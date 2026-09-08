@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Doodle Jump</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #111;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+        color: white;
+    }
+
+    #gameContainer {
+        position: relative;
+        width: 400px;
+        height: 650px;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(#87ceeb, #e0f7ff);
+        border: 4px solid #222;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+
+    canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    #score {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #222;
+        text-shadow: 1px 1px 0 white;
+        z-index: 5;
+    }
+
+    #startScreen,
+    #gameOverScreen {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: rgba(0,0,0,0.55);
+        z-index: 10;
+        padding: 20px;
+    }
+
+    #gameOverScreen {
+        display: none;
+    }
+
+    h1 {
+        margin: 0 0 10px;
+        font-size: 42px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    button {
+        border: none;
+        border-radius: 10px;
+        padding: 14px 28px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        background: #2ecc71;
+        color: white;
+        margin-top: 15px;
+    }
+
+    button:hover {
+        background: #27ae60;
+    }
+
+    #controls {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        pointer-events: none;
+        z-index: 6;
+    }
+
+    .controlButton {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.35);
+        border: 2px solid rgba(255,255,255,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        color: white;
+        user-select: none;
+        pointer-events: auto;
+        touch-action: none;
+    }
+
+    @media (max-width: 450px) {
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            border-radius: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="gameContainer">
+
+    <canvas id="game"></canvas>
+
+    <div id="score">
+        Punkte: 0
+    </div>
+
+    <!-- Startbildschirm -->
+    <div id="startScreen">
+
+        <h1>🐸 Jump!</h1>
+
+        <p>
+            Springe von Plattform zu Plattform!<br>
+            Bewege dich mit ← → oder den Buttons.
+        </p>
+
+        <button onclick="startGame()">
+            Spiel starten
+        </button>
+
+    </div>
+
+    <!-- Game Over -->
+    <div id="gameOverScreen">
+
+        <h1>Game Over</h1>
+
+        <p>
+            Deine Punkte:
+            <strong id="finalScore">0</strong>
+        </p>
+
+        <button onclick="restartGame()">
+            Nochmal spielen
+        </button>
+
+    </div>
+
+    <!-- Touch-Steuerung -->
+    <div id="controls">
+
+        <div
+            class="controlButton"
+            id="leftButton">
+            ◀
+        </div>
+
+        <div
+            class="controlButton"
+            id="rightButton">
+            ▶
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   GRUNDEINSTELLUNGEN
+===================================================== */
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const container = document.getElementById("gameContainer");
+
+canvas.width = 400;
+canvas.height = 650;
+
+
+/* =====================================================
+   SPIELER
+===================================================== */
+
+const player = {
+
+    x: 180,
+    y: 500,
+
+    width: 35,
+    height: 35,
+
+    velocityX: 0,
+    velocityY: 0,
+
+    speed: 5,
+
+    jumpPower: -12,
+
+    gravity: 0.45
+
+};
+
+
+/* =====================================================
+   SPIELVARIABLEN
+===================================================== */
+
+let platforms = [];
+
+let score = 0;
+
+let gameRunning = false;
+
+let keys = {
+
+    left: false,
+    right: false
+
+};
+
+let cameraY = 0;
+
+let highestPlatformY = 600;
+
+
+/* =====================================================
+   PLATTFORMEN ERSTELLEN
+===================================================== */
+
+function createPlatforms() {
+
+    platforms = [];
+
+    let y = 600;
+
+    // Startplattform
+    platforms.push({
+
+        x: 150,
+        y: 600,
+        width: 100,
+        height: 15
+
+    });
+
+    // Weitere Plattformen
+    for (let i = 0; i < 25; i++) {
+
+        y -= 80;
+
+        let width = 70 + Math.random() * 50;
+
+        let x = Math.random() * (canvas.width - width);
+
+        platforms.push({
+
+            x: x,
+            y: y,
+            width: width,
+            height: 15
+
+        });
+
+    }
+
+    highestPlatformY = y;
+
+}
+
+
+/* =====================================================
+   SPIEL STARTEN
+===================================================== */
+
+function startGame() {
+
+    document.getElementById("startScreen").style.display = "none";
+
+    document.getElementById("gameOverScreen").style.display = "none";
+
+    resetGame();
+
+    gameRunning = true;
+
+    gameLoop();
+
+}
+
+
+/* =====================================================
+   SPIEL ZURÜCKSETZEN
+===================================================== */
+
+function resetGame() {
+
+    player.x = 180;
+
+    player.y = 540;
+
+    player.velocityX = 0;
+
+    player.velocityY = player.jumpPower;
+
+    cameraY = 0;
+
+    score = 0;
+
+    document.getElementById("score").innerText =
+        "Punkte: 0";
+
+    createPlatforms();
+
+}
+
+
+/* =====================================================
+   SPIEL NEUSTARTEN
+===================================================== */
+
+function restartGame() {
+
+    document.getElementById("gameOverScreen").style.display = "none";
+
+    resetGame();
+
+    gameRunning = true;
+
+    gameLoop();
+
+}
+
+
+/* =====================================================
+   SPIELER ZEICHNEN
+===================================================== */
+
+function drawPlayer() {
+
+    ctx.save();
+
+    ctx.translate(
+        player.x,
+        player.y - cameraY
+    );
+
+    /*
+       Körper
+    */
+
+    ctx.fillStyle = "#27ae60";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        player.width / 2,
+        player.height / 2,
+        player.width / 2,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Augen
+    */
+
+    ctx.fillStyle = "white";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        11,
+        12,
+        7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        24,
+        12,
+        7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Pupillen
+    */
+
+    ctx.fillStyle = "#222";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        11,
+        12,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        24,
+        12,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+       Mund
+    */
+
+    ctx.strokeStyle = "#222";
+
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        17.5,
+        20,
+        7,
+        0,
+        Math.PI
+    );
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   PLATTFORMEN ZEICHNEN
+===================================================== */
+
+function drawPlatforms() {
+
+    platforms.forEach(platform => {
+
+        let screenY =
+            platform.y - cameraY;
+
+        /*
+           Nur sichtbare Plattformen zeichnen
+        */
+
+        if (
+            screenY > -30 &&
+            screenY < canvas.height + 30
+        ) {
+
+            // Plattform
+            ctx.fillStyle = "#2ecc71";
+
+            ctx.fillRect(
+                platform.x,
+                screenY,
+                platform.width,
+                platform.height
+            );
+
+
+            // Oberseite
+            ctx.fillStyle = "#196f3d";
+
+            ctx.fillRect(
+                platform.x,
+                screenY,
+                platform.width,
+                4
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   HINTERGRUND
+===================================================== */
+
+function drawBackground() {
+
+    // Himmel
+    let gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            canvas.height
+        );
+
+    gradient.addColorStop(
+        0,
+        "#87ceeb"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#e8f8ff"
+    );
+
+    ctx.fillStyle = gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /*
+       Wolken
+    */
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.7)";
+
+    drawCloud(60, 100);
+
+    drawCloud(280, 180);
+
+    drawCloud(150, 320);
+
+}
+
+
+/* =====================================================
+   WOLKE
+===================================================== */
+
+function drawCloud(x, y) {
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        20,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        x + 25,
+        y - 10,
+        25,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        x + 55,
+        y,
+        20,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   SPIELER BEWEGEN
+===================================================== */
+
+function updatePlayer() {
+
+    /*
+       Links / rechts
+    */
+
+    if (keys.left) {
+
+        player.velocityX = -player.speed;
+
+    }
+
+    else if (keys.right) {
+
+        player.velocityX = player.speed;
+
+    }
+
+    else {
+
+        player.velocityX *= 0.8;
+
+    }
+
+
+    player.x += player.velocityX;
+
+
+    /*
+       Bildschirmbegrenzung
+    */
+
+    if (player.x < 0) {
+
+        player.x = 0;
+
+    }
+
+    if (
+        player.x + player.width >
+        canvas.width
+    ) {
+
+        player.x =
+            canvas.width -
+            player.width;
+
+    }
+
+
+    /*
+       Schwerkraft
+    */
+
+    player.velocityY +=
+        player.gravity;
+
+    player.y +=
+        player.velocityY;
+
+
+    /*
+       Plattform-Kollision
+    */
+
+    if (player.velocityY > 0) {
+
+        platforms.forEach(platform => {
+
+            let playerBottom =
+                player.y +
+                player.height;
+
+            let platformTop =
+                platform.y;
+
+            let horizontalCollision =
+                player.x +
+                player.width >
+                platform.x &&
+                player.x <
+                platform.x +
+                platform.width;
+
+            let verticalCollision =
+                playerBottom >= platformTop &&
+                playerBottom <=
+                platformTop + 20;
+
+            if (
+                horizontalCollision &&
+                verticalCollision
+            ) {
+
+                player.y =
+                    platform.y -
+                    player.height;
+
+                player.velocityY =
+                    player.jumpPower;
+
+            }
+
+        });
+
+    }
+
+
+    /*
+       Kamera bewegen
+    */
+
+    if (
+        player.y -
+        cameraY <
+        canvas.height * 0.4
+    ) {
+
+        cameraY =
+            player.y -
+            canvas.height * 0.4;
+
+    }
+
+
+    /*
+       Punkte
+    */
+
+    let newScore =
+        Math.floor(
+            Math.max(
+                0,
+                600 -
+                player.y
+            ) / 10
+        );
+
+    if (newScore > score) {
+
+        score = newScore;
+
+        document.getElementById(
+            "score"
+        ).innerText =
+            "Punkte: " +
+            score;
+
+    }
+
+
+    /*
+       Neue Plattformen erzeugen
+    */
+
+    while (
+        highestPlatformY -
+        cameraY >
+        -200
+    ) {
+
+        highestPlatformY -= 80;
+
+        let width =
+            70 +
+            Math.random() * 50;
+
+        let x =
+            Math.random() *
+            (canvas.width - width);
+
+        platforms.push({
+
+            x: x,
+
+            y: highestPlatformY,
+
+            width: width,
+
+            height: 15
+
+        });
+
+    }
+
+
+    /*
+       Alte Plattformen entfernen
+    */
+
+    platforms =
+        platforms.filter(
+            platform =>
+                platform.y -
+                cameraY <
+                canvas.height + 200
+        );
+
+
+    /*
+       Game Over
+    */
+
+    if (
+        player.y -
+        cameraY >
+        canvas.height + 100
+    ) {
+
+        gameOver();
+
+    }
+
+}
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+function gameOver() {
+
+    gameRunning = false;
+
+    document.getElementById(
+        "finalScore"
+    ).innerText = score;
+
+    document.getElementById(
+        "gameOverScreen"
+    ).style.display = "flex";
+
+}
+
+
+/* =====================================================
+   SPIELZEUG
+===================================================== */
+
+function gameLoop() {
+
+    if (!gameRunning) {
+
+        return;
+
+    }
+
+    updatePlayer();
+
+    drawBackground();
+
+    drawPlatforms();
+
+    drawPlayer();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =====================================================
+   TASTATUR
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key.toLowerCase() === "a"
+        ) {
+
+            keys.left = true;
+
+        }
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key.toLowerCase() === "d"
+        ) {
+
+            keys.right = true;
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key.toLowerCase() === "a"
+        ) {
+
+            keys.left = false;
+
+        }
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key.toLowerCase() === "d"
+        ) {
+
+            keys.right = false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   TOUCH-STEUERUNG
+===================================================== */
+
+const leftButton =
+    document.getElementById(
+        "leftButton"
+    );
+
+const rightButton =
+    document.getElementById(
+        "rightButton"
+    );
+
+
+function touchStart(direction) {
+
+    if (direction === "left") {
+
+        keys.left = true;
+
+    }
+
+    if (direction === "right") {
+
+        keys.right = true;
+
+    }
+
+}
+
+
+function touchEnd(direction) {
+
+    if (direction === "left") {
+
+        keys.left = false;
+
+    }
+
+    if (direction === "right") {
+
+        keys.right = false;
+
+    }
+
+}
+
+
+/*
+   Linker Button
+*/
+
+leftButton.addEventListener(
+    "touchstart",
+    function(event) {
+
+        event.preventDefault();
+
+        touchStart("left");
+
+    }
+);
+
+leftButton.addEventListener(
+    "touchend",
+    function(event) {
+
+        event.preventDefault();
+
+        touchEnd("left");
+
+    }
+);
+
+
+/*
+   Rechter Button
+*/
+
+rightButton.addEventListener(
+    "touchstart",
+    function(event) {
+
+        event.preventDefault();
+
+        touchStart("right");
+
+    }
+);
+
+rightButton.addEventListener(
+    "touchend",
+    function(event) {
+
+        event.preventDefault();
+
+        touchEnd("right");
+
+    }
+);
+
+
+/*
+   Auch Mausklicks unterstützen
+*/
+
+leftButton.addEventListener(
+    "mousedown",
+    function() {
+
+        keys.left = true;
+
+    }
+);
+
+leftButton.addEventListener(
+    "mouseup",
+    function() {
+
+        keys.left = false;
+
+    }
+);
+
+rightButton.addEventListener(
+    "mousedown",
+    function() {
+
+        keys.right = true;
+
+    }
+);
+
+rightButton.addEventListener(
+    "mouseup",
+    function() {
+
+        keys.right = false;
+
+    }
+);
+
+</script>
+
+</body>
+</html>
