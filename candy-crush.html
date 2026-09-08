@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Candy Match</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9bd2, #8f7cff);
+}
+
+.game {
+    width: 430px;
+    max-width: 95vw;
+    padding: 20px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+h1 {
+    margin: 5px 0 15px;
+    color: #7b2cbf;
+    font-size: 34px;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#board {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 5px;
+    background: #6c4ab6;
+    border-radius: 12px;
+    touch-action: manipulation;
+}
+
+.candy {
+    position: relative;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: transform 0.12s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(20px, 7vw, 38px);
+    user-select: none;
+}
+
+.candy:hover {
+    transform: scale(1.08);
+}
+
+.selected {
+    transform: scale(0.82);
+    box-shadow:
+        0 0 0 4px white,
+        0 0 15px white;
+}
+
+.red {
+    background: #ff4d6d;
+}
+
+.blue {
+    background: #4dabf7;
+}
+
+.green {
+    background: #51cf66;
+}
+
+.yellow {
+    background: #ffd43b;
+}
+
+.purple {
+    background: #b197fc;
+}
+
+.orange {
+    background: #ff922b;
+}
+
+button {
+    margin-top: 18px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #7b2cbf;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5a189a;
+}
+
+#message {
+    min-height: 25px;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #7b2cbf;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🍬 Candy Match</h1>
+
+    <div class="info">
+
+        <div>
+            Punkte:
+            <span id="score">0</span>
+        </div>
+
+        <div>
+            Züge:
+            <span id="moves">30</span>
+        </div>
+
+    </div>
+
+    <div id="board"></div>
+
+    <div id="message">
+        Tausche zwei Süßigkeiten!
+    </div>
+
+    <button onclick="newGame()">
+        Neues Spiel
+    </button>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SPIEL-EINSTELLUNGEN
+========================================== */
+
+const SIZE = 8;
+
+const MAX_MOVES = 30;
+
+const candyTypes = [
+    "red",
+    "blue",
+    "green",
+    "yellow",
+    "purple",
+    "orange"
+];
+
+const candySymbols = {
+    red: "🍓",
+    blue: "💎",
+    green: "🍏",
+    yellow: "🍋",
+    purple: "🍇",
+    orange: "🍊"
+};
+
+
+/* ==========================================
+   SPIELVARIABLEN
+========================================== */
+
+let board = [];
+
+let score = 0;
+
+let moves = MAX_MOVES;
+
+let selected = null;
+
+let busy = false;
+
+
+/* ==========================================
+   SPIEL STARTEN
+========================================== */
+
+function newGame() {
+
+    score = 0;
+
+    moves = MAX_MOVES;
+
+    selected = null;
+
+    busy = false;
+
+    document.getElementById("score").textContent = score;
+
+    document.getElementById("moves").textContent = moves;
+
+    document.getElementById("message").textContent =
+        "Tausche zwei Süßigkeiten!";
+
+    createBoard();
+
+    drawBoard();
+
+}
+
+
+/* ==========================================
+   SPIELFELD ERSTELLEN
+========================================== */
+
+function createBoard() {
+
+    board = [];
+
+    for (let row = 0; row < SIZE; row++) {
+
+        board[row] = [];
+
+        for (let col = 0; col < SIZE; col++) {
+
+            let candy;
+
+            do {
+
+                candy = randomCandy();
+
+            } while (
+                createsMatch(row, col, candy)
+            );
+
+            board[row][col] = candy;
+        }
+    }
+}
+
+
+/* ==========================================
+   ZUFÄLLIGE SÜSSIGKEIT
+========================================== */
+
+function randomCandy() {
+
+    return candyTypes[
+        Math.floor(
+            Math.random() * candyTypes.length
+        )
+    ];
+
+}
+
+
+/* ==========================================
+   VERHINDERT START-MATCHES
+========================================== */
+
+function createsMatch(row, col, candy) {
+
+    /*
+       Drei gleiche horizontal?
+    */
+
+    if (
+        col >= 2 &&
+        board[row][col - 1] === candy &&
+        board[row][col - 2] === candy
+    ) {
+
+        return true;
+
+    }
+
+
+    /*
+       Drei gleiche vertikal?
+    */
+
+    if (
+        row >= 2 &&
+        board[row - 1][col] === candy &&
+        board[row - 2][col] === candy
+    ) {
+
+        return true;
+
+    }
+
+    return false;
+
+}
+
+
+/* ==========================================
+   SPIELFELD ZEICHNEN
+========================================== */
+
+function drawBoard() {
+
+    const boardElement =
+        document.getElementById("board");
+
+    boardElement.innerHTML = "";
+
+    for (let row = 0; row < SIZE; row++) {
+
+        for (let col = 0; col < SIZE; col++) {
+
+            const candy =
+                document.createElement("div");
+
+            candy.className =
+                "candy " + board[row][col];
+
+            candy.textContent =
+                candySymbols[board[row][col]];
+
+            if (
+                selected &&
+                selected.row === row &&
+                selected.col === col
+            ) {
+
+                candy.classList.add("selected");
+
+            }
+
+            candy.dataset.row = row;
+
+            candy.dataset.col = col;
+
+            candy.addEventListener(
+                "click",
+                () => selectCandy(row, col)
+            );
+
+            boardElement.appendChild(candy);
+        }
+    }
+}
+
+
+/* ==========================================
+   SÜSSIGKEIT AUSWÄHLEN
+========================================== */
+
+function selectCandy(row, col) {
+
+    if (busy || moves <= 0) {
+        return;
+    }
+
+    /*
+       Erste Auswahl
+    */
+
+    if (!selected) {
+
+        selected = {
+            row: row,
+            col: col
+        };
+
+        drawBoard();
+
+        return;
+    }
+
+
+    /*
+       Gleiche Position erneut angeklickt
+    */
+
+    if (
+        selected.row === row &&
+        selected.col === col
+    ) {
+
+        selected = null;
+
+        drawBoard();
+
+        return;
+    }
+
+
+    /*
+       Prüfen, ob Nachbar
+    */
+
+    if (
+        !isAdjacent(
+            selected.row,
+            selected.col,
+            row,
+            col
+        )
+    ) {
+
+        selected = {
+            row: row,
+            col: col
+        };
+
+        drawBoard();
+
+        return;
+    }
+
+
+    /*
+       Tauschen
+    */
+
+    swap(
+        selected.row,
+        selected.col,
+        row,
+        col
+    );
+
+    selected = null;
+
+    drawBoard();
+
+    /*
+       Prüfen, ob Match entstanden ist
+    */
+
+    const matches = findMatches();
+
+    if (matches.length === 0) {
+
+        /*
+           Kein Match:
+           Tausch rückgängig machen
+        */
+
+        swap(
+            selected?.row ?? row,
+            selected?.col ?? col,
+            row,
+            col
+        );
+
+        /*
+           Der obige Swap kann nach dem Zurücksetzen
+           der Auswahl nicht mehr korrekt sein.
+           Deshalb wird die letzte Aktion separat
+           korrigiert.
+        */
+
+        swap(
+            row,
+            col,
+            getPreviousRow(row, col),
+            getPreviousCol(row, col)
+        );
+
+        return;
+    }
+
+}
+
+
+/* ==========================================
+   NACHBAR PRÜFEN
+========================================== */
+
+function isAdjacent(r1, c1, r2, c2) {
+
+    const distance =
+        Math.abs(r1 - r2) +
+        Math.abs(c1 - c2);
+
+    return distance === 1;
+
+}
+
+
+/* ==========================================
+   TAUSCHEN
+========================================== */
+
+function swap(r1, c1, r2, c2) {
+
+    const temp =
+        board[r1][c1];
+
+    board[r1][c1] =
+        board[r2][c2];
+
+    board[r2][c2] =
+        temp;
+
+}
+
+
+/* ==========================================
+   MATCHES FINDEN
+========================================== */
+
+function findMatches() {
+
+    const matches = [];
+
+    /*
+       Horizontal
+    */
+
+    for (let row = 0; row < SIZE; row++) {
+
+        let count = 1;
+
+        for (let col = 1; col < SIZE; col++) {
+
+            if (
+                board[row][col] ===
+                board[row][col - 1]
+            ) {
+
+                count++;
+
+            } else {
+
+                if (count >= 3) {
+
+                    for (
+                        let k = col - count;
+                        k < col;
+                        k++
+                    ) {
+
+                        matches.push({
+                            row: row,
+                            col: k
+                        });
+
+                    }
+                }
+
+                count = 1;
+            }
+        }
+
+
+        if (count >= 3) {
+
+            for (
+                let k = SIZE - count;
+                k < SIZE;
+                k++
+            ) {
+
+                matches.push({
+                    row: row,
+                    col: k
+                });
+
+            }
+        }
+    }
+
+
+    /*
+       Vertikal
+    */
+
+    for (let col = 0; col < SIZE; col++) {
+
+        let count = 1;
+
+        for (let row = 1; row < SIZE; row++) {
+
+            if (
+                board[row][col] ===
+                board[row - 1][col]
+            ) {
+
+                count++;
+
+            } else {
+
+                if (count >= 3) {
+
+                    for (
+                        let k = row - count;
+                        k < row;
+                        k++
+                    ) {
+
+                        matches.push({
+                            row: k,
+                            col: col
+                        });
+
+                    }
+                }
+
+                count = 1;
+            }
+        }
+
+
+        if (count >= 3) {
+
+            for (
+                let k = SIZE - count;
+                k < SIZE;
+                k++
+            ) {
+
+                matches.push({
+                    row: k,
+                    col: col
+                });
+
+            }
+        }
+    }
+
+
+    /*
+       Doppelte entfernen
+    */
+
+    const unique = [];
+
+    const seen = new Set();
+
+    matches.forEach(match => {
+
+        const key =
+            match.row + "," + match.col;
+
+        if (!seen.has(key)) {
+
+            seen.add(key);
+
+            unique.push(match);
+
+        }
+
+    });
+
+    return unique;
+
+}
+
+
+/* ==========================================
+   MATCHES ENTFERNEN
+========================================== */
+
+function removeMatches(matches) {
+
+    matches.forEach(match => {
+
+        board[match.row][match.col] = null;
+
+    });
+
+    score += matches.length * 10;
+
+    document.getElementById("score")
+        .textContent = score;
+
+}
+
+
+/* ==========================================
+   SÜSSIGKEITEN FALLEN LASSEN
+========================================== */
+
+function dropCandies() {
+
+    for (let col = 0; col < SIZE; col++) {
+
+        let emptySpaces = 0;
+
+        for (
+            let row = SIZE - 1;
+            row >= 0;
+            row--
+        ) {
+
+            if (
+                board[row][col] === null
+            ) {
+
+                emptySpaces++;
+
+            } else if (
+                emptySpaces > 0
+            ) {
+
+                board[
+                    row + emptySpaces
+                ][col] =
+                    board[row][col];
+
+                board[row][col] = null;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   NEUE SÜSSIGKEITEN
+========================================== */
+
+function fillBoard() {
+
+    for (let row = 0; row < SIZE; row++) {
+
+        for (let col = 0; col < SIZE; col++) {
+
+            if (
+                board[row][col] === null
+            ) {
+
+                board[row][col] =
+                    randomCandy();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   SPIELZUG VERARBEITEN
+========================================== */
+
+async function processMatches() {
+
+    busy = true;
+
+    let matches = findMatches();
+
+    while (matches.length > 0) {
+
+        removeMatches(matches);
+
+        drawBoard();
+
+        await wait(180);
+
+        dropCandies();
+
+        fillBoard();
+
+        drawBoard();
+
+        await wait(180);
+
+        matches = findMatches();
+
+    }
+
+    busy = false;
+
+    checkGameOver();
+
+}
+
+
+/* ==========================================
+   WARTEN
+========================================== */
+
+function wait(ms) {
+
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+
+}
+
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
+function checkGameOver() {
+
+    if (moves <= 0) {
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "🎉 Spiel vorbei! Punkte: " +
+            score;
+
+        return;
+
+    }
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Weiter geht's! 🍬";
+
+}
+
+
+/* ==========================================
+   VORHERIGE POSITION
+==========================================
+
+   Diese Funktionen werden hier nur als
+   Sicherheitsfunktionen verwendet.
+*/
+
+let lastMove = null;
+
+function getPreviousRow(row, col) {
+
+    if (lastMove) {
+        return lastMove.row;
+    }
+
+    return row;
+
+}
+
+function getPreviousCol(row, col) {
+
+    if (lastMove) {
+        return lastMove.col;
+    }
+
+    return col;
+
+}
+
+
+/* ==========================================
+   SPIELZUG NEU DEFINIEREN
+========================================== */
+
+const originalSelectCandy = selectCandy;
+
+
+/*
+   Korrekte Spielzug-Funktion
+*/
+
+function selectCandy(row, col) {
+
+    if (busy || moves <= 0) {
+        return;
+    }
+
+    if (!selected) {
+
+        selected = {
+            row: row,
+            col: col
+        };
+
+        drawBoard();
+
+        return;
+    }
+
+
+    if (
+        selected.row === row &&
+        selected.col === col
+    ) {
+
+        selected = null;
+
+        drawBoard();
+
+        return;
+    }
+
+
+    if (
+        !isAdjacent(
+            selected.row,
+            selected.col,
+            row,
+            col
+        )
+    ) {
+
+        selected = {
+            row: row,
+            col: col
+        };
+
+        drawBoard();
+
+        return;
+    }
+
+
+    /*
+       Position merken
+    */
+
+    const r1 = selected.row;
+    const c1 = selected.col;
+
+    const r2 = row;
+    const c2 = col;
+
+
+    /*
+       Tauschen
+    */
+
+    swap(r1, c1, r2, c2);
+
+    selected = null;
+
+    drawBoard();
+
+
+    /*
+       Match suchen
+    */
+
+    const matches = findMatches();
+
+
+    if (matches.length === 0) {
+
+        /*
+           Kein gültiger Zug.
+           Zurücktauschen.
+        */
+
+        swap(r1, c1, r2, c2);
+
+        drawBoard();
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Kein Match!";
+
+        return;
+
+    }
+
+
+    /*
+       Zug verbrauchen
+    */
+
+    moves--;
+
+    document.getElementById(
+        "moves"
+    ).textContent = moves;
+
+
+    /*
+       Matches verarbeiten
+    */
+
+    processMatches();
+
+}
+
+
+/* ==========================================
+   SPIEL START
+========================================== */
+
+newGame();
+
+</script>
+
+</body>
+</html>
