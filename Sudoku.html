@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sudoku</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+    color: #222;
+}
+
+.game {
+    width: 450px;
+    max-width: 95vw;
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.3);
+
+    text-align: center;
+}
+
+h1 {
+    margin: 5px 0 15px;
+
+    color: #5a3d8e;
+
+    font-size: 34px;
+}
+
+.info {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   SUDOKU FELD
+========================================== */
+
+#board {
+
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(9, 1fr);
+
+    border: 3px solid #222;
+
+    background: #222;
+}
+
+
+/* ==========================================
+   FELD
+========================================== */
+
+.cell {
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #aaa;
+
+    font-size: clamp(
+        18px,
+        6vw,
+        30px
+    );
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+/* Vorgegebene Zahlen */
+
+.fixed {
+
+    background: #eeeeee;
+
+    color: #222;
+
+    cursor: default;
+
+}
+
+
+/* Benutzerzahlen */
+
+.user {
+
+    color: #4b3f72;
+
+}
+
+
+/* ausgewähltes Feld */
+
+.selected {
+
+    background: #dcd3ff;
+
+}
+
+
+/* gleiche Zahl */
+
+.highlight {
+
+    background: #eee8ff;
+
+}
+
+
+/* Fehler */
+
+.error {
+
+    background: #ffcccc;
+
+    color: #c0392b;
+
+}
+
+
+/* ==========================================
+   DICKERE SUDOKU-LINIEN
+========================================== */
+
+
+/* Vertikale Linien */
+
+.cell:nth-child(3n) {
+
+    border-right:
+        3px solid #222;
+
+}
+
+.cell:nth-child(9n) {
+
+    border-right:
+        none;
+
+}
+
+
+/* Horizontale Linien */
+
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) {
+
+    border-bottom:
+        3px solid #222;
+
+}
+
+
+/* ==========================================
+   ZAHLEN BUTTONS
+========================================== */
+
+#numbers {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(9, 1fr);
+
+    gap: 6px;
+
+    margin-top: 15px;
+
+}
+
+.number {
+
+    padding: 10px 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #5a3d8e;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.number:hover {
+
+    background: #432d6b;
+
+}
+
+
+/* Löschen */
+
+#erase {
+
+    background: #c0392b;
+
+}
+
+#erase:hover {
+
+    background: #922b21;
+
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.mainButton {
+
+    margin-top: 15px;
+
+    padding: 12px 25px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #5a3d8e;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.mainButton:hover {
+
+    background: #432d6b;
+
+}
+
+
+#message {
+
+    min-height: 25px;
+
+    margin-top: 10px;
+
+    font-weight: bold;
+
+    color: #5a3d8e;
+
+}
+
+
+/* ==========================================
+   HANDY
+========================================== */
+
+@media (max-width: 500px) {
+
+    .game {
+
+        padding: 12px;
+
+    }
+
+    #numbers {
+
+        gap: 4px;
+
+    }
+
+    .number {
+
+        padding: 8px 0;
+
+        font-size: 16px;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="game">
+
+    <h1>🧩 Sudoku</h1>
+
+
+    <div class="info">
+
+        <div>
+            Fehler:
+            <span id="mistakes">
+                0
+            </span>
+            / 3
+        </div>
+
+        <div>
+            Zeit:
+            <span id="timer">
+                00:00
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- Sudoku -->
+
+    <div id="board"></div>
+
+
+    <!-- Zahlen -->
+
+    <div id="numbers">
+
+        <button class="number"
+                onclick="enterNumber(1)">
+            1
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(2)">
+            2
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(3)">
+            3
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(4)">
+            4
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(5)">
+            5
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(6)">
+            6
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(7)">
+            7
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(8)">
+            8
+        </button>
+
+        <button class="number"
+                onclick="enterNumber(9)">
+            9
+        </button>
+
+        <button
+            class="number"
+            id="erase"
+            onclick="eraseNumber()">
+            ✕
+        </button>
+
+    </div>
+
+
+    <div id="message">
+        Wähle ein Feld aus.
+    </div>
+
+
+    <button
+        class="mainButton"
+        onclick="newGame()">
+
+        Neues Sudoku
+
+    </button>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SPIELVARIABLEN
+========================================== */
+
+let solution = [];
+
+let puzzle = [];
+
+let playerBoard = [];
+
+let selectedRow = -1;
+
+let selectedCol = -1;
+
+let mistakes = 0;
+
+let seconds = 0;
+
+let gameOver = false;
+
+let timer;
+
+
+/* ==========================================
+   NEUES SPIEL
+========================================== */
+
+function newGame() {
+
+    clearInterval(timer);
+
+    mistakes = 0;
+
+    seconds = 0;
+
+    gameOver = false;
+
+    selectedRow = -1;
+
+    selectedCol = -1;
+
+    document.getElementById(
+        "mistakes"
+    ).textContent = "0";
+
+    document.getElementById(
+        "timer"
+    ).textContent = "00:00";
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Wähle ein Feld aus.";
+
+    /*
+       Neues vollständiges Sudoku
+    */
+
+    solution =
+        generateSolution();
+
+    /*
+       Rätsel daraus erstellen
+    */
+
+    puzzle =
+        createPuzzle(solution);
+
+    /*
+       Spielbrett kopieren
+    */
+
+    playerBoard =
+        puzzle.map(
+            row => [...row]
+        );
+
+    drawBoard();
+
+    startTimer();
+
+}
+
+
+/* ==========================================
+   SUDOKU-LÖSUNG ERZEUGEN
+========================================== */
+
+function generateSolution() {
+
+    let board =
+        Array.from(
+            { length: 9 },
+            () => Array(9).fill(0)
+        );
+
+    solveBoard(board);
+
+    return board;
+
+}
+
+
+/* ==========================================
+   SUDOKU LÖSER
+========================================== */
+
+function solveBoard(board) {
+
+    /*
+       Leeres Feld suchen
+    */
+
+    let empty = findEmpty(board);
+
+    if (!empty) {
+
+        return true;
+
+    }
+
+    const row = empty.row;
+
+    const col = empty.col;
+
+
+    /*
+       Zahlen mischen
+    */
+
+    let numbers =
+        [1,2,3,4,5,6,7,8,9];
+
+    shuffle(numbers);
+
+
+    for (let number of numbers) {
+
+        if (
+            isValid(
+                board,
+                row,
+                col,
+                number
+            )
+        ) {
+
+            board[row][col] =
+                number;
+
+            if (
+                solveBoard(board)
+            ) {
+
+                return true;
+
+            }
+
+            board[row][col] = 0;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+
+/* ==========================================
+   LEERES FELD
+========================================== */
+
+function findEmpty(board) {
+
+    for (let row = 0; row < 9; row++) {
+
+        for (let col = 0; col < 9; col++) {
+
+            if (
+                board[row][col] === 0
+            ) {
+
+                return {
+                    row: row,
+                    col: col
+                };
+
+            }
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* ==========================================
+   GÜLTIGKEIT PRÜFEN
+========================================== */
+
+function isValid(
+    board,
+    row,
+    col,
+    number
+) {
+
+    /*
+       Reihe
+    */
+
+    for (let c = 0; c < 9; c++) {
+
+        if (
+            board[row][c] === number
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    /*
+       Spalte
+    */
+
+    for (let r = 0; r < 9; r++) {
+
+        if (
+            board[r][col] === number
+        ) {
+
+            return false;
+
+        }
+
+    }
+
+
+    /*
+       3x3 Block
+    */
+
+    const startRow =
+        Math.floor(row / 3) * 3;
+
+    const startCol =
+        Math.floor(col / 3) * 3;
+
+
+    for (
+        let r = startRow;
+        r < startRow + 3;
+        r++
+    ) {
+
+        for (
+            let c = startCol;
+            c < startCol + 3;
+            c++
+        ) {
+
+            if (
+                board[r][c] === number
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+/* ==========================================
+   ARRAY MISCHEN
+========================================== */
+
+function shuffle(array) {
+
+    for (
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            array[i],
+            array[j]
+        ] =
+        [
+            array[j],
+            array[i]
+        ];
+
+    }
+
+}
+
+
+/* ==========================================
+   RÄTSEL ERSTELLEN
+========================================== */
+
+function createPuzzle(solution) {
+
+    let puzzle =
+        solution.map(
+            row => [...row]
+        );
+
+    /*
+       Anzahl der entfernten Felder
+    */
+
+    const removeCount = 48;
+
+    let removed = 0;
+
+
+    while (
+        removed < removeCount
+    ) {
+
+        const row =
+            Math.floor(
+                Math.random() * 9
+            );
+
+        const col =
+            Math.floor(
+                Math.random() * 9
+            );
+
+
+        if (
+            puzzle[row][col] !== 0
+        ) {
+
+            puzzle[row][col] = 0;
+
+            removed++;
+
+        }
+
+    }
+
+    return puzzle;
+
+}
+
+
+/* ==========================================
+   SPIELBRETT ZEICHNEN
+========================================== */
+
+function drawBoard() {
+
+    const boardElement =
+        document.getElementById(
+            "board"
+        );
+
+    boardElement.innerHTML = "";
+
+
+    for (let row = 0; row < 9; row++) {
+
+        for (
+            let col = 0;
+            col < 9;
+            col++
+        ) {
+
+            const cell =
+                document.createElement(
+                    "div"
+                );
+
+
+            cell.className =
+                "cell";
+
+
+            /*
+               Vorgegebene Zahl
+            */
+
+            if (
+                puzzle[row][col] !== 0
+            ) {
+
+                cell.classList.add(
+                    "fixed"
+                );
+
+            }
+
+
+            /*
+               Benutzerzahl
+            */
+
+            if (
+                puzzle[row][col] === 0 &&
+                playerBoard[row][col] !== 0
+            ) {
+
+                cell.classList.add(
+                    "user"
+                );
+
+            }
+
+
+            /*
+               Auswahl
+            */
+
+            if (
+                selectedRow === row &&
+                selectedCol === col
+            ) {
+
+                cell.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            /*
+               Gleiche Zahl hervorheben
+            */
+
+            if (
+                selectedRow >= 0 &&
+                playerBoard[
+                    selectedRow
+                ][selectedCol] !== 0 &&
+                playerBoard[row][col] ===
+                playerBoard[
+                    selectedRow
+                ][selectedCol]
+            ) {
+
+                cell.classList.add(
+                    "highlight"
+                );
+
+            }
+
+
+            /*
+               Zahl anzeigen
+            */
+
+            if (
+                playerBoard[row][col] !== 0
+            ) {
+
+                cell.textContent =
+                    playerBoard[row][col];
+
+            }
+
+
+            /*
+               Klick
+            */
+
+            cell.addEventListener(
+                "click",
+                function() {
+
+                    selectCell(
+                        row,
+                        col
+                    );
+
+                }
+            );
+
+
+            boardElement.appendChild(
+                cell
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   FELD AUSWÄHLEN
+========================================== */
+
+function selectCell(row, col) {
+
+    if (gameOver) {
+        return;
+    }
+
+    /*
+       Vorgegebene Zahlen
+       nicht verändern
+    */
+
+    if (
+        puzzle[row][col] !== 0
+    ) {
+
+        selectedRow = row;
+
+        selectedCol = col;
+
+        drawBoard();
+
+        return;
+
+    }
+
+
+    selectedRow = row;
+
+    selectedCol = col;
+
+    drawBoard();
+
+}
+
+
+/* ==========================================
+   ZAHL EINGEBEN
+========================================== */
+
+function enterNumber(number) {
+
+    if (gameOver) {
+        return;
+    }
+
+
+    if (
+        selectedRow === -1 ||
+        selectedCol === -1
+    ) {
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Bitte zuerst ein Feld auswählen.";
+
+        return;
+
+    }
+
+
+    /*
+       Vorgegebene Felder
+    */
+
+    if (
+        puzzle[
+            selectedRow
+        ][selectedCol] !== 0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Richtige Zahl?
+    */
+
+    if (
+        solution[
+            selectedRow
+        ][selectedCol] === number
+    ) {
+
+        playerBoard[
+            selectedRow
+        ][selectedCol] = number;
+
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Richtig! 👍";
+
+
+        drawBoard();
+
+        checkWin();
+
+    }
+
+    else {
+
+        mistakes++;
+
+        document.getElementById(
+            "mistakes"
+        ).textContent =
+            mistakes;
+
+
+        /*
+           Falsche Zahl kurz anzeigen
+        */
+
+        playerBoard[
+            selectedRow
+        ][selectedCol] = number;
+
+        drawBoard();
+
+
+        setTimeout(
+            function() {
+
+                if (
+                    !gameOver &&
+                    playerBoard[
+                        selectedRow
+                    ][selectedCol] === number
+                ) {
+
+                    playerBoard[
+                        selectedRow
+                    ][selectedCol] = 0;
+
+                    drawBoard();
+
+                }
+
+            },
+            500
+        );
+
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Das war leider falsch.";
+
+
+        /*
+           Drei Fehler
+        */
+
+        if (mistakes >= 3) {
+
+            gameOver = true;
+
+            clearInterval(timer);
+
+            document.getElementById(
+                "message"
+            ).textContent =
+                "❌ Drei Fehler! Neues Spiel starten.";
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   ZAHL LÖSCHEN
+========================================== */
+
+function eraseNumber() {
+
+    if (gameOver) {
+        return;
+    }
+
+
+    if (
+        selectedRow === -1 ||
+        selectedCol === -1
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Vorgegebene Zahl
+    */
+
+    if (
+        puzzle[
+            selectedRow
+        ][selectedCol] !== 0
+    ) {
+
+        return;
+
+    }
+
+
+    playerBoard[
+        selectedRow
+    ][selectedCol] = 0;
+
+
+    drawBoard();
+
+}
+
+
+/* ==========================================
+   GEWINN PRÜFEN
+========================================== */
+
+function checkWin() {
+
+    for (let row = 0; row < 9; row++) {
+
+        for (
+            let col = 0;
+            col < 9;
+            col++
+        ) {
+
+            if (
+                playerBoard[row][col] === 0
+            ) {
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Gewonnen
+    */
+
+    gameOver = true;
+
+    clearInterval(timer);
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "🎉 Sudoku gelöst! Glückwunsch!";
+
+}
+
+
+/* ==========================================
+   TIMER
+========================================== */
+
+function startTimer() {
+
+    timer =
+        setInterval(
+            function() {
+
+                if (gameOver) {
+                    return;
+                }
+
+                seconds++;
+
+                const minutes =
+                    Math.floor(
+                        seconds / 60
+                    );
+
+                const secs =
+                    seconds % 60;
+
+
+                document.getElementById(
+                    "timer"
+                ).textContent =
+
+                    String(minutes)
+                        .padStart(2, "0")
+
+                    + ":" +
+
+                    String(secs)
+                        .padStart(2, "0");
+
+            },
+            1000
+        );
+
+}
+
+
+/* ==========================================
+   TASTATUR
+========================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        /*
+           Zahlen 1-9
+        */
+
+        if (
+            event.key >= "1" &&
+            event.key <= "9"
+        ) {
+
+            enterNumber(
+                Number(event.key)
+            );
+
+        }
+
+
+        /*
+           Löschen
+        */
+
+        if (
+            event.key === "Backspace" ||
+            event.key === "Delete"
+        ) {
+
+            eraseNumber();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   SPIEL STARTEN
+========================================== */
+
+newGame();
+
+</script>
+
+</body>
+</html>
