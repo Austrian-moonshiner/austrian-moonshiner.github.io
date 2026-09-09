@@ -3,336 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Solitaire</title>
 
 <style>
 * {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
-    background:
-        radial-gradient(circle at top, #197a46 0%, #07552f 45%, #03371f 100%);
+    background: linear-gradient(135deg, #07552f, #063d25);
+    font-family: Arial, sans-serif;
     color: white;
-    overflow-x: hidden;
 }
 
 .game {
     width: 100%;
-    max-width: 1250px;
+    max-width: 1200px;
     margin: auto;
-    padding: 18px;
+    padding: 15px;
 }
 
-header {
+h1 {
+    text-align: center;
+    margin: 5px 0 8px;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.buttons {
     text-align: center;
     margin-bottom: 15px;
 }
 
-header h1 {
-    margin: 5px 0;
-    font-size: 34px;
-}
-
-.stats {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    font-size: 16px;
-    margin-top: 8px;
-}
-
-.controls {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 15px 0 20px;
-}
-
 button {
-    border: none;
-    border-radius: 10px;
-    padding: 11px 18px;
-    background: #f5f5f5;
-    color: #222;
-    font-size: 15px;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 3px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0,0,0,.25);
-    transition: transform .1s, background .1s;
 }
 
-button:hover {
-    background: white;
-    transform: translateY(-1px);
-}
+/* =========================
+   OBERE REIHE
+========================= */
 
-button:active {
-    transform: translateY(1px);
-}
-
-.board {
-    width: 100%;
-}
-
-/* OBERE REIHE */
-
-.top-row {
+.top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 25px;
 }
 
-.stock-area,
-.foundation-area {
+.leftTop,
+.foundations {
     display: flex;
-    gap: 12px;
+    gap: 10px;
 }
 
-.card-slot {
+.slot {
     width: 82px;
     height: 116px;
-    border: 2px dashed rgba(255,255,255,.35);
+    border: 2px dashed rgba(255,255,255,.4);
     border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.slot-label {
-    color: rgba(255,255,255,.45);
+.slotText {
+    opacity: .5;
     font-size: 12px;
     text-align: center;
 }
 
-/* KARTEN */
+/* =========================
+   KARTEN
+========================= */
 
 .card {
     width: 82px;
     height: 116px;
-    border-radius: 9px;
-    background: #fff;
+    background: white;
     color: #111;
+    border-radius: 9px;
     position: relative;
-    user-select: none;
-    touch-action: none;
+    border: 1px solid #bbb;
+    box-shadow: 0 3px 7px rgba(0,0,0,.35);
     cursor: pointer;
-    box-shadow: 0 3px 7px rgba(0,0,0,.4);
-    border: 1px solid #ddd;
+    user-select: none;
 }
 
 .card.red {
-    color: #c5162e;
+    color: #d01932;
 }
 
-.card.black {
-    color: #111;
+.card.selected {
+    outline: 4px solid #ffd400;
+    transform: translateY(-5px);
 }
 
 .card.back {
     background:
-        linear-gradient(135deg, #173b9d 25%, #0d2464 25%, #0d2464 50%, #173b9d 50%, #173b9d 75%, #0d2464 75%);
-    background-size: 16px 16px;
+        repeating-linear-gradient(
+            45deg,
+            #173e91,
+            #173e91 7px,
+            #244fa7 7px,
+            #244fa7 14px
+        );
     border: 4px solid white;
-    cursor: pointer;
 }
 
-.card.back::after {
-    content: "";
+.card .rank {
     position: absolute;
-    inset: 5px;
-    border: 2px solid rgba(255,255,255,.7);
-    border-radius: 5px;
-}
-
-.card .corner {
-    position: absolute;
-    font-size: 19px;
-    line-height: 18px;
-    font-weight: bold;
-    z-index: 2;
-}
-
-.card .top-left {
     left: 6px;
     top: 5px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.card .bottom-right {
+.card .suit {
+    position: absolute;
+    left: 6px;
+    top: 24px;
+    font-size: 17px;
+}
+
+.card .bigSuit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 36px;
+    text-align: center;
+    font-size: 43px;
+}
+
+.card .bottom {
+    position: absolute;
     right: 6px;
     bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
     transform: rotate(180deg);
 }
 
-.card .center {
-    position: absolute;
-    inset: 25px 8px 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 45px;
-}
-
-.card.selected {
-    outline: 4px solid #ffd43b;
-    transform: translateY(-5px);
-}
-
-/* STOCK */
-
-#stock {
-    cursor: pointer;
-}
-
-/* TABLEAU */
+/* =========================
+   TABLEAU
+========================= */
 
 .tableau {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 14px;
-    align-items: start;
+    gap: 12px;
 }
 
-.pile {
-    min-height: 350px;
+.column {
     position: relative;
-    border-radius: 8px;
+    min-height: 400px;
 }
 
-.pile.empty {
+.column.empty {
     border: 2px dashed rgba(255,255,255,.25);
+    border-radius: 9px;
     min-height: 116px;
 }
 
-.pile .card {
+.column .card {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.pile .card.selected {
+.column .card.selected {
     transform: translateX(-50%) translateY(-5px);
 }
 
 .message {
     text-align: center;
-    margin-top: 18px;
-    min-height: 25px;
+    min-height: 24px;
+    margin-top: 15px;
+    color: #ffe477;
     font-weight: bold;
-    color: #ffe27a;
 }
 
-/* MOBILE */
+/* =========================
+   MOBIL
+========================= */
 
-@media (max-width: 800px) {
+@media(max-width:800px) {
 
     .game {
-        padding: 10px;
+        padding: 8px;
     }
 
-    header h1 {
-        font-size: 27px;
-    }
-
-    .stats {
-        gap: 12px;
-        font-size: 14px;
-    }
-
-    .top-row {
-        gap: 8px;
-    }
-
-    .stock-area,
-    .foundation-area {
+    .top {
         gap: 5px;
     }
 
+    .leftTop,
+    .foundations {
+        gap: 4px;
+    }
+
     .card,
-    .card-slot {
+    .slot {
         width: 58px;
         height: 82px;
-    }
-
-    .card .corner {
-        font-size: 14px;
-        line-height: 13px;
-    }
-
-    .card .center {
-        font-size: 31px;
-        inset: 18px 4px;
     }
 
     .tableau {
         gap: 4px;
     }
 
-    .pile {
-        min-height: 280px;
+    .column {
+        min-height: 300px;
     }
 
-    .controls button {
-        padding: 9px 12px;
+    .card .rank {
+        left: 4px;
+        top: 3px;
+        font-size: 14px;
+    }
+
+    .card .suit {
+        left: 4px;
+        top: 18px;
         font-size: 13px;
+    }
+
+    .card .bigSuit {
+        top: 27px;
+        font-size: 31px;
+    }
+
+    .card .bottom {
+        right: 4px;
+        bottom: 3px;
+        font-size: 14px;
     }
 }
 
-@media (max-width: 500px) {
+@media(max-width:500px) {
+
+    h1 {
+        font-size: 25px;
+    }
 
     .card,
-    .card-slot {
-        width: 44px;
-        height: 64px;
+    .slot {
+        width: 43px;
+        height: 63px;
     }
 
-    .card {
-        border-radius: 6px;
-    }
-
-    .card .corner {
-        left: 3px;
-        top: 3px;
-        font-size: 11px;
-        line-height: 10px;
-    }
-
-    .card .bottom-right {
-        right: 3px;
-        bottom: 3px;
-    }
-
-    .card .center {
-        font-size: 24px;
-        inset: 14px 2px;
-    }
-
-    .top-row {
-        margin-bottom: 15px;
-    }
-
-    .stock-area,
-    .foundation-area {
-        gap: 3px;
-    }
-
-    .tableau {
-        gap: 2px;
-    }
-
-    .pile {
+    .column {
         min-height: 230px;
     }
 
-    .controls {
-        gap: 6px;
+    .card .rank {
+        left: 3px;
+        top: 2px;
+        font-size: 10px;
+    }
+
+    .card .suit {
+        left: 3px;
+        top: 13px;
+        font-size: 9px;
+    }
+
+    .card .bigSuit {
+        top: 21px;
+        font-size: 23px;
+    }
+
+    .card .bottom {
+        right: 3px;
+        bottom: 2px;
+        font-size: 10px;
+    }
+
+    .info {
+        font-size: 13px;
+        gap: 12px;
+    }
+
+    button {
+        padding: 8px 11px;
+        font-size: 12px;
     }
 }
 </style>
@@ -342,100 +310,97 @@ button:active {
 
 <div class="game">
 
-<header>
-    <h1>♠ Solitaire ♥</h1>
+<h1>♠️ Solitaire ♥️</h1>
 
-    <div class="stats">
-        <span>Züge: <b id="moves">0</b></span>
-        <span>Zeit: <b id="time">00:00</b></span>
-    </div>
-</header>
+<div class="info">
+    <span>Züge: <b id="moves">0</b></span>
+    <span>Zeit: <b id="timer">00:00</b></span>
+</div>
 
-<div class="controls">
+<div class="buttons">
     <button onclick="newGame()">🔄 Neues Spiel</button>
-    <button onclick="undoMove()">↩ Rückgängig</button>
+    <button onclick="undo()">↩ Rückgängig</button>
 </div>
 
-<div class="board">
+<div class="top">
 
-    <!-- OBERE REIHE -->
+    <!-- NACHZIEHSTAPEL + ABLAGE -->
 
-    <div class="top-row">
+    <div class="leftTop">
 
-        <div class="stock-area">
-
-            <div id="stock"
-                 class="card-slot"
-                 onclick="drawCard()">
-                <div class="slot-label">Nachziehstapel</div>
-            </div>
-
-            <div id="waste"
-                 class="card-slot"
-                 onclick="selectWaste()">
-                <div class="slot-label">Ablage</div>
-            </div>
-
+        <div
+            id="stock"
+            class="slot"
+            onclick="stockClick()">
         </div>
 
-        <div class="foundation-area">
-
-            <div class="card-slot"
-                 id="foundation0"
-                 onclick="foundationClick(0)">
-                <div class="slot-label">♠</div>
-            </div>
-
-            <div class="card-slot"
-                 id="foundation1"
-                 onclick="foundationClick(1)">
-                <div class="slot-label">♥</div>
-            </div>
-
-            <div class="card-slot"
-                 id="foundation2"
-                 onclick="foundationClick(2)">
-                <div class="slot-label">♦</div>
-            </div>
-
-            <div class="card-slot"
-                 id="foundation3"
-                 onclick="foundationClick(3)">
-                <div class="slot-label">♣</div>
-            </div>
-
+        <div
+            id="waste"
+            class="slot"
+            onclick="wasteClick()">
         </div>
 
     </div>
 
-    <!-- SPIELFELD -->
+    <!-- DIE 4 ECHTEN FOUNDATION-STAPEL -->
 
-    <div id="tableau" class="tableau"></div>
+    <div class="foundations">
+
+        <div
+            id="foundation0"
+            class="slot"
+            onclick="foundationClick(0)">
+        </div>
+
+        <div
+            id="foundation1"
+            class="slot"
+            onclick="foundationClick(1)">
+        </div>
+
+        <div
+            id="foundation2"
+            class="slot"
+            onclick="foundationClick(2)">
+        </div>
+
+        <div
+            id="foundation3"
+            class="slot"
+            onclick="foundationClick(3)">
+        </div>
+
+    </div>
 
 </div>
+
+<div id="tableau" class="tableau"></div>
 
 <div id="message" class="message">
-    Willkommen bei Solitaire!
+    Klicke zuerst eine Karte an.
 </div>
 
 </div>
+
 
 <script>
 
-/* ==========================================
+/* =====================================================
    SOLITAIRE
-   ========================================== */
+   KOMPLETT NEU
+===================================================== */
 
-const suits = ["♠", "♥", "♦", "♣"];
+const SUITS = ["♠","♥","♦","♣"];
 
-const suitNames = {
-    "♠": 0,
-    "♥": 1,
-    "♦": 2,
-    "♣": 3
+const COLORS = {
+    "♠": "black",
+    "♥": "red",
+    "♦": "red",
+    "♣": "black"
 };
 
-const ranks = [
+const RANK_NAMES = [
+    "",
     "A",
     "2",
     "3",
@@ -451,7 +416,8 @@ const ranks = [
     "K"
 ];
 
-let deck = [];
+let stock = [];
+let waste = [];
 
 let tableau = [
     [],
@@ -462,9 +428,7 @@ let tableau = [
     [],
 ];
 
-let waste = [];
-
-let foundations = [
+let foundation = [
     [],
     [],
     [],
@@ -474,34 +438,31 @@ let foundations = [
 let selected = null;
 
 let moves = 0;
-
 let seconds = 0;
 
-let timer = null;
+let timerInterval = null;
 
 let history = [];
 
 
-/* ==========================================
-   KARTEN ERSTELLEN
-   ========================================== */
+/* =====================================================
+   DECK
+===================================================== */
 
 function createDeck() {
 
-    const cards = [];
-
+    let cards = [];
     let id = 0;
 
-    for (let s = 0; s < suits.length; s++) {
+    for (let s = 0; s < SUITS.length; s++) {
 
-        for (let r = 0; r < ranks.length; r++) {
+        for (let r = 1; r <= 13; r++) {
 
             cards.push({
                 id: id++,
-                suit: suits[s],
-                suitIndex: s,
-                rank: r + 1,
-                name: ranks[r],
+                suit: SUITS[s],
+                color: COLORS[SUITS[s]],
+                rank: r,
                 faceUp: false
             });
 
@@ -513,48 +474,52 @@ function createDeck() {
 }
 
 
-/* ==========================================
+/* =====================================================
    MISCHEN
-   ========================================== */
+===================================================== */
 
 function shuffle(array) {
 
     for (let i = array.length - 1; i > 0; i--) {
 
-        const j = Math.floor(Math.random() * (i + 1));
+        let j =
+            Math.floor(Math.random() * (i + 1));
 
-        [array[i], array[j]] =
-        [array[j], array[i]];
+        let temp = array[i];
 
+        array[i] = array[j];
+
+        array[j] = temp;
     }
-
 }
 
 
-/* ==========================================
+/* =====================================================
    NEUES SPIEL
-   ========================================== */
+===================================================== */
 
 function newGame() {
 
-    clearInterval(timer);
+    clearInterval(timerInterval);
 
-    deck = createDeck();
+    let deck = createDeck();
 
     shuffle(deck);
+
+    stock = [];
+    waste = [];
+
+    foundation = [
+        [],
+        [],
+        [],
+        []
+    ];
 
     tableau = [
         [],
         [],
         [],
-        [],
-        [],
-        [],
-    ];
-
-    waste = [];
-
-    foundations = [
         [],
         [],
         [],
@@ -564,54 +529,69 @@ function newGame() {
     selected = null;
 
     moves = 0;
-
     seconds = 0;
 
     history = [];
 
-    updateStats();
+
+    /*
+
+       7 Spalten:
+
+       1 Karte
+       2 Karten
+       3 Karten
+       ...
+       7 Karten
+
+       Insgesamt 28 Karten.
+
+    */
+
+    for (let column = 0; column < 7; column++) {
+
+        for (
+            let row = 0;
+            row <= column;
+            row++
+        ) {
+
+            let card = deck.pop();
+
+            card.faceUp =
+                row === column;
+
+            tableau[column].push(card);
+        }
+    }
+
+
+    /* Restliche Karten = Stock */
+
+    stock = deck;
 
     startTimer();
 
-    /*
-       28 Karten auf das Tableau
-    */
-
-    for (let pile = 0; pile < 7; pile++) {
-
-        for (let j = 0; j <= pile; j++) {
-
-            const card = deck.pop();
-
-            card.faceUp =
-                (j === pile);
-
-            tableau[pile].push(card);
-
-        }
-
-    }
-
     render();
 
-    showMessage("Neues Spiel gestartet!");
+    message("Neues Spiel gestartet.");
 }
 
 
-/* ==========================================
+/* =====================================================
    TIMER
-   ========================================== */
+===================================================== */
 
 function startTimer() {
 
-    timer = setInterval(() => {
+    timerInterval =
+        setInterval(function() {
 
-        seconds++;
+            seconds++;
 
-        updateStats();
+            updateStats();
 
-    }, 1000);
-
+        }, 1000);
 }
 
 
@@ -620,55 +600,57 @@ function updateStats() {
     document.getElementById("moves")
         .textContent = moves;
 
-    const min =
-        String(Math.floor(seconds / 60))
-        .padStart(2, "0");
+    let minutes =
+        Math.floor(seconds / 60);
 
-    const sec =
-        String(seconds % 60)
-        .padStart(2, "0");
+    let secs =
+        seconds % 60;
 
-    document.getElementById("time")
-        .textContent = `${min}:${sec}`;
+    document.getElementById("timer")
+        .textContent =
+        String(minutes).padStart(2,"0")
+        + ":" +
+        String(secs).padStart(2,"0");
 }
 
 
-/* ==========================================
-   KARTE HTML
-   ========================================== */
+/* =====================================================
+   KARTE ALS HTML
+===================================================== */
 
-function cardHTML(card) {
+function cardHTML(card, selectedCard=false) {
 
     if (!card.faceUp) {
 
         return `
-            <div class="card back"
-                 data-id="${card.id}">
-            </div>
+            <div class="card back"></div>
         `;
-
     }
 
-    const color =
-        (card.suit === "♥" ||
-         card.suit === "♦")
-        ? "red"
-        : "black";
+    let selectedClass =
+        selectedCard
+        ? " selected"
+        : "";
 
     return `
-        <div class="card ${color}"
-             data-id="${card.id}">
+        <div
+            class="card ${card.color}${selectedClass}"
+            data-card-id="${card.id}">
 
-            <div class="corner top-left">
-                ${card.name}<br>${card.suit}
+            <div class="rank">
+                ${RANK_NAMES[card.rank]}
             </div>
 
-            <div class="center">
+            <div class="suit">
                 ${card.suit}
             </div>
 
-            <div class="corner bottom-right">
-                ${card.name}<br>${card.suit}
+            <div class="bigSuit">
+                ${card.suit}
+            </div>
+
+            <div class="bottom">
+                ${RANK_NAMES[card.rank]}
             </div>
 
         </div>
@@ -676,9 +658,9 @@ function cardHTML(card) {
 }
 
 
-/* ==========================================
+/* =====================================================
    RENDER
-   ========================================== */
+===================================================== */
 
 function render() {
 
@@ -686,55 +668,55 @@ function render() {
 
     renderWaste();
 
-    renderFoundations();
+    renderFoundation();
 
     renderTableau();
 
-    setupInteractions();
-
+    updateStats();
 }
 
 
-/* ==========================================
+/* =====================================================
    STOCK
-   ========================================== */
+===================================================== */
 
 function renderStock() {
 
-    const stock = document.getElementById("stock");
+    let element =
+        document.getElementById("stock");
 
-    if (deck.length === 0) {
+    if (stock.length === 0) {
 
-        stock.innerHTML = `
-            <div class="slot-label">
-                Leer
+        element.innerHTML = `
+            <div class="slotText">
+                ${waste.length > 0
+                    ? "↻ Zurück"
+                    : "Leer"}
             </div>
         `;
 
     } else {
 
-        stock.innerHTML = `
+        element.innerHTML = `
             <div class="card back"></div>
         `;
-
     }
-
 }
 
 
-/* ==========================================
+/* =====================================================
    WASTE
-   ========================================== */
+===================================================== */
 
 function renderWaste() {
 
-    const wasteElement =
+    let element =
         document.getElementById("waste");
 
     if (waste.length === 0) {
 
-        wasteElement.innerHTML = `
-            <div class="slot-label">
+        element.innerHTML = `
+            <div class="slotText">
                 Ablage
             </div>
         `;
@@ -742,271 +724,256 @@ function renderWaste() {
         return;
     }
 
-    wasteElement.innerHTML =
-        cardHTML(waste[waste.length - 1]);
+    let card =
+        waste[waste.length - 1];
 
+    let selectedCard =
+        selected &&
+        selected.type === "waste";
+
+    element.innerHTML =
+        cardHTML(
+            card,
+            selectedCard
+        );
 }
 
 
-/* ==========================================
-   FOUNDATIONS
-   ========================================== */
+/* =====================================================
+   FOUNDATION
+===================================================== */
 
-function renderFoundations() {
+function renderFoundation() {
 
     for (let i = 0; i < 4; i++) {
 
-        const element =
+        let element =
             document.getElementById(
                 "foundation" + i
             );
 
-        const pile = foundations[i];
+        let pile =
+            foundation[i];
 
         if (pile.length === 0) {
 
             element.innerHTML = `
-                <div class="slot-label">
-                    ${suits[i]}
+                <div class="slotText">
+                    ${SUITS[i]}
                 </div>
             `;
 
         } else {
 
+            let card =
+                pile[pile.length - 1];
+
             element.innerHTML =
-                cardHTML(
-                    pile[pile.length - 1]
-                );
-
+                cardHTML(card);
         }
-
     }
-
 }
 
 
-/* ==========================================
+/* =====================================================
    TABLEAU
-   ========================================== */
+===================================================== */
 
 function renderTableau() {
 
-    const container =
+    let area =
         document.getElementById("tableau");
 
-    container.innerHTML = "";
+    area.innerHTML = "";
 
-    for (let i = 0; i < 7; i++) {
+    for (let c = 0; c < 7; c++) {
 
-        const pile = tableau[i];
-
-        const pileElement =
+        let column =
             document.createElement("div");
 
-        pileElement.className =
-            "pile";
+        column.className = "column";
 
-        pileElement.dataset.pile = i;
+        column.dataset.column = c;
 
-        if (pile.length === 0) {
+        if (tableau[c].length === 0) {
 
-            pileElement.classList.add("empty");
-
+            column.classList.add("empty");
         }
 
-        pile.forEach((card, index) => {
 
-            const wrapper =
+        for (
+            let i = 0;
+            i < tableau[c].length;
+            i++
+        ) {
+
+            let card =
+                tableau[c][i];
+
+            let isSelected =
+                selected &&
+                selected.type === "tableau" &&
+                selected.column === c &&
+                selected.index === i;
+
+            let wrapper =
                 document.createElement("div");
 
             wrapper.innerHTML =
-                cardHTML(card);
-
-            const cardElement =
-                wrapper.firstElementChild;
-
-            cardElement.style.top =
-                `${index * getCardOffset()}px`;
-
-            if (
-                selected &&
-                selected.type === "tableau" &&
-                selected.pile === i &&
-                selected.index === index
-            ) {
-
-                cardElement.classList.add(
-                    "selected"
+                cardHTML(
+                    card,
+                    isSelected
                 );
 
-            }
+            let cardElement =
+                wrapper.firstElementChild;
 
-            pileElement.appendChild(
+            let offset =
+                getOffset();
+
+            cardElement.style.top =
+                (i * offset) + "px";
+
+            cardElement.dataset.column = c;
+            cardElement.dataset.index = i;
+
+            cardElement.onclick =
+                function(event) {
+
+                    event.stopPropagation();
+
+                    tableauCardClick(
+                        c,
+                        i
+                    );
+                };
+
+            column.appendChild(
                 cardElement
             );
+        }
 
-        });
 
-        container.appendChild(
-            pileElement
-        );
+        column.onclick =
+            function() {
 
+                tableauColumnClick(c);
+
+            };
+
+
+        area.appendChild(column);
     }
-
 }
 
 
-function getCardOffset() {
+/* =====================================================
+   KARTENABSTAND
+===================================================== */
+
+function getOffset() {
 
     if (window.innerWidth <= 500) {
-        return 23;
+        return 21;
     }
 
     if (window.innerWidth <= 800) {
-        return 30;
+        return 28;
     }
 
     return 34;
 }
 
 
-/* ==========================================
-   KLICK / TOUCH
-   ========================================== */
+/* =====================================================
+   STOCK KLICK
+===================================================== */
 
-function setupInteractions() {
+function stockClick() {
 
-    document.querySelectorAll(
-        ".pile .card"
-    ).forEach(cardElement => {
+    saveState();
 
-        cardElement.addEventListener(
-            "click",
-            function(e) {
+    /*
+       Noch Karten im Stock?
+    */
 
-                e.stopPropagation();
+    if (stock.length > 0) {
 
-                const pileElement =
-                    cardElement.closest(".pile");
-
-                const pileIndex =
-                    Number(
-                        pileElement.dataset.pile
-                    );
-
-                const cardId =
-                    Number(
-                        cardElement.dataset.id
-                    );
-
-                const index =
-                    tableau[pileIndex]
-                    .findIndex(
-                        c => c.id === cardId
-                    );
-
-                tableauClick(
-                    pileIndex,
-                    index
-                );
-
-            }
-        );
-
-    });
-
-    document.querySelectorAll(
-        ".pile"
-    ).forEach(pile => {
-
-        pile.addEventListener(
-            "click",
-            function() {
-
-                const pileIndex =
-                    Number(
-                        this.dataset.pile
-                    );
-
-                emptyPileClick(pileIndex);
-
-            }
-        );
-
-    });
-
-}
-
-
-/* ==========================================
-   STOCK ZIEHEN
-   ========================================== */
-
-function drawCard() {
-
-    saveHistory();
-
-    if (deck.length > 0) {
-
-        const card = deck.pop();
+        let card =
+            stock.pop();
 
         card.faceUp = true;
 
         waste.push(card);
 
-        moves++;
-
         selected = null;
+
+        moves++;
 
         render();
 
-        updateStats();
+        message(
+            "Karte gezogen."
+        );
 
         return;
     }
 
+
     /*
-       Wenn der Stock leer ist,
-       wird die Ablage zurückgelegt.
+       Stock leer:
+       Ablage zurücklegen.
     */
 
     if (waste.length > 0) {
 
         while (waste.length > 0) {
 
-            const card =
+            let card =
                 waste.pop();
 
             card.faceUp = false;
 
-            deck.push(card);
-
+            stock.push(card);
         }
-
-        moves++;
 
         selected = null;
 
+        moves++;
+
         render();
 
-        updateStats();
-
-        showMessage(
-            "Ablagestapel wurde zurückgelegt."
+        message(
+            "Ablage wurde zurückgelegt."
         );
-
     }
-
 }
 
 
-/* ==========================================
-   WASTE AUSWÄHLEN
-   ========================================== */
+/* =====================================================
+   WASTE KLICK
+===================================================== */
 
-function selectWaste() {
+function wasteClick() {
 
     if (waste.length === 0) {
+        return;
+    }
+
+    /*
+       Wenn bereits etwas ausgewählt ist,
+       versuchen wir den Waste zu verwenden.
+    */
+
+    if (
+        selected &&
+        selected.type === "tableau"
+    ) {
+
+        message(
+            "Wähle einen Tableau-Stapel als Ziel."
+        );
+
         return;
     }
 
@@ -1016,41 +983,54 @@ function selectWaste() {
 
     render();
 
+    message(
+        "Karte ausgewählt. Jetzt Ziel anklicken."
+    );
 }
 
 
-/* ==========================================
-   TABLEAU KLICK
-   ========================================== */
+/* =====================================================
+   TABLEAU-KARTE
+===================================================== */
 
-function tableauClick(
-    pileIndex,
-    cardIndex
+function tableauCardClick(
+    column,
+    index
 ) {
 
-    const card =
-        tableau[pileIndex][cardIndex];
+    let card =
+        tableau[column][index];
+
+
+    /*
+       Verdeckte Karte
+    */
 
     if (!card.faceUp) {
 
         /*
-           verdeckte Karte aufdecken
+           Nur die oberste verdeckte Karte
+           darf aufgedeckt werden.
         */
 
         if (
-            cardIndex ===
-            tableau[pileIndex].length - 1
+            index ===
+            tableau[column].length - 1
         ) {
 
-            saveHistory();
+            saveState();
 
             card.faceUp = true;
 
             moves++;
 
+            selected = null;
+
             render();
 
-            updateStats();
+            message(
+                "Karte aufgedeckt."
+            );
 
         }
 
@@ -1064,27 +1044,53 @@ function tableauClick(
 
     if (!selected) {
 
-        /*
-           Nur Sequenzen auswählen,
-           die gültig sind.
-        */
-
         if (
             canSelectSequence(
-                tableau[pileIndex],
-                cardIndex
+                column,
+                index
             )
         ) {
 
             selected = {
                 type: "tableau",
-                pile: pileIndex,
-                index: cardIndex
+                column: column,
+                index: index
             };
 
             render();
 
+            message(
+                "Karte ausgewählt. Ziel anklicken."
+            );
+
+        } else {
+
+            message(
+                "Diese Kartenfolge ist nicht gültig."
+            );
         }
+
+        return;
+    }
+
+
+    /*
+       Erneut dieselbe Karte
+    */
+
+    if (
+        selected.type === "tableau" &&
+        selected.column === column &&
+        selected.index === index
+    ) {
+
+        selected = null;
+
+        render();
+
+        message(
+            "Auswahl aufgehoben."
+        );
 
         return;
     }
@@ -1092,143 +1098,127 @@ function tableauClick(
 
     /*
        Wir versuchen,
-       die ausgewählten Karten
-       auf diesen Stapel zu legen.
+       die ausgewählte Karte
+       hier abzulegen.
     */
 
-    if (
-        selected.type === "tableau" &&
-        selected.pile === pileIndex
-    ) {
-
-        if (
-            selected.index === cardIndex
-        ) {
-
-            selected = null;
-
-            render();
-
-            return;
-        }
-
-    }
-
-
-    moveSelectedToTableau(
-        pileIndex
-    );
-
+    moveToTableau(column);
 }
 
 
-/* ==========================================
-   LEEREN STAPEL KLICKEN
-   ========================================== */
+/* =====================================================
+   LEERE TABLEAU-SPALTE
+===================================================== */
 
-function emptyPileClick(pileIndex) {
+function tableauColumnClick(column) {
 
     if (!selected) {
         return;
     }
 
-    moveSelectedToTableau(
-        pileIndex
-    );
-
+    moveToTableau(column);
 }
 
 
-/* ==========================================
-   SEQUENZ AUSWÄHLBAR?
-   ========================================== */
+/* =====================================================
+   SEQUENZ GÜLTIG?
+===================================================== */
 
 function canSelectSequence(
-    pile,
-    index
+    column,
+    startIndex
 ) {
 
+    let pile =
+        tableau[column];
+
+    /*
+       Alle Karten müssen offen sein.
+    */
+
     for (
-        let i = index;
+        let i = startIndex;
+        i < pile.length;
+        i++
+    ) {
+
+        if (!pile[i].faceUp) {
+            return false;
+        }
+    }
+
+
+    /*
+       Karten müssen absteigend
+       und abwechselnd gefärbt sein.
+    */
+
+    for (
+        let i = startIndex;
         i < pile.length - 1;
         i++
     ) {
 
-        const a = pile[i];
-        const b = pile[i + 1];
+        let first =
+            pile[i];
+
+        let second =
+            pile[i + 1];
 
         if (
-            !a.faceUp ||
-            !b.faceUp ||
-            !isAlternating(a, b) ||
-            a.rank !== b.rank + 1
+            first.rank !==
+            second.rank + 1
         ) {
-
             return false;
-
         }
 
+        if (
+            first.color ===
+            second.color
+        ) {
+            return false;
+        }
     }
 
     return true;
-
 }
 
 
-/* ==========================================
-   FARBWECHSEL
-   ========================================== */
+/* =====================================================
+   TABLEAU-ZUG
+===================================================== */
 
-function isRed(card) {
-
-    return (
-        card.suit === "♥" ||
-        card.suit === "♦"
-    );
-
-}
-
-
-function isAlternating(a, b) {
-
-    return isRed(a) !== isRed(b);
-
-}
-
-
-/* ==========================================
-   AUF TABLEAU LEGEN
-   ========================================== */
-
-function moveSelectedToTableau(
-    targetPile
+function moveToTableau(
+    targetColumn
 ) {
 
-    const target =
-        tableau[targetPile];
+    if (!selected) {
+        return;
+    }
 
 
     /*
-       WASTE
+       WASTE -> TABLEAU
     */
 
     if (selected.type === "waste") {
 
-        const card =
+        let card =
             waste[waste.length - 1];
 
         if (
             canPlaceOnTableau(
                 card,
-                target
+                targetColumn
             )
         ) {
 
-            saveHistory();
+            saveState();
 
             waste.pop();
 
-            target.push(card);
+            tableau[targetColumn]
+                .push(card);
 
             moves++;
 
@@ -1236,16 +1226,17 @@ function moveSelectedToTableau(
 
             render();
 
-            updateStats();
+            message(
+                "Karte abgelegt."
+            );
 
             checkWin();
 
         } else {
 
-            showMessage(
-                "Diese Karte kann dort nicht abgelegt werden."
+            message(
+                "Diese Karte kann hier nicht abgelegt werden."
             );
-
         }
 
         return;
@@ -1253,18 +1244,34 @@ function moveSelectedToTableau(
 
 
     /*
-       TABLEAU
+       TABLEAU -> TABLEAU
     */
 
-    if (selected.type === "tableau") {
+    if (
+        selected.type === "tableau"
+    ) {
 
-        const sourcePile =
-            tableau[selected.pile];
+        let sourceColumn =
+            selected.column;
 
-        const moving =
-            sourcePile.slice(
-                selected.index
-            );
+        let startIndex =
+            selected.index;
+
+
+        if (
+            sourceColumn === targetColumn
+        ) {
+
+            return;
+        }
+
+
+        let source =
+            tableau[sourceColumn];
+
+        let moving =
+            source.slice(startIndex);
+
 
         if (
             moving.length === 0
@@ -1272,42 +1279,49 @@ function moveSelectedToTableau(
             return;
         }
 
+
         if (
             !canPlaceOnTableau(
                 moving[0],
-                target
+                targetColumn
             )
         ) {
 
-            showMessage(
+            message(
                 "Ungültiger Zug."
             );
 
             return;
         }
 
-        if (
-            selected.pile === targetPile
-        ) {
 
-            return;
-        }
+        saveState();
 
-        saveHistory();
 
-        tableau[selected.pile] =
-            sourcePile.slice(
+        tableau[sourceColumn] =
+            source.slice(
                 0,
-                selected.index
+                startIndex
             );
 
-        moving.forEach(card =>
-            target.push(card)
-        );
 
-        flipTopCard(
-            selected.pile
-        );
+        for (
+            let i = 0;
+            i < moving.length;
+            i++
+        ) {
+
+            tableau[targetColumn]
+                .push(moving[i]);
+        }
+
+
+        /*
+           Oberste Karte der alten
+           Spalte aufdecken.
+        */
+
+        flipTop(sourceColumn);
 
         moves++;
 
@@ -1315,88 +1329,101 @@ function moveSelectedToTableau(
 
         render();
 
-        updateStats();
+        message(
+            "Karten verschoben."
+        );
 
         checkWin();
-
     }
-
 }
 
 
-/* ==========================================
-   AUF TABLEAU ERLAUBT?
-   ========================================== */
+/* =====================================================
+   TABLEAU-REGEL
+===================================================== */
 
 function canPlaceOnTableau(
     card,
-    target
+    targetColumn
 ) {
 
-    if (target.length === 0) {
+    let pile =
+        tableau[targetColumn];
+
+
+    /*
+       Leere Spalte:
+       Nur König.
+    */
+
+    if (pile.length === 0) {
 
         return card.rank === 13;
-
     }
 
-    const top =
-        target[target.length - 1];
 
-    if (!top.faceUp) {
+    let target =
+        pile[pile.length - 1];
+
+
+    if (!target.faceUp) {
         return false;
     }
 
-    return (
-        isAlternating(
-            card,
-            top
-        ) &&
-        card.rank === top.rank - 1
-    );
 
+    /*
+       Absteigend + andere Farbe.
+    */
+
+    return (
+        target.rank === card.rank + 1 &&
+        target.color !== card.color
+    );
 }
 
 
-/* ==========================================
+/* =====================================================
    FOUNDATION KLICK
-   ========================================== */
+===================================================== */
 
 function foundationClick(
     foundationIndex
 ) {
 
-    /*
-       Wenn eine Karte ausgewählt ist,
-       versuchen wir sie abzulegen.
-    */
-
     if (!selected) {
         return;
     }
 
+
     let card = null;
 
-    let source = null;
 
+    /*
+       Waste
+    */
 
-    if (selected.type === "waste") {
+    if (
+        selected.type === "waste"
+    ) {
 
         card =
             waste[waste.length - 1];
-
-        source = "waste";
-
     }
 
 
-    if (selected.type === "tableau") {
+    /*
+       Tableau
+    */
 
-        const pile =
-            tableau[selected.pile];
+    if (
+        selected.type === "tableau"
+    ) {
+
+        let pile =
+            tableau[selected.column];
 
         /*
-           Nur einzelne Karte darf
-           direkt in die Foundation.
+           Nur einzelne oberste Karte.
         */
 
         if (
@@ -1404,8 +1431,8 @@ function foundationClick(
             pile.length - 1
         ) {
 
-            showMessage(
-                "Nur die oberste Karte kann auf den Ablagestapel."
+            message(
+                "Nur die oberste Karte kann auf die Foundation."
             );
 
             return;
@@ -1413,9 +1440,6 @@ function foundationClick(
 
         card =
             pile[pile.length - 1];
-
-        source = "tableau";
-
     }
 
 
@@ -1424,6 +1448,10 @@ function foundationClick(
     }
 
 
+    /*
+       Passt die Karte?
+    */
+
     if (
         !canPlaceOnFoundation(
             card,
@@ -1431,33 +1459,42 @@ function foundationClick(
         )
     ) {
 
-        showMessage(
-            "Diese Karte passt nicht auf diesen Ablagestapel."
+        message(
+            "Diese Karte passt nicht auf diesen Foundation-Stapel."
         );
 
         return;
     }
 
 
-    saveHistory();
+    saveState();
 
 
-    if (source === "waste") {
+    /*
+       Karte aus Quelle entfernen.
+    */
+
+    if (
+        selected.type === "waste"
+    ) {
 
         waste.pop();
 
     } else {
 
-        tableau[selected.pile].pop();
+        tableau[selected.column].pop();
 
-        flipTopCard(
-            selected.pile
+        flipTop(
+            selected.column
         );
-
     }
 
 
-    foundations[foundationIndex]
+    /*
+       Karte auf Foundation.
+    */
+
+    foundation[foundationIndex]
         .push(card);
 
 
@@ -1467,128 +1504,137 @@ function foundationClick(
 
     render();
 
-    updateStats();
+    message(
+        "Karte auf Foundation gelegt."
+    );
 
     checkWin();
-
 }
 
 
-/* ==========================================
+/* =====================================================
    FOUNDATION REGEL
-   ========================================== */
+===================================================== */
 
 function canPlaceOnFoundation(
     card,
     foundationIndex
 ) {
 
+    /*
+       Falsche Farbe/Symbol?
+    */
+
     if (
-        card.suitIndex !==
-        foundationIndex
+        SUITS[foundationIndex] !==
+        card.suit
     ) {
 
         return false;
-
     }
 
-    const pile =
-        foundations[foundationIndex];
+
+    let pile =
+        foundation[foundationIndex];
+
+
+    /*
+       Foundation leer:
+       Nur Ass.
+    */
 
     if (pile.length === 0) {
 
         return card.rank === 1;
-
     }
 
-    const top =
+
+    let top =
         pile[pile.length - 1];
 
-    return card.rank === top.rank + 1;
 
+    /*
+       Nächste Karte muss
+       genau eine Zahl höher sein.
+    */
+
+    return card.rank ===
+        top.rank + 1;
 }
 
 
-/* ==========================================
-   OBERSTE KARTE AUFDECKEN
-   ========================================== */
+/* =====================================================
+   KARTE AUFDECKEN
+===================================================== */
 
-function flipTopCard(
-    pileIndex
-) {
+function flipTop(column) {
 
-    const pile =
-        tableau[pileIndex];
+    let pile =
+        tableau[column];
 
     if (pile.length === 0) {
         return;
     }
 
-    const top =
+    let card =
         pile[pile.length - 1];
 
-    if (!top.faceUp) {
-        top.faceUp = true;
+    if (!card.faceUp) {
+        card.faceUp = true;
     }
-
 }
 
 
-/* ==========================================
+/* =====================================================
    RÜCKGÄNGIG
-   ========================================== */
+===================================================== */
 
-function saveHistory() {
+function saveState() {
 
     history.push(
         JSON.stringify({
-            deck,
-            tableau,
-            waste,
-            foundations,
-            moves,
-            seconds
+            stock: stock,
+            waste: waste,
+            tableau: tableau,
+            foundation: foundation,
+            moves: moves,
+            seconds: seconds
         })
     );
-
-    /*
-       Nicht unendlich viele Zustände speichern.
-    */
 
     if (history.length > 50) {
         history.shift();
     }
-
 }
 
 
-function undoMove() {
+function undo() {
 
     if (history.length === 0) {
 
-        showMessage(
-            "Kein Zug zum Rückgängigmachen."
+        message(
+            "Es gibt keinen Zug zum Rückgängigmachen."
         );
 
         return;
     }
 
-    const state =
+    let state =
         JSON.parse(
             history.pop()
         );
 
-    deck =
-        state.deck;
-
-    tableau =
-        state.tableau;
+    stock =
+        state.stock;
 
     waste =
         state.waste;
 
-    foundations =
-        state.foundations;
+    tableau =
+        state.tableau;
+
+    foundation =
+        state.foundation;
 
     moves =
         state.moves;
@@ -1600,58 +1646,76 @@ function undoMove() {
 
     render();
 
-    updateStats();
-
-    showMessage(
+    message(
         "Letzter Zug rückgängig gemacht."
     );
-
 }
 
 
-/* ==========================================
+/* =====================================================
    GEWINN
-   ========================================== */
+===================================================== */
 
 function checkWin() {
 
     let total = 0;
 
-    foundations.forEach(
-        pile => total += pile.length
-    );
+    for (let i = 0; i < 4; i++) {
+
+        total +=
+            foundation[i].length;
+    }
 
     if (total === 52) {
 
-        clearInterval(timer);
+        clearInterval(timerInterval);
 
-        showMessage(
-            `🎉 Gewonnen! ${moves} Züge in ${formatTime(seconds)}.`
+        message(
+            "🎉 GEWONNEN! Alle 52 Karten sind abgelegt."
         );
 
+        alert(
+            "🎉 Glückwunsch!\n\n" +
+            "Du hast Solitaire gewonnen!\n\n" +
+            "Züge: " + moves + "\n" +
+            "Zeit: " +
+            document.getElementById("timer").textContent
+        );
     }
-
 }
 
 
-/* ==========================================
-   NACHRICHTEN
-   ========================================== */
+/* =====================================================
+   NACHRICHT
+===================================================== */
 
-function showMessage(text) {
+function message(text) {
 
     document.getElementById(
         "message"
     ).textContent = text;
-
 }
 
 
-/* ==========================================
+/* =====================================================
    START
-   ========================================== */
+===================================================== */
 
 newGame();
+
+
+/*
+   Bei einer Größenänderung neu zeichnen,
+   damit die Kartenabstände auf Handy
+   und PC korrekt bleiben.
+*/
+
+window.addEventListener(
+    "resize",
+    function() {
+        renderTableau();
+    }
+);
 
 </script>
 
