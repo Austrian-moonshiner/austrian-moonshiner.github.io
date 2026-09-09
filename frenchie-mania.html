@@ -7,6 +7,7 @@
 <title>Bulldog Crush – 70 Level</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -15,9 +16,17 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
+
     background:
-        radial-gradient(circle at top, #ffe5ef 0%, #ffc4d8 35%, #a52c55 100%);
+        radial-gradient(
+            circle at top,
+            #ffe8f0 0%,
+            #ffc1d5 35%,
+            #a52d56 100%
+        );
+
     color: #35121f;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,99 +35,161 @@ body {
 .game {
     width: min(96vw, 760px);
     margin: 20px auto;
-    background: rgba(255,255,255,0.94);
+
+    background: rgba(255,255,255,0.96);
+
     border-radius: 28px;
+
     padding: 20px;
-    box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,0.3);
 }
 
 h1 {
     text-align: center;
-    margin: 0 0 5px;
-    font-size: clamp(28px, 6vw, 46px);
+
+    margin:
+        0 0 5px;
+
+    font-size:
+        clamp(28px, 6vw, 46px);
 }
 
 .subtitle {
     text-align: center;
+
     margin-bottom: 15px;
+
     color: #7b3851;
 }
 
 .topbar {
+
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap: 8px;
+
     margin-bottom: 12px;
 }
 
 .info {
+
     background: #fff0f5;
-    border: 2px solid #f2b4c9;
+
+    border:
+        2px solid #f2b4c9;
+
     border-radius: 15px;
+
     padding: 9px 5px;
+
     text-align: center;
+
     font-weight: bold;
 }
 
 .info span {
+
     display: block;
+
     font-size: 12px;
+
     color: #8d5368;
 }
 
 .info strong {
+
     font-size: 20px;
 }
 
 .goal {
+
     background: #fff8dc;
-    border: 2px solid #e9cb6b;
+
+    border:
+        2px solid #e9cb6b;
+
     border-radius: 15px;
+
     padding: 10px;
+
     text-align: center;
+
     font-weight: bold;
+
     margin-bottom: 12px;
 }
 
 #board {
-    width: min(92vw, 620px);
+
+    width: min(92vw,620px);
+
     aspect-ratio: 1 / 1;
+
     margin: auto;
+
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+
+    grid-template-columns:
+        repeat(8,1fr);
+
     gap: 5px;
+
     padding: 7px;
+
     background: #59263a;
+
     border-radius: 20px;
+
     box-shadow:
         inset 0 0 0 4px #7c3c54,
-        0 8px 20px rgba(0,0,0,0.25);
+        0 8px 20px rgba(0,0,0,.25);
 }
 
 .cell {
+
     position: relative;
+
     min-width: 0;
     min-height: 0;
+
     border-radius: 13px;
+
     display: flex;
+
     justify-content: center;
     align-items: center;
+
     cursor: pointer;
+
     user-select: none;
-    transition: transform .15s, filter .15s;
-    background: rgba(255,255,255,0.13);
+
+    transition:
+        transform .15s,
+        filter .15s;
+
+    background:
+        rgba(255,255,255,.13);
 }
 
 .cell:hover {
+
     filter: brightness(1.12);
 }
 
 .cell.empty {
+
     background: transparent;
+
     cursor: default;
 }
 
 .cell.blocked {
+
     background:
         repeating-linear-gradient(
             45deg,
@@ -127,189 +198,313 @@ h1 {
             #626262 8px,
             #626262 16px
         );
+
     cursor: default;
-    box-shadow: inset 0 0 0 3px #444;
+
+    box-shadow:
+        inset 0 0 0 3px #444;
 }
 
 .cell.ice {
+
     background: #bdeaff;
-    box-shadow: inset 0 0 0 4px #74c8ed;
+
+    box-shadow:
+        inset 0 0 0 4px #74c8ed;
 }
 
 .cell.ice::after {
+
     content: "❄️";
+
     position: absolute;
+
     right: 2px;
     top: 1px;
+
     font-size: 12px;
 }
 
 .tile {
+
     width: 86%;
     height: 86%;
+
     display: flex;
+
     justify-content: center;
     align-items: center;
+
     border-radius: 18px;
-    font-size: clamp(25px, 6vw, 45px);
-    background: linear-gradient(145deg, #fff, #f3d8e2);
+
+    font-size:
+        clamp(25px,6vw,45px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f3d8e2
+        );
+
     box-shadow:
         0 5px 7px rgba(0,0,0,.28),
-        inset 0 2px 3px rgba(255,255,255,.8);
-    transition: transform .15s;
+        inset 0 2px 3px
+        rgba(255,255,255,.8);
+
+    transition:
+        transform .15s;
 }
 
 .tile.selected {
+
     transform: scale(1.12);
+
     box-shadow:
         0 0 0 4px #ffd83d,
-        0 5px 10px rgba(0,0,0,.35);
+        0 5px 10px
+        rgba(0,0,0,.35);
 }
 
 .tile.special-row {
-    background: linear-gradient(145deg, #fff6a8, #ffd83d);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff6a8,
+            #ffd83d
+        );
 }
 
 .tile.special-bomb {
-    background: linear-gradient(145deg, #ffb6d0, #ff5790);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffb6d0,
+            #ff5790
+        );
 }
 
 .tile.special-color {
-    background: linear-gradient(145deg, #b9f5ff, #48cce8);
+
+    background:
+        linear-gradient(
+            145deg,
+            #b9f5ff,
+            #48cce8
+        );
 }
 
 .controls {
+
     display: flex;
+
     gap: 10px;
+
     justify-content: center;
+
     flex-wrap: wrap;
+
     margin-top: 15px;
 }
 
 button {
+
     border: none;
+
     border-radius: 14px;
-    padding: 11px 18px;
+
+    padding:
+        11px 18px;
+
     font-weight: bold;
+
     cursor: pointer;
+
     font-size: 15px;
+
     background: #d94c78;
+
     color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,.2);
+
+    box-shadow:
+        0 4px 8px
+        rgba(0,0,0,.2);
 }
 
 button:hover {
+
     filter: brightness(1.08);
 }
 
 button.secondary {
+
     background: #67384d;
 }
 
 button.green {
+
     background: #329c68;
 }
 
 .message {
+
     min-height: 28px;
+
     text-align: center;
+
     font-weight: bold;
+
     margin-top: 12px;
 }
 
 .levelMap {
+
     margin-top: 18px;
+
     background: #fff0f5;
+
     padding: 12px;
+
     border-radius: 17px;
-    border: 2px solid #f2b4c9;
+
+    border:
+        2px solid #f2b4c9;
 }
 
 .levelMapTitle {
+
     text-align: center;
+
     font-weight: bold;
+
     margin-bottom: 8px;
 }
 
 .levelButtons {
+
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+
+    grid-template-columns:
+        repeat(10,1fr);
+
     gap: 5px;
 }
 
 .levelButton {
+
     padding: 6px 2px;
+
     font-size: 12px;
+
     border-radius: 8px;
+
     background: #dca0b6;
 }
 
 .levelButton.current {
+
     background: #d53d70;
 }
 
 .levelButton.locked {
+
     background: #999;
+
     cursor: not-allowed;
 }
 
 .overlay {
+
     position: fixed;
+
     inset: 0;
-    background: rgba(35,10,20,.72);
+
+    background:
+        rgba(35,10,20,.72);
+
     display: none;
+
     justify-content: center;
     align-items: center;
+
     z-index: 20;
+
     padding: 20px;
 }
 
 .overlay.show {
+
     display: flex;
 }
 
 .popup {
+
     background: white;
-    width: min(92vw, 450px);
+
+    width:
+        min(92vw,450px);
+
     border-radius: 25px;
+
     padding: 28px;
+
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.4);
 }
 
 .popup h2 {
+
     margin-top: 0;
+
     font-size: 32px;
 }
 
 .stars {
+
     font-size: 38px;
+
     margin: 15px 0;
 }
 
 @media(max-width:520px) {
+
     .game {
+
         padding: 12px;
+
         border-radius: 18px;
     }
 
     .topbar {
-        grid-template-columns: repeat(2, 1fr);
+
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     #board {
+
         gap: 3px;
+
         padding: 4px;
     }
 
     .tile {
+
         border-radius: 10px;
     }
 
     .levelButtons {
-        grid-template-columns: repeat(7, 1fr);
+
+        grid-template-columns:
+            repeat(7,1fr);
     }
 }
+
 </style>
 </head>
 
@@ -317,109 +512,172 @@ button.green {
 
 <div class="game">
 
-    <h1>🐶 Bulldog Crush 🐶</h1>
-    <div class="subtitle">
-        70 Level voller Französischer Bulldoggen
-    </div>
+<h1>🐶 Bulldog Crush 🐶</h1>
 
-    <div class="topbar">
-        <div class="info">
-            <span>LEVEL</span>
-            <strong id="level">1</strong>
-        </div>
+<div class="subtitle">
+70 Level voller Französischer Bulldoggen
+</div>
 
-        <div class="info">
-            <span>PUNKTE</span>
-            <strong id="score">0</strong>
-        </div>
+<div class="topbar">
 
-        <div class="info">
-            <span>ZÜGE</span>
-            <strong id="moves">0</strong>
-        </div>
+<div class="info">
+<span>LEVEL</span>
+<strong id="level">1</strong>
+</div>
 
-        <div class="info">
-            <span>ZIEL</span>
-            <strong id="target">0</strong>
-        </div>
-    </div>
+<div class="info">
+<span>PUNKTE</span>
+<strong id="score">0</strong>
+</div>
 
-    <div class="goal" id="goal">
-        Ziel wird geladen...
-    </div>
+<div class="info">
+<span>ZÜGE</span>
+<strong id="moves">0</strong>
+</div>
 
-    <div id="board"></div>
-
-    <div class="message" id="message"></div>
-
-    <div class="controls">
-        <button onclick="restartLevel()">🔄 Level neu</button>
-        <button class="secondary" onclick="resetProgress()">🗑️ Fortschritt löschen</button>
-    </div>
-
-    <div class="levelMap">
-        <div class="levelMapTitle">🗺️ Bulldog-Crush-Level</div>
-        <div class="levelButtons" id="levelButtons"></div>
-    </div>
+<div class="info">
+<span>ZIEL</span>
+<strong id="target">0</strong>
+</div>
 
 </div>
 
+<div class="goal" id="goal">
+Ziel wird geladen...
+</div>
+
+<div id="board"></div>
+
+<div class="message" id="message"></div>
+
+<div class="controls">
+
+<button onclick="restartLevel()">
+🔄 Level neu
+</button>
+
+<button
+class="secondary"
+onclick="resetProgress()">
+🗑️ Fortschritt löschen
+</button>
+
+</div>
+
+<div class="levelMap">
+
+<div class="levelMapTitle">
+🗺️ Bulldog-Crush-Level
+</div>
+
+<div
+class="levelButtons"
+id="levelButtons">
+</div>
+
+</div>
+
+</div>
+
+
 <div class="overlay" id="overlay">
-    <div class="popup">
-        <h2 id="popupTitle">Level geschafft!</h2>
-        <div class="stars" id="popupStars">⭐⭐⭐</div>
-        <p id="popupText"></p>
 
-        <button class="green" onclick="nextLevel()">
-            ➡️ Nächstes Level
-        </button>
+<div class="popup">
 
-        <button class="secondary" onclick="closePopup()">
-            Weiter spielen
-        </button>
-    </div>
+<h2 id="popupTitle">
+Level geschafft!
+</h2>
+
+<div
+class="stars"
+id="popupStars">
+⭐⭐⭐
+</div>
+
+<p id="popupText"></p>
+
+<button
+class="green"
+onclick="nextLevel()">
+
+➡️ Nächstes Level
+
+</button>
+
+<button
+class="secondary"
+onclick="closePopup()">
+
+Weiter spielen
+
+</button>
+
+</div>
+
 </div>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    BULLDOG CRUSH
-   70 FEST DEFINIERTE LEVEL
-   ========================================================= */
+   ===================================================== */
 
 const SIZE = 8;
 
+
+/* =====================================================
+   SYMBOLE
+   ===================================================== */
+
 const symbols = [
+
     "🐶",
     "🐾",
     "🦴",
     "🎾",
     "❤️",
     "🎀"
+
 ];
 
+
+/* =====================================================
+   SPIELVARIABLEN
+   ===================================================== */
+
 let board = [];
+
 let selected = null;
+
 let currentLevel = 1;
+
 let score = 0;
+
 let moves = 0;
+
 let locked = false;
 
+
+/* =====================================================
+   GESAMMELTE SYMBOLE
+   ===================================================== */
+
 let collected = {
-    "🐶": 0,
-    "🐾": 0,
-    "🦴": 0,
-    "🎾": 0,
-    "❤️": 0,
-    "🎀": 0
+
+    "🐶":0,
+    "🐾":0,
+    "🦴":0,
+    "🎾":0,
+    "❤️":0,
+    "🎀":0
+
 };
 
 
-/* =========================================================
+/* =====================================================
    70 LEVEL
-   JEDES LEVEL IST EIN EIGENER EINTRAG
-   ========================================================= */
+   ===================================================== */
 
 const levels = [
 
@@ -509,12 +767,10 @@ const levels = [
 
 ];
 
-/* =========================================================
+
+/* =====================================================
    KARTEN
-   0 = normale Karte
-   X = Block
-   I = Eis
-   ========================================================= */
+   ===================================================== */
 
 const maps = [
 
@@ -686,144 +942,228 @@ const maps = [
 ];
 
 
-/* =========================================================
-   HILFSFUNKTIONEN
-   ========================================================= */
+/* =====================================================
+   LEVELDATEN
+   ===================================================== */
 
 function getLevelData() {
+
     return levels[currentLevel - 1];
+
 }
 
 function isBlocked(r,c) {
-    return maps[getLevelData().map][r][c] === "X";
-}
 
-function isIce(r,c) {
-    return maps[getLevelData().map][r][c] === "I";
+    return maps[
+        getLevelData().map
+    ][r][c] === "X";
+
 }
 
 function randomSymbol() {
-    return symbols[Math.floor(Math.random() * symbols.length)];
+
+    return symbols[
+        Math.floor(
+            Math.random() * symbols.length
+        )
+    ];
+
 }
 
 function createTile() {
+
     return {
+
         symbol: randomSymbol(),
+
         special: null
+
     };
+
 }
 
 
-/* =========================================================
-   SPIEL STARTEN
-   ========================================================= */
+/* =====================================================
+   LEVEL START
+   ===================================================== */
 
 function startLevel() {
 
-    const data = getLevelData();
+    const data =
+        getLevelData();
 
     score = 0;
-    moves = data.moves;
+
+    moves =
+        data.moves;
+
     selected = null;
+
     locked = false;
 
-    for (const key in collected) {
+    for (
+        const key in collected
+    ) {
+
         collected[key] = 0;
+
     }
 
     createBoard();
 
-    /*
-       Solange zufällig erzeugte Steine bereits
-       Kombinationen enthalten, wird neu erzeugt.
-    */
     let safety = 0;
 
-    while (findMatches().length > 0 && safety < 100) {
+    while (
+        findMatches().length > 0 &&
+        safety < 100
+    ) {
+
         createBoard();
+
         safety++;
+
     }
 
     updateUI();
+
 }
 
 
-/* =========================================================
-   SPIELBRETT ERZEUGEN
-   ========================================================= */
+/* =====================================================
+   BOARD ERSTELLEN
+   ===================================================== */
 
 function createBoard() {
 
     board = [];
 
-    for (let r = 0; r < SIZE; r++) {
+    for (
+        let r = 0;
+        r < SIZE;
+        r++
+    ) {
 
         board[r] = [];
 
-        for (let c = 0; c < SIZE; c++) {
+        for (
+            let c = 0;
+            c < SIZE;
+            c++
+        ) {
 
-            if (isBlocked(r,c)) {
+            if (
+                isBlocked(r,c)
+            ) {
+
                 board[r][c] = null;
+
             } else {
 
-                board[r][c] = createTile();
+                board[r][c] =
+                    createTile();
 
             }
+
         }
+
     }
 
     renderBoard();
+
 }
 
 
-/* =========================================================
-   BOARD DARSTELLEN
-   ========================================================= */
+/* =====================================================
+   BOARD RENDERN
+   ===================================================== */
 
 function renderBoard() {
 
-    const boardElement = document.getElementById("board");
+    const boardElement =
+        document.getElementById(
+            "board"
+        );
 
     boardElement.innerHTML = "";
 
-    for (let r = 0; r < SIZE; r++) {
+    for (
+        let r = 0;
+        r < SIZE;
+        r++
+    ) {
 
-        for (let c = 0; c < SIZE; c++) {
+        for (
+            let c = 0;
+            c < SIZE;
+            c++
+        ) {
 
-            const cell = document.createElement("div");
+            const cell =
+                document.createElement(
+                    "div"
+                );
 
-            cell.className = "cell";
+            cell.className =
+                "cell";
 
-            if (isBlocked(r,c)) {
+            if (
+                isBlocked(r,c)
+            ) {
 
-                cell.classList.add("blocked");
+                cell.classList.add(
+                    "blocked"
+                );
 
             } else {
 
-                if (isIce(r,c)) {
-                    cell.classList.add("ice");
-                }
+                if (
+                    board[r][c]
+                ) {
 
-                if (board[r][c]) {
+                    const tile =
+                        document.createElement(
+                            "div"
+                        );
 
-                    const tile = document.createElement("div");
+                    tile.className =
+                        "tile";
 
-                    tile.className = "tile";
+                    const special =
+                        board[r][c].special;
 
-                    if (board[r][c].special === "row") {
-                        tile.classList.add("special-row");
+                    if (
+                        special === "row"
+                    ) {
+
+                        tile.classList.add(
+                            "special-row"
+                        );
+
                     }
 
-                    if (board[r][c].special === "bomb") {
-                        tile.classList.add("special-bomb");
+                    if (
+                        special === "bomb"
+                    ) {
+
+                        tile.classList.add(
+                            "special-bomb"
+                        );
+
                     }
 
-                    if (board[r][c].special === "color") {
-                        tile.classList.add("special-color");
+                    if (
+                        special === "color"
+                    ) {
+
+                        tile.classList.add(
+                            "special-color"
+                        );
+
                     }
 
-                    tile.textContent = board[r][c].special
-                        ? specialIcon(board[r][c].special)
+                    tile.textContent =
+                        special
+                        ? specialIcon(special)
                         : board[r][c].symbol;
 
                     if (
@@ -831,68 +1171,125 @@ function renderBoard() {
                         selected.r === r &&
                         selected.c === c
                     ) {
-                        tile.classList.add("selected");
+
+                        tile.classList.add(
+                            "selected"
+                        );
+
                     }
 
-                    cell.appendChild(tile);
+                    cell.appendChild(
+                        tile
+                    );
+
                 }
 
-                cell.addEventListener("click", () => selectCell(r,c));
+                cell.addEventListener(
+                    "click",
+                    () =>
+                        selectCell(r,c)
+                );
+
             }
 
-            boardElement.appendChild(cell);
+            boardElement.appendChild(
+                cell
+            );
+
         }
+
     }
+
 }
 
 
-/* =========================================================
-   SPEZIALSTEINE
-   ========================================================= */
+/* =====================================================
+   SPEZIAL-ICONS
+   ===================================================== */
 
 function specialIcon(type) {
 
-    if (type === "row") {
+    if (
+        type === "row"
+    ) {
+
         return "🐶↔️";
+
     }
 
-    if (type === "bomb") {
+    if (
+        type === "bomb"
+    ) {
+
         return "💣🐶";
+
     }
 
-    if (type === "color") {
+    if (
+        type === "color"
+    ) {
+
         return "🌈🐶";
+
     }
 
     return "🐶";
+
 }
 
 
-/* =========================================================
+/* =====================================================
    FELD AUSWÄHLEN
-   ========================================================= */
+   ===================================================== */
 
 function selectCell(r,c) {
 
-    if (locked || isBlocked(r,c) || !board[r][c]) {
+    if (
+        locked ||
+        isBlocked(r,c) ||
+        !board[r][c]
+    ) {
+
         return;
+
     }
 
-    if (!selected) {
+    if (
+        !selected
+    ) {
 
-        selected = {r,c};
+        selected = {
+            r,
+            c
+        };
+
         renderBoard();
+
         return;
+
     }
 
-    if (selected.r === r && selected.c === c) {
+    if (
+        selected.r === r &&
+        selected.c === c
+    ) {
 
         selected = null;
+
         renderBoard();
+
         return;
+
     }
 
-    if (isAdjacent(selected.r,selected.c,r,c)) {
+    if (
+        isAdjacent(
+            selected.r,
+            selected.c,
+            r,
+            c
+        )
+    ) {
 
         swapTiles(
             selected.r,
@@ -905,67 +1302,98 @@ function selectCell(r,c) {
 
     } else {
 
-        selected = {r,c};
+        selected = {
+            r,
+            c
+        };
+
         renderBoard();
+
     }
+
 }
 
 
-/* =========================================================
-   NACHBARSCHAFT
-   ========================================================= */
+/* =====================================================
+   NACHBAR?
+   ===================================================== */
 
-function isAdjacent(r1,c1,r2,c2) {
+function isAdjacent(
+    r1,c1,r2,c2
+) {
 
     return (
         Math.abs(r1-r2) +
         Math.abs(c1-c2)
     ) === 1;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    TAUSCHEN
-   ========================================================= */
+   ===================================================== */
 
-async function swapTiles(r1,c1,r2,c2) {
+async function swapTiles(
+    r1,c1,r2,c2
+) {
 
     locked = true;
 
-    const temp = board[r1][c1];
+    const temp =
+        board[r1][c1];
 
-    board[r1][c1] = board[r2][c2];
+    board[r1][c1] =
+        board[r2][c2];
 
-    board[r2][c2] = temp;
+    board[r2][c2] =
+        temp;
 
     renderBoard();
 
     await sleep(130);
 
-    let matches = findMatches();
+    let matches =
+        findMatches();
 
-    if (matches.length === 0) {
+    if (
+        matches.length === 0
+    ) {
 
         const specialMove =
-            activateSpecialIfNeeded(r1,c1,r2,c2);
+            activateSpecialIfNeeded(
+                r1,
+                c1,
+                r2,
+                c2
+            );
 
-        if (!specialMove) {
+        if (
+            !specialMove
+        ) {
 
-            const temp2 = board[r1][c1];
+            const temp2 =
+                board[r1][c1];
 
-            board[r1][c1] = board[r2][c2];
+            board[r1][c1] =
+                board[r2][c2];
 
-            board[r2][c2] = temp2;
+            board[r2][c2] =
+                temp2;
 
             renderBoard();
 
             locked = false;
 
-            document.getElementById("message").textContent =
+            document.getElementById(
+                "message"
+            ).textContent =
                 "❌ Keine Kombination!";
-            
+
             return;
+
         }
+
     }
 
     moves--;
@@ -977,64 +1405,125 @@ async function swapTiles(r1,c1,r2,c2) {
     updateUI();
 
     checkLevelEnd();
+
 }
 
 
-/* =========================================================
-   SPEZIALSTEIN AKTIVIEREN
-   ========================================================= */
+/* =====================================================
+   SPEZIALSTEINE
+   ===================================================== */
 
-function activateSpecialIfNeeded(r1,c1,r2,c2) {
+function activateSpecialIfNeeded(
+    r1,c1,r2,c2
+) {
 
     let activated = false;
 
-    const a = board[r1][c1];
-    const b = board[r2][c2];
+    const a =
+        board[r1][c1];
 
-    if (a && a.special) {
+    const b =
+        board[r2][c2];
 
-        triggerSpecial(r1,c1);
+    if (
+        a &&
+        a.special
+    ) {
+
+        triggerSpecial(
+            r1,c1
+        );
+
         activated = true;
+
     }
 
-    if (b && b.special) {
+    if (
+        b &&
+        b.special
+    ) {
 
-        triggerSpecial(r2,c2);
+        triggerSpecial(
+            r2,c2
+        );
+
         activated = true;
+
     }
 
     return activated;
+
 }
 
 
+/* =====================================================
+   SPEZIALSTEIN AUSLÖSEN
+   ===================================================== */
+
 function triggerSpecial(r,c) {
 
-    const tile = board[r][c];
+    const tile =
+        board[r][c];
 
-    if (!tile) return;
+    if (!tile)
+        return;
 
-    if (tile.special === "row") {
 
-        for (let x = 0; x < SIZE; x++) {
+    /* REIHE */
 
-            if (board[r][x]) {
+    if (
+        tile.special === "row"
+    ) {
 
-                addScore(120);
+        for (
+            let x = 0;
+            x < SIZE;
+            x++
+        ) {
 
-                if (board[r][x].symbol) {
-                    collected[board[r][x].symbol]++;
+            if (
+                board[r][x]
+            ) {
+
+                addScore(800);
+
+                if (
+                    board[r][x].symbol
+                ) {
+
+                    collected[
+                        board[r][x].symbol
+                    ]++;
+
                 }
 
-                board[r][x] = null;
+                board[r][x] =
+                    null;
+
             }
+
         }
+
     }
 
-    else if (tile.special === "bomb") {
 
-        for (let y = r-1; y <= r+1; y++) {
+    /* BOMBE */
 
-            for (let x = c-1; x <= c+1; x++) {
+    else if (
+        tile.special === "bomb"
+    ) {
+
+        for (
+            let y = r-1;
+            y <= r+1;
+            y++
+        ) {
+
+            for (
+                let x = c-1;
+                x <= c+1;
+                x++
+            ) {
 
                 if (
                     y >= 0 &&
@@ -1044,60 +1533,104 @@ function triggerSpecial(r,c) {
                     board[y][x]
                 ) {
 
-                    addScore(150);
+                    addScore(1000);
 
-                    if (board[y][x].symbol) {
-                        collected[board[y][x].symbol]++;
+                    if (
+                        board[y][x].symbol
+                    ) {
+
+                        collected[
+                            board[y][x].symbol
+                        ]++;
+
                     }
 
-                    board[y][x] = null;
+                    board[y][x] =
+                        null;
+
                 }
+
             }
+
         }
+
     }
 
-    else if (tile.special === "color") {
 
-        const target = tile.symbol;
+    /* FARBSPEZIALSTEIN */
 
-        for (let y = 0; y < SIZE; y++) {
+    else if (
+        tile.special === "color"
+    ) {
 
-            for (let x = 0; x < SIZE; x++) {
+        const target =
+            tile.symbol;
+
+        for (
+            let y = 0;
+            y < SIZE;
+            y++
+        ) {
+
+            for (
+                let x = 0;
+                x < SIZE;
+                x++
+            ) {
 
                 if (
                     board[y][x] &&
-                    board[y][x].symbol === target
+                    board[y][x].symbol ===
+                    target
                 ) {
 
-                    addScore(180);
+                    addScore(1200);
 
-                    collected[target]++;
+                    collected[
+                        target
+                    ]++;
 
-                    board[y][x] = null;
+                    board[y][x] =
+                        null;
+
                 }
+
             }
+
         }
+
     }
 
-    board[r][c] = null;
+    board[r][c] =
+        null;
+
 }
 
 
-/* =========================================================
-   MATCHES FINDEN
-   ========================================================= */
+/* =====================================================
+   MATCHES SUCHEN
+   ===================================================== */
 
 function findMatches() {
 
     const matches = [];
 
-    /* horizontal */
 
-    for (let r = 0; r < SIZE; r++) {
+    /* HORIZONTAL */
+
+    for (
+        let r = 0;
+        r < SIZE;
+        r++
+    ) {
 
         let start = 0;
 
-        for (let c = 1; c <= SIZE; c++) {
+        for (
+            let c = 1;
+            c <= SIZE;
+            c++
+        ) {
 
             const current =
                 c < SIZE &&
@@ -1113,10 +1646,13 @@ function findMatches() {
                 current &&
                 current === previous
             ) {
+
                 continue;
+
             }
 
-            const length = c - start;
+            const length =
+                c - start;
 
             if (
                 length >= 3 &&
@@ -1128,27 +1664,46 @@ function findMatches() {
                     x < c;
                     x++
                 ) {
+
                     matches.push({
+
                         r,
+
                         c:x,
+
                         length,
-                        direction:"horizontal"
+
+                        direction:
+                            "horizontal"
+
                     });
+
                 }
+
             }
 
             start = c;
+
         }
+
     }
 
 
-    /* vertical */
+    /* VERTIKAL */
 
-    for (let c = 0; c < SIZE; c++) {
+    for (
+        let c = 0;
+        c < SIZE;
+        c++
+    ) {
 
         let start = 0;
 
-        for (let r = 1; r <= SIZE; r++) {
+        for (
+            let r = 1;
+            r <= SIZE;
+            r++
+        ) {
 
             const current =
                 r < SIZE &&
@@ -1164,10 +1719,13 @@ function findMatches() {
                 current &&
                 current === previous
             ) {
+
                 continue;
+
             }
 
-            const length = r - start;
+            const length =
+                r - start;
 
             if (
                 length >= 3 &&
@@ -1181,46 +1739,74 @@ function findMatches() {
                 ) {
 
                     matches.push({
+
                         r:y,
+
                         c,
+
                         length,
-                        direction:"vertical"
+
+                        direction:
+                            "vertical"
+
                     });
+
                 }
+
             }
 
             start = r;
+
         }
+
     }
 
-    return uniqueMatches(matches);
+    return uniqueMatches(
+        matches
+    );
+
 }
 
 
-/* =========================================================
-   DOPPELTE TREFFER ENTFERNEN
-   ========================================================= */
+/* =====================================================
+   DOPPELTE MATCHES ENTFERNEN
+   ===================================================== */
 
 function uniqueMatches(matches) {
 
-    const map = new Map();
+    const map =
+        new Map();
 
-    matches.forEach(m => {
+    matches.forEach(
+        m => {
 
-        const key = `${m.r}-${m.c}`;
+            const key =
+                `${m.r}-${m.c}`;
 
-        if (!map.has(key)) {
-            map.set(key,m);
+            if (
+                !map.has(key)
+            ) {
+
+                map.set(
+                    key,
+                    m
+                );
+
+            }
+
         }
-    });
+    );
 
-    return [...map.values()];
+    return [
+        ...map.values()
+    ];
+
 }
 
 
-/* =========================================================
+/* =====================================================
    MATCHES ABARBEITEN
-   ========================================================= */
+   ===================================================== */
 
 async function processMatches() {
 
@@ -1228,85 +1814,264 @@ async function processMatches() {
 
     while (true) {
 
-        const matches = findMatches();
+        const matches =
+            findMatches();
 
-        if (matches.length === 0) {
+        if (
+            matches.length === 0
+        ) {
+
             break;
+
         }
 
         combo++;
 
+
+        /* =========================================
+           PUNKTSYSTEM
+           ========================================= */
+
+        let basePoints = 0;
+
+        matches.forEach(
+            match => {
+
+                /*
+                3er:
+                300 Punkte
+
+                4er:
+                600 Punkte
+
+                5er:
+                1000 Punkte
+                */
+
+                if (
+                    match.length >= 5
+                ) {
+
+                    basePoints += 1000;
+
+                }
+
+                else if (
+                    match.length === 4
+                ) {
+
+                    basePoints += 600;
+
+                }
+
+                else {
+
+                    basePoints += 300;
+
+                }
+
+            }
+        );
+
+
+        /*
+        KOMBO-MULTIPLIKATOR
+
+        1. Kette = x1
+        2. Kette = x1.5
+        3. Kette = x2
+        4. Kette = x2.5
+        usw.
+        */
+
+        const comboMultiplier =
+            1 +
+            (combo - 1) * 0.5;
+
+
+        const comboPoints =
+            Math.round(
+                basePoints *
+                comboMultiplier
+            );
+
+
+        addScore(
+            comboPoints
+        );
+
+
+        /* =========================================
+           SPEZIALSTEINE ERZEUGEN
+           ========================================= */
+
         let specialCandidates = [];
 
-        for (const match of matches) {
 
-            const tile = board[match.r][match.c];
+        for (
+            const match of matches
+        ) {
 
-            if (!tile) continue;
+            const tile =
+                board[
+                    match.r
+                ][
+                    match.c
+                ];
 
-            if (match.length >= 5) {
+            if (!tile)
+                continue;
+
+
+            /*
+            5 oder mehr
+            */
+
+            if (
+                match.length >= 5
+            ) {
 
                 specialCandidates.push({
+
                     r:match.r,
+
                     c:match.c,
+
                     type:"color",
-                    symbol:tile.symbol
+
+                    symbol:
+                        tile.symbol
+
                 });
 
-            } else if (match.length === 4) {
+            }
+
+
+            /*
+            4er
+            */
+
+            else if (
+                match.length === 4
+            ) {
 
                 specialCandidates.push({
+
                     r:match.r,
+
                     c:match.c,
+
                     type:
-                        match.direction === "horizontal"
+                        match.direction ===
+                        "horizontal"
                         ? "row"
                         : "bomb",
-                    symbol:tile.symbol
+
+                    symbol:
+                        tile.symbol
+
                 });
+
             }
+
         }
 
 
-        /* Punkte */
+        /* =========================================
+           BONUSPUNKTE FÜR SPEZIALKOMBINATIONEN
+           ========================================= */
 
-        const points =
-            matches.length *
-            100 *
-            combo;
-
-        addScore(points);
-
-
-        /* Gesammelte Symbole */
-
-        matches.forEach(m => {
+        if (
+            specialCandidates.length > 0
+        ) {
 
             if (
-                board[m.r][m.c] &&
-                board[m.r][m.c].symbol
+                specialCandidates[0]
+                    .type === "color"
             ) {
 
-                collected[
-                    board[m.r][m.c].symbol
-                ]++;
+                addScore(
+                    3000 * combo
+                );
+
             }
 
-            board[m.r][m.c] = null;
-        });
+            else {
+
+                addScore(
+                    1500 * combo
+                );
+
+            }
+
+        }
 
 
-        /* Spezialstein erhalten */
+        /* =========================================
+           SYMBOLE ENTFERNEN
+           ========================================= */
 
-        if (specialCandidates.length > 0) {
+        matches.forEach(
+            match => {
+
+                if (
+                    board[
+                        match.r
+                    ][
+                        match.c
+                    ] &&
+                    board[
+                        match.r
+                    ][
+                        match.c
+                    ].symbol
+                ) {
+
+                    collected[
+                        board[
+                            match.r
+                        ][
+                            match.c
+                        ].symbol
+                    ]++;
+
+                }
+
+                board[
+                    match.r
+                ][
+                    match.c
+                ] = null;
+
+            }
+        );
+
+
+        /* =========================================
+           SPEZIALSTEIN SETZEN
+           ========================================= */
+
+        if (
+            specialCandidates.length > 0
+        ) {
 
             const special =
                 specialCandidates[0];
 
-            board[special.r][special.c] = {
-                symbol:special.symbol,
-                special:special.type
+            board[
+                special.r
+            ][
+                special.c
+            ] = {
+
+                symbol:
+                    special.symbol,
+
+                special:
+                    special.type
+
             };
+
         }
 
 
@@ -1319,21 +2084,33 @@ async function processMatches() {
         renderBoard();
 
         await sleep(220);
+
     }
+
 }
 
 
-/* =========================================================
-   BOARD FALLEN LASSEN
-   ========================================================= */
+/* =====================================================
+   STEINE FALLEN LASSEN
+   ===================================================== */
 
 function collapseBoard() {
 
-    for (let c = 0; c < SIZE; c++) {
+    for (
+        let c = 0;
+        c < SIZE;
+        c++
+    ) {
 
-        let write = SIZE - 1;
+        let write =
+            SIZE - 1;
 
-        for (let r = SIZE - 1; r >= 0; r--) {
+
+        for (
+            let r = SIZE - 1;
+            r >= 0;
+            r--
+        ) {
 
             if (
                 !isBlocked(r,c) &&
@@ -1343,74 +2120,123 @@ function collapseBoard() {
                 board[write][c] =
                     board[r][c];
 
-                if (write !== r) {
-                    board[r][c] = null;
+                if (
+                    write !== r
+                ) {
+
+                    board[r][c] =
+                        null;
+
                 }
 
                 write--;
+
             }
+
         }
 
-        for (let r = write; r >= 0; r--) {
 
-            if (!isBlocked(r,c)) {
+        for (
+            let r = write;
+            r >= 0;
+            r--
+        ) {
 
-                board[r][c] = createTile();
+            if (
+                !isBlocked(r,c)
+            ) {
+
+                board[r][c] =
+                    createTile();
+
             }
+
         }
+
     }
+
 }
 
 
-/* =========================================================
-   PUNKTE
-   ========================================================= */
+/* =====================================================
+   PUNKTE HINZUFÜGEN
+   ===================================================== */
 
 function addScore(points) {
 
     score += points;
+
     updateUI();
+
 }
 
 
-/* =========================================================
-   UI
-   ========================================================= */
+/* =====================================================
+   UI AKTUALISIEREN
+   ===================================================== */
 
 function updateUI() {
 
-    const data = getLevelData();
+    const data =
+        getLevelData();
 
-    document.getElementById("level").textContent =
+
+    document.getElementById(
+        "level"
+    ).textContent =
         currentLevel;
 
-    document.getElementById("score").textContent =
-        score.toLocaleString("de-DE");
 
-    document.getElementById("moves").textContent =
+    document.getElementById(
+        "score"
+    ).textContent =
+        score.toLocaleString(
+            "de-DE"
+        );
+
+
+    document.getElementById(
+        "moves"
+    ).textContent =
         moves;
 
-    document.getElementById("target").textContent =
-        data.target.toLocaleString("de-DE");
 
-    document.getElementById("goal").textContent =
+    document.getElementById(
+        "target"
+    ).textContent =
+        data.target.toLocaleString(
+            "de-DE"
+        );
+
+
+    document.getElementById(
+        "goal"
+    ).textContent =
         "🎯 Erreiche mindestens " +
-        data.target.toLocaleString("de-DE") +
+        data.target.toLocaleString(
+            "de-DE"
+        ) +
         " Punkte!";
 
+
     createLevelButtons();
+
 }
 
 
-/* =========================================================
+/* =====================================================
    LEVEL ENDE
-   ========================================================= */
+   ===================================================== */
 
 function checkLevelEnd() {
 
-    const data = getLevelData();
+    const data =
+        getLevelData();
 
-    if (score >= data.target) {
+
+    if (
+        score >= data.target
+    ) {
 
         const stars =
             score >= data.target * 1.8
@@ -1419,146 +2245,232 @@ function checkLevelEnd() {
             ? 2
             : 1;
 
+
         if (
             currentLevel >=
             getUnlockedLevel()
         ) {
 
             localStorage.setItem(
+
                 "bulldogCrushUnlocked",
+
                 Math.min(
                     70,
                     currentLevel + 1
                 )
+
             );
+
         }
 
-        document.getElementById("popupTitle").textContent =
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent =
             "🐶 Level geschafft!";
 
-        document.getElementById("popupStars").textContent =
-            "⭐".repeat(stars);
 
-        document.getElementById("popupText").textContent =
+        document.getElementById(
+            "popupStars"
+        ).textContent =
+            "⭐".repeat(
+                stars
+            );
+
+
+        document.getElementById(
+            "popupText"
+        ).textContent =
             "Du hast " +
-            score.toLocaleString("de-DE") +
+            score.toLocaleString(
+                "de-DE"
+            ) +
             " Punkte erreicht!";
 
-        document.getElementById("overlay")
-            .classList.add("show");
+
+        document.getElementById(
+            "overlay"
+        ).classList.add(
+            "show"
+        );
+
 
         return;
+
     }
 
-    if (moves <= 0) {
 
-        document.getElementById("popupTitle").textContent =
+    if (
+        moves <= 0
+    ) {
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent =
             "😵 Keine Züge mehr!";
 
-        document.getElementById("popupStars").textContent =
+
+        document.getElementById(
+            "popupStars"
+        ).textContent =
             "💥";
 
-        document.getElementById("popupText").textContent =
+
+        document.getElementById(
+            "popupText"
+        ).textContent =
             "Du brauchst " +
-            data.target.toLocaleString("de-DE") +
+            data.target.toLocaleString(
+                "de-DE"
+            ) +
             " Punkte. Erreicht wurden " +
-            score.toLocaleString("de-DE") +
+            score.toLocaleString(
+                "de-DE"
+            ) +
             ".";
 
-        document.getElementById("overlay")
-            .classList.add("show");
+
+        document.getElementById(
+            "overlay"
+        ).classList.add(
+            "show"
+        );
+
     }
+
 }
 
 
-/* =========================================================
+/* =====================================================
    NÄCHSTES LEVEL
-   ========================================================= */
+   ===================================================== */
 
 function nextLevel() {
 
     closePopup();
 
-    if (currentLevel < 70) {
+
+    if (
+        currentLevel < 70
+    ) {
 
         currentLevel++;
 
+
         localStorage.setItem(
+
             "bulldogCrushCurrent",
+
             currentLevel
+
         );
+
 
         startLevel();
 
-    } else {
+    }
 
-        document.getElementById("popupTitle").textContent =
+    else {
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent =
             "🏆 ALLE 70 LEVEL GESCHAFFT!";
 
-        document.getElementById("popupStars").textContent =
+
+        document.getElementById(
+            "popupStars"
+        ).textContent =
             "🐶 ⭐ 🐶 ⭐ 🐶";
 
-        document.getElementById("popupText").textContent =
+
+        document.getElementById(
+            "popupText"
+        ).textContent =
             "Du hast die komplette Bulldog-Crush-Karte bezwungen!";
 
-        document.getElementById("overlay")
-            .classList.add("show");
+
+        document.getElementById(
+            "overlay"
+        ).classList.add(
+            "show"
+        );
+
     }
+
 }
 
 
-/* =========================================================
+/* =====================================================
    LEVEL NEU STARTEN
-   ========================================================= */
+   ===================================================== */
 
 function restartLevel() {
 
     closePopup();
+
     startLevel();
 
-    document.getElementById("message").textContent =
+
+    document.getElementById(
+        "message"
+    ).textContent =
         "🔄 Level wurde neu gestartet.";
+
 }
 
 
-/* =========================================================
-   POPUP
-   ========================================================= */
+/* =====================================================
+   POPUP SCHLIESSEN
+   ===================================================== */
 
 function closePopup() {
 
-    document.getElementById("overlay")
-        .classList.remove("show");
+    document.getElementById(
+        "overlay"
+    ).classList.remove(
+        "show"
+    );
+
 }
 
 
-/* =========================================================
-   LEVEL FREISCHALTEN
-   ========================================================= */
+/* =====================================================
+   FREIGESCHALTETES LEVEL
+   ===================================================== */
 
 function getUnlockedLevel() {
 
     return parseInt(
+
         localStorage.getItem(
             "bulldogCrushUnlocked"
         ) || "1"
+
     );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    LEVEL BUTTONS
-   ========================================================= */
+   ===================================================== */
 
 function createLevelButtons() {
 
     const container =
-        document.getElementById("levelButtons");
+        document.getElementById(
+            "levelButtons"
+        );
+
 
     container.innerHTML = "";
 
+
     const unlocked =
         getUnlockedLevel();
+
 
     for (
         let i = 1;
@@ -1567,50 +2479,85 @@ function createLevelButtons() {
     ) {
 
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         button.className =
             "levelButton";
 
-        if (i === currentLevel) {
-            button.classList.add("current");
+
+        if (
+            i === currentLevel
+        ) {
+
+            button.classList.add(
+                "current"
+            );
+
         }
 
-        if (i > unlocked) {
 
-            button.classList.add("locked");
+        if (
+            i > unlocked
+        ) {
+
+            button.classList.add(
+                "locked"
+            );
+
 
             button.textContent =
                 "🔒";
 
-            button.disabled = true;
 
-        } else {
+            button.disabled =
+                true;
+
+        }
+
+        else {
 
             button.textContent =
                 i;
 
-            button.onclick = () => {
 
-                currentLevel = i;
+            button.onclick =
+                () => {
 
-                localStorage.setItem(
-                    "bulldogCrushCurrent",
-                    i
-                );
+                    currentLevel =
+                        i;
 
-                startLevel();
-            };
+
+                    localStorage.setItem(
+
+                        "bulldogCrushCurrent",
+
+                        i
+
+                    );
+
+
+                    startLevel();
+
+                };
+
         }
 
-        container.appendChild(button);
+
+        container.appendChild(
+            button
+        );
+
     }
+
 }
 
 
-/* =========================================================
+/* =====================================================
    FORTSCHRITT LÖSCHEN
-   ========================================================= */
+   ===================================================== */
 
 function resetProgress() {
 
@@ -1619,56 +2566,86 @@ function resetProgress() {
             "Möchtest du wirklich den gesamten Level-Fortschritt löschen?"
         );
 
-    if (!answer) return;
+
+    if (!answer)
+        return;
+
 
     localStorage.removeItem(
         "bulldogCrushUnlocked"
     );
 
+
     localStorage.removeItem(
         "bulldogCrushCurrent"
     );
 
+
     currentLevel = 1;
 
+
     startLevel();
+
 }
 
 
-/* =========================================================
-   HILFSFUNKTION
-   ========================================================= */
+/* =====================================================
+   SLEEP
+   ===================================================== */
 
 function sleep(ms) {
 
     return new Promise(
-        resolve => setTimeout(resolve,ms)
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
     );
+
 }
 
 
-/* =========================================================
-   SPIEL LADEN
-   ========================================================= */
+/* =====================================================
+   GESPEICHERTES LEVEL LADEN
+   ===================================================== */
 
 const savedLevel =
     parseInt(
+
         localStorage.getItem(
             "bulldogCrushCurrent"
         ) || "1"
+
     );
+
 
 const unlocked =
     getUnlockedLevel();
 
+
 currentLevel =
     Math.min(
+
         70,
+
         Math.max(
+
             1,
-            Math.min(savedLevel,unlocked)
+
+            Math.min(
+                savedLevel,
+                unlocked
+            )
+
         )
+
     );
+
+
+/* =====================================================
+   SPIEL STARTEN
+   ===================================================== */
 
 startLevel();
 
