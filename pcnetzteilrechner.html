@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PC Netzteil Rechner</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at top, #243b55 0%, #141e30 45%, #080d14 100%);
+    color: #fff;
+    min-height: 100vh;
+}
+
+.container {
+    width: min(1200px, 94%);
+    margin: 30px auto 60px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 38px;
+    margin: 0 0 10px;
+}
+
+.header p {
+    color: #bfc9d6;
+    margin: 0;
+    font-size: 16px;
+}
+
+.card {
+    background: rgba(18, 27, 40, 0.95);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #7dd3fc;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field label {
+    font-weight: bold;
+    color: #dce7f2;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid #34475c;
+    background: #0c1520;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+}
+
+select:focus,
+input:focus {
+    border-color: #38bdf8;
+}
+
+input[type="number"] {
+    appearance: textfield;
+}
+
+.range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+input[type="range"] {
+    padding: 0;
+}
+
+.range-value {
+    min-width: 60px;
+    text-align: center;
+    font-weight: bold;
+    color: #7dd3fc;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.calculate {
+    width: 100%;
+    padding: 16px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.calculate:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.results {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.result-box {
+    background: #0c1520;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #26384b;
+}
+
+.result-box .number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.result-box .label {
+    color: #9fb0c1;
+    font-size: 14px;
+}
+
+.recommendation {
+    text-align: center;
+    padding: 25px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #10263b, #0b1724);
+    border: 1px solid #31526e;
+}
+
+.recommendation h3 {
+    margin-top: 0;
+    font-size: 26px;
+}
+
+.recommended-watt {
+    font-size: 48px;
+    font-weight: bold;
+    color: #7dd3fc;
+}
+
+.status {
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.status.good {
+    background: rgba(34,197,94,0.15);
+    color: #86efac;
+    border: 1px solid rgba(34,197,94,0.4);
+}
+
+.status.warning {
+    background: rgba(234,179,8,0.15);
+    color: #fde047;
+    border: 1px solid rgba(234,179,8,0.4);
+}
+
+.status.danger {
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.4);
+}
+
+.breakdown {
+    margin-top: 20px;
+}
+
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid #26384b;
+}
+
+.breakdown-row:last-child {
+    border-bottom: 0;
+}
+
+.bar-container {
+    margin-top: 20px;
+    background: #08101a;
+    border-radius: 999px;
+    height: 25px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+}
+
+.small-note {
+    color: #91a1b2;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 15px;
+}
+
+details {
+    margin-top: 15px;
+    background: #0b141f;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+summary {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.footer {
+    text-align: center;
+    color: #718096;
+    font-size: 13px;
+    margin-top: 30px;
+}
+
+@media (max-width: 850px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .header h1 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .results {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        width: 96%;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .recommended-watt {
+        font-size: 40px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>⚡ PC Netzteil Rechner</h1>
+        <p>Berechne den ungefähren Strombedarf deines Gaming-PCs</p>
+    </div>
+
+    <div class="card">
+
+        <h2>🧠 Prozessor</h2>
+
+        <div class="grid">
+
+            <div class="field">
+                <label for="cpu">CPU</label>
+
+                <select id="cpu">
+
+                    <option value="65">AMD Ryzen 5 5600 / 5600X</option>
+                    <option value="105">AMD Ryzen 7 5700X</option>
+                    <option value="105">AMD Ryzen 7 5700X3D</option>
+                    <option value="120">AMD Ryzen 7 5800X</option>
+                    <option value="105">AMD Ryzen 7 5800X3D</option>
+                    <option value="65">AMD Ryzen 5 7600</option>
+                    <option value="88">AMD Ryzen 7 7700</option>
+                    <option value="120">AMD Ryzen 7 7800X3D</option>
+                    <option value="170">AMD Ryzen 9 7900X</option>
+                    <option value="170">AMD Ryzen 9 7950X</option>
+
+                    <option value="65">Intel Core i5-12400F</option>
+                    <option value="125">Intel Core i5-12600K</option>
+                    <option value="125">Intel Core i5-13600K</option>
+                    <option value="125">Intel Core i5-14600K</option>
+                    <option value="125">Intel Core i7-12700K</option>
+                    <option value="253">Intel Core i7-13700K</option>
+                    <option value="253">Intel Core i7-14700K</option>
+                    <option value="253">Intel Core i9-13900K</option>
+                    <option value="253">Intel Core i9-14900K</option>
+
+                    <option value="75">Eigene CPU</option>
+
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="cpuCustom">Eigener CPU-Verbrauch (W)</label>
+                <input type="number" id="cpuCustom" value="0" min="0">
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card">
+
+        <h2>🎮 Grafikkarte</h2>
+
+        <div class="grid">
+
+            <div class="field">
+
+                <label for="gpu">GPU</label>
+
+                <select id="gpu">
+
+                    <option value="115">NVIDIA GTX 1660 Super</option>
+                    <option value="160">NVIDIA RTX 3060 12 GB</option>
+                    <option value="170">NVIDIA RTX 4060</option>
+                    <option value="200">NVIDIA RTX 4060 Ti</option>
+                    <option value="220">NVIDIA RTX 4070</option>
+                    <option value="285">NVIDIA RTX 4070 Super</option>
+                    <option value="300">NVIDIA RTX 4070 Ti Super</option>
+                    <option value="320">NVIDIA RTX 4080 Super</option>
+                    <option value="450">NVIDIA RTX 4090</option>
+
+                    <option value="132">AMD RX 6600</option>
+                    <option value="160">AMD RX 6650 XT</option>
+                    <option value="180">AMD RX 7600</option>
+                    <option value="263">AMD RX 7700 XT</option>
+                    <option value="263">AMD RX 7800 XT</option>
+                    <option value="300">AMD RX 7900 GRE</option>
+                    <option value="355">AMD RX 7900 XT</option>
+                    <option value="355">AMD RX 7900 XTX</option>
+
+                    <option value="75">Intel Arc A750</option>
+                    <option value="225">Intel Arc A770</option>
+
+                    <option value="100">Eigene GPU</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label for="gpuCustom">Eigener GPU-Verbrauch (W)</label>
+                <input type="number" id="gpuCustom" value="0" min="0">
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card">
+
+        <h2>💾 Arbeitsspeicher & Speicher</h2>
+
+        <div class="grid">
+
+            <div class="field">
+                <label for="ram">RAM</label>
+
+                <select id="ram">
+                    <option value="8">8 GB</option>
+                    <option value="12">12 GB</option>
+                    <option value="16">16 GB</option>
+                    <option value="24">24 GB</option>
+                    <option value="32" selected>32 GB</option>
+                    <option value="48">48 GB</option>
+                    <option value="64">64 GB</option>
+                    <option value="96">96 GB</option>
+                    <option value="128">128 GB</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="ramModules">RAM-Module</label>
+
+                <select id="ramModules">
+                    <option value="1">1 Modul</option>
+                    <option value="2" selected>2 Module</option>
+                    <option value="4">4 Module</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="ssd">SSD Anzahl</label>
+                <input type="number" id="ssd" value="1" min="0" max="20">
+            </div>
+
+            <div class="field">
+                <label for="hdd">HDD Anzahl</label>
+                <input type="number" id="hdd" value="0" min="0" max="20">
+            </div>
+
+            <div class="field">
+                <label for="sata">Weitere SATA-Geräte</label>
+                <input type="number" id="sata" value="0" min="0" max="20">
+            </div>
+
+            <div class="field">
+                <label for="optical">DVD/Blu-ray Laufwerke</label>
+                <input type="number" id="optical" value="0" min="0" max="10">
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card">
+
+        <h2>🖥️ Mainboard & Erweiterungen</h2>
+
+        <div class="grid">
+
+            <div class="field">
+
+                <label for="board">Mainboard</label>
+
+                <select id="board">
+
+                    <option value="45">Mini-ITX</option>
+                    <option value="55" selected>ATX / B550 / B650</option>
+                    <option value="65">High-End ATX</option>
+                    <option value="80">Enthusiast / HEDT</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label for="pcie">Zusätzliche PCIe-Karten</label>
+                <input type="number" id="pcie" value="0" min="0" max="10">
+
+            </div>
+
+            <div class="field">
+
+                <label for="fans">Gehäuselüfter</label>
+                <input type="number" id="fans" value="3" min="0" max="20">
+
+            </div>
+
+            <div class="field">
+
+                <label for="aio">AIO / Wasserkühlung</label>
+
+                <select id="aio">
+
+                    <option value="0">Keine</option>
+                    <option value="8">120-mm-AIO</option>
+                    <option value="12">240-mm-AIO</option>
+                    <option value="16">280-mm-AIO</option>
+                    <option value="20">360-mm-AIO</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label for="usb">USB-Geräte</label>
+
+                <select id="usb">
+
+                    <option value="5">Wenige</option>
+                    <option value="15" selected>Normal</option>
+                    <option value="30">Viele</option>
+                    <option value="50">Sehr viele</option>
+
+                </select>
+
+            </div>
+
+            <div class="field">
+
+                <label for="extra">Sonstige Verbraucher (W)</label>
+                <input type="number" id="extra" value="0" min="0">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>⚙️ Berechnungseinstellungen</h2>
+
+        <div class="grid">
+
+            <div class="field">
+
+                <label>Zusätzliche Sicherheitsreserve</label>
+
+                <div class="range-wrap">
+
+                    <input
+                        type="range"
+                        id="reserve"
+                        min="10"
+                        max="50"
+                        value="25"
+                        step="5"
+                    >
+
+                    <div class="range-value">
+                        <span id="reserveValue">25</span> %
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="field">
+
+                <label>Lastspitzen berücksichtigen</label>
+
+                <select id="spikes">
+
+                    <option value="0.05">Niedrig</option>
+                    <option value="0.10" selected>Normal</option>
+                    <option value="0.15">Hoch</option>
+                    <option value="0.20">Sehr hoch</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="small-note">
+
+            Die Berechnung ist eine Näherung. Tatsächlicher Verbrauch hängt unter anderem
+            von CPU-/GPU-Limitierung, BIOS-Einstellungen, Power Limits, Übertaktung,
+            Undervolting und den verwendeten Komponenten ab.
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <button class="calculate" onclick="calculatePower()">
+            ⚡ Netzteil berechnen
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>📊 Ergebnis</h2>
+
+        <div class="results">
+
+            <div class="result-box">
+                <div class="label">Grundverbrauch</div>
+                <div class="number" id="baseResult">0 W</div>
+            </div>
+
+            <div class="result-box">
+                <div class="label">Geschätzte Last</div>
+                <div class="number" id="loadResult">0 W</div>
+            </div>
+
+            <div class="result-box">
+                <div class="label">Mit Reserve</div>
+                <div class="number" id="reserveResult">0 W</div>
+            </div>
+
+            <div class="result-box">
+                <div class="label">Empfehlung</div>
+                <div class="number" id="recommendedResult">0 W</div>
+            </div>
+
+        </div>
+
+        <div class="bar-container">
+            <div class="bar" id="powerBar"></div>
+        </div>
+
+        <div class="recommendation">
+
+            <h3>Empfohlene Netzteilgröße</h3>
+
+            <div class="recommended-watt" id="recommendation">
+                650 W
+            </div>
+
+            <div id="status" class="status good">
+                Gute Reserve vorhanden
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>🔍 Verbrauchsaufschlüsselung</h2>
+
+        <div class="breakdown">
+
+            <div class="breakdown-row">
+                <span>CPU</span>
+                <strong id="bCPU">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>GPU</span>
+                <strong id="bGPU">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>Mainboard</span>
+                <strong id="bBoard">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>RAM</span>
+                <strong id="bRAM">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>SSD</span>
+                <strong id="bSSD">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>HDD</span>
+                <strong id="bHDD">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>Lüfter</span>
+                <strong id="bFans">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>AIO</span>
+                <strong id="bAIO">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>USB</span>
+                <strong id="bUSB">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>PCIe</span>
+                <strong id="bPCIe">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>Optische Laufwerke</span>
+                <strong id="bOptical">0 W</strong>
+            </div>
+
+            <div class="breakdown-row">
+                <span>Sonstiges</span>
+                <strong id="bExtra">0 W</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>ℹ️ Hinweise</h2>
+
+        <details>
+            <summary>Warum braucht man Reserve?</summary>
+
+            <p>
+                Ein Netzteil sollte nicht dauerhaft exakt an seiner theoretischen
+                Maximalleistung betrieben werden. Eine Reserve berücksichtigt
+                Lastspitzen, Alterung, zusätzliche Komponenten und zukünftige
+                Aufrüstungen.
+            </p>
+
+        </details>
+
+        <details>
+            <summary>Warum kann der Rechner vom echten Verbrauch abweichen?</summary>
+
+            <p>
+                Herstellerangaben sind nicht immer identisch mit dem tatsächlichen
+                Verbrauch. CPU und GPU können je nach Spiel, Anwendung,
+                Power-Limit, BIOS-Einstellung und Temperatur deutlich unterschiedlich
+                viel Leistung aufnehmen.
+            </p>
+
+        </details>
+
+        <details>
+            <summary>Was bedeutet 80 PLUS?</summary>
+
+            <p>
+                80 PLUS beschreibt die Effizienz eines Netzteils unter bestimmten
+                Bedingungen. Ein höheres Effizienzniveau bedeutet grundsätzlich,
+                dass weniger Energie als Wärme verloren geht. Die 80-PLUS-Stufe
+                allein sagt allerdings nichts über die vollständige Qualität eines
+                Netzteils aus.
+            </p>
+
+        </details>
+
+        <details>
+            <summary>Gaming-PC mit leistungsstarker Grafikkarte?</summary>
+
+            <p>
+                Bei modernen High-End-GPUs sollten neben der Gesamtleistung auch
+                die empfohlenen Netzteilanforderungen des GPU-Herstellers und
+                die vorhandenen Stromanschlüsse berücksichtigt werden.
+            </p>
+
+        </details>
+
+    </div>
+
+
+    <div class="footer">
+        PC Netzteil Rechner • Unverbindliche Verbrauchsschätzung
+    </div>
+
+</div>
+
+
+<script>
+
+const reserveSlider = document.getElementById("reserve");
+const reserveValue = document.getElementById("reserveValue");
+
+reserveSlider.addEventListener("input", function() {
+    reserveValue.textContent = this.value;
+});
+
+
+function getValue(id) {
+
+    return parseFloat(document.getElementById(id).value) || 0;
+
+}
+
+
+function roundPSU(watt) {
+
+    const standard = [
+        300,
+        350,
+        400,
+        450,
+        500,
+        550,
+        600,
+        650,
+        700,
+        750,
+        800,
+        850,
+        900,
+        1000,
+        1050,
+        1200,
+        1300,
+        1500,
+        1600,
+        1800,
+        2000
+    ];
+
+    for (let value of standard) {
+
+        if (value >= watt) {
+            return value;
+        }
+
+    }
+
+    return Math.ceil(watt / 100) * 100;
+
+}
+
+
+function calculatePower() {
+
+    let cpu = getValue("cpu");
+    let gpu = getValue("gpu");
+
+    const cpuCustom = getValue("cpuCustom");
+    const gpuCustom = getValue("gpuCustom");
+
+    if (cpuCustom > 0) {
+        cpu = cpuCustom;
+    }
+
+    if (gpuCustom > 0) {
+        gpu = gpuCustom;
+    }
+
+
+    const board = getValue("board");
+
+    const ramGB = getValue("ram");
+    const ramModules = getValue("ramModules");
+
+    const ssdCount = getValue("ssd");
+    const hddCount = getValue("hdd");
+
+    const sataCount = getValue("sata");
+    const opticalCount = getValue("optical");
+
+    const fans = getValue("fans");
+    const aio = getValue("aio");
+
+    const usb = getValue("usb");
+    const pcieCount = getValue("pcie");
+
+    const extra = getValue("extra");
+
+    const reserve = getValue("reserve") / 100;
+
+    const spikePercent = getValue("spikes");
+
+
+    /*
+       Einzelverbraucher
+    */
+
+    const ramPower =
+        (ramGB * 0.45) +
+        (ramModules * 1.5);
+
+    const ssdPower =
+        ssdCount * 4;
+
+    const hddPower =
+        hddCount * 9;
+
+    const sataPower =
+        sataCount * 4;
+
+    const opticalPower =
+        opticalCount * 20;
+
+    const fanPower =
+        fans * 3;
+
+    const pciePower =
+        pcieCount * 15;
+
+
+    /*
+       Grundverbrauch
+    */
+
+    let base =
+        cpu +
+        gpu +
+        board +
+        ramPower +
+        ssdPower +
+        hddPower +
+        sataPower +
+        opticalPower +
+        fanPower +
+        aio +
+        usb +
+        pciePower +
+        extra;
+
+
+    /*
+       Lastspitzen
+    */
+
+    const spikePower =
+        (cpu + gpu) * spikePercent;
+
+    const estimatedLoad =
+        base + spikePower;
+
+
+    /*
+       Sicherheitsreserve
+    */
+
+    const withReserve =
+        estimatedLoad * (1 + reserve);
+
+
+    /*
+       Empfohlenes Netzteil
+    */
+
+    const recommended =
+        roundPSU(withReserve);
+
+
+    /*
+       Anzeige
+    */
+
+    document.getElementById("baseResult").textContent =
+        Math.round(base) + " W";
+
+    document.getElementById("loadResult").textContent =
+        Math.round(estimatedLoad) + " W";
+
+    document.getElementById("reserveResult").textContent =
+        Math.round(withReserve) + " W";
+
+    document.getElementById("recommendedResult").textContent =
+        recommended + " W";
+
+    document.getElementById("recommendation").textContent =
+        recommended + " W";
+
+
+    /*
+       Breakdown
+    */
+
+    document.getElementById("bCPU").textContent =
+        Math.round(cpu) + " W";
+
+    document.getElementById("bGPU").textContent =
+        Math.round(gpu) + " W";
+
+    document.getElementById("bBoard").textContent =
+        Math.round(board) + " W";
+
+    document.getElementById("bRAM").textContent =
+        Math.round(ramPower) + " W";
+
+    document.getElementById("bSSD").textContent =
+        Math.round(ssdPower) + " W";
+
+    document.getElementById("bHDD").textContent =
+        Math.round(hddPower) + " W";
+
+    document.getElementById("bFans").textContent =
+        Math.round(fanPower) + " W";
+
+    document.getElementById("bAIO").textContent =
+        Math.round(aio) + " W";
+
+    document.getElementById("bUSB").textContent =
+        Math.round(usb) + " W";
+
+    document.getElementById("bPCIe").textContent =
+        Math.round(pciePower) + " W";
+
+    document.getElementById("bOptical").textContent =
+        Math.round(opticalPower) + " W";
+
+    document.getElementById("bExtra").textContent =
+        Math.round(extra) + " W";
+
+
+    /*
+       Balken
+    */
+
+    const percentage =
+        Math.min((estimatedLoad / recommended) * 100, 100);
+
+    document.getElementById("powerBar").style.width =
+        percentage + "%";
+
+
+    /*
+       Status
+    */
+
+    const status =
+        document.getElementById("status");
+
+    const ratio =
+        estimatedLoad / recommended;
+
+
+    if (ratio < 0.65) {
+
+        status.className = "status good";
+
+        status.textContent =
+            "Sehr gute Reserve vorhanden";
+
+    }
+    else if (ratio < 0.80) {
+
+        status.className = "status good";
+
+        status.textContent =
+            "Gute Reserve vorhanden";
+
+    }
+    else if (ratio < 0.90) {
+
+        status.className = "status warning";
+
+        status.textContent =
+            "Netzteil ist relativ gut ausgelastet";
+
+    }
+    else {
+
+        status.className = "status danger";
+
+        status.textContent =
+            "Netzteil wäre sehr knapp dimensioniert";
+
+    }
+
+}
+
+
+/*
+   Automatische Erstberechnung
+*/
+
+calculatePower();
+
+</script>
+
+</body>
+</html>
