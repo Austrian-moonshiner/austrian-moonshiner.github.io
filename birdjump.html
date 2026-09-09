@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sky Bird</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#75cfff, #dff7ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#gameWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 760px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 18px;
+    background: linear-gradient(#66c9ff, #e5f9ff);
+    box-shadow: 0 8px 35px rgba(0,0,0,0.25);
+}
+
+#score {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px #333;
+    z-index: 5;
+}
+
+#highscore {
+    position: absolute;
+    top: 52px;
+    left: 20px;
+    color: white;
+    font-size: 16px;
+    text-shadow: 2px 2px 3px #333;
+    z-index: 5;
+}
+
+#startScreen,
+#gameOver {
+    position: absolute;
+    inset: 0;
+    background: rgba(20,70,100,0.78);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 10;
+    text-align: center;
+    padding: 30px;
+}
+
+#gameOver {
+    display: none;
+}
+
+h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 5px #17445c;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #ffd83d;
+    color: #533d00;
+    box-shadow: 0 5px 0 #c29e12;
+}
+
+button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #c29e12;
+}
+
+#controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 8;
+    pointer-events: none;
+}
+
+.controlBtn {
+    width: 90px;
+    height: 65px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.65);
+    color: #17627e;
+    font-size: 32px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    pointer-events: auto;
+    user-select: none;
+    touch-action: none;
+}
+
+#tip {
+    margin-top: 25px;
+    font-size: 14px;
+    opacity: 0.85;
+    line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameWrapper">
+
+<canvas id="gameCanvas" width="480" height="760"></canvas>
+
+<div id="score">Punkte: 0</div>
+<div id="highscore">Highscore: 0</div>
+
+<div id="startScreen">
+    <h1>🐦 Sky Bird</h1>
+
+    <div class="subtitle">
+        Fliege immer höher!<br>
+        Lande auf den Wolkenplattformen.
+    </div>
+
+    <button onclick="startGame()">SPIEL STARTEN</button>
+
+    <div id="tip">
+        Steuerung: ← → oder A / D<br>
+        Mobil: die beiden Buttons unten
+    </div>
+</div>
+
+<div id="gameOver">
+
+    <h1>🐦 Game Over</h1>
+
+    <div class="subtitle">
+        Deine Punktzahl:
+        <strong id="finalScore">0</strong>
+        <br><br>
+        Highscore:
+        <strong id="finalHighscore">0</strong>
+    </div>
+
+    <button onclick="restartGame()">NOCHMAL</button>
+
+</div>
+
+<div id="controls">
+
+    <button class="controlBtn"
+        id="leftBtn">◀</button>
+
+    <button class="controlBtn"
+        id="rightBtn">▶</button>
+
+</div>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const W = canvas.width;
+const H = canvas.height;
+
+let gameRunning = false;
+
+let score = 0;
+let highscore = Number(localStorage.getItem("skyBirdHighscore")) || 0;
+
+document.getElementById("highscore").textContent =
+    "Highscore: " + highscore;
+
+
+// -------------------------
+// SPIELER
+// -------------------------
+
+const bird = {
+    x: 220,
+    y: 600,
+    width: 42,
+    height: 36,
+
+    vx: 0,
+    vy: 0,
+
+    speed: 0.55,
+    maxSpeed: 6,
+
+    jumpPower: -13,
+
+    rotation: 0,
+
+    wing: 0
+};
+
+
+// -------------------------
+// PLATTFORMEN
+// -------------------------
+
+let platforms = [];
+
+
+// -------------------------
+// TASTEN
+// -------------------------
+
+let leftPressed = false;
+let rightPressed = false;
+
+
+document.addEventListener("keydown", e => {
+
+    if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        leftPressed = true;
+    }
+
+    if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        rightPressed = true;
+    }
+
+});
+
+
+document.addEventListener("keyup", e => {
+
+    if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        leftPressed = false;
+    }
+
+    if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        rightPressed = false;
+    }
+
+});
+
+
+// -------------------------
+// MOBILE STEUERUNG
+// -------------------------
+
+const leftBtn = document.getElementById("leftBtn");
+const rightBtn = document.getElementById("rightBtn");
+
+
+function pressLeft(e) {
+    e.preventDefault();
+    leftPressed = true;
+}
+
+function releaseLeft(e) {
+    e.preventDefault();
+    leftPressed = false;
+}
+
+function pressRight(e) {
+    e.preventDefault();
+    rightPressed = true;
+}
+
+function releaseRight(e) {
+    e.preventDefault();
+    rightPressed = false;
+}
+
+
+leftBtn.addEventListener("pointerdown", pressLeft);
+leftBtn.addEventListener("pointerup", releaseLeft);
+leftBtn.addEventListener("pointercancel", releaseLeft);
+leftBtn.addEventListener("pointerleave", releaseLeft);
+
+rightBtn.addEventListener("pointerdown", pressRight);
+rightBtn.addEventListener("pointerup", releaseRight);
+rightBtn.addEventListener("pointercancel", releaseRight);
+rightBtn.addEventListener("pointerleave", releaseRight);
+
+
+// -------------------------
+// PLATTFORM ERSTELLEN
+// -------------------------
+
+function createPlatform(x, y, width = 90) {
+
+    platforms.push({
+
+        x: x,
+        y: y,
+
+        width: width,
+        height: 18,
+
+        type: Math.random(),
+
+        moving: Math.random() < 0.18,
+
+        direction: Math.random() < 0.5 ? 1 : -1,
+
+        speed: 0.7 + Math.random() * 0.7
+
+    });
+
+}
+
+
+// -------------------------
+// LEVEL AUFBAU
+// -------------------------
+
+function createInitialPlatforms() {
+
+    platforms = [];
+
+    createPlatform(190, 690, 110);
+
+    createPlatform(70, 585, 100);
+
+    createPlatform(280, 480, 95);
+
+    createPlatform(130, 380, 100);
+
+    createPlatform(320, 280, 90);
+
+    createPlatform(180, 180, 110);
+
+    createPlatform(50, 80, 100);
+
+}
+
+
+// -------------------------
+// WEITERE PLATTFORMEN
+// -------------------------
+
+function generatePlatforms() {
+
+    let highest = Math.min(...platforms.map(p => p.y));
+
+    while (highest > -150) {
+
+        let newY = highest - (75 + Math.random() * 70);
+
+        let newX =
+            20 + Math.random() * (W - 130);
+
+        let width =
+            75 + Math.random() * 45;
+
+        createPlatform(newX, newY, width);
+
+        highest = newY;
+    }
+
+}
+
+
+// -------------------------
+// START
+// -------------------------
+
+function startGame() {
+
+    document.getElementById("startScreen").style.display = "none";
+
+    document.getElementById("gameOver").style.display = "none";
+
+    score = 0;
+
+    bird.x = 220;
+    bird.y = 600;
+    bird.vx = 0;
+    bird.vy = 0;
+
+    createInitialPlatforms();
+
+    generatePlatforms();
+
+    gameRunning = true;
+
+    gameLoop();
+
+}
+
+
+// -------------------------
+// RESTART
+// -------------------------
+
+function restartGame() {
+
+    document.getElementById("gameOver").style.display = "none";
+
+    score = 0;
+
+    bird.x = 220;
+    bird.y = 600;
+    bird.vx = 0;
+    bird.vy = 0;
+
+    createInitialPlatforms();
+
+    generatePlatforms();
+
+    gameRunning = true;
+
+    gameLoop();
+
+}
+
+
+// -------------------------
+// GAME OVER
+// -------------------------
+
+function endGame() {
+
+    gameRunning = false;
+
+    if (score > highscore) {
+
+        highscore = score;
+
+        localStorage.setItem(
+            "skyBirdHighscore",
+            highscore
+        );
+
+    }
+
+    document.getElementById("finalScore").textContent =
+        score;
+
+    document.getElementById("finalHighscore").textContent =
+        highscore;
+
+    document.getElementById("highscore").textContent =
+        "Highscore: " + highscore;
+
+    document.getElementById("gameOver").style.display =
+        "flex";
+
+}
+
+
+// -------------------------
+// VOGEL ZEICHNEN
+// -------------------------
+
+function drawBird() {
+
+    ctx.save();
+
+    ctx.translate(
+        bird.x + bird.width / 2,
+        bird.y + bird.height / 2
+    );
+
+    bird.rotation =
+        Math.max(-0.35,
+        Math.min(0.35, bird.vy * 0.025));
+
+    ctx.rotate(bird.rotation);
+
+
+    // Körper
+
+    ctx.fillStyle = "#f6b72c";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        0,
+        20,
+        15,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Bauch
+
+    ctx.fillStyle = "#fff0bd";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        7,
+        5,
+        11,
+        8,
+        0,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Flügel
+
+    bird.wing += 0.18;
+
+    let wingY =
+        Math.sin(bird.wing) * 5;
+
+    ctx.fillStyle = "#e59b18";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -5,
+        wingY,
+        15,
+        7,
+        -0.4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Auge
+
+    ctx.fillStyle = "#222";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        11,
+        -6,
+        3,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // Schnabel
+
+    ctx.fillStyle = "#e87527";
+
+    ctx.beginPath();
+
+    ctx.moveTo(18, 0);
+
+    ctx.lineTo(31, 5);
+
+    ctx.lineTo(18, 9);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+// -------------------------
+// PLATTFORM ZEICHNEN
+// -------------------------
+
+function drawPlatform(p) {
+
+    ctx.fillStyle = "#ffffff";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        p.x,
+        p.y,
+        p.width,
+        p.height,
+        10
+    );
+
+    ctx.fill();
+
+
+    // Wolken-Unterseite
+
+    ctx.fillStyle = "#d7f4ff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        p.x + 20,
+        p.y + 17,
+        12,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        p.x + 42,
+        p.y + 14,
+        15,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        p.x + 67,
+        p.y + 17,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+// -------------------------
+// HINTERGRUND
+// -------------------------
+
+function drawBackground() {
+
+    ctx.clearRect(0, 0, W, H);
+
+
+    // Himmel
+
+    let gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            H
+        );
+
+    gradient.addColorStop(
+        0,
+        "#55c7ff"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#e7faff"
+    );
+
+    ctx.fillStyle = gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    // kleine Wolken
+
+    drawCloud(80, 130, 0.8);
+
+    drawCloud(360, 220, 0.65);
+
+    drawCloud(120, 320, 0.5);
+
+    drawCloud(400, 520, 0.75);
+
+}
+
+
+function drawCloud(x, y, scale) {
+
+    ctx.save();
+
+    ctx.translate(x, y);
+
+    ctx.scale(scale, scale);
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.65)";
+
+    ctx.beginPath();
+
+    ctx.arc(0, 10, 22, 0, Math.PI * 2);
+
+    ctx.arc(25, 0, 30, 0, Math.PI * 2);
+
+    ctx.arc(55, 12, 20, 0, Math.PI * 2);
+
+    ctx.fill();
+
+    ctx.restore();
+
+}
+
+
+// -------------------------
+// SPIEL UPDATE
+// -------------------------
+
+function update() {
+
+    if (!gameRunning) return;
+
+
+    // Bewegung
+
+    if (leftPressed) {
+
+        bird.vx -= bird.speed;
+
+    }
+
+    if (rightPressed) {
+
+        bird.vx += bird.speed;
+
+    }
+
+
+    // Bremsen
+
+    if (!leftPressed && !rightPressed) {
+
+        bird.vx *= 0.90;
+
+    }
+
+
+    bird.vx =
+        Math.max(
+            -bird.maxSpeed,
+            Math.min(
+                bird.maxSpeed,
+                bird.vx
+            )
+        );
+
+
+    bird.x += bird.vx;
+
+
+    // Bildschirmrand
+
+    if (bird.x < -bird.width) {
+
+        bird.x = W;
+
+    }
+
+    if (bird.x > W) {
+
+        bird.x = -bird.width;
+
+    }
+
+
+    // Schwerkraft
+
+    bird.vy += 0.48;
+
+    bird.y += bird.vy;
+
+
+    // Plattformbewegung
+
+    for (const p of platforms) {
+
+        if (p.moving) {
+
+            p.x +=
+                p.direction *
+                p.speed;
+
+            if (
+                p.x < 0 ||
+                p.x + p.width > W
+            ) {
+
+                p.direction *= -1;
+
+            }
+
+        }
+
+    }
+
+
+    // Plattform-Kollision
+
+    if (bird.vy > 0) {
+
+        for (const p of platforms) {
+
+            if (
+
+                bird.x + bird.width > p.x &&
+
+                bird.x < p.x + p.width &&
+
+                bird.y + bird.height >= p.y &&
+
+                bird.y + bird.height <= p.y + 25
+
+            ) {
+
+                bird.y =
+                    p.y - bird.height;
+
+                bird.vy =
+                    bird.jumpPower;
+
+            }
+
+        }
+
+    }
+
+
+    // Kamera scrollen
+
+    if (bird.y < H * 0.38) {
+
+        let scroll =
+            H * 0.38 - bird.y;
+
+        bird.y =
+            H * 0.38;
+
+        for (const p of platforms) {
+
+            p.y += scroll;
+
+        }
+
+        score +=
+            Math.floor(scroll);
+
+    }
+
+
+    // Plattformen entfernen
+
+    platforms =
+        platforms.filter(
+            p => p.y < H + 100
+        );
+
+
+    // neue Plattformen
+
+    generatePlatforms();
+
+
+    // Punktestand
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        "Punkte: " + Math.floor(score);
+
+
+    // Fall
+
+    if (bird.y > H + 100) {
+
+        endGame();
+
+    }
+
+}
+
+
+// -------------------------
+// ZEICHNEN
+// -------------------------
+
+function draw() {
+
+    drawBackground();
+
+
+    for (const p of platforms) {
+
+        drawPlatform(p);
+
+    }
+
+
+    drawBird();
+
+}
+
+
+// -------------------------
+// GAME LOOP
+// -------------------------
+
+function gameLoop() {
+
+    if (!gameRunning) {
+
+        draw();
+
+        return;
+
+    }
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+// -------------------------
+// STARTBILD
+// -------------------------
+
+createInitialPlatforms();
+
+draw();
+
+</script>
+
+</body>
+</html>
