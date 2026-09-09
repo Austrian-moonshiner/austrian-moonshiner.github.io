@@ -1,0 +1,1791 @@
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vogel Mania</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+        linear-gradient(
+            180deg,
+            #72d6ff 0%,
+            #b9f0ff 55%,
+            #7bd66d 55%,
+            #4caf50 100%
+        );
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding: 18px;
+}
+
+.game {
+    width: 100%;
+    max-width: 650px;
+    text-align: center;
+}
+
+h1 {
+    margin: 4px 0;
+    font-size: 42px;
+    text-shadow: 0 4px 8px rgba(0,0,0,.35);
+}
+
+.subtitle {
+    margin-bottom: 14px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,.25);
+}
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.infoBox {
+    background: rgba(0,0,0,.20);
+    padding: 9px 4px;
+    border-radius: 13px;
+    backdrop-filter: blur(4px);
+}
+
+.infoBox strong {
+    display: block;
+    font-size: 20px;
+}
+
+.infoBox span {
+    font-size: 11px;
+}
+
+.progress {
+    height: 14px;
+    background: rgba(0,0,0,.25);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 13px;
+}
+
+.progressBar {
+    width: 0%;
+    height: 100%;
+    background: white;
+    transition: width .3s;
+}
+
+#board {
+    width: min(94vw,560px);
+    aspect-ratio: 1;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: repeat(8,1fr);
+    gap: 4px;
+
+    padding: 6px;
+
+    background: rgba(255,255,255,.23);
+    border-radius: 18px;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.3);
+}
+
+.cell {
+    position: relative;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: clamp(21px,5vw,35px);
+
+    user-select: none;
+
+    box-shadow:
+        inset 0 4px 5px rgba(255,255,255,.5),
+        inset 0 -5px 8px rgba(0,0,0,.2),
+        0 3px 5px rgba(0,0,0,.2);
+
+    transition:
+        transform .12s,
+        filter .12s;
+}
+
+.cell:hover {
+    transform: scale(1.05);
+}
+
+.cell.selected {
+    transform: scale(1.12);
+    outline: 4px solid white;
+    z-index: 10;
+}
+
+.red {
+    background:#ff595e;
+}
+
+.blue {
+    background:#3f9cff;
+}
+
+.green {
+    background:#42c96b;
+}
+
+.yellow {
+    background:#ffd93d;
+}
+
+.purple {
+    background:#a86cff;
+}
+
+.orange {
+    background:#ff9f43;
+}
+
+/* Blockaden */
+
+.block {
+    background:#756e65 !important;
+    cursor:not-allowed;
+    box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,.15),
+        inset 0 -5px 10px rgba(0,0,0,.35);
+}
+
+.ice {
+    box-shadow:
+        inset 0 0 0 4px rgba(190,240,255,.8),
+        inset 0 4px 5px white,
+        0 3px 5px rgba(0,0,0,.2);
+}
+
+.bomb {
+    background:#292929 !important;
+    color:white;
+    font-size:clamp(17px,4vw,29px);
+}
+
+.controls {
+    margin-top:14px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.control {
+    border:none;
+    border-radius:12px;
+    padding:11px 16px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#513b70;
+    background:white;
+    box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+.control:hover {
+    transform:translateY(-2px);
+}
+
+.message {
+    min-height:30px;
+    margin-top:10px;
+    font-weight:bold;
+    text-shadow:0 2px 4px rgba(0,0,0,.25);
+}
+
+.levels {
+    margin-top:15px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.levelButton {
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    font-weight:bold;
+    color:#4e3970;
+    background:white;
+}
+
+.levelButton.current {
+    background:#ffd93d;
+    transform:scale(1.1);
+}
+
+.levelButton.locked {
+    opacity:.35;
+    cursor:not-allowed;
+}
+
+.instructions {
+    margin-top:16px;
+    padding:13px;
+    border-radius:14px;
+    background:rgba(0,0,0,.18);
+    font-size:13px;
+    line-height:1.5;
+}
+
+.overlay {
+    position:fixed;
+    inset:0;
+    background:rgba(15,20,35,.75);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.overlay.show {
+    display:flex;
+}
+
+.popup {
+    width:min(90%,420px);
+    background:white;
+    color:#4d3765;
+    padding:30px;
+    border-radius:22px;
+    text-align:center;
+    box-shadow:0 15px 50px rgba(0,0,0,.4);
+}
+
+.popup h2 {
+    margin-top:0;
+    font-size:30px;
+}
+
+.popup button {
+    border:none;
+    border-radius:12px;
+    padding:12px 20px;
+    margin:5px;
+    background:#7655c7;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+@media(max-width:500px) {
+
+    h1 {
+        font-size:32px;
+    }
+
+    .infoBox strong {
+        font-size:17px;
+    }
+
+    .infoBox span {
+        font-size:9px;
+    }
+
+    #board {
+        gap:3px;
+        padding:4px;
+    }
+
+    .cell {
+        border-radius:8px;
+    }
+
+    .levelButton {
+        width:35px;
+        height:35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>🐦 Vogel Mania</h1>
+
+<div class="subtitle">
+    Tausche die Vögel und meistere 20 Level!
+</div>
+
+<div class="info">
+
+<div class="infoBox">
+<strong id="level">1</strong>
+<span>Level</span>
+</div>
+
+<div class="infoBox">
+<strong id="score">0</strong>
+<span>Punkte</span>
+</div>
+
+<div class="infoBox">
+<strong id="target">500</strong>
+<span>Ziel</span>
+</div>
+
+<div class="infoBox">
+<strong id="moves">30</strong>
+<span>Züge</span>
+</div>
+
+</div>
+
+<div class="progress">
+<div class="progressBar" id="progressBar"></div>
+</div>
+
+<div id="board"></div>
+
+<div class="message" id="message">
+🐦 Kombiniere mindestens drei gleiche Vögel!
+</div>
+
+<div class="controls">
+
+<button class="control" onclick="restartLevel()">
+🔄 Neustart
+</button>
+
+<button class="control" onclick="showRules()">
+❓ Anleitung
+</button>
+
+<button class="control" onclick="resetProgress()">
+🗑️ Reset
+</button>
+
+</div>
+
+<div class="levels" id="levels"></div>
+
+<div class="instructions">
+
+🐦 <b>3 gleiche Vögel</b> = Kombination<br>
+⚡ <b>4 gleiche Vögel</b> = Bonus<br>
+🌟 <b>5 gleiche Vögel</b> = großer Bonus<br>
+🧊 Eis muss durch Kombinationen entfernt werden<br>
+🧱 Blockaden können nicht verschoben werden<br>
+💣 Bomben müssen schnell entfernt werden
+
+</div>
+
+</div>
+
+
+<div class="overlay" id="overlay">
+
+<div class="popup">
+
+<h2 id="popupTitle">
+Level geschafft! 🎉
+</h2>
+
+<p id="popupText"></p>
+
+<button id="nextButton" onclick="nextLevel()">
+Nächstes Level
+</button>
+
+<button onclick="closePopup()">
+Weiter
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SPIELGRÖSSE
+========================================== */
+
+const SIZE = 8;
+
+
+/* ==========================================
+   VÖGEL
+========================================== */
+
+const birds = [
+    {
+        type:"red",
+        emoji:"🐦"
+    },
+    {
+        type:"blue",
+        emoji:"🦜"
+    },
+    {
+        type:"green",
+        emoji:"🦚"
+    },
+    {
+        type:"yellow",
+        emoji:"🐤"
+    },
+    {
+        type:"purple",
+        emoji:"🦉"
+    },
+    {
+        type:"orange",
+        emoji:"🦆"
+    }
+];
+
+
+/* ==========================================
+   20 LEVEL
+========================================== */
+
+const levels = [
+
+    {
+        target:500,
+        moves:30,
+        colors:5,
+        blocks:0,
+        ice:0,
+        bombs:0
+    },
+
+    {
+        target:800,
+        moves:30,
+        colors:5,
+        blocks:0,
+        ice:4,
+        bombs:0
+    },
+
+    {
+        target:1200,
+        moves:28,
+        colors:5,
+        blocks:2,
+        ice:6,
+        bombs:0
+    },
+
+    {
+        target:1700,
+        moves:28,
+        colors:6,
+        blocks:3,
+        ice:8,
+        bombs:0
+    },
+
+    {
+        target:2300,
+        moves:26,
+        colors:6,
+        blocks:4,
+        ice:10,
+        bombs:0
+    },
+
+    {
+        target:3000,
+        moves:25,
+        colors:6,
+        blocks:5,
+        ice:12,
+        bombs:2
+    },
+
+    {
+        target:3800,
+        moves:24,
+        colors:6,
+        blocks:6,
+        ice:14,
+        bombs:2
+    },
+
+    {
+        target:4700,
+        moves:23,
+        colors:6,
+        blocks:7,
+        ice:16,
+        bombs:3
+    },
+
+    {
+        target:5700,
+        moves:22,
+        colors:6,
+        blocks:8,
+        ice:18,
+        bombs:3
+    },
+
+    {
+        target:6800,
+        moves:21,
+        colors:6,
+        blocks:9,
+        ice:20,
+        bombs:4
+    },
+
+    {
+        target:8000,
+        moves:20,
+        colors:6,
+        blocks:10,
+        ice:22,
+        bombs:4
+    },
+
+    {
+        target:9300,
+        moves:20,
+        colors:6,
+        blocks:11,
+        ice:24,
+        bombs:5
+    },
+
+    {
+        target:10700,
+        moves:19,
+        colors:6,
+        blocks:12,
+        ice:26,
+        bombs:5
+    },
+
+    {
+        target:12200,
+        moves:19,
+        colors:6,
+        blocks:13,
+        ice:28,
+        bombs:6
+    },
+
+    {
+        target:13800,
+        moves:18,
+        colors:6,
+        blocks:14,
+        ice:30,
+        bombs:6
+    },
+
+    {
+        target:15500,
+        moves:18,
+        colors:6,
+        blocks:15,
+        ice:32,
+        bombs:7
+    },
+
+    {
+        target:17300,
+        moves:17,
+        colors:6,
+        blocks:16,
+        ice:34,
+        bombs:7
+    },
+
+    {
+        target:19200,
+        moves:17,
+        colors:6,
+        blocks:17,
+        ice:36,
+        bombs:8
+    },
+
+    {
+        target:21200,
+        moves:16,
+        colors:6,
+        blocks:18,
+        ice:38,
+        bombs:8
+    },
+
+    {
+        target:23500,
+        moves:16,
+        colors:6,
+        blocks:20,
+        ice:40,
+        bombs:9
+    }
+
+];
+
+
+/* ==========================================
+   SPIELVARIABLEN
+========================================== */
+
+let board = [];
+
+let selected = null;
+
+let score = 0;
+
+let moves = 0;
+
+let currentLevel = 1;
+
+let unlockedLevel =
+    parseInt(
+        localStorage.getItem("vogelManiaLevel")
+    ) || 1;
+
+
+/* ==========================================
+   ELEMENTE
+========================================== */
+
+const boardElement =
+    document.getElementById("board");
+
+const scoreElement =
+    document.getElementById("score");
+
+const movesElement =
+    document.getElementById("moves");
+
+const targetElement =
+    document.getElementById("target");
+
+const levelElement =
+    document.getElementById("level");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const messageElement =
+    document.getElementById("message");
+
+const levelsElement =
+    document.getElementById("levels");
+
+const overlay =
+    document.getElementById("overlay");
+
+
+/* ==========================================
+   LEVEL START
+========================================== */
+
+function startLevel(level) {
+
+    if(level > unlockedLevel)
+        return;
+
+    currentLevel = level;
+
+    const data =
+        levels[level - 1];
+
+    score = 0;
+
+    moves = data.moves;
+
+    selected = null;
+
+    createBoard();
+
+    setupObstacles();
+
+    updateUI();
+
+    createLevelButtons();
+
+    messageElement.textContent =
+        "🐦 Kombiniere drei oder mehr gleiche Vögel!";
+}
+
+
+/* ==========================================
+   SPIELFELD
+========================================== */
+
+function createBoard() {
+
+    board = [];
+
+    const colorCount =
+        levels[currentLevel - 1].colors;
+
+    for(let r=0;r<SIZE;r++) {
+
+        board[r] = [];
+
+        for(let c=0;c<SIZE;c++) {
+
+            let bird;
+
+            do {
+
+                bird =
+                    birds[
+                        Math.floor(
+                            Math.random()*colorCount
+                        )
+                    ].type;
+
+            }
+
+            while(
+
+                c>=2 &&
+                board[r][c-1] === bird &&
+                board[r][c-2] === bird
+
+                ||
+
+                r>=2 &&
+                board[r-1][c] === bird &&
+                board[r-2][c] === bird
+            );
+
+            board[r][c] = {
+                type:bird,
+                blocked:false,
+                ice:0,
+                bomb:0
+            };
+        }
+    }
+
+    renderBoard();
+}
+
+
+/* ==========================================
+   HINDERNISSE ERZEUGEN
+========================================== */
+
+function setupObstacles() {
+
+    const data =
+        levels[currentLevel-1];
+
+    let positions = [];
+
+    for(let r=0;r<SIZE;r++) {
+
+        for(let c=0;c<SIZE;c++) {
+
+            positions.push({r,c});
+        }
+    }
+
+    positions.sort(
+        () => Math.random() - .5
+    );
+
+
+    /* BLOCKADEN */
+
+    for(
+        let i=0;
+        i<data.blocks && i<positions.length;
+        i++
+    ) {
+
+        const p = positions[i];
+
+        board[p.r][p.c].blocked = true;
+    }
+
+
+    /* EIS */
+
+    let iceStart =
+        data.blocks;
+
+    for(
+        let i=iceStart;
+        i<iceStart + data.ice &&
+        i<positions.length;
+        i++
+    ) {
+
+        const p = positions[i];
+
+        if(
+            !board[p.r][p.c].blocked
+        ) {
+
+            board[p.r][p.c].ice = 2;
+        }
+    }
+
+
+    /* BOMBEN */
+
+    let bombStart =
+        iceStart + data.ice;
+
+    for(
+        let i=bombStart;
+        i<bombStart + data.bombs &&
+        i<positions.length;
+        i++
+    ) {
+
+        const p = positions[i];
+
+        if(
+            !board[p.r][p.c].blocked
+        ) {
+
+            board[p.r][p.c].bomb = 8;
+        }
+    }
+}
+
+
+/* ==========================================
+   SPIELFELD ANZEIGEN
+========================================== */
+
+function renderBoard() {
+
+    boardElement.innerHTML = "";
+
+    for(let r=0;r<SIZE;r++) {
+
+        for(let c=0;c<SIZE;c++) {
+
+            const item =
+                board[r][c];
+
+            const cell =
+                document.createElement("button");
+
+            cell.className =
+                "cell";
+
+            if(item.blocked) {
+
+                cell.classList.add("block");
+
+                cell.textContent = "🧱";
+
+            } else {
+
+                cell.classList.add(
+                    item.type
+                );
+
+                const bird =
+                    birds.find(
+                        b => b.type === item.type
+                    );
+
+                cell.textContent =
+                    bird.emoji;
+
+                if(item.ice > 0) {
+
+                    cell.classList.add("ice");
+
+                    cell.textContent =
+                        "🧊" + bird.emoji;
+                }
+
+                if(item.bomb > 0) {
+
+                    cell.classList.add("bomb");
+
+                    cell.textContent =
+                        "💣" + item.bomb;
+                }
+            }
+
+            if(
+                selected &&
+                selected.r === r &&
+                selected.c === c
+            ) {
+
+                cell.classList.add("selected");
+            }
+
+            cell.addEventListener(
+                "click",
+                () => selectCandy(r,c)
+            );
+
+            boardElement.appendChild(cell);
+        }
+    }
+}
+
+
+/* ==========================================
+   AUSWAHL
+========================================== */
+
+function selectCandy(r,c) {
+
+    const item =
+        board[r][c];
+
+    if(
+        moves <= 0 ||
+        item.blocked
+    )
+        return;
+
+
+    if(!selected) {
+
+        selected = {r,c};
+
+        renderBoard();
+
+        return;
+    }
+
+
+    if(
+        selected.r === r &&
+        selected.c === c
+    ) {
+
+        selected = null;
+
+        renderBoard();
+
+        return;
+    }
+
+
+    if(
+        isAdjacent(
+            selected,
+            {r,c}
+        )
+    ) {
+
+        const first =
+            {...selected};
+
+        const second =
+            {r,c};
+
+        swap(first,second);
+
+        const matches =
+            findMatches();
+
+        if(matches.length === 0) {
+
+            swap(first,second);
+
+            selected = null;
+
+            messageElement.textContent =
+                "❌ Keine Kombination.";
+
+            renderBoard();
+
+            return;
+        }
+
+        moves--;
+
+        selected = null;
+
+        renderBoard();
+
+        processMatches();
+
+    } else {
+
+        selected = {r,c};
+
+        renderBoard();
+    }
+}
+
+
+/* ==========================================
+   NACHBAR
+========================================== */
+
+function isAdjacent(a,b) {
+
+    return (
+        Math.abs(a.r-b.r) +
+        Math.abs(a.c-b.c)
+    ) === 1;
+}
+
+
+/* ==========================================
+   TAUSCHEN
+========================================== */
+
+function swap(a,b) {
+
+    if(
+        board[a.r][a.c].blocked ||
+        board[b.r][b.c].blocked
+    )
+        return;
+
+    const temp =
+        board[a.r][a.c];
+
+    board[a.r][a.c] =
+        board[b.r][b.c];
+
+    board[b.r][b.c] =
+        temp;
+}
+
+
+/* ==========================================
+   MATCHES
+========================================== */
+
+function findMatches() {
+
+    const matches =
+        new Set();
+
+
+    /* REIHEN */
+
+    for(let r=0;r<SIZE;r++) {
+
+        let start = 0;
+
+        for(
+            let c=1;
+            c<=SIZE;
+            c++
+        ) {
+
+            if(
+                c<SIZE &&
+                !board[r][c].blocked &&
+                !board[r][start].blocked &&
+                board[r][c].type ===
+                board[r][start].type
+            ) {
+
+                continue;
+            }
+
+            const length =
+                c-start;
+
+            if(length>=3) {
+
+                for(
+                    let x=start;
+                    x<c;
+                    x++
+                ) {
+
+                    if(
+                        !board[r][x].blocked
+                    ) {
+
+                        matches.add(
+                            `${r},${x}`
+                        );
+                    }
+                }
+            }
+
+            start=c;
+        }
+    }
+
+
+    /* SPALTEN */
+
+    for(let c=0;c<SIZE;c++) {
+
+        let start=0;
+
+        for(
+            let r=1;
+            r<=SIZE;
+            r++
+        ) {
+
+            if(
+                r<SIZE &&
+                !board[r][c].blocked &&
+                !board[start][c].blocked &&
+                board[r][c].type ===
+                board[start][c].type
+            ) {
+
+                continue;
+            }
+
+            const length =
+                r-start;
+
+            if(length>=3) {
+
+                for(
+                    let x=start;
+                    x<r;
+                    x++
+                ) {
+
+                    if(
+                        !board[x][c].blocked
+                    ) {
+
+                        matches.add(
+                            `${x},${c}`
+                        );
+                    }
+                }
+            }
+
+            start=r;
+        }
+    }
+
+    return [...matches];
+}
+
+
+/* ==========================================
+   MATCHES VERARBEITEN
+========================================== */
+
+function processMatches() {
+
+    const matches =
+        findMatches();
+
+    if(matches.length === 0) {
+
+        decreaseBombs();
+
+        checkGameState();
+
+        return;
+    }
+
+
+    let points =
+        matches.length * 60;
+
+
+    if(matches.length >= 4)
+        points += 200;
+
+    if(matches.length >= 5)
+        points += 500;
+
+
+    score += points;
+
+
+    messageElement.textContent =
+        "+" + points +
+        " Punkte! 🐦";
+
+
+    for(const position of matches) {
+
+        const [r,c] =
+            position
+            .split(",")
+            .map(Number);
+
+        const item =
+            board[r][c];
+
+
+        /* EIS */
+
+        if(item.ice > 0) {
+
+            item.ice--;
+
+            if(item.ice > 0)
+                continue;
+        }
+
+
+        /* BONBON ENTFERNEN */
+
+        board[r][c] = null;
+    }
+
+
+    updateUI();
+
+    setTimeout(
+        () => {
+
+            dropBirds();
+
+            fillBoard();
+
+            renderBoard();
+
+            setTimeout(
+                processMatches,
+                180
+            );
+
+        },
+        180
+    );
+}
+
+
+/* ==========================================
+   BOMBEN
+========================================== */
+
+function decreaseBombs() {
+
+    for(let r=0;r<SIZE;r++) {
+
+        for(let c=0;c<SIZE;c++) {
+
+            const item =
+                board[r][c];
+
+            if(
+                item &&
+                item.bomb > 0
+            ) {
+
+                item.bomb--;
+
+                if(item.bomb <= 0) {
+
+                    gameOverBomb();
+
+                    return;
+                }
+            }
+        }
+    }
+}
+
+
+/* ==========================================
+   BOMBEN GAME OVER
+========================================== */
+
+function gameOverBomb() {
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent =
+        "💣 Die Bombe ist explodiert!";
+
+    document.getElementById(
+        "popupText"
+    ).innerHTML =
+        "Eine Bombe wurde nicht rechtzeitig entfernt.<br><br>" +
+        "Versuche es noch einmal.";
+
+    document.getElementById(
+        "nextButton"
+    ).style.display =
+        "none";
+
+    overlay.classList.add("show");
+}
+
+
+/* ==========================================
+   VÖGEL FALLEN
+========================================== */
+
+function dropBirds() {
+
+    for(let c=0;c<SIZE;c++) {
+
+        let writeRow =
+            SIZE-1;
+
+        for(
+            let r=SIZE-1;
+            r>=0;
+            r--
+        ) {
+
+            if(
+                board[r][c] !== null &&
+                !board[r][c].blocked
+            ) {
+
+                if(
+                    writeRow !== r
+                ) {
+
+                    board[writeRow][c] =
+                        board[r][c];
+
+                    board[r][c] = null;
+                }
+
+                writeRow--;
+            }
+        }
+    }
+}
+
+
+/* ==========================================
+   FELDER FÜLLEN
+========================================== */
+
+function fillBoard() {
+
+    const colorCount =
+        levels[currentLevel-1].colors;
+
+
+    for(let r=0;r<SIZE;r++) {
+
+        for(let c=0;c<SIZE;c++) {
+
+            if(
+                board[r][c] === null
+            ) {
+
+                board[r][c] = {
+
+                    type:
+                        birds[
+                            Math.floor(
+                                Math.random()*colorCount
+                            )
+                        ].type,
+
+                    blocked:false,
+
+                    ice:0,
+
+                    bomb:0
+                };
+            }
+        }
+    }
+}
+
+
+/* ==========================================
+   SPIELSTATUS
+========================================== */
+
+function checkGameState() {
+
+    const target =
+        levels[currentLevel-1].target;
+
+
+    if(score >= target) {
+
+        levelCompleted();
+
+        return;
+    }
+
+
+    if(moves <= 0) {
+
+        gameOver();
+
+        return;
+    }
+
+
+    updateUI();
+}
+
+
+/* ==========================================
+   LEVEL GESCHAFFT
+========================================== */
+
+function levelCompleted() {
+
+    if(
+        currentLevel >= unlockedLevel &&
+        currentLevel < levels.length
+    ) {
+
+        unlockedLevel =
+            currentLevel + 1;
+
+        localStorage.setItem(
+            "vogelManiaLevel",
+            unlockedLevel
+        );
+    }
+
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent =
+        "🎉 Level geschafft!";
+
+
+    document.getElementById(
+        "popupText"
+    ).innerHTML =
+        "Du hast <b>" +
+        score +
+        "</b> Punkte erreicht!<br><br>" +
+
+        (
+            currentLevel < levels.length
+            ? "🐦 Das nächste Level wurde freigeschaltet."
+            : "🏆 Du hast alle 20 Level geschafft!"
+        );
+
+
+    document.getElementById(
+        "nextButton"
+    ).style.display =
+        currentLevel < levels.length
+        ? "inline-block"
+        : "none";
+
+
+    overlay.classList.add("show");
+
+    createLevelButtons();
+}
+
+
+/* ==========================================
+   GAME OVER
+========================================== */
+
+function gameOver() {
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent =
+        "😅 Level nicht geschafft";
+
+
+    document.getElementById(
+        "popupText"
+    ).innerHTML =
+        "Du hast <b>" +
+        score +
+        "</b> Punkte erreicht.<br><br>" +
+
+        "Benötigt werden <b>" +
+        levels[currentLevel-1].target +
+        "</b> Punkte.";
+
+
+    document.getElementById(
+        "nextButton"
+    ).style.display =
+        "none";
+
+
+    overlay.classList.add("show");
+}
+
+
+/* ==========================================
+   NÄCHSTES LEVEL
+========================================== */
+
+function nextLevel() {
+
+    closePopup();
+
+    if(
+        currentLevel < levels.length
+    ) {
+
+        startLevel(
+            currentLevel + 1
+        );
+    }
+}
+
+
+/* ==========================================
+   POPUP SCHLIESSEN
+========================================== */
+
+function closePopup() {
+
+    overlay.classList.remove(
+        "show"
+    );
+}
+
+
+/* ==========================================
+   LEVELAUSWAHL
+========================================== */
+
+function createLevelButtons() {
+
+    levelsElement.innerHTML = "";
+
+
+    levels.forEach(
+        (_,index) => {
+
+            const number =
+                index + 1;
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "levelButton";
+
+
+            button.textContent =
+                number;
+
+
+            if(
+                number > unlockedLevel
+            ) {
+
+                button.classList.add(
+                    "locked"
+                );
+
+                button.textContent =
+                    "🔒";
+
+            } else {
+
+                button.addEventListener(
+                    "click",
+                    () => startLevel(number)
+                );
+            }
+
+
+            if(
+                number === currentLevel
+            ) {
+
+                button.classList.add(
+                    "current"
+                );
+            }
+
+
+            levelsElement.appendChild(
+                button
+            );
+        }
+    );
+}
+
+
+/* ==========================================
+   UI
+========================================== */
+
+function updateUI() {
+
+    const target =
+        levels[currentLevel-1].target;
+
+
+    levelElement.textContent =
+        currentLevel;
+
+    scoreElement.textContent =
+        score;
+
+    targetElement.textContent =
+        target;
+
+    movesElement.textContent =
+        moves;
+
+
+    const percentage =
+        Math.min(
+            100,
+            score / target * 100
+        );
+
+
+    progressBar.style.width =
+        percentage + "%";
+}
+
+
+/* ==========================================
+   NEUSTART
+========================================== */
+
+function restartLevel() {
+
+    closePopup();
+
+    startLevel(
+        currentLevel
+    );
+}
+
+
+/* ==========================================
+   ANLEITUNG
+========================================== */
+
+function showRules() {
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent =
+        "🐦 So funktioniert das Spiel";
+
+
+    document.getElementById(
+        "popupText"
+    ).innerHTML = `
+
+        Tausche zwei benachbarte Vögel.
+
+        <br><br>
+
+        🐦 Drei gleiche Vögel:
+        normale Kombination.
+
+        <br><br>
+
+        ⚡ Vier gleiche Vögel:
+        Bonuspunkte.
+
+        <br><br>
+
+        🌟 Fünf oder mehr:
+        großer Bonus.
+
+        <br><br>
+
+        🧊 Eis muss mehrfach getroffen werden.
+
+        <br><br>
+
+        🧱 Blockaden können nicht bewegt werden.
+
+        <br><br>
+
+        💣 Bomben müssen vor Ablauf
+        ihres Zählers entfernt werden.
+
+        <br><br>
+
+        Erreiche das Ziel,
+        bevor deine Züge ausgehen.
+    `;
+
+
+    document.getElementById(
+        "nextButton"
+    ).style.display =
+        "none";
+
+
+    overlay.classList.add(
+        "show"
+    );
+}
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+function resetProgress() {
+
+    if(
+        confirm(
+            "Wirklich den gesamten Fortschritt löschen?"
+        )
+    ) {
+
+        localStorage.removeItem(
+            "vogelManiaLevel"
+        );
+
+        unlockedLevel = 1;
+
+        startLevel(1);
+    }
+}
+
+
+/* ==========================================
+   SPIEL START
+========================================== */
+
+startLevel(
+    Math.min(
+        unlockedLevel,
+        levels.length
+    )
+);
+
+</script>
+
+</body>
+</html>
+```
