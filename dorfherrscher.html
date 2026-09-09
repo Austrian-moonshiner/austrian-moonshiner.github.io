@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dorfherrscher</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    background:
+        radial-gradient(circle at top, #42533a 0%, #20291d 45%, #10150f 100%);
+    color: #f5ead0;
+    min-height: 100vh;
+}
+
+button {
+    font-family: inherit;
+}
+
+#game {
+    max-width: 1500px;
+    margin: auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: linear-gradient(#382b1d, #21180f);
+    border-bottom: 3px solid #b38a45;
+    padding: 12px 18px;
+    box-shadow: 0 4px 15px #0009;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.top-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 40px);
+    color: #e8c878;
+    text-shadow: 2px 2px #000;
+}
+
+.subtitle {
+    color: #c7b99b;
+    font-size: 13px;
+}
+
+.resources {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.resource {
+    background: linear-gradient(145deg, #4b3924, #2a2015);
+    border: 1px solid #806239;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    box-shadow: inset 0 1px #ffffff14;
+}
+
+.resource-icon {
+    font-size: 22px;
+}
+
+.resource-name {
+    font-size: 11px;
+    color: #cfc1a5;
+}
+
+.resource-value {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.resource-rate {
+    font-size: 10px;
+    color: #9fc47d;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    overflow-x: auto;
+    background: #19140e;
+    border-bottom: 1px solid #634a2a;
+}
+
+.nav-btn {
+    white-space: nowrap;
+    border: 1px solid #74552f;
+    background: linear-gradient(#60482c, #342517);
+    color: #f4e7c8;
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background: linear-gradient(#9b743e, #614722);
+    border-color: #d5aa5a;
+    transform: translateY(-1px);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    padding: 15px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.panel {
+    background:
+        linear-gradient(145deg, #382a1b, #21180f);
+    border: 1px solid #795a31;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px #0007;
+}
+
+.panel h2 {
+    color: #e4c16d;
+    margin-top: 0;
+    border-bottom: 1px solid #70532c;
+    padding-bottom: 8px;
+}
+
+.panel h3 {
+    color: #dfbd72;
+}
+
+/* =========================
+   VILLAGE
+========================= */
+
+.village {
+    position: relative;
+    min-height: 610px;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 3px solid #70532e;
+
+    background:
+        radial-gradient(circle at 30% 30%, #71884b 0 5%, transparent 6%),
+        radial-gradient(circle at 70% 65%, #536b38 0 7%, transparent 8%),
+        linear-gradient(135deg, #5c773f, #324b29 55%, #263b20);
+}
+
+.village::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .25;
+    background-image:
+        radial-gradient(#d6cf9d 1px, transparent 1px);
+    background-size: 18px 18px;
+}
+
+.village-road {
+    position: absolute;
+    width: 75%;
+    height: 85px;
+    left: 12%;
+    top: 46%;
+    background: #8a704d;
+    transform: rotate(-15deg);
+    border-radius: 50%;
+    opacity: .75;
+    box-shadow: inset 0 0 20px #493a27;
+}
+
+.village-title {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    z-index: 3;
+    background: #24190fdd;
+    padding: 10px 15px;
+    border-radius: 9px;
+    border: 1px solid #a47c40;
+}
+
+.village-title strong {
+    color: #e9c978;
+}
+
+.building {
+    position: absolute;
+    width: 145px;
+    min-height: 105px;
+    background: linear-gradient(#765633, #392718);
+    border: 2px solid #a47a40;
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 4;
+    box-shadow: 0 7px 12px #0008;
+    transition: .2s;
+}
+
+.building:hover {
+    transform: scale(1.04);
+    border-color: #e4c06b;
+}
+
+.building .emoji {
+    font-size: 38px;
+}
+
+.building-name {
+    font-weight: bold;
+}
+
+.level {
+    display: inline-block;
+    margin-top: 4px;
+    background: #17120c;
+    padding: 2px 7px;
+    border-radius: 10px;
+    color: #e7c978;
+    font-size: 12px;
+}
+
+.b-rathaus { left: 42%; top: 33%; }
+.b-sawmill { left: 7%; top: 20%; }
+.b-clay { right: 7%; top: 18%; }
+.b-iron { left: 7%; bottom: 12%; }
+.b-farm { right: 7%; bottom: 12%; }
+.b-barracks { left: 37%; bottom: 7%; }
+.b-wall { left: 42%; top: 7%; }
+
+.empty-building {
+    position: absolute;
+    width: 130px;
+    min-height: 75px;
+    border: 2px dashed #d6c18d88;
+    border-radius: 10px;
+    background: #11180c66;
+    color: #ded1ad;
+    text-align: center;
+    padding: 18px 5px;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.empty-building:hover {
+    background: #263b1dcc;
+    border-color: #e2c16c;
+}
+
+.empty1 { left: 25%; top: 18%; }
+.empty2 { right: 27%; top: 35%; }
+.empty3 { left: 25%; bottom: 13%; }
+
+/* =========================
+   CARDS
+========================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+}
+
+.card {
+    background: linear-gradient(145deg, #493521, #281d13);
+    border: 1px solid #73552e;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.card-icon {
+    font-size: 40px;
+}
+
+.card-title {
+    color: #e5c170;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-description {
+    color: #c4b497;
+    font-size: 13px;
+    min-height: 42px;
+}
+
+button.action {
+    width: 100%;
+    padding: 10px;
+    margin-top: 9px;
+    border-radius: 7px;
+    border: 1px solid #a27b3f;
+    background: linear-gradient(#8b6838, #4b351d);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button.action:hover {
+    background: linear-gradient(#b08748, #674b27);
+}
+
+button.action:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.cost {
+    color: #c9b998;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.locked {
+    opacity: .55;
+}
+
+/* =========================
+   PROGRESS
+========================= */
+
+.progress {
+    height: 9px;
+    background: #16110c;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 7px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #91b95b, #d5bc62);
+    transition: width .3s;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map {
+    position: relative;
+    min-height: 580px;
+    border: 3px solid #6e542f;
+    border-radius: 14px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 30% 30%, #65824b, transparent 20%),
+        radial-gradient(circle at 75% 70%, #587343, transparent 20%),
+        linear-gradient(135deg, #435d35, #263c25);
+}
+
+.map::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .16;
+    background-image:
+        linear-gradient(#d8d0a0 1px, transparent 1px),
+        linear-gradient(90deg, #d8d0a0 1px, transparent 1px);
+    background-size: 70px 70px;
+}
+
+.map-village {
+    position: absolute;
+    z-index: 4;
+    padding: 8px;
+    min-width: 90px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #9b783e;
+    background: #251b12e8;
+    cursor: pointer;
+}
+
+.map-village:hover {
+    transform: scale(1.08);
+}
+
+.player-village {
+    border-color: #e4c66f;
+    box-shadow: 0 0 20px #f0ce68aa;
+}
+
+.v1 { left: 46%; top: 45%; }
+.v2 { left: 15%; top: 22%; }
+.v3 { right: 13%; top: 18%; }
+.v4 { left: 19%; bottom: 18%; }
+.v5 { right: 18%; bottom: 19%; }
+.v6 { left: 47%; top: 10%; }
+.v7 { left: 68%; top: 45%; }
+.v8 { left: 35%; bottom: 10%; }
+
+/* =========================
+   REPORTS
+========================= */
+
+.report {
+    padding: 12px;
+    margin-bottom: 8px;
+    border-left: 4px solid #ad8647;
+    background: #21180f;
+    border-radius: 5px;
+}
+
+.report.win {
+    border-left-color: #8eb85c;
+}
+
+.report.loss {
+    border-left-color: #b65b4d;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toast-container {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    z-index: 999;
+    width: min(360px, calc(100vw - 30px));
+}
+
+.toast {
+    background: #20170f;
+    border: 1px solid #a37b3e;
+    border-radius: 9px;
+    padding: 12px;
+    margin-top: 8px;
+    box-shadow: 0 6px 20px #0009;
+    animation: toastIn .25s;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: #000a;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 15px;
+}
+
+.modal-bg.show {
+    display: flex;
+}
+
+.modal {
+    width: min(600px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: linear-gradient(145deg, #493521, #21180f);
+    border: 2px solid #a57d42;
+    border-radius: 13px;
+    padding: 20px;
+    box-shadow: 0 15px 50px #000;
+}
+
+.modal h2 {
+    color: #e4c06c;
+    margin-top: 0;
+}
+
+.close {
+    float: right;
+    border: 0;
+    background: transparent;
+    color: #e6d5b2;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 750px) {
+    .resources {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .village {
+        min-height: 760px;
+    }
+
+    .building {
+        width: 125px;
+        min-height: 95px;
+    }
+
+    .building .emoji {
+        font-size: 30px;
+    }
+
+    .b-rathaus {
+        left: calc(50% - 62px);
+        top: 38%;
+    }
+
+    .b-sawmill {
+        left: 4%;
+        top: 15%;
+    }
+
+    .b-clay {
+        right: 4%;
+        top: 15%;
+    }
+
+    .b-iron {
+        left: 4%;
+        bottom: 15%;
+    }
+
+    .b-farm {
+        right: 4%;
+        bottom: 15%;
+    }
+
+    .b-barracks {
+        left: calc(50% - 62px);
+        bottom: 4%;
+    }
+
+    .b-wall {
+        left: calc(50% - 62px);
+        top: 9%;
+    }
+
+    .empty1 {
+        left: 8%;
+        top: 30%;
+    }
+
+    .empty2 {
+        right: 8%;
+        top: 33%;
+    }
+
+    .empty3 {
+        left: 8%;
+        bottom: 5%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<header>
+    <div class="top-title">
+        <div>
+            <h1>🏰 Dorfherrscher</h1>
+            <div class="subtitle">
+                Baue dein Dorf auf, entwickle dein Reich und verteidige deine Ländereien.
+            </div>
+        </div>
+
+        <div>
+            <strong>Tag <span id="day">1</span></strong><br>
+            <small>Ruhm: <span id="fame">0</span></small>
+        </div>
+    </div>
+
+    <div class="resources">
+        <div class="resource">
+            <div class="resource-icon">🪵</div>
+            <div class="resource-name">Holz</div>
+            <div class="resource-value" id="wood">0</div>
+            <div class="resource-rate" id="woodRate">+0 / Min.</div>
+        </div>
+
+        <div class="resource">
+            <div class="resource-icon">🧱</div>
+            <div class="resource-name">Lehm</div>
+            <div class="resource-value" id="clay">0</div>
+            <div class="resource-rate" id="clayRate">+0 / Min.</div>
+        </div>
+
+        <div class="resource">
+            <div class="resource-icon">⛓️</div>
+            <div class="resource-name">Eisen</div>
+            <div class="resource-value" id="iron">0</div>
+            <div class="resource-rate" id="ironRate">+0 / Min.</div>
+        </div>
+
+        <div class="resource">
+            <div class="resource-icon">🌾</div>
+            <div class="resource-name">Nahrung</div>
+            <div class="resource-value" id="food">0</div>
+            <div class="resource-rate" id="foodRate">+0 / Min.</div>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <button class="nav-btn active" onclick="showPage('village', this)">🏘️ Dorf</button>
+    <button class="nav-btn" onclick="showPage('buildings', this)">🏗️ Gebäude</button>
+    <button class="nav-btn" onclick="showPage('army', this)">⚔️ Armee</button>
+    <button class="nav-btn" onclick="showPage('map', this)">🗺️ Weltkarte</button>
+    <button class="nav-btn" onclick="showPage('missions', this)">🎯 Aufgaben</button>
+    <button class="nav-btn" onclick="showPage('reports', this)">📜 Berichte</button>
+    <button class="nav-btn" onclick="showPage('market', this)">💰 Markt</button>
+    <button class="nav-btn" onclick="showPage('statistics', this)">📊 Statistik</button>
+</nav>
+
+<main>
+
+<!-- ================= VILLAGE ================= -->
+
+<section id="page-village" class="page active">
+
+    <div class="village">
+
+        <div class="village-title">
+            🏰 <strong id="villageName">Eichenhain</strong><br>
+            <small>Rathaus Stufe <span id="villageRathaus">1</span></small>
+        </div>
+
+        <div class="village-road"></div>
+
+        <div class="building b-rathaus" onclick="buildingInfo('townhall')">
+            <div class="emoji">🏰</div>
+            <div class="building-name">Rathaus</div>
+            <span class="level">Stufe <span id="townhallLevel">1</span></span>
+        </div>
+
+        <div class="building b-sawmill" onclick="buildingInfo('sawmill')">
+            <div class="emoji">🪓</div>
+            <div class="building-name">Holzfäller</div>
+            <span class="level">Stufe <span id="sawmillLevel">1</span></span>
+        </div>
+
+        <div class="building b-clay" onclick="buildingInfo('clay')">
+            <div class="emoji">🧱</div>
+            <div class="building-name">Lehmgrube</div>
+            <span class="level">Stufe <span id="clayLevel">1</span></span>
+        </div>
+
+        <div class="building b-iron" onclick="buildingInfo('iron')">
+            <div class="emoji">⛏️</div>
+            <div class="building-name">Eisenmine</div>
+            <span class="level">Stufe <span id="ironLevel">1</span></span>
+        </div>
+
+        <div class="building b-farm" onclick="buildingInfo('farm')">
+            <div class="emoji">🌾</div>
+            <div class="building-name">Bauernhof</div>
+            <span class="level">Stufe <span id="farmLevel">1</span></span>
+        </div>
+
+        <div class="building b-barracks" onclick="buildingInfo('barracks')">
+            <div class="emoji">⚔️</div>
+            <div class="building-name">Kaserne</div>
+            <span class="level">Stufe <span id="barracksLevel">1</span></span>
+        </div>
+
+        <div class="building b-wall" onclick="buildingInfo('wall')">
+            <div class="emoji">🛡️</div>
+            <div class="building-name">Mauer</div>
+            <span class="level">Stufe <span id="wallLevel">1</span></span>
+        </div>
+
+        <div class="empty-building empty1" onclick="showPage('buildings')">
+            ➕<br>
+            Bauplatz
+        </div>
+
+        <div class="empty-building empty2" onclick="showPage('buildings')">
+            ➕<br>
+            Bauplatz
+        </div>
+
+        <div class="empty-building empty3" onclick="showPage('buildings')">
+            ➕<br>
+            Bauplatz
+        </div>
+
+    </div>
+
+    <div class="grid" style="margin-top:15px">
+
+        <div class="panel">
+            <h2>👥 Bevölkerung</h2>
+            <strong><span id="population">20</span> / <span id="populationMax">50</span></strong>
+
+            <div class="progress">
+                <div class="progress-bar" id="populationBar"></div>
+            </div>
+
+            <p>
+                Freie Bevölkerung:
+                <strong id="freePopulation">30</strong>
+            </p>
+        </div>
+
+        <div class="panel">
+            <h2>🏗️ Baufortschritt</h2>
+            <div id="construction">
+                Momentan wird nichts gebaut.
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>⚠️ Dorfstatus</h2>
+            <p>
+                Verteidigung:
+                <strong id="defense">10</strong>
+            </p>
+            <p>
+                Moral:
+                <strong id="morale">100%</strong>
+            </p>
+            <p>
+                Sicherheit:
+                <strong id="security">Stabil</strong>
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= BUILDINGS ================= -->
+
+<section id="page-buildings" class="page">
+
+    <div class="panel">
+        <h2>🏗️ Gebäude ausbauen</h2>
+        <p>
+            Baue dein Dorf aus. Höhere Gebäudestufen erhöhen Produktion,
+            Bevölkerung oder militärische Möglichkeiten.
+        </p>
+
+        <div class="grid" id="buildingGrid"></div>
+    </div>
+
+</section>
+
+<!-- ================= ARMY ================= -->
+
+<section id="page-army" class="page">
+
+    <div class="panel">
+        <h2>⚔️ Armee</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">Speerwache</div>
+                <p>Günstige defensive Einheit.</p>
+                <strong>Besitz: <span id="spears">5</span></strong>
+                <div class="cost">🪵 60 · 🧱 40 · ⛓️ 20 · 🌾 30</div>
+                <button class="action" onclick="trainUnit('spears')">
+                    Ausbilden
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">⚔️</div>
+                <div class="card-title">Axtkämpfer</div>
+                <p>Starker Angreifer.</p>
+                <strong>Besitz: <span id="axes">0</span></strong>
+                <div class="cost">🪵 80 · 🧱 30 · ⛓️ 50 · 🌾 40</div>
+                <button class="action" onclick="trainUnit('axes')">
+                    Ausbilden
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🏹</div>
+                <div class="card-title">Bogenschütze</div>
+                <p>Ausgewogene Fernkampfeinheit.</p>
+                <strong>Besitz: <span id="archers">0</span></strong>
+                <div class="cost">🪵 100 · 🧱 50 · ⛓️ 30 · 🌾 50</div>
+                <button class="action" onclick="trainUnit('archers')">
+                    Ausbilden
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🐎</div>
+                <div class="card-title">Reiter</div>
+                <p>Schnelle und starke Einheit.</p>
+                <strong>Besitz: <span id="cavalry">0</span></strong>
+                <div class="cost">🪵 150 · 🧱 80 · ⛓️ 100 · 🌾 120</div>
+                <button class="action" onclick="trainUnit('cavalry')">
+                    Ausbilden
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>🛡️ Militärische Stärke</h2>
+        <div class="grid">
+            <div class="card">
+                <strong>Angriff</strong>
+                <h2 id="attackPower">50</h2>
+            </div>
+            <div class="card">
+                <strong>Verteidigung</strong>
+                <h2 id="defensePower">100</h2>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ================= MAP ================= -->
+
+<section id="page-map" class="page">
+
+    <div class="panel">
+        <h2>🗺️ Weltkarte</h2>
+        <p>
+            Andere Dörfer liegen in deiner Umgebung. Einige sind freundlich,
+            andere werden dir früher oder später Probleme bereiten.
+        </p>
+
+        <div class="map">
+
+            <div class="map-village player-village v1"
+                 onclick="openVillage('Dein Dorf', true)">
+                👑<br>
+                <strong>Eichenhain</strong>
+                <br><small>Dein Dorf</small>
+            </div>
+
+            <div class="map-village v2"
+                 onclick="openVillage('Nordtal')">
+                🏠<br>
+                Nordtal<br>
+                <small>Stufe 2</small>
+            </div>
+
+            <div class="map-village v3"
+                 onclick="openVillage('Steinburg')">
+                🏰<br>
+                Steinburg<br>
+                <small>Stufe 4</small>
+            </div>
+
+            <div class="map-village v4"
+                 onclick="openVillage('Waldfurt')">
+                🏠<br>
+                Waldfurt<br>
+                <small>Stufe 3</small>
+            </div>
+
+            <div class="map-village v5"
+                 onclick="openVillage('Eisental')">
+                🏰<br>
+                Eisental<br>
+                <small>Stufe 5</small>
+            </div>
+
+            <div class="map-village v6"
+                 onclick="openVillage('Hohenfels')">
+                🏯<br>
+                Hohenfels<br>
+                <small>Stufe 7</small>
+            </div>
+
+            <div class="map-village v7"
+                 onclick="openVillage('Rabenstein')">
+                ⚔️<br>
+                Rabenstein<br>
+                <small>Feindlich</small>
+            </div>
+
+            <div class="map-village v8"
+                 onclick="openVillage('Morgenrot')">
+                🏠<br>
+                Morgenrot<br>
+                <small>Stufe 2</small>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- ================= MISSIONS ================= -->
+
+<section id="page-missions" class="page">
+
+    <div class="panel">
+        <h2>🎯 Aufgaben</h2>
+        <div id="missionList"></div>
+    </div>
+
+</section>
+
+<!-- ================= REPORTS ================= -->
+
+<section id="page-reports" class="page">
+
+    <div class="panel">
+        <h2>📜 Kampfberichte & Ereignisse</h2>
+        <div id="reportList"></div>
+    </div>
+
+</section>
+
+<!-- ================= MARKET ================= -->
+
+<section id="page-market" class="page">
+
+    <div class="panel">
+        <h2>💰 Markt</h2>
+        <p>Handle Ressourcen miteinander.</p>
+
+        <div class="grid">
+
+            <div class="card">
+                <div class="card-title">🪵 Holz verkaufen</div>
+                <p>100 Holz → 70 Münzen</p>
+                <button class="action" onclick="trade('wood', -100, 70)">
+                    Verkaufen
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🧱 Lehm verkaufen</div>
+                <p>100 Lehm → 70 Münzen</p>
+                <button class="action" onclick="trade('clay', -100, 70)">
+                    Verkaufen
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">⛓️ Eisen verkaufen</div>
+                <p>100 Eisen → 100 Münzen</p>
+                <button class="action" onclick="trade('iron', -100, 100)">
+                    Verkaufen
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🌾 Nahrung kaufen</div>
+                <p>80 Münzen → 100 Nahrung</p>
+                <button class="action" onclick="buyFood()">
+                    Kaufen
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>💰 Schatzkammer</h2>
+        <h1>🪙 <span id="coins">250</span></h1>
+    </div>
+
+</section>
+
+<!-- ================= STATISTICS ================= -->
+
+<section id="page-statistics" class="page">
+
+    <div class="panel">
+        <h2>📊 Dorfstatistik</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                <strong>Dorfstufe</strong>
+                <h2 id="statTownhall">1</h2>
+            </div>
+
+            <div class="card">
+                <strong>Gesamtbevölkerung</strong>
+                <h2 id="statPopulation">20</h2>
+            </div>
+
+            <div class="card">
+                <strong>Gebäudelevel</strong>
+                <h2 id="statBuildings">7</h2>
+            </div>
+
+            <div class="card">
+                <strong>Einheiten</strong>
+                <h2 id="statArmy">5</h2>
+            </div>
+
+            <div class="card">
+                <strong>Gewonnene Kämpfe</strong>
+                <h2 id="statWins">0</h2>
+            </div>
+
+            <div class="card">
+                <strong>Verlorene Kämpfe</strong>
+                <h2 id="statLosses">0</h2>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>💾 Spielstand</h2>
+        <p>
+            Dein Fortschritt wird automatisch gespeichert.
+        </p>
+
+        <button class="action" onclick="saveGame()">
+            💾 Jetzt speichern
+        </button>
+
+        <button class="action" onclick="resetGame()">
+            🗑️ Spielstand löschen
+        </button>
+    </div>
+
+</section>
+
+</main>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- MODAL -->
+
+<div class="modal-bg" id="modalBg">
+    <div class="modal">
+        <button class="close" onclick="closeModal()">×</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+
+/* =========================================================
+   SPIELDATEN
+========================================================= */
+
+const SAVE_KEY = "dorfherrscher_save_v1";
+
+const defaultGame = {
+    villageName: "Eichenhain",
+
+    wood: 600,
+    clay: 600,
+    iron: 500,
+    food: 700,
+    coins: 250,
+
+    population: 20,
+    populationMax: 50,
+
+    fame: 0,
+    day: 1,
+
+    buildings: {
+        townhall: 1,
+        sawmill: 1,
+        clay: 1,
+        iron: 1,
+        farm: 1,
+        barracks: 1,
+        wall: 1
+    },
+
+    army: {
+        spears: 5,
+        axes: 0,
+        archers: 0,
+        cavalry: 0
+    },
+
+    construction: null,
+
+    reports: [],
+
+    missions: {
+        firstUpgrade: false,
+        population50: false,
+        firstAttack: false,
+        buildLevel5: false
+    },
+
+    statistics: {
+        wins: 0,
+        losses: 0,
+        attacks: 0,
+        resourcesCollected: 0
+    },
+
+    lastUpdate: Date.now()
+};
+
+let game = loadGame();
+
+/* =========================================================
+   LADEN / SPEICHERN
+========================================================= */
+
+function loadGame() {
+
+    try {
+
+        const saved = localStorage.getItem(SAVE_KEY);
+
+        if (!saved) {
+            return structuredClone(defaultGame);
+        }
+
+        const parsed = JSON.parse(saved);
+
+        return mergeDefaults(parsed);
+
+    } catch (e) {
+
+        console.error(e);
+
+        return structuredClone(defaultGame);
+    }
+}
+
+function mergeDefaults(saved) {
+
+    const fresh = structuredClone(defaultGame);
+
+    return {
+        ...fresh,
+        ...saved,
+        buildings: {
+            ...fresh.buildings,
+            ...(saved.buildings || {})
+        },
+        army: {
+            ...fresh.army,
+            ...(saved.army || {})
+        },
+        missions: {
+            ...fresh.missions,
+            ...(saved.missions || {})
+        },
+        statistics: {
+            ...fresh.statistics,
+            ...(saved.statistics || {})
+        }
+    };
+}
+
+function saveGame(showMessage = false) {
+
+    game.lastUpdate = Date.now();
+
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(game)
+    );
+
+    if (showMessage) {
+        toast("💾 Spielstand gespeichert.");
+    }
+}
+
+/* =========================================================
+   OFFLINE-FORTSCHRITT
+========================================================= */
+
+function calculateOfflineProgress() {
+
+    const now = Date.now();
+
+    let seconds = (now - game.lastUpdate) / 1000;
+
+    if (seconds <= 0) return;
+
+    // Maximal 24 Stunden Offline-Produktion
+    seconds = Math.min(seconds, 86400);
+
+    const rates = getRates();
+
+    game.wood = Math.min(
+        getStorage(),
+        game.wood + rates.wood * seconds / 60
+    );
+
+    game.clay = Math.min(
+        getStorage(),
+        game.clay + rates.clay * seconds / 60
+    );
+
+    game.iron = Math.min(
+        getStorage(),
+        game.iron + rates.iron * seconds / 60
+    );
+
+    game.food = Math.min(
+        getStorage(),
+        game.food + rates.food * seconds / 60
+    );
+
+    game.lastUpdate = now;
+}
+
+calculateOfflineProgress();
+
+/* =========================================================
+   RESSOURCEN
+========================================================= */
+
+function getRates() {
+
+    return {
+        wood: game.buildings.sawmill * 18,
+        clay: game.buildings.clay * 16,
+        iron: game.buildings.iron * 12,
+        food: game.buildings.farm * 20
+    };
+}
+
+function getStorage() {
+
+    return 1000 + game.buildings.townhall * 750;
+}
+
+function resourceCost(base, level) {
+
+    return Math.floor(
+        base * Math.pow(1.55, level - 1)
+    );
+}
+
+function formatNumber(value) {
+
+    return Math.floor(value).toLocaleString("de-DE");
+}
+
+/* =========================================================
+   BAUZEIT
+========================================================= */
+
+function buildingTime(level) {
+
+    return Math.max(
+        5,
+        Math.floor(8 * Math.pow(1.45, level - 1))
+    );
+}
+
+/* =========================================================
+   GEBÄUDE
+========================================================= */
+
+const buildingData = {
+
+    townhall: {
+        name: "Rathaus",
+        icon: "🏰",
+        description: "Das Herz deines Dorfes. Höhere Stufen schalten neue Möglichkeiten frei.",
+        wood: 150,
+        clay: 150,
+        iron: 100,
+        food: 100
+    },
+
+    sawmill: {
+        name: "Holzfäller",
+        icon: "🪓",
+        description: "Produziert Holz.",
+        wood: 100,
+        clay: 70,
+        iron: 30,
+        food: 50
+    },
+
+    clay: {
+        name: "Lehmgrube",
+        icon: "🧱",
+        description: "Produziert Lehm.",
+        wood: 90,
+        clay: 90,
+        iron: 30,
+        food: 40
+    },
+
+    iron: {
+        name: "Eisenmine",
+        icon: "⛏️",
+        description: "Fördert Eisen.",
+        wood: 120,
+        clay: 100,
+        iron: 60,
+        food: 50
+    },
+
+    farm: {
+        name: "Bauernhof",
+        icon: "🌾",
+        description: "Produziert Nahrung und erhöht deine Bevölkerungskapazität.",
+        wood: 100,
+        clay: 100,
+        iron: 30,
+        food: 70
+    },
+
+    barracks: {
+        name: "Kaserne",
+        icon: "⚔️",
+        description: "Ermöglicht dir, Soldaten auszubilden.",
+        wood: 180,
+        clay: 150,
+        iron: 120,
+        food: 100
+    },
+
+    wall: {
+        name: "Mauer",
+        icon: "🛡️",
+        description: "Erhöht die Verteidigung deines Dorfes.",
+        wood: 200,
+        clay: 250,
+        iron: 80,
+        food: 50
+    }
+
+};
+
+/* =========================================================
+   BUILDING GRID
+========================================================= */
+
+function renderBuildings() {
+
+    const grid = document.getElementById("buildingGrid");
+
+    grid.innerHTML = "";
+
+    Object.keys(buildingData).forEach(key => {
+
+        const data = buildingData[key];
+        const level = game.buildings[key];
+
+        const cost = {
+            wood: resourceCost(data.wood, level),
+            clay: resourceCost(data.clay, level),
+            iron: resourceCost(data.iron, level),
+            food: resourceCost(data.food, level)
+        };
+
+        const maxed = level >= 20;
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+            <div class="card-icon">${data.icon}</div>
+            <div class="card-title">${data.name}</div>
+
+            <p>${data.description}</p>
+
+            <strong>Stufe ${level} / 20</strong>
+
+            <div class="progress">
+                <div class="progress-bar"
+                     style="width:${level * 5}%"></div>
+            </div>
+
+            <div class="cost">
+                🪵 ${formatNumber(cost.wood)}
+                · 🧱 ${formatNumber(cost.clay)}
+                · ⛓️ ${formatNumber(cost.iron)}
+                · 🌾 ${formatNumber(cost.food)}
+            </div>
+
+            ${
+                maxed
+                ?
+                `<button class="action" disabled>Maximale Stufe</button>`
+                :
+                `<button class="action"
+                    onclick="upgradeBuilding('${key}')">
+                    ⬆️ Auf Stufe ${level + 1} ausbauen
+                </button>`
+            }
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+/* =========================================================
+   UPGRADE
+========================================================= */
+
+function upgradeBuilding(key) {
+
+    if (game.construction) {
+
+        toast("⏳ Es läuft bereits ein Bauprojekt.");
+
+        return;
+    }
+
+    const data = buildingData[key];
+    const level = game.buildings[key];
+
+    if (level >= 20) {
+
+        toast("🏆 Dieses Gebäude ist bereits auf maximaler Stufe.");
+
+        return;
+    }
+
+    if (level + 1 > game.buildings.townhall + 2 &&
+        key !== "townhall") {
+
+        toast("🏰 Dein Rathaus muss zuerst weiter ausgebaut werden.");
+
+        return;
+    }
+
+    const cost = {
+        wood: resourceCost(data.wood, level),
+        clay: resourceCost(data.clay, level),
+        iron: resourceCost(data.iron, level),
+        food: resourceCost(data.food, level)
+    };
+
+    if (
+        game.wood < cost.wood ||
+        game.clay < cost.clay ||
+        game.iron < cost.iron ||
+        game.food < cost.food
+    ) {
+
+        toast("❌ Nicht genügend Ressourcen.");
+
+        return;
+    }
+
+    game.wood -= cost.wood;
+    game.clay -= cost.clay;
+    game.iron -= cost.iron;
+    game.food -= cost.food;
+
+    game.construction = {
+        key,
+        targetLevel: level + 1,
+        finish: Date.now() + buildingTime(level) * 1000
+    };
+
+    saveGame();
+
+    toast(
+        `${data.icon} ${data.name} wird auf Stufe ${level + 1} ausgebaut.`
+    );
+
+    updateUI();
+}
+
+/* =========================================================
+   KONSTRUKTION
+========================================================= */
+
+function processConstruction() {
+
+    if (!game.construction) return;
+
+    if (Date.now() >= game.construction.finish) {
+
+        const c = game.construction;
+
+        game.buildings[c.key] = c.targetLevel;
+
+        game.construction = null;
+
+        applyBuildingEffects(c.key);
+
+        game.fame += 5;
+
+        addReport(
+            `🏗️ ${buildingData[c.key].name} wurde auf Stufe ${c.targetLevel} ausgebaut.`,
+            "win"
+        );
+
+        toast(
+            `🏗️ ${buildingData[c.key].name} fertiggestellt!`
+        );
+
+        saveGame();
+    }
+}
+
+function applyBuildingEffects(key) {
+
+    if (key === "farm") {
+
+        game.populationMax =
+            30 + game.buildings.farm * 20;
+    }
+
+    if (key === "townhall") {
+
+        game.populationMax += 10;
+    }
+}
+
+/* =========================================================
+   EINHEITEN
+========================================================= */
+
+const unitCosts = {
+
+    spears: {
+        wood: 60,
+        clay: 40,
+        iron: 20,
+        food: 30,
+        population: 1
+    },
+
+    axes: {
+        wood: 80,
+        clay: 30,
+        iron: 50,
+        food: 40,
+        population: 1
+    },
+
+    archers: {
+        wood: 100,
+        clay: 50,
+        iron: 30,
+        food: 50,
+        population: 1
+    },
+
+    cavalry: {
+        wood: 150,
+        clay: 80,
+        iron: 100,
+        food: 120,
+        population: 2
+    }
+
+};
+
+function trainUnit(type) {
+
+    const cost = unitCosts[type];
+
+    if (game.population + cost.population > game.populationMax) {
+
+        toast("👥 Nicht genügend freie Bevölkerung.");
+
+        return;
+    }
+
+    if (
+        game.wood < cost.wood ||
+        game.clay < cost.clay ||
+        game.iron < cost.iron ||
+        game.food < cost.food
+    ) {
+
+        toast("❌ Nicht genügend Ressourcen.");
+
+        return;
+    }
+
+    if (type === "cavalry" &&
+        game.buildings.barracks < 3) {
+
+        toast("🏰 Für Reiter benötigst du eine Kaserne Stufe 3.");
+
+        return;
+    }
+
+    game.wood -= cost.wood;
+    game.clay -= cost.clay;
+    game.iron -= cost.iron;
+    game.food -= cost.food;
+
+    game.army[type] += 1;
+
+    game.population += cost.population;
+
+    toast("⚔️ Einheit erfolgreich ausgebildet.");
+
+    saveGame();
+
+    updateUI();
+}
+
+/* =========================================================
+   KAMPFKRAFT
+========================================================= */
+
+function getAttackPower() {
+
+    return (
+        game.army.spears * 10 +
+        game.army.axes * 35 +
+        game.army.archers * 25 +
+        game.army.cavalry * 65
+    );
+}
+
+function getDefensePower() {
+
+    return (
+        game.army.spears * 25 +
+        game.army.axes * 10 +
+        game.army.archers * 30 +
+        game.army.cavalry * 45 +
+        game.buildings.wall * 35
+    );
+}
+
+/* =========================================================
+   ANGRIFF
+========================================================= */
+
+function attackVillage(name) {
+
+    if (
+        game.army.spears +
+        game.army.axes +
+        game.army.archers +
+        game.army.cavalry === 0
+    ) {
+
+        toast("⚔️ Du hast keine Soldaten.");
+
+        return;
+    }
+
+    game.statistics.attacks++;
+
+    const enemyPower =
+        Math.floor(
+            50 + Math.random() * 300
+        );
+
+    const myPower =
+        getAttackPower() *
+        (0.75 + Math.random() * 0.5);
+
+    if (myPower >= enemyPower) {
+
+        const lootWood =
+            Math.floor(100 + Math.random() * 400);
+
+        const lootClay =
+            Math.floor(100 + Math.random() * 400);
+
+        const lootIron =
+            Math.floor(50 + Math.random() * 250);
+
+        game.wood = Math.min(
+            getStorage(),
+            game.wood + lootWood
+        );
+
+        game.clay = Math.min(
+            getStorage(),
+            game.clay + lootClay
+        );
+
+        game.iron = Math.min(
+            getStorage(),
+            game.iron + lootIron
+        );
+
+        game.fame += 20;
+
+        game.statistics.wins++;
+
+        addReport(
+            `⚔️ Sieg gegen ${name}! Beute: ${lootWood} Holz, ${lootClay} Lehm und ${lootIron} Eisen.`,
+            "win"
+        );
+
+        toast(`🏆 Sieg! ${name} wurde besiegt.`);
+
+    } else {
+
+        game.statistics.losses++;
+
+        game.morale = Math.max(
+            50,
+            (game.morale || 100) - 5
+        );
+
+        addReport(
+            `⚔️ Niederlage gegen ${name}. Deine Truppen mussten sich zurückziehen.`,
+            "loss"
+        );
+
+        toast("⚔️ Der Angriff ist gescheitert.");
+    }
+
+    saveGame();
+
+    updateUI();
+}
+
+/* =========================================================
+   VILLAGE MODAL
+========================================================= */
+
+function openVillage(name, own = false) {
+
+    let html = `
+        <h2>🏘️ ${name}</h2>
+    `;
+
+    if (own) {
+
+        html += `
+            <p>Dies ist dein eigenes Dorf.</p>
+            <p>
+                Verteidigung:
+                <strong>${getDefensePower()}</strong>
+            </p>
+        `;
+
+    } else {
+
+        const difficulty =
+            Math.floor(30 + Math.random() * 350);
+
+        html += `
+            <p>Ein unabhängiges Dorf in deiner Nachbarschaft.</p>
+
+            <div class="card">
+                <strong>Geschätzte Stärke</strong>
+                <h2>${difficulty}</h2>
+            </div>
+
+            <button class="action"
+                    onclick="attackVillage('${name}'); closeModal();">
+                ⚔️ Angriff starten
+            </button>
+
+            <button class="action"
+                    onclick="closeModal()">
+                🕊️ Nicht angreifen
+            </button>
+        `;
+    }
+
+    showModal(html);
+}
+
+/* =========================================================
+   BUILDING INFO
+========================================================= */
+
+function buildingInfo(key) {
+
+    const data = buildingData[key];
+    const level = game.buildings[key];
+
+    showModal(`
+        <h2>${data.icon} ${data.name}</h2>
+
+        <p>${data.description}</p>
+
+        <div class="card">
+            <strong>Aktuelle Stufe</strong>
+            <h2>${level}</h2>
+        </div>
+
+        <p>
+            Produktion:
+            <strong>
+                ${getBuildingProduction(key)}
+            </strong>
+        </p>
+
+        <button class="action"
+                onclick="closeModal(); showPage('buildings')">
+            🏗️ Ausbau öffnen
+        </button>
+    `);
+}
+
+function getBuildingProduction(key) {
+
+    const level = game.buildings[key];
+
+    if (key === "sawmill")
+        return "+" + level * 18 + " Holz / Min.";
+
+    if (key === "clay")
+        return "+" + level * 16 + " Lehm / Min.";
+
+    if (key === "iron")
+        return "+" + level * 12 + " Eisen / Min.";
+
+    if (key === "farm")
+        return "+" + level * 20 + " Nahrung / Min.";
+
+    if (key === "wall")
+        return level * 35 + " Verteidigung";
+
+    return "Keine direkte Produktion";
+}
+
+/* =========================================================
+   MISSIONEN
+========================================================= */
+
+function renderMissions() {
+
+    const list = document.getElementById("missionList");
+
+    const missions = [
+
+        {
+            id: "firstUpgrade",
+            title: "🏗️ Der erste Ausbau",
+            description: "Baue ein Gebäude mindestens auf Stufe 2.",
+            completed:
+                Object.values(game.buildings).some(v => v >= 2),
+            reward: "100 Holz + 100 Lehm + 10 Ruhm"
+        },
+
+        {
+            id: "population50",
+            title: "👥 Wachsendes Dorf",
+            description: "Erreiche mindestens 50 Einwohner.",
+            completed: game.population >= 50,
+            reward: "250 Nahrung + 20 Ruhm"
+        },
+
+        {
+            id: "firstAttack",
+            title: "⚔️ Der erste Feldzug",
+            description: "Gewinne deinen ersten Angriff.",
+            completed: game.statistics.wins >= 1,
+            reward: "300 Eisen + 25 Ruhm"
+        },
+
+        {
+            id: "buildLevel5",
+            title: "🏰 Aufstieg",
+            description: "Bringe das Rathaus auf Stufe 5.",
+            completed: game.buildings.townhall >= 5,
+            reward: "1.000 Holz + 1.000 Lehm"
+        }
+
+    ];
+
+    list.innerHTML = "";
+
+    missions.forEach(m => {
+
+        const alreadyClaimed = game.missions[m.id];
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = `
+            <h3>
+                ${m.title}
+                ${m.completed ? " ✅" : ""}
+            </h3>
+
+            <p>${m.description}</p>
+
+            <div class="cost">
+                Belohnung: ${m.reward}
+            </div>
+
+            ${
+                alreadyClaimed
+                ?
+                `<button class="action" disabled>
+                    Belohnung abgeholt
+                </button>`
+                :
+                m.completed
+                ?
+                `<button class="action"
+                    onclick="claimMission('${m.id}')">
+                    🎁 Belohnung abholen
+                </button>`
+                :
+                `<button class="action" disabled>
+                    Noch nicht abgeschlossen
+                </button>`
+            }
+        `;
+
+        list.appendChild(card);
+    });
+}
+
+function claimMission(id) {
+
+    if (game.missions[id]) return;
+
+    game.missions[id] = true;
+
+    if (id === "firstUpgrade") {
+
+        game.wood += 100;
+        game.clay += 100;
+        game.fame += 10;
+
+    }
+
+    if (id === "population50") {
+
+        game.food += 250;
+        game.fame += 20;
+
+    }
+
+    if (id === "firstAttack") {
+
+        game.iron += 300;
+        game.fame += 25;
+
+    }
+
+    if (id === "buildLevel5") {
+
+        game.wood += 1000;
+        game.clay += 1000;
+
+    }
+
+    addReport("🎁 Aufgabe abgeschlossen und Belohnung erhalten.", "win");
+
+    toast("🎁 Belohnung erhalten!");
+
+    saveGame();
+
+    updateUI();
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function addReport(text, type = "") {
+
+    game.reports.unshift({
+        text,
+        type,
+        time: new Date().toLocaleString("de-DE")
+    });
+
+    game.reports =
+        game.reports.slice(0, 30);
+}
+
+function renderReports() {
+
+    const list =
+        document.getElementById("reportList");
+
+    if (game.reports.length === 0) {
+
+        list.innerHTML =
+            "<p>Noch keine Berichte.</p>";
+
+        return;
+    }
+
+    list.innerHTML =
+        game.reports.map(r => `
+            <div class="report ${r.type}">
+                <strong>${r.time}</strong><br>
+                ${r.text}
+            </div>
+        `).join("");
+}
+
+/* =========================================================
+   MARKT
+========================================================= */
+
+function trade(resource, amount, coins) {
+
+    if (game[resource] < Math.abs(amount)) {
+
+        toast("❌ Nicht genügend Ressourcen.");
+
+        return;
+    }
+
+    game[resource] += amount;
+    game.coins += coins;
+
+    toast("💰 Handel abgeschlossen.");
+
+    saveGame();
+    updateUI();
+}
+
+function buyFood() {
+
+    if (game.coins < 80) {
+
+        toast("❌ Nicht genügend Münzen.");
+
+        return;
+    }
+
+    game.coins -= 80;
+
+    game.food = Math.min(
+        getStorage(),
+        game.food + 100
+    );
+
+    toast("🌾 100 Nahrung gekauft.");
+
+    saveGame();
+    updateUI();
+}
+
+/* =========================================================
+   RANDOM EVENTS
+========================================================= */
+
+let lastEvent = Date.now();
+
+function randomEvents() {
+
+    if (Date.now() - lastEvent < 45000) return;
+
+    lastEvent = Date.now();
+
+    const chance = Math.random();
+
+    if (chance < .12) {
+
+        const amount =
+            Math.floor(50 + Math.random() * 150);
+
+        game.wood = Math.min(
+            getStorage(),
+            game.wood + amount
+        );
+
+        addReport(
+            `🌲 Deine Holzfäller entdeckten zusätzlich ${amount} Holz.`,
+            "win"
+        );
+
+        toast(`🌲 Bonus: ${amount} Holz gefunden!`);
+
+    } else if (chance < .20) {
+
+        const amount =
+            Math.floor(30 + Math.random() * 100);
+
+        game.food = Math.min(
+            getStorage(),
+            game.food + amount
+        );
+
+        addReport(
+            `🌾 Eine gute Ernte brachte ${amount} zusätzliche Nahrung.`,
+            "win"
+        );
+
+        toast(`🌾 Gute Ernte! +${amount} Nahrung.`);
+
+    } else if (chance < .25) {
+
+        const enemy =
+            Math.floor(20 + Math.random() * 100);
+
+        const defense =
+            getDefensePower();
+
+        if (defense >= enemy) {
+
+            game.fame += 5;
+
+            addReport(
+                `🛡️ Ein kleiner Überfall wurde abgewehrt.`,
+                "win"
+            );
+
+            toast("🛡️ Dein Dorf wurde erfolgreich verteidigt.");
+
+        } else {
+
+            const loss =
+                Math.floor(50 + Math.random() * 150);
+
+            game.wood =
+                Math.max(0, game.wood - loss);
+
+            game.fame =
+                Math.max(0, game.fame - 3);
+
+            addReport(
+                `⚠️ Räuber konnten ${loss} Holz stehlen.`,
+                "loss"
+            );
+
+            toast("⚠️ Räuber haben dein Dorf geplündert!");
+        }
+
+        saveGame();
+    }
+}
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI() {
+
+    processConstruction();
+
+    const rates = getRates();
+
+    document.getElementById("wood").textContent =
+        formatNumber(game.wood);
+
+    document.getElementById("clay").textContent =
+        formatNumber(game.clay);
+
+    document.getElementById("iron").textContent =
+        formatNumber(game.iron);
+
+    document.getElementById("food").textContent =
+        formatNumber(game.food);
+
+    document.getElementById("coins").textContent =
+        formatNumber(game.coins);
+
+    document.getElementById("fame").textContent =
+        formatNumber(game.fame);
+
+    document.getElementById("day").textContent =
+        game.day;
+
+    document.getElementById("woodRate").textContent =
+        "+" + rates.wood + " / Min.";
+
+    document.getElementById("clayRate").textContent =
+        "+" + rates.clay + " / Min.";
+
+    document.getElementById("ironRate").textContent =
+        "+" + rates.iron + " / Min.";
+
+    document.getElementById("foodRate").textContent =
+        "+" + rates.food + " / Min.";
+
+    document.getElementById("population").textContent =
+        game.population;
+
+    document.getElementById("populationMax").textContent =
+        game.populationMax;
+
+    document.getElementById("freePopulation").textContent =
+        Math.max(
+            0,
+            game.populationMax - game.population
+        );
+
+    document.getElementById("populationBar").style.width =
+        Math.min(
+            100,
+            game.population /
+            game.populationMax * 100
+        ) + "%";
+
+    document.getElementById("townhallLevel").textContent =
+        game.buildings.townhall;
+
+    document.getElementById("villageRathaus").textContent =
+        game.buildings.townhall;
+
+    document.getElementById("sawmillLevel").textContent =
+        game.buildings.sawmill;
+
+    document.getElementById("clayLevel").textContent =
+        game.buildings.clay;
+
+    document.getElementById("ironLevel").textContent =
+        game.buildings.iron;
+
+    document.getElementById("farmLevel").textContent =
+        game.buildings.farm;
+
+    document.getElementById("barracksLevel").textContent =
+        game.buildings.barracks;
+
+    document.getElementById("wallLevel").textContent =
+        game.buildings.wall;
+
+    document.getElementById("villageName").textContent =
+        game.villageName;
+
+    document.getElementById("defense").textContent =
+        getDefensePower();
+
+    document.getElementById("morale").textContent =
+        (game.morale || 100) + "%";
+
+    document.getElementById("security").textContent =
+        getDefensePower() > 300
+        ? "Sehr gut"
+        : getDefensePower() > 150
+        ? "Stabil"
+        : "Gefährdet";
+
+    document.getElementById("spears").textContent =
+        game.army.spears;
+
+    document.getElementById("axes").textContent =
+        game.army.axes;
+
+    document.getElementById("archers").textContent =
+        game.army.archers;
+
+    document.getElementById("cavalry").textContent =
+        game.army.cavalry;
+
+    document.getElementById("attackPower").textContent =
+        getAttackPower();
+
+    document.getElementById("defensePower").textContent =
+        getDefensePower();
+
+    document.getElementById("statTownhall").textContent =
+        game.buildings.townhall;
+
+    document.getElementById("statPopulation").textContent =
+        game.population;
+
+    document.getElementById("statBuildings").textContent =
+        Object.values(game.buildings)
+        .reduce((a,b) => a+b, 0);
+
+    document.getElementById("statArmy").textContent =
+        game.army.spears +
+        game.army.axes +
+        game.army.archers +
+        game.army.cavalry;
+
+    document.getElementById("statWins").textContent =
+        game.statistics.wins;
+
+    document.getElementById("statLosses").textContent =
+        game.statistics.losses;
+
+    renderConstruction();
+    renderBuildings();
+    renderMissions();
+    renderReports();
+
+    saveGame();
+}
+
+/* =========================================================
+   KONSTRUKTIONSANZEIGE
+========================================================= */
+
+function renderConstruction() {
+
+    const box =
+        document.getElementById("construction");
+
+    if (!game.construction) {
+
+        box.innerHTML =
+            "Momentan wird nichts gebaut.";
+
+        return;
+    }
+
+    const remaining =
+        Math.max(
+            0,
+            Math.ceil(
+                (game.construction.finish -
+                Date.now()) / 1000
+            )
+        );
+
+    const mins =
+        Math.floor(remaining / 60);
+
+    const secs =
+        remaining % 60;
+
+    const data =
+        buildingData[game.construction.key];
+
+    box.innerHTML = `
+        <strong>
+            ${data.icon} ${data.name}
+        </strong>
+        wird auf Stufe
+        <strong>${game.construction.targetLevel}</strong>
+        ausgebaut.
+
+        <p>
+            Verbleibend:
+            <strong>
+                ${mins}:${String(secs).padStart(2, "0")}
+            </strong>
+        </p>
+
+        <div class="progress">
+            <div class="progress-bar"
+                 style="width:${getConstructionProgress()}%">
+            </div>
+        </div>
+    `;
+}
+
+function getConstructionProgress() {
+
+    if (!game.construction) return 0;
+
+    const target =
+        buildingTime(
+            game.construction.targetLevel - 1
+        );
+
+    const remaining =
+        Math.max(
+            0,
+            (game.construction.finish -
+            Date.now()) / 1000
+        );
+
+    return Math.max(
+        0,
+        Math.min(
+            100,
+            (1 - remaining / target) * 100
+        )
+    );
+}
+
+/* =========================================================
+   SEITEN
+========================================================= */
+
+function showPage(page, button = null) {
+
+    document.querySelectorAll(".page")
+        .forEach(p => p.classList.remove("active"));
+
+    document.getElementById("page-" + page)
+        .classList.add("active");
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(b => b.classList.remove("active"));
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+    updateUI();
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function showModal(content) {
+
+    document.getElementById("modalContent")
+        .innerHTML = content;
+
+    document.getElementById("modalBg")
+        .classList.add("show");
+}
+
+function closeModal() {
+
+    document.getElementById("modalBg")
+        .classList.remove("show");
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(message) {
+
+    const container =
+        document.getElementById("toast-container");
+
+    const element =
+        document.createElement("div");
+
+    element.className = "toast";
+
+    element.innerHTML = message;
+
+    container.appendChild(element);
+
+    setTimeout(() => {
+
+        element.remove();
+
+    }, 3500);
+}
+
+/* =========================================================
+   SPIELTAG
+========================================================= */
+
+let lastDayCheck = Date.now();
+
+function updateDay() {
+
+    if (Date.now() - lastDayCheck >= 60000) {
+
+        game.day++;
+
+        lastDayCheck = Date.now();
+
+        saveGame();
+    }
+}
+
+/* =========================================================
+   HAUPTSCHLEIFE
+========================================================= */
+
+setInterval(() => {
+
+    const rates = getRates();
+
+    game.wood = Math.min(
+        getStorage(),
+        game.wood + rates.wood / 60
+    );
+
+    game.clay = Math.min(
+        getStorage(),
+        game.clay + rates.clay / 60
+    );
+
+    game.iron = Math.min(
+        getStorage(),
+        game.iron + rates.iron / 60
+    );
+
+    game.food = Math.min(
+        getStorage(),
+        game.food + rates.food / 60
+    );
+
+    processConstruction();
+
+    randomEvents();
+
+    updateDay();
+
+    updateUI();
+
+}, 1000);
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame() {
+
+    const confirmReset =
+        confirm(
+            "Möchtest du deinen gesamten Spielstand wirklich löschen?"
+        );
+
+    if (!confirmReset) return;
+
+    localStorage.removeItem(SAVE_KEY);
+
+    location.reload();
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+if (!game.morale) {
+    game.morale = 100;
+}
+
+if (!game.populationMax) {
+    game.populationMax =
+        30 + game.buildings.farm * 20;
+}
+
+updateUI();
+
+</script>
+
+</body>
+</html>
