@@ -1,0 +1,804 @@
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Labyrinth-Jäger</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #111;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        margin: 20px 0 8px;
+        color: #ffd800;
+    }
+
+    #info {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 10px 0 15px;
+        font-size: 18px;
+        font-weight: bold;
+        flex-wrap: wrap;
+    }
+
+    #game {
+        display: block;
+        margin: 0 auto;
+        background: #000;
+        border: 4px solid #333;
+        max-width: 95vw;
+        height: auto;
+        image-rendering: pixelated;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #ffd800;
+        color: #111;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #fff000;
+    }
+
+    #message {
+        margin-top: 12px;
+        min-height: 25px;
+        font-weight: bold;
+    }
+
+    /* Touch-Steuerung */
+
+    #controls {
+        margin: 18px auto;
+        width: 180px;
+        display: grid;
+        grid-template-columns: 60px 60px 60px;
+        grid-template-rows: 55px 55px;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .control {
+        width: 60px;
+        height: 55px;
+        margin: 0;
+        padding: 0;
+        font-size: 25px;
+        background: #333;
+        color: white;
+        border: 1px solid #555;
+    }
+
+    .control:active {
+        background: #ffd800;
+        color: #111;
+    }
+
+    #up {
+        grid-column: 2;
+    }
+
+    #left {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    #down {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    #right {
+        grid-column: 3;
+        grid-row: 2;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🟡 Labyrinth-Jäger</h1>
+
+<div id="info">
+    <div>Punkte: <span id="score">0</span></div>
+    <div>Leben: <span id="lives">3</span></div>
+    <div>Level: <span id="level">1</span></div>
+</div>
+
+<canvas id="game" width="420" height="420"></canvas>
+
+<div id="message">
+    Sammle alle Punkte und weiche den Gegnern aus!
+</div>
+
+<button onclick="restartGame()">🔄 Neustart</button>
+
+<div id="controls">
+    <button class="control" id="up">▲</button>
+    <button class="control" id="left">◀</button>
+    <button class="control" id="down">▼</button>
+    <button class="control" id="right">▶</button>
+</div>
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const TILE = 30;
+const ROWS = 14;
+const COLS = 14;
+
+/*
+    1 = Wand
+    0 = Weg
+    2 = Punkt
+    3 = Power-Punkt
+*/
+
+const originalMap = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,3,0,0,0,1,0,0,0,1,0,0,3,1],
+    [1,0,1,1,0,1,0,1,0,1,0,1,0,1],
+    [1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,0,1,0,0,0,1,1,1,0,1],
+    [1,0,0,0,0,1,0,1,0,1,0,0,0,1],
+    [1,0,1,1,0,0,0,1,0,0,0,1,0,1],
+    [1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+    [1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,3,0,1,0,1,0,0,0,1,0,1,3,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+
+let map;
+let score = 0;
+let lives = 3;
+let level = 1;
+let gameRunning = true;
+let powerMode = false;
+let powerTimer = 0;
+
+let player;
+let enemies;
+
+const directions = {
+    up:    {x:0, y:-1},
+    down:  {x:0, y:1},
+    left:  {x:-1, y:0},
+    right: {x:1, y:0}
+};
+
+function copyMap() {
+    map = originalMap.map(row => row.slice());
+
+    // Gegnerbereich freihalten
+    map[6][6] = 0;
+    map[6][7] = 0;
+    map[7][6] = 0;
+    map[7][7] = 0;
+}
+
+function createPlayer() {
+    player = {
+        x: 1,
+        y: 1,
+        dir: directions.right,
+        nextDir: directions.right
+    };
+}
+
+function createEnemies() {
+
+    enemies = [
+        {
+            x: 6,
+            y: 6,
+            dir: directions.left,
+            color: "#ff4040"
+        },
+        {
+            x: 7,
+            y: 6,
+            dir: directions.right,
+            color: "#40a0ff"
+        },
+        {
+            x: 6,
+            y: 7,
+            dir: directions.up,
+            color: "#ff70c0"
+        }
+    ];
+}
+
+function resetGame() {
+
+    copyMap();
+
+    score = 0;
+    lives = 3;
+    level = 1;
+    gameRunning = true;
+    powerMode = false;
+    powerTimer = 0;
+
+    createPlayer();
+    createEnemies();
+
+    updateInfo();
+}
+
+function restartGame() {
+    resetGame();
+    document.getElementById("message").textContent =
+        "Sammle alle Punkte und weiche den Gegnern aus!";
+}
+
+function updateInfo() {
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("lives").textContent = lives;
+    document.getElementById("level").textContent = level;
+}
+
+function isWalkable(x, y) {
+
+    if (x < 0 || y < 0 || x >= COLS || y >= ROWS)
+        return false;
+
+    return map[y][x] !== 1;
+}
+
+function canMove(entity, dir) {
+
+    return isWalkable(
+        entity.x + dir.x,
+        entity.y + dir.y
+    );
+}
+
+function movePlayer() {
+
+    if (!gameRunning) return;
+
+    // Richtungswechsel versuchen
+
+    if (canMove(player, player.nextDir)) {
+        player.dir = player.nextDir;
+    }
+
+    if (canMove(player, player.dir)) {
+
+        player.x += player.dir.x;
+        player.y += player.dir.y;
+
+        collectItem();
+    }
+
+    checkEnemyCollision();
+}
+
+function collectItem() {
+
+    if (map[player.y][player.x] === 2) {
+
+        map[player.y][player.x] = 0;
+        score += 10;
+    }
+
+    if (map[player.y][player.x] === 3) {
+
+        map[player.y][player.x] = 0;
+        score += 50;
+
+        powerMode = true;
+        powerTimer = 300;
+    }
+
+    checkLevelComplete();
+    updateInfo();
+}
+
+function checkLevelComplete() {
+
+    let dots = 0;
+
+    for (let y = 0; y < ROWS; y++) {
+        for (let x = 0; x < COLS; x++) {
+
+            if (map[y][x] === 2 || map[y][x] === 3) {
+                dots++;
+            }
+        }
+    }
+
+    if (dots === 0) {
+
+        level++;
+
+        document.getElementById("message").textContent =
+            "Level " + level + "! Das wird jetzt etwas schneller.";
+
+        copyMap();
+        createPlayer();
+        createEnemies();
+
+        powerMode = false;
+        powerTimer = 0;
+
+        updateInfo();
+    }
+}
+
+function moveEnemies() {
+
+    if (!gameRunning) return;
+
+    enemies.forEach(enemy => {
+
+        let possible = [];
+
+        Object.values(directions).forEach(dir => {
+
+            if (canMove(enemy, dir)) {
+                possible.push(dir);
+            }
+        });
+
+        if (possible.length === 0) return;
+
+        // Nicht ständig umdrehen
+
+        let reverse = {
+            x: -enemy.dir.x,
+            y: -enemy.dir.y
+        };
+
+        let choices = possible.filter(dir =>
+            !(dir.x === reverse.x && dir.y === reverse.y)
+        );
+
+        if (choices.length === 0)
+            choices = possible;
+
+        // Im Power-Modus eher zufällig
+        if (powerMode) {
+
+            enemy.dir =
+                choices[Math.floor(Math.random() * choices.length)];
+
+        } else {
+
+            // Teilweise Spieler verfolgen
+            if (Math.random() < 0.65) {
+
+                choices.sort((a,b) => {
+
+                    let da =
+                        Math.abs(enemy.x + a.x - player.x) +
+                        Math.abs(enemy.y + a.y - player.y);
+
+                    let db =
+                        Math.abs(enemy.x + b.x - player.x) +
+                        Math.abs(enemy.y + b.y - player.y);
+
+                    return da - db;
+                });
+
+                enemy.dir = choices[0];
+
+            } else {
+
+                enemy.dir =
+                    choices[Math.floor(Math.random() * choices.length)];
+            }
+        }
+
+        enemy.x += enemy.dir.x;
+        enemy.y += enemy.dir.y;
+    });
+
+    checkEnemyCollision();
+}
+
+function checkEnemyCollision() {
+
+    enemies.forEach(enemy => {
+
+        if (
+            enemy.x === player.x &&
+            enemy.y === player.y
+        ) {
+
+            if (powerMode) {
+
+                score += 200;
+
+                // Gegner zurücksetzen
+
+                enemy.x = 6;
+                enemy.y = 6;
+
+                updateInfo();
+
+            } else {
+
+                loseLife();
+            }
+        }
+    });
+}
+
+function loseLife() {
+
+    if (!gameRunning) return;
+
+    lives--;
+
+    updateInfo();
+
+    if (lives <= 0) {
+
+        gameRunning = false;
+
+        document.getElementById("message").textContent =
+            "Game Over! Punkte: " + score;
+
+        return;
+    }
+
+    document.getElementById("message").textContent =
+        "Autsch! Noch " + lives + " Leben.";
+
+    createPlayer();
+    createEnemies();
+}
+
+function drawMap() {
+
+    for (let y = 0; y < ROWS; y++) {
+
+        for (let x = 0; x < COLS; x++) {
+
+            let px = x * TILE;
+            let py = y * TILE;
+
+            if (map[y][x] === 1) {
+
+                ctx.fillStyle = "#1738c9";
+                ctx.fillRect(px, py, TILE, TILE);
+
+                ctx.strokeStyle = "#305cff";
+                ctx.strokeRect(
+                    px + 2,
+                    py + 2,
+                    TILE - 4,
+                    TILE - 4
+                );
+
+            } else {
+
+                ctx.fillStyle = "#000";
+                ctx.fillRect(px, py, TILE, TILE);
+
+                // Punkte
+
+                if (map[y][x] === 2) {
+
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(
+                        px + TILE / 2,
+                        py + TILE / 2,
+                        3,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+
+                // Power-Punkte
+
+                if (map[y][x] === 3) {
+
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(
+                        px + TILE / 2,
+                        py + TILE / 2,
+                        7,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+            }
+        }
+    }
+}
+
+function drawPlayer() {
+
+    let cx = player.x * TILE + TILE / 2;
+    let cy = player.y * TILE + TILE / 2;
+
+    let angle = 0;
+
+    if (player.dir === directions.right)
+        angle = 0;
+
+    if (player.dir === directions.down)
+        angle = Math.PI / 2;
+
+    if (player.dir === directions.left)
+        angle = Math.PI;
+
+    if (player.dir === directions.up)
+        angle = -Math.PI / 2;
+
+    ctx.save();
+
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    ctx.fillStyle = "#ffd800";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, 0);
+
+    ctx.arc(
+        0,
+        0,
+        12,
+        0.25,
+        Math.PI * 2 - 0.25
+    );
+
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawEnemy(enemy) {
+
+    let cx = enemy.x * TILE + TILE / 2;
+    let cy = enemy.y * TILE + TILE / 2;
+
+    let color = enemy.color;
+
+    if (powerMode) {
+        color = "#2255ff";
+    }
+
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx,
+        cy - 2,
+        11,
+        Math.PI,
+        0
+    );
+
+    ctx.lineTo(cx + 11, cy + 11);
+    ctx.lineTo(cx + 5, cy + 6);
+    ctx.lineTo(cx, cy + 11);
+    ctx.lineTo(cx - 5, cy + 6);
+    ctx.lineTo(cx - 11, cy + 11);
+
+    ctx.closePath();
+    ctx.fill();
+
+    // Augen
+
+    ctx.fillStyle = "white";
+
+    ctx.beginPath();
+    ctx.arc(cx - 5, cy - 3, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx + 5, cy - 3, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#111";
+
+    ctx.beginPath();
+    ctx.arc(cx - 5, cy - 3, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx + 5, cy - 3, 2, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    drawMap();
+    drawPlayer();
+
+    enemies.forEach(drawEnemy);
+}
+
+function gameLoop() {
+
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+// Tastatur
+
+document.addEventListener("keydown", function(e) {
+
+    if (
+        e.key === "ArrowUp" ||
+        e.key.toLowerCase() === "w"
+    ) {
+        player.nextDir = directions.up;
+        e.preventDefault();
+    }
+
+    if (
+        e.key === "ArrowDown" ||
+        e.key.toLowerCase() === "s"
+    ) {
+        player.nextDir = directions.down;
+        e.preventDefault();
+    }
+
+    if (
+        e.key === "ArrowLeft" ||
+        e.key.toLowerCase() === "a"
+    ) {
+        player.nextDir = directions.left;
+        e.preventDefault();
+    }
+
+    if (
+        e.key === "ArrowRight" ||
+        e.key.toLowerCase() === "d"
+    ) {
+        player.nextDir = directions.right;
+        e.preventDefault();
+    }
+
+    if (e.key === "Enter" && !gameRunning) {
+        restartGame();
+    }
+});
+
+// Touch-Buttons
+
+function setDirection(direction) {
+    if (player && gameRunning) {
+        player.nextDir = directions[direction];
+    }
+}
+
+document.getElementById("up").addEventListener("click", () => {
+    setDirection("up");
+});
+
+document.getElementById("down").addEventListener("click", () => {
+    setDirection("down");
+});
+
+document.getElementById("left").addEventListener("click", () => {
+    setDirection("left");
+});
+
+document.getElementById("right").addEventListener("click", () => {
+    setDirection("right");
+});
+
+// Punkte auf Wegen verteilen
+
+function addDots() {
+
+    for (let y = 0; y < ROWS; y++) {
+
+        for (let x = 0; x < COLS; x++) {
+
+            if (
+                map[y][x] === 0 &&
+                !(x === 1 && y === 1) &&
+                !(x >= 6 && x <= 7 && y >= 6 && y <= 7)
+            ) {
+                map[y][x] = 2;
+            }
+        }
+    }
+
+    // Power-Punkte
+
+    map[1][1] = 3;
+    map[1][12] = 3;
+    map[12][1] = 3;
+    map[12][12] = 3;
+}
+
+// Start
+
+resetGame();
+addDots();
+
+gameLoop();
+
+// Spielerbewegung
+// Je kleiner das Intervall, desto schneller.
+
+setInterval(() => {
+
+    if (!gameRunning) return;
+
+    movePlayer();
+
+}, 120);
+
+// Gegnerbewegung
+
+setInterval(() => {
+
+    if (!gameRunning) return;
+
+    moveEnemies();
+
+}, 180);
+
+// Power-Modus
+
+setInterval(() => {
+
+    if (powerMode) {
+
+        powerTimer--;
+
+        if (powerTimer <= 0) {
+            powerMode = false;
+        }
+    }
+
+}, 100);
+
+</script>
+
+</body>
+</html>
+```
