@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Memory</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game {
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0 0 15px;
+    font-size: 40px;
+}
+
+.info {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.info-box {
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 18px;
+    min-width: 110px;
+}
+
+.info-box strong {
+    display: block;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.info-box span {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.card {
+    aspect-ratio: 1 / 1;
+    perspective: 800px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.45s;
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner,
+.card.matched .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back {
+    background: #333;
+    border: 2px solid #666;
+    font-size: 38px;
+}
+
+.card-back:hover {
+    background: #444;
+}
+
+.card-front {
+    background: white;
+    color: #111;
+    transform: rotateY(180deg);
+    border: 2px solid white;
+    font-size: clamp(30px, 7vw, 55px);
+}
+
+.card.matched .card-front {
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 22px;
+    background: #333;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #555;
+}
+
+.message {
+    min-height: 30px;
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rules {
+    margin-top: 15px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.game-over {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.game-over-box {
+    width: 90%;
+    max-width: 360px;
+    background: #222;
+    border: 2px solid white;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+}
+
+.game-over-box h2 {
+    margin-top: 0;
+    font-size: 32px;
+}
+
+.game-over-box button {
+    width: 100%;
+    margin-top: 15px;
+}
+
+@media (max-width: 500px) {
+
+    .game {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .board {
+        gap: 7px;
+    }
+
+    .card-back {
+        font-size: 28px;
+    }
+
+    .info-box {
+        padding: 8px 12px;
+        min-width: 95px;
+    }
+
+    .info-box span {
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🧠 Memory</h1>
+
+    <div class="info">
+
+        <div class="info-box">
+            <strong>PAARE</strong>
+            <span id="pairs">0 / 8</span>
+        </div>
+
+        <div class="info-box">
+            <strong>ZÜGE</strong>
+            <span id="moves">0</span>
+        </div>
+
+        <div class="info-box">
+            <strong>ZEIT</strong>
+            <span id="time">00:00</span>
+        </div>
+
+        <div class="info-box">
+            <strong>BESTWERT</strong>
+            <span id="best">--</span>
+        </div>
+
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="message" id="message">
+        Finde alle Kartenpaare!
+    </div>
+
+    <div class="buttons">
+
+        <button onclick="newGame()">
+            🔄 Neues Spiel
+        </button>
+
+    </div>
+
+    <div class="rules">
+        Zwei Karten aufdecken und gleiche Symbole finden.
+    </div>
+
+</div>
+
+
+<div class="game-over" id="gameOver">
+
+    <div class="game-over-box">
+
+        <h2>🎉 Geschafft!</h2>
+
+        <p>Du hast alle Paare gefunden.</p>
+
+        <p>
+            Züge:
+            <strong id="finalMoves">0</strong>
+        </p>
+
+        <p>
+            Zeit:
+            <strong id="finalTime">00:00</strong>
+        </p>
+
+        <button onclick="newGame()">
+            🔄 Nochmal spielen
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   SPIELDATEN
+========================= */
+
+const symbols = [
+    "🍎",
+    "🍕",
+    "🚀",
+    "🐱",
+    "⚽",
+    "🎮",
+    "🍔",
+    "🌟"
+];
+
+let cards = [];
+
+let firstCard = null;
+let secondCard = null;
+
+let lockBoard = false;
+
+let moves = 0;
+let matchedPairs = 0;
+
+let seconds = 0;
+let timer = null;
+
+let best = localStorage.getItem("memoryBest");
+
+
+/* =========================
+   BESTWERT ANZEIGEN
+========================= */
+
+function updateBest() {
+
+    if (best) {
+
+        document.getElementById("best")
+            .textContent = best + " Züge";
+
+    } else {
+
+        document.getElementById("best")
+            .textContent = "--";
+
+    }
+
+}
+
+
+/* =========================
+   KARTEN ERSTELLEN
+========================= */
+
+function createCards() {
+
+    cards = [
+        ...symbols,
+        ...symbols
+    ];
+
+    shuffle(cards);
+
+}
+
+
+/* =========================
+   MISCHEN
+========================= */
+
+function shuffle(array) {
+
+    for (
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [array[i], array[j]] =
+            [array[j], array[i]];
+
+    }
+
+}
+
+
+/* =========================
+   SPIELBRETT
+========================= */
+
+function createBoard() {
+
+    const board =
+        document.getElementById("board");
+
+    board.innerHTML = "";
+
+    cards.forEach((symbol, index) => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "card";
+
+        card.dataset.symbol = symbol;
+        card.dataset.index = index;
+
+        card.innerHTML = `
+
+            <div class="card-inner">
+
+                <div class="card-back">
+                    ?
+                </div>
+
+                <div class="card-front">
+                    ${symbol}
+                </div>
+
+            </div>
+
+        `;
+
+        card.addEventListener(
+            "click",
+            () => flipCard(card)
+        );
+
+        board.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   KARTE AUFDECKEN
+========================= */
+
+function flipCard(card) {
+
+    if (lockBoard) return;
+
+    if (card === firstCard) return;
+
+    if (
+        card.classList.contains("matched")
+    ) return;
+
+    card.classList.add("flipped");
+
+    if (!firstCard) {
+
+        firstCard = card;
+
+        startTimer();
+
+        return;
+
+    }
+
+    secondCard = card;
+
+    moves++;
+
+    updateInfo();
+
+    checkMatch();
+
+}
+
+
+/* =========================
+   PAAR PRÜFEN
+========================= */
+
+function checkMatch() {
+
+    const match =
+        firstCard.dataset.symbol ===
+        secondCard.dataset.symbol;
+
+    if (match) {
+
+        disableCards();
+
+    } else {
+
+        unflipCards();
+
+    }
+
+}
+
+
+/* =========================
+   RICHTIGES PAAR
+========================= */
+
+function disableCards() {
+
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+
+    matchedPairs++;
+
+    resetSelection();
+
+    updateInfo();
+
+    if (
+        matchedPairs === symbols.length
+    ) {
+
+        finishGame();
+
+    }
+
+}
+
+
+/* =========================
+   FALSCHE KARTEN
+========================= */
+
+function unflipCards() {
+
+    lockBoard = true;
+
+    setTimeout(() => {
+
+        firstCard.classList.remove(
+            "flipped"
+        );
+
+        secondCard.classList.remove(
+            "flipped"
+        );
+
+        resetSelection();
+
+    }, 800);
+
+}
+
+
+/* =========================
+   AUSWAHL ZURÜCKSETZEN
+========================= */
+
+function resetSelection() {
+
+    [
+        firstCard,
+        secondCard
+    ] = [null, null];
+
+    lockBoard = false;
+
+}
+
+
+/* =========================
+   TIMER STARTEN
+========================= */
+
+function startTimer() {
+
+    if (timer) return;
+
+    timer = setInterval(() => {
+
+        seconds++;
+
+        updateTime();
+
+    }, 1000);
+
+}
+
+
+/* =========================
+   TIMER STOPPEN
+========================= */
+
+function stopTimer() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+}
+
+
+/* =========================
+   ZEIT FORMATIEREN
+========================= */
+
+function formatTime(totalSeconds) {
+
+    const minutes =
+        Math.floor(totalSeconds / 60);
+
+    const secs =
+        totalSeconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":" +
+        String(secs).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================
+   ZEIT ANZEIGEN
+========================= */
+
+function updateTime() {
+
+    document.getElementById("time")
+        .textContent =
+        formatTime(seconds);
+
+}
+
+
+/* =========================
+   INFOS AKTUALISIEREN
+========================= */
+
+function updateInfo() {
+
+    document.getElementById("pairs")
+        .textContent =
+        matchedPairs + " / " + symbols.length;
+
+    document.getElementById("moves")
+        .textContent = moves;
+
+    updateTime();
+
+    updateBest();
+
+}
+
+
+/* =========================
+   SPIEL BEENDET
+========================= */
+
+function finishGame() {
+
+    stopTimer();
+
+    document.getElementById("finalMoves")
+        .textContent = moves;
+
+    document.getElementById("finalTime")
+        .textContent =
+        formatTime(seconds);
+
+    document.getElementById("message")
+        .textContent =
+        "🎉 Alle Paare gefunden!";
+
+    if (
+        !best ||
+        moves < Number(best)
+    ) {
+
+        best = moves;
+
+        localStorage.setItem(
+            "memoryBest",
+            best
+        );
+
+    }
+
+    updateBest();
+
+    setTimeout(() => {
+
+        document.getElementById(
+            "gameOver"
+        ).style.display = "flex";
+
+    }, 500);
+
+}
+
+
+/* =========================
+   NEUES SPIEL
+========================= */
+
+function newGame() {
+
+    stopTimer();
+
+    firstCard = null;
+    secondCard = null;
+
+    lockBoard = false;
+
+    moves = 0;
+    matchedPairs = 0;
+
+    seconds = 0;
+
+    document.getElementById(
+        "gameOver"
+    ).style.display = "none";
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Finde alle Kartenpaare!";
+
+    createCards();
+    createBoard();
+    updateInfo();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+newGame();
+
+</script>
+
+</body>
+</html>
