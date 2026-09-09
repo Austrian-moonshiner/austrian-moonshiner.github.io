@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bird Blasters</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #87ceeb;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1400px;
+    overflow: hidden;
+    background: #87ceeb;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+#topBar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    pointer-events: none;
+}
+
+.infoBox {
+    background: rgba(0,0,0,0.58);
+    color: white;
+    padding: 8px 13px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+#buttons {
+    position: absolute;
+    top: 55px;
+    right: 12px;
+    z-index: 20;
+
+    display: flex;
+    gap: 7px;
+}
+
+.gameButton {
+    border: none;
+    border-radius: 12px;
+    padding: 9px 13px;
+    background: rgba(0,0,0,0.62);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.gameButton:active {
+    transform: scale(0.94);
+}
+
+#message {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    min-width: 280px;
+    max-width: 90%;
+
+    padding: 24px;
+    border-radius: 20px;
+
+    background: rgba(0,0,0,0.82);
+    color: white;
+    text-align: center;
+
+    z-index: 30;
+    display: none;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+#message h1 {
+    margin: 0 0 10px;
+    font-size: 30px;
+}
+
+#message p {
+    margin: 8px 0 18px;
+    line-height: 1.5;
+}
+
+#message button {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    background: #ffca28;
+    color: #222;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#hint {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 7px 13px;
+    border-radius: 10px;
+
+    background: rgba(0,0,0,0.45);
+    color: white;
+    font-size: 13px;
+    text-align: center;
+
+    pointer-events: none;
+}
+
+@media (max-width: 600px) {
+    .infoBox {
+        font-size: 12px;
+        padding: 7px 9px;
+    }
+
+    #buttons {
+        top: 48px;
+    }
+
+    .gameButton {
+        font-size: 12px;
+        padding: 7px 9px;
+    }
+
+    #hint {
+        font-size: 11px;
+        bottom: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameWrapper">
+
+    <canvas id="game"></canvas>
+
+    <div id="topBar">
+        <div class="infoBox" id="levelText">Level 1</div>
+        <div class="infoBox" id="scoreText">Punkte: 0</div>
+        <div class="infoBox" id="birdsText">Vögel: 3</div>
+    </div>
+
+    <div id="buttons">
+        <button class="gameButton" id="restartBtn">↻ Neustart</button>
+        <button class="gameButton" id="nextBtn">Nächstes Level ▶</button>
+    </div>
+
+    <div id="message">
+        <h1 id="messageTitle">Level geschafft!</h1>
+        <p id="messageText"></p>
+        <button id="messageButton">Weiter</button>
+    </div>
+
+    <div id="hint">
+        Ziehe den Vogel zurück und lasse ihn los!
+    </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   BIRD BLASTERS
+   Eigenständiges Canvas-Spiel
+   ========================================================= */
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const levelText = document.getElementById("levelText");
+const scoreText = document.getElementById("scoreText");
+const birdsText = document.getElementById("birdsText");
+
+const restartBtn = document.getElementById("restartBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const message = document.getElementById("message");
+const messageTitle = document.getElementById("messageTitle");
+const messageText = document.getElementById("messageText");
+const messageButton = document.getElementById("messageButton");
+
+let W = 1200;
+let H = 700;
+
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    W = rect.width;
+    H = rect.height;
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+/* =========================================================
+   SPIELZUSTAND
+   ========================================================= */
+
+let currentLevel = 1;
+let score = 0;
+
+let birds = [];
+let currentBird = null;
+
+let objects = [];
+let enemies = [];
+let particles = [];
+
+let dragging = false;
+let gameRunning = true;
+let levelFinished = false;
+
+let lastTime = 0;
+
+/* =========================================================
+   PHYSIK
+   ========================================================= */
+
+const gravity = 900;
+const groundHeight = 80;
+
+const sling = {
+    x: 145,
+    y: 0
+};
+
+/* =========================================================
+   HILFSFUNKTIONEN
+   ========================================================= */
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function distance(x1, y1, x2, y2) {
+    return Math.hypot(x2 - x1, y2 - y1);
+}
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+/* =========================================================
+   LEVELDATEN
+   ========================================================= */
+
+const levels = [
+
+    {
+        birds: 3,
+        structures: [
+            {x: 780, y: 520, w: 30, h: 150, type:"wood"},
+            {x: 940, y: 520, w: 30, h: 150, type:"wood"},
+            {x: 765, y: 440, w: 220, h: 30, type:"wood"}
+        ],
+        enemies: [
+            {x: 875, y: 490, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 3,
+        structures: [
+            {x: 730, y: 520, w: 30, h: 150, type:"wood"},
+            {x: 900, y: 520, w: 30, h: 150, type:"wood"},
+            {x: 1060, y: 520, w: 30, h: 150, type:"wood"},
+            {x: 715, y: 440, w: 200, h: 30, type:"stone"},
+            {x: 885, y: 440, w: 200, h: 30, type:"wood"},
+            {x: 800, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 970, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 785, y: 330, w: 215, h: 30, type:"stone"}
+        ],
+        enemies: [
+            {x: 815, y: 400, type:"grunt"},
+            {x: 970, y: 400, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 4,
+        structures: [
+            {x: 720, y: 550, w: 30, h: 120, type:"stone"},
+            {x: 880, y: 550, w: 30, h: 120, type:"stone"},
+            {x: 1040, y: 550, w: 30, h: 120, type:"stone"},
+            {x: 700, y: 490, w: 190, h: 30, type:"wood"},
+            {x: 865, y: 490, w: 190, h: 30, type:"wood"},
+            {x: 780, y: 410, w: 30, h: 80, type:"wood"},
+            {x: 970, y: 410, w: 30, h: 80, type:"wood"},
+            {x: 765, y: 380, w: 235, h: 30, type:"stone"},
+            {x: 850, y: 310, w: 60, h: 70, type:"wood"}
+        ],
+        enemies: [
+            {x: 790, y: 450, type:"grunt"},
+            {x: 950, y: 450, type:"grunt"},
+            {x: 880, y: 345, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 4,
+        structures: [
+            {x: 700, y: 550, w: 30, h: 120, type:"wood"},
+            {x: 850, y: 550, w: 30, h: 120, type:"wood"},
+            {x: 1000, y: 550, w: 30, h: 120, type:"wood"},
+            {x: 680, y: 490, w: 200, h: 30, type:"stone"},
+            {x: 830, y: 490, w: 200, h: 30, type:"stone"},
+            {x: 750, y: 410, w: 30, h: 80, type:"wood"},
+            {x: 930, y: 410, w: 30, h: 80, type:"wood"},
+            {x: 735, y: 380, w: 225, h: 30, type:"wood"},
+            {x: 825, y: 300, w: 60, h: 80, type:"stone"},
+            {x: 815, y: 270, w: 80, h: 30, type:"wood"}
+        ],
+        enemies: [
+            {x: 790, y: 450, type:"grunt"},
+            {x: 910, y: 450, type:"grunt"},
+            {x: 850, y: 340, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 4,
+        structures: [
+            {x: 680, y: 570, w: 30, h: 100, type:"stone"},
+            {x: 790, y: 570, w: 30, h: 100, type:"wood"},
+            {x: 900, y: 570, w: 30, h: 100, type:"wood"},
+            {x: 1010, y: 570, w: 30, h: 100, type:"stone"},
+            {x: 660, y: 510, w: 380, h: 30, type:"wood"},
+            {x: 750, y: 430, w: 30, h: 80, type:"stone"},
+            {x: 920, y: 430, w: 30, h: 80, type:"stone"},
+            {x: 735, y: 400, w: 230, h: 30, type:"wood"},
+            {x: 820, y: 320, w: 60, h: 80, type:"wood"},
+            {x: 805, y: 290, w: 90, h: 30, type:"stone"}
+        ],
+        enemies: [
+            {x: 720, y: 470, type:"grunt"},
+            {x: 850, y: 470, type:"grunt"},
+            {x: 970, y: 470, type:"grunt"},
+            {x: 850, y: 350, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 5,
+        structures: [
+            {x: 690, y: 560, w: 35, h: 110, type:"stone"},
+            {x: 800, y: 560, w: 35, h: 110, type:"stone"},
+            {x: 910, y: 560, w: 35, h: 110, type:"stone"},
+            {x: 1020, y: 560, w: 35, h: 110, type:"stone"},
+            {x: 670, y: 500, w: 380, h: 30, type:"wood"},
+            {x: 735, y: 420, w: 30, h: 80, type:"wood"},
+            {x: 985, y: 420, w: 30, h: 80, type:"wood"},
+            {x: 720, y: 390, w: 310, h: 30, type:"stone"},
+            {x: 810, y: 310, w: 35, h: 80, type:"wood"},
+            {x: 925, y: 310, w: 35, h: 80, type:"wood"},
+            {x: 795, y: 280, w: 180, h: 30, type:"wood"}
+        ],
+        enemies: [
+            {x: 730, y: 460, type:"grunt"},
+            {x: 850, y: 460, type:"grunt"},
+            {x: 970, y: 460, type:"grunt"},
+            {x: 850, y: 350, type:"grunt"},
+            {x: 925, y: 350, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 5,
+        structures: [
+            {x: 700, y: 570, w: 30, h: 100, type:"wood"},
+            {x: 810, y: 570, w: 30, h: 100, type:"stone"},
+            {x: 920, y: 570, w: 30, h: 100, type:"stone"},
+            {x: 1030, y: 570, w: 30, h: 100, type:"wood"},
+            {x: 680, y: 510, w: 380, h: 30, type:"stone"},
+            {x: 740, y: 430, w: 30, h: 80, type:"wood"},
+            {x: 990, y: 430, w: 30, h: 80, type:"wood"},
+            {x: 725, y: 400, w: 300, h: 30, type:"stone"},
+            {x: 800, y: 320, w: 30, h: 80, type:"stone"},
+            {x: 940, y: 320, w: 30, h: 80, type:"stone"},
+            {x: 785, y: 290, w: 200, h: 30, type:"wood"},
+            {x: 850, y: 210, w: 70, h: 80, type:"stone"}
+        ],
+        enemies: [
+            {x: 735, y: 470, type:"grunt"},
+            {x: 850, y: 470, type:"grunt"},
+            {x: 970, y: 470, type:"grunt"},
+            {x: 850, y: 360, type:"grunt"},
+            {x: 885, y: 250, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 5,
+        structures: [
+            {x: 670, y: 580, w: 30, h: 90, type:"stone"},
+            {x: 760, y: 580, w: 30, h: 90, type:"wood"},
+            {x: 850, y: 580, w: 30, h: 90, type:"stone"},
+            {x: 940, y: 580, w: 30, h: 90, type:"wood"},
+            {x: 1030, y: 580, w: 30, h: 90, type:"stone"},
+            {x: 650, y: 520, w: 410, h: 30, type:"wood"},
+            {x: 720, y: 440, w: 30, h: 80, type:"stone"},
+            {x: 1000, y: 440, w: 30, h: 80, type:"stone"},
+            {x: 705, y: 410, w: 325, h: 30, type:"wood"},
+            {x: 790, y: 330, w: 30, h: 80, type:"wood"},
+            {x: 940, y: 330, w: 30, h: 80, type:"wood"},
+            {x: 775, y: 300, w: 185, h: 30, type:"stone"},
+            {x: 850, y: 220, w: 70, h: 80, type:"wood"},
+            {x: 835, y: 190, w: 100, h: 30, type:"stone"}
+        ],
+        enemies: [
+            {x: 710, y: 480, type:"grunt"},
+            {x: 820, y: 480, type:"grunt"},
+            {x: 950, y: 480, type:"grunt"},
+            {x: 850, y: 370, type:"grunt"},
+            {x: 885, y: 250, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 6,
+        structures: [
+            {x: 670, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 760, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 850, y: 590, w: 30, h: 80, type:"wood"},
+            {x: 940, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 1030, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 650, y: 530, w: 410, h: 30, type:"stone"},
+            {x: 710, y: 450, w: 30, h: 80, type:"wood"},
+            {x: 1000, y: 450, w: 30, h: 80, type:"wood"},
+            {x: 695, y: 420, w: 335, h: 30, type:"wood"},
+            {x: 780, y: 340, w: 30, h: 80, type:"stone"},
+            {x: 950, y: 340, w: 30, h: 80, type:"stone"},
+            {x: 765, y: 310, w: 215, h: 30, type:"wood"},
+            {x: 820, y: 230, w: 30, h: 80, type:"wood"},
+            {x: 920, y: 230, w: 30, h: 80, type:"wood"},
+            {x: 805, y: 200, w: 165, h: 30, type:"stone"},
+            {x: 850, y: 120, w: 70, h: 80, type:"stone"}
+        ],
+        enemies: [
+            {x: 700, y: 490, type:"grunt"},
+            {x: 800, y: 490, type:"grunt"},
+            {x: 900, y: 490, type:"grunt"},
+            {x: 990, y: 490, type:"grunt"},
+            {x: 850, y: 380, type:"grunt"},
+            {x: 885, y: 270, type:"grunt"},
+            {x: 885, y: 160, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 6,
+        structures: [
+            {x: 650, y: 590, w: 30, h: 80, type:"wood"},
+            {x: 740, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 830, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 920, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 1010, y: 590, w: 30, h: 80, type:"wood"},
+            {x: 1090, y: 590, w: 30, h: 80, type:"stone"},
+            {x: 630, y: 530, w: 490, h: 30, type:"wood"},
+            {x: 700, y: 450, w: 30, h: 80, type:"stone"},
+            {x: 1050, y: 450, w: 30, h: 80, type:"stone"},
+            {x: 685, y: 420, w: 395, h: 30, type:"stone"},
+            {x: 770, y: 340, w: 30, h: 80, type:"wood"},
+            {x: 980, y: 340, w: 30, h: 80, type:"wood"},
+            {x: 755, y: 310, w: 245, h: 30, type:"wood"},
+            {x: 820, y: 230, w: 30, h: 80, type:"stone"},
+            {x: 930, y: 230, w: 30, h: 80, type:"stone"},
+            {x: 805, y: 200, w: 170, h: 30, type:"wood"},
+            {x: 855, y: 120, w: 70, h: 80, type:"stone"},
+            {x: 840, y: 90, w: 100, h: 30, type:"wood"}
+        ],
+        enemies: [
+            {x: 690, y: 490, type:"grunt"},
+            {x: 790, y: 490, type:"grunt"},
+            {x: 880, y: 490, type:"grunt"},
+            {x: 980, y: 490, type:"grunt"},
+            {x: 1040, y: 490, type:"grunt"},
+            {x: 850, y: 370, type:"grunt"},
+            {x: 930, y: 370, type:"grunt"},
+            {x: 890, y: 250, type:"grunt"},
+            {x: 890, y: 150, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 6,
+        structures: [
+            {x: 650, y: 600, w: 30, h: 70, type:"stone"},
+            {x: 730, y: 600, w: 30, h: 70, type:"wood"},
+            {x: 810, y: 600, w: 30, h: 70, type:"stone"},
+            {x: 890, y: 600, w: 30, h: 70, type:"wood"},
+            {x: 970, y: 600, w: 30, h: 70, type:"stone"},
+            {x: 1050, y: 600, w: 30, h: 70, type:"wood"},
+            {x: 630, y: 540, w: 450, h: 30, type:"stone"},
+            {x: 690, y: 460, w: 30, h: 80, type:"wood"},
+            {x: 1030, y: 460, w: 30, h: 80, type:"wood"},
+            {x: 675, y: 430, w: 375, h: 30, type:"wood"},
+            {x: 750, y: 350, w: 30, h: 80, type:"stone"},
+            {x: 990, y: 350, w: 30, h: 80, type:"stone"},
+            {x: 735, y: 320, w: 285, h: 30, type:"stone"},
+            {x: 800, y: 240, w: 30, h: 80, type:"wood"},
+            {x: 950, y: 240, w: 30, h: 80, type:"wood"},
+            {x: 785, y: 210, w: 195, h: 30, type:"wood"},
+            {x: 840, y: 130, w: 90, h: 80, type:"stone"},
+            {x: 825, y: 100, w: 120, h: 30, type:"wood"}
+        ],
+        enemies: [
+            {x: 680, y: 500, type:"grunt"},
+            {x: 780, y: 500, type:"grunt"},
+            {x: 870, y: 500, type:"grunt"},
+            {x: 960, y: 500, type:"grunt"},
+            {x: 1030, y: 500, type:"grunt"},
+            {x: 820, y: 390, type:"grunt"},
+            {x: 930, y: 390, type:"grunt"},
+            {x: 875, y: 260, type:"grunt"},
+            {x: 875, y: 170, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 7,
+        structures: [
+            {x: 640, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 720, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 800, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 880, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 960, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 1040, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1120, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 620, y: 550, w: 530, h: 30, type:"wood"},
+            {x: 680, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 1080, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 665, y: 440, w: 445, h: 30, type:"stone"},
+            {x: 750, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 1000, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 735, y: 330, w: 285, h: 30, type:"wood"},
+            {x: 800, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 950, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 785, y: 220, w: 195, h: 30, type:"stone"},
+            {x: 835, y: 140, w: 100, h: 80, type:"wood"},
+            {x: 820, y: 110, w: 130, h: 30, type:"stone"},
+            {x: 860, y: 30, w: 50, h: 80, type:"wood"}
+        ],
+        enemies: [
+            {x: 670, y: 510, type:"grunt"},
+            {x: 770, y: 510, type:"grunt"},
+            {x: 870, y: 510, type:"grunt"},
+            {x: 970, y: 510, type:"grunt"},
+            {x: 1060, y: 510, type:"grunt"},
+            {x: 820, y: 400, type:"grunt"},
+            {x: 930, y: 400, type:"grunt"},
+            {x: 850, y: 290, type:"grunt"},
+            {x: 915, y: 290, type:"grunt"},
+            {x: 885, y: 175, type:"grunt"},
+            {x: 885, y: 70, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 7,
+        structures: [
+            {x: 620, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 700, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 780, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 860, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 940, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1020, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 1100, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 600, y: 550, w: 550, h: 30, type:"stone"},
+            {x: 660, y: 470, w: 30, h: 80, type:"wood"},
+            {x: 1090, y: 470, w: 30, h: 80, type:"wood"},
+            {x: 645, y: 440, w: 460, h: 30, type:"wood"},
+            {x: 730, y: 360, w: 30, h: 80, type:"stone"},
+            {x: 1020, y: 360, w: 30, h: 80, type:"stone"},
+            {x: 715, y: 330, w: 335, h: 30, type:"stone"},
+            {x: 790, y: 250, w: 30, h: 80, type:"wood"},
+            {x: 960, y: 250, w: 30, h: 80, type:"wood"},
+            {x: 775, y: 220, w: 205, h: 30, type:"wood"},
+            {x: 830, y: 140, w: 100, h: 80, type:"stone"},
+            {x: 815, y: 110, w: 130, h: 30, type:"wood"},
+            {x: 860, y: 30, w: 50, h: 80, type:"stone"}
+        ],
+        enemies: [
+            {x: 650, y: 510, type:"grunt"},
+            {x: 750, y: 510, type:"grunt"},
+            {x: 850, y: 510, type:"grunt"},
+            {x: 950, y: 510, type:"grunt"},
+            {x: 1050, y: 510, type:"grunt"},
+            {x: 810, y: 400, type:"grunt"},
+            {x: 920, y: 400, type:"grunt"},
+            {x: 850, y: 290, type:"grunt"},
+            {x: 925, y: 290, type:"grunt"},
+            {x: 880, y: 175, type:"grunt"},
+            {x: 885, y: 70, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 7,
+        structures: [
+            {x: 610, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 690, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 770, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 850, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 930, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1010, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1090, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 590, y: 550, w: 530, h: 30, type:"stone"},
+            {x: 650, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 1070, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 635, y: 440, w: 455, h: 30, type:"wood"},
+            {x: 720, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 1010, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 705, y: 330, w: 335, h: 30, type:"stone"},
+            {x: 780, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 960, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 765, y: 220, w: 215, h: 30, type:"wood"},
+            {x: 820, y: 140, w: 110, h: 80, type:"stone"},
+            {x: 805, y: 110, w: 140, h: 30, type:"wood"},
+            {x: 850, y: 30, w: 50, h: 80, type:"stone"}
+        ],
+        enemies: [
+            {x: 640, y: 510, type:"grunt"},
+            {x: 740, y: 510, type:"grunt"},
+            {x: 840, y: 510, type:"grunt"},
+            {x: 940, y: 510, type:"grunt"},
+            {x: 1040, y: 510, type:"grunt"},
+            {x: 800, y: 400, type:"grunt"},
+            {x: 920, y: 400, type:"grunt"},
+            {x: 840, y: 290, type:"grunt"},
+            {x: 920, y: 290, type:"grunt"},
+            {x: 875, y: 175, type:"grunt"},
+            {x: 875, y: 70, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 8,
+        structures: [
+            {x: 600, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 680, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 760, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 840, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 920, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1000, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 1080, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 590, y: 550, w: 520, h: 30, type:"wood"},
+            {x: 640, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 1060, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 625, y: 440, w: 450, h: 30, type:"stone"},
+            {x: 710, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 990, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 695, y: 330, w: 325, h: 30, type:"wood"},
+            {x: 775, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 950, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 760, y: 220, w: 205, h: 30, type:"stone"},
+            {x: 815, y: 140, w: 110, h: 80, type:"wood"},
+            {x: 800, y: 110, w: 140, h: 30, type:"stone"},
+            {x: 850, y: 30, w: 50, h: 80, type:"wood"}
+        ],
+        enemies: [
+            {x: 630, y: 510, type:"grunt"},
+            {x: 730, y: 510, type:"grunt"},
+            {x: 830, y: 510, type:"grunt"},
+            {x: 930, y: 510, type:"grunt"},
+            {x: 1030, y: 510, type:"grunt"},
+            {x: 790, y: 400, type:"grunt"},
+            {x: 910, y: 400, type:"grunt"},
+            {x: 840, y: 290, type:"grunt"},
+            {x: 920, y: 290, type:"grunt"},
+            {x: 875, y: 175, type:"grunt"},
+            {x: 875, y: 70, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 8,
+        structures: [
+            {x: 590, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 670, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 750, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 830, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 910, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 990, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 1070, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 570, y: 550, w: 530, h: 30, type:"stone"},
+            {x: 630, y: 470, w: 30, h: 80, type:"wood"},
+            {x: 1050, y: 470, w: 30, h: 80, type:"wood"},
+            {x: 615, y: 440, w: 450, h: 30, type:"wood"},
+            {x: 700, y: 360, w: 30, h: 80, type:"stone"},
+            {x: 980, y: 360, w: 30, h: 80, type:"stone"},
+            {x: 685, y: 330, w: 325, h: 30, type:"stone"},
+            {x: 765, y: 250, w: 30, h: 80, type:"wood"},
+            {x: 945, y: 250, w: 30, h: 80, type:"wood"},
+            {x: 750, y: 220, w: 225, h: 30, type:"wood"},
+            {x: 810, y: 140, w: 110, h: 80, type:"stone"},
+            {x: 795, y: 110, w: 140, h: 30, type:"wood"},
+            {x: 850, y: 30, w: 50, h: 80, type:"stone"}
+        ],
+        enemies: [
+            {x: 620, y: 510, type:"grunt"},
+            {x: 720, y: 510, type:"grunt"},
+            {x: 820, y: 510, type:"grunt"},
+            {x: 920, y: 510, type:"grunt"},
+            {x: 1020, y: 510, type:"grunt"},
+            {x: 790, y: 400, type:"grunt"},
+            {x: 900, y: 400, type:"grunt"},
+            {x: 835, y: 290, type:"grunt"},
+            {x: 920, y: 290, type:"grunt"},
+            {x: 875, y: 175, type:"grunt"},
+            {x: 875, y: 70, type:"grunt"}
+        ]
+    },
+
+    {
+        birds: 8,
+        structures: [
+            {x: 580, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 660, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 740, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 820, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 900, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 980, y: 610, w: 30, h: 60, type:"wood"},
+            {x: 1060, y: 610, w: 30, h: 60, type:"stone"},
+            {x: 560, y: 550, w: 550, h: 30, type:"wood"},
+            {x: 620, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 1060, y: 470, w: 30, h: 80, type:"stone"},
+            {x: 605, y: 440, w: 485, h: 30, type:"stone"},
+            {x: 690, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 990, y: 360, w: 30, h: 80, type:"wood"},
+            {x: 675, y: 330, w: 345, h: 30, type:"wood"},
+            {x: 760, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 950, y: 250, w: 30, h: 80, type:"stone"},
+            {x: 745, y: 220, w: 235, h: 30, type:"stone"},
+            {x: 805, y: 140, w: 110, h: 80, type:"wood"},
+            {x: 790, y: 110, w: 140, h: 30, type:"stone"},
+            {x: 850, y: 30, w: 50, h: 80, type:"wood"}
+        ],
+        enemies: [
+            {x: 610, y: 510, type:"grunt"},
+            {x: 710, y: 510, type:"grunt"},
+            {x: 810, y: 510, type:"grunt"},
+            {x: 910, y: 510, type:"grunt"},
+            {x: 1010, y: 510, type:"grunt"},
+            {x: 790, y: 400, type:"grunt"},
+            {x: 900, y: 400, type:"grunt"},
+            {x: 830, y: 290, type:"grunt"},
+            {x: 920, y: 290, type:"grunt"},
+            {x: 875, y: 175, type:"grunt"},
+            {x: 875, y: 70, type:"grunt"}
+        ]
+    }
+
+];
+
+/* =========================================================
+   LEVEL LADEN
+   ========================================================= */
+
+function loadLevel(levelNumber) {
+
+    currentLevel = levelNumber;
+
+    const index = clamp(levelNumber - 1, 0, levels.length - 1);
+    const data = levels[index];
+
+    objects = data.structures.map(o => ({
+        ...o,
+        vx: 0,
+        vy: 0,
+        angle: 0,
+        alive: true,
+        health: o.type === "stone" ? 2 : 1
+    }));
+
+    enemies = data.enemies.map(e => ({
+        ...e,
+        radius: 20,
+        alive: true,
+        vx: 0,
+        vy: 0
+    }));
+
+    birds = [];
+
+    for (let i = 0; i < data.birds; i++) {
+        birds.push({
+            x: sling.x,
+            y: sling.y,
+            radius: 21,
+            launched: false,
+            active: false,
+            vx: 0,
+            vy: 0,
+            abilityUsed: false
+        });
+    }
+
+    currentBird = null;
+
+    levelFinished = false;
+    gameRunning = true;
+
+    hideMessage();
+
+    updateUI();
+}
+
+/* =========================================================
+   VOGEL ERSTELLEN
+   ========================================================= */
+
+function prepareNextBird() {
+
+    if (levelFinished) return;
+
+    const next = birds.find(b => !b.launched && !b.active);
+
+    if (!next) {
+        checkLevelState();
+        return;
+    }
+
+    next.x = sling.x;
+    next.y = sling.y;
+
+    next.active = true;
+
+    currentBird = next;
+}
+
+/* =========================================================
+   SCHLEUDER
+   ========================================================= */
+
+function drawSling() {
+
+    const y = sling.y;
+
+    ctx.save();
+
+    // Holzstangen
+    ctx.lineWidth = 14;
+    ctx.lineCap = "round";
+
+    ctx.strokeStyle = "#654321";
+
+    ctx.beginPath();
+    ctx.moveTo(sling.x - 12, y + 40);
+    ctx.lineTo(sling.x - 10, y - 45);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(sling.x + 15, y + 40);
+    ctx.lineTo(sling.x + 7, y - 45);
+    ctx.stroke();
+
+    // Gummiband
+    if (currentBird && currentBird.active && !currentBird.launched) {
+
+        ctx.strokeStyle = "#3c2415";
+        ctx.lineWidth = 5;
+
+        ctx.beginPath();
+        ctx.moveTo(sling.x - 10, y - 35);
+        ctx.lineTo(currentBird.x, currentBird.y);
+        ctx.lineTo(sling.x + 7, y - 35);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+/* =========================================================
+   VOGEL ZEICHNEN
+   ========================================================= */
+
+function drawBird(bird) {
+
+    if (!bird) return;
+    if (!bird.active && bird.launched) return;
+
+    ctx.save();
+
+    ctx.translate(bird.x, bird.y);
+
+    // Körper
+    ctx.fillStyle = "#e84a35";
+
+    ctx.beginPath();
+    ctx.arc(0, 0, bird.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bauch
+    ctx.fillStyle = "#f7c59f";
+
+    ctx.beginPath();
+    ctx.arc(3, 7, 11, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Augen
+    ctx.fillStyle = "white";
+
+    ctx.beginPath();
+    ctx.arc(-7, -7, 7, 0, Math.PI * 2);
+    ctx.arc(7, -7, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#222";
+
+    ctx.beginPath();
+    ctx.arc(-6, -6, 3, 0, Math.PI * 2);
+    ctx.arc(6, -6, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Augenbrauen
+    ctx.strokeStyle = "#4d1710";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.moveTo(-13, -16);
+    ctx.lineTo(-3, -12);
+    ctx.moveTo(3, -12);
+    ctx.lineTo(13, -16);
+    ctx.stroke();
+
+    // Schnabel
+    ctx.fillStyle = "#f5a623";
+
+    ctx.beginPath();
+    ctx.moveTo(0, -1);
+    ctx.lineTo(18, 5);
+    ctx.lineTo(0, 11);
+    ctx.closePath();
+    ctx.fill();
+
+    // Feder oben
+    ctx.fillStyle = "#c93424";
+
+    ctx.beginPath();
+    ctx.moveTo(-4, -20);
+    ctx.lineTo(-9, -34);
+    ctx.lineTo(0, -24);
+    ctx.lineTo(7, -35);
+    ctx.lineTo(8, -18);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+/* =========================================================
+   GEGNER
+   ========================================================= */
+
+function drawEnemy(enemy) {
+
+    if (!enemy.alive) return;
+
+    ctx.save();
+
+    ctx.translate(enemy.x, enemy.y);
+
+    // Körper
+    ctx.fillStyle = "#7fa83b";
+
+    ctx.beginPath();
+    ctx.arc(0, 0, enemy.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ohren
+    ctx.fillStyle = "#6f9132";
+
+    ctx.beginPath();
+    ctx.arc(-15, -15, 8, 0, Math.PI * 2);
+    ctx.arc(15, -15, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Augen
+    ctx.fillStyle = "white";
+
+    ctx.beginPath();
+    ctx.arc(-7, -6, 6, 0, Math.PI * 2);
+    ctx.arc(7, -6, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#222";
+
+    ctx.beginPath();
+    ctx.arc(-6, -6, 2.5, 0, Math.PI * 2);
+    ctx.arc(6, -6, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Nase
+    ctx.fillStyle = "#4f7125";
+
+    ctx.beginPath();
+    ctx.arc(0, 5, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Mund
+    ctx.strokeStyle = "#365017";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.arc(0, 6, 10, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+/* =========================================================
+   OBJEKTE
+   ========================================================= */
+
+function drawObject(o) {
+
+    if (!o.alive) return;
+
+    ctx.save();
+
+    ctx.translate(o.x + o.w / 2, o.y + o.h / 2);
+    ctx.rotate(o.angle);
+
+    ctx.fillStyle = o.type === "stone"
+        ? "#858585"
+        : "#b8783c";
+
+    ctx.strokeStyle = o.type === "stone"
+        ? "#555"
+        : "#70451f";
+
+    ctx.lineWidth = 3;
+
+    ctx.fillRect(-o.w / 2, -o.h / 2, o.w, o.h);
+    ctx.strokeRect(-o.w / 2, -o.h / 2, o.w, o.h);
+
+    // Holzmaserung
+    if (o.type === "wood") {
+
+        ctx.strokeStyle = "rgba(80,40,10,0.45)";
+        ctx.lineWidth = 2;
+
+        for (let i = -o.h / 2 + 12; i < o.h / 2; i += 18) {
+            ctx.beginPath();
+            ctx.moveTo(-o.w / 2 + 4, i);
+            ctx.lineTo(o.w / 2 - 4, i);
+            ctx.stroke();
+        }
+    }
+
+    // Steindetails
+    if (o.type === "stone") {
+
+        ctx.strokeStyle = "rgba(40,40,40,0.35)";
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(-o.w / 3, -o.h / 5);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(o.w / 3, -o.h / 5);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+/* =========================================================
+   PARTIKEL
+   ========================================================= */
+
+function createParticles(x, y, amount = 12) {
+
+    for (let i = 0; i < amount; i++) {
+
+        particles.push({
+            x,
+            y,
+            vx: random(-250, 250),
+            vy: random(-300, 50),
+            life: random(0.4, 0.9),
+            size: random(3, 7)
+        });
+    }
+}
+
+function updateParticles(dt) {
+
+    for (const p of particles) {
+
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        p.vy += gravity * dt;
+
+        p.life -= dt;
+    }
+
+    particles = particles.filter(p => p.life > 0);
+}
+
+function drawParticles() {
+
+    for (const p of particles) {
+
+        ctx.globalAlpha = Math.max(0, p.life);
+
+        ctx.fillStyle = "#d99b4b";
+
+        ctx.fillRect(
+            p.x - p.size / 2,
+            p.y - p.size / 2,
+            p.size,
+            p.size
+        );
+    }
+
+    ctx.globalAlpha = 1;
+}
+
+/* =========================================================
+   HINTERGRUND
+   ========================================================= */
+
+function drawBackground() {
+
+    // Himmel
+    const gradient = ctx.createLinearGradient(0, 0, 0, H);
+
+    gradient.addColorStop(0, "#70c8ff");
+    gradient.addColorStop(1, "#d9f3ff");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, W, H);
+
+    // Wolken
+    ctx.fillStyle = "rgba(255,255,255,0.7)";
+
+    drawCloud(250, 120, 1);
+    drawCloud(520, 190, 0.7);
+    drawCloud(900, 110, 0.8);
+
+    // Hügel
+    ctx.fillStyle = "#76ad54";
+
+    ctx.beginPath();
+    ctx.moveTo(0, H - groundHeight);
+    ctx.quadraticCurveTo(
+        W * 0.25,
+        H - 170,
+        W * 0.5,
+        H - groundHeight
+    );
+    ctx.quadraticCurveTo(
+        W * 0.75,
+        H - 150,
+        W,
+        H - groundHeight
+    );
+    ctx.closePath();
+    ctx.fill();
+
+    // Boden
+    ctx.fillStyle = "#62a844";
+
+    ctx.fillRect(
+        0,
+        H - groundHeight,
+        W,
+        groundHeight
+    );
+
+    // Bodenlinie
+    ctx.fillStyle = "#4c8636";
+
+    ctx.fillRect(
+        0,
+        H - groundHeight,
+        W,
+        10
+    );
+}
+
+function drawCloud(x, y, scale) {
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    ctx.beginPath();
+
+    ctx.arc(0, 0, 28, 0, Math.PI * 2);
+    ctx.arc(30, -10, 35, 0, Math.PI * 2);
+    ctx.arc(65, 0, 27, 0, Math.PI * 2);
+
+    ctx.fill();
+
+    ctx.restore();
+}
+
+/* =========================================================
+   TRAJEKTORIE
+   ========================================================= */
+
+function drawTrajectory() {
+
+    if (!dragging || !currentBird) return;
+
+    const dx = sling.x - currentBird.x;
+    const dy = sling.y - currentBird.y;
+
+    const power = 4.2;
+
+    let vx = dx * power;
+    let vy = dy * power;
+
+    let x = currentBird.x;
+    let y = currentBird.y;
+
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+
+    for (let i = 0; i < 28; i++) {
+
+        x += vx * 0.055;
+        y += vy * 0.055;
+
+        vy += gravity * 0.055;
+
+        if (i % 2 === 0) {
+
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+/* =========================================================
+   SCHWERKRAFT / PHYSIK
+   ========================================================= */
+
+function updateBird(bird, dt) {
+
+    if (!bird || !bird.launched) return;
+
+    bird.vy += gravity * dt;
+
+    bird.x += bird.vx * dt;
+    bird.y += bird.vy * dt;
+
+    // Boden
+    const groundY = H - groundHeight - bird.radius;
+
+    if (bird.y > groundY) {
+
+        bird.y = groundY;
+
+        if (Math.abs(bird.vy) > 100) {
+            bird.vy *= -0.35;
+            bird.vx *= 0.65;
+        } else {
+            bird.vy = 0;
+            bird.vx *= 0.90;
+        }
+    }
+
+    // leichte Luftreibung
+    bird.vx *= Math.pow(0.998, dt * 60);
+}
+
+/* =========================================================
+   OBJEKT-PHYSIK
+   ========================================================= */
+
+function updateObjects(dt) {
+
+    for (const o of objects) {
+
+        if (!o.alive) continue;
+
+        o.vy += gravity * dt;
+
+        o.x += o.vx * dt;
+        o.y += o.vy * dt;
+
+        o.vx *= Math.pow(0.96, dt * 60);
+
+        const ground = H - groundHeight;
+
+        if (o.y + o.h > ground) {
+
+            o.y = ground - o.h;
+
+            if (Math.abs(o.vy) > 100) {
+                o.vy *= -0.2;
+            } else {
+                o.vy = 0;
+            }
+
+            o.vx *= 0.7;
+        }
+    }
+}
+
+/* =========================================================
+   KOLLISIONEN
+   ========================================================= */
+
+function circleRectCollision(circle, rect) {
+
+    const closestX = clamp(
+        circle.x,
+        rect.x,
+        rect.x + rect.w
+    );
+
+    const closestY = clamp(
+        circle.y,
+        rect.y,
+        rect.y + rect.h
+    );
+
+    const dx = circle.x - closestX;
+    const dy = circle.y - closestY;
+
+    return Math.hypot(dx, dy) < circle.radius;
+}
+
+function handleCollisions() {
+
+    if (!currentBird || !currentBird.launched) return;
+
+    // Vogel gegen Objekte
+    for (const o of objects) {
+
+        if (!o.alive) continue;
+
+        if (circleRectCollision(currentBird, o)) {
+
+            const speed = Math.hypot(
+                currentBird.vx,
+                currentBird.vy
+            );
+
+            if (speed > 180) {
+
+                o.health -= speed > 500 ? 2 : 1;
+
+                o.vx += currentBird.vx * 0.04;
+                o.vy += currentBird.vy * 0.04;
+
+                currentBird.vx *= 0.55;
+                currentBird.vy *= 0.55;
+
+                createParticles(
+                    currentBird.x,
+                    currentBird.y,
+                    10
+                );
+
+                if (o.health <= 0) {
+
+                    o.alive = false;
+
+                    score += o.type === "stone"
+                        ? 150
+                        : 100;
+
+                    createParticles(
+                        o.x + o.w / 2,
+                        o.y + o.h / 2,
+                        18
+                    );
+
+                    updateUI();
+                }
+            }
+        }
+    }
+
+    // Vogel gegen Gegner
+    for (const enemy of enemies) {
+
+        if (!enemy.alive) continue;
+
+        const d = distance(
+            currentBird.x,
+            currentBird.y,
+            enemy.x,
+            enemy.y
+        );
+
+        if (d < currentBird.radius + enemy.radius) {
+
+            const speed = Math.hypot(
+                currentBird.vx,
+                currentBird.vy
+            );
+
+            if (speed > 120) {
+
+                enemy.alive = false;
+
+                score += 500;
+
+                createParticles(
+                    enemy.x,
+                    enemy.y,
+                    22
+                );
+
+                currentBird.vx *= 0.65;
+                currentBird.vy *= 0.65;
+
+                updateUI();
+            }
+        }
+    }
+}
+
+/* =========================================================
+   VOGEL ENDE
+   ========================================================= */
+
+function checkBirdFinished() {
+
+    if (!currentBird || !currentBird.launched) return;
+
+    const speed = Math.hypot(
+        currentBird.vx,
+        currentBird.vy
+    );
+
+    const outside =
+        currentBird.x > W + 100 ||
+        currentBird.x < -100 ||
+        currentBird.y > H + 100;
+
+    const stopped =
+        speed < 30 &&
+        currentBird.y > H - groundHeight - 80;
+
+    if (outside || stopped) {
+
+        currentBird.active = false;
+
+        currentBird.launched = true;
+
+        currentBird = null;
+
+        prepareNextBird();
+    }
+}
+
+/* =========================================================
+   LEVELSTATUS
+   ========================================================= */
+
+function checkLevelState() {
+
+    const remainingEnemies =
+        enemies.filter(e => e.alive).length;
+
+    if (remainingEnemies === 0) {
+
+        finishLevel(true);
+        return;
+    }
+
+    const remainingBirds =
+        birds.filter(b => !b.launched && !b.active).length;
+
+    if (
+        remainingBirds === 0 &&
+        !currentBird
+    ) {
+        finishLevel(false);
+    }
+}
+
+function finishLevel(success) {
+
+    if (levelFinished) return;
+
+    levelFinished = true;
+    gameRunning = false;
+
+    if (success) {
+
+        const unused =
+            birds.filter(b => !b.launched).length;
+
+        const bonus = unused * 250;
+
+        score += bonus;
+
+        let stars = 1;
+
+        if (unused >= 2) stars = 2;
+        if (unused >= 4) stars = 3;
+
+        messageTitle.textContent =
+            "Level geschafft! 🎉";
+
+        messageText.innerHTML =
+            "Punkte: <strong>" +
+            score +
+            "</strong><br><br>" +
+            "Bonus für übrige Vögel: +" +
+            bonus +
+            "<br><br>" +
+            "Bewertung: " +
+            "⭐".repeat(stars);
+
+        messageButton.textContent =
+            currentLevel < levels.length
+            ? "Nächstes Level"
+            : "Neustart";
+
+    } else {
+
+        messageTitle.textContent =
+            "Nicht geschafft!";
+
+        messageText.innerHTML =
+            "Die Grunzer stehen noch.<br>" +
+            "Offenbar haben sie heute ihren Glückstag.";
+
+        messageButton.textContent =
+            "Nochmal versuchen";
+    }
+
+    message.style.display = "block";
+
+    updateUI();
+}
+
+/* =========================================================
+   SPIELZUSTAND
+   ========================================================= */
+
+function updateUI() {
+
+    levelText.textContent =
+        "Level " + currentLevel;
+
+    scoreText.textContent =
+        "Punkte: " + score;
+
+    birdsText.textContent =
+        "Vögel: " +
+        birds.filter(b => !b.launched).length;
+}
+
+/* =========================================================
+   MOUSE / TOUCH
+   ========================================================= */
+
+function getPointerPosition(event) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    let clientX;
+    let clientY;
+
+    if (event.touches && event.touches.length) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else if (event.changedTouches && event.changedTouches.length) {
+        clientX = event.changedTouches[0].clientX;
+        clientY = event.changedTouches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+    };
+}
+
+function pointerDown(event) {
+
+    if (!gameRunning) return;
+    if (!currentBird) return;
+    if (currentBird.launched) return;
+
+    const p = getPointerPosition(event);
+
+    const d = distance(
+        p.x,
+        p.y,
+        currentBird.x,
+        currentBird.y
+    );
+
+    if (d < 50) {
+
+        dragging = true;
+
+        event.preventDefault();
+    }
+}
+
+function pointerMove(event) {
+
+    if (!dragging || !currentBird) return;
+
+    const p = getPointerPosition(event);
+
+    const maxPull = 100;
+
+    let dx = p.x - sling.x;
+    let dy = p.y - sling.y;
+
+    const len = Math.hypot(dx, dy);
+
+    if (len > maxPull) {
+
+        dx = dx / len * maxPull;
+        dy = dy / len * maxPull;
+    }
+
+    // Nur links von der Schleuder ziehen
+    dx = Math.min(dx, 15);
+
+    currentBird.x =
+        sling.x + dx;
+
+    currentBird.y =
+        sling.y + dy;
+
+    event.preventDefault();
+}
+
+function pointerUp(event) {
+
+    if (!dragging || !currentBird) return;
+
+    dragging = false;
+
+    const dx =
+        sling.x - currentBird.x;
+
+    const dy =
+        sling.y - currentBird.y;
+
+    const power = 4.2;
+
+    currentBird.vx =
+        dx * power;
+
+    currentBird.vy =
+        dy * power;
+
+    currentBird.launched = true;
+
+    currentBird.active = true;
+
+    score += 50;
+
+    updateUI();
+
+    event.preventDefault();
+}
+
+canvas.addEventListener(
+    "mousedown",
+    pointerDown
+);
+
+canvas.addEventListener(
+    "mousemove",
+    pointerMove
+);
+
+window.addEventListener(
+    "mouseup",
+    pointerUp
+);
+
+canvas.addEventListener(
+    "touchstart",
+    pointerDown,
+    {passive:false}
+);
+
+canvas.addEventListener(
+    "touchmove",
+    pointerMove,
+    {passive:false}
+);
+
+window.addEventListener(
+    "touchend",
+    pointerUp,
+    {passive:false}
+);
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+restartBtn.addEventListener(
+    "click",
+    () => {
+        loadLevel(currentLevel);
+        prepareNextBird();
+    }
+);
+
+nextBtn.addEventListener(
+    "click",
+    () => {
+
+        if (currentLevel < levels.length) {
+
+            loadLevel(currentLevel + 1);
+            prepareNextBird();
+
+        } else {
+
+            score = 0;
+
+            loadLevel(1);
+            prepareNextBird();
+        }
+    }
+);
+
+messageButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            levelFinished &&
+            enemies.every(e => !e.alive) &&
+            currentLevel < levels.length
+        ) {
+
+            loadLevel(currentLevel + 1);
+            prepareNextBird();
+
+        } else if (
+            levelFinished &&
+            enemies.every(e => !e.alive) &&
+            currentLevel >= levels.length
+        ) {
+
+            score = 0;
+
+            loadLevel(1);
+            prepareNextBird();
+
+        } else {
+
+            loadLevel(currentLevel);
+            prepareNextBird();
+        }
+    }
+);
+
+function hideMessage() {
+    message.style.display = "none";
+}
+
+/* =========================================================
+   SPIELLOOP
+   ========================================================= */
+
+function update(dt) {
+
+    if (!gameRunning) {
+
+        updateParticles(dt);
+
+        return;
+    }
+
+    if (currentBird && currentBird.launched) {
+
+        updateBird(
+            currentBird,
+            dt
+        );
+
+        handleCollisions();
+
+        checkBirdFinished();
+    }
+
+    updateObjects(dt);
+
+    updateParticles(dt);
+
+    checkLevelState();
+}
+
+/* =========================================================
+   ZEICHNEN
+   ========================================================= */
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+    drawBackground();
+
+    // Schleuderposition an Bildschirmgröße anpassen
+    sling.y =
+        Math.min(
+            H - groundHeight - 70,
+            H * 0.72
+        );
+
+    drawSling();
+
+    drawTrajectory();
+
+    // Objekte
+    for (const o of objects) {
+        drawObject(o);
+    }
+
+    // Gegner
+    for (const enemy of enemies) {
+        drawEnemy(enemy);
+    }
+
+    // Vögel
+    for (const bird of birds) {
+
+        if (bird.active) {
+            drawBird(bird);
+        }
+    }
+
+    drawParticles();
+}
+
+/* =========================================================
+   LOOP
+   ========================================================= */
+
+function gameLoop(timestamp) {
+
+    if (!lastTime) {
+        lastTime = timestamp;
+    }
+
+    let dt =
+        (timestamp - lastTime) / 1000;
+
+    dt = Math.min(dt, 0.033);
+
+    lastTime = timestamp;
+
+    update(dt);
+    draw();
+
+    requestAnimationFrame(gameLoop);
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+
+resizeCanvas();
+
+loadLevel(1);
+
+prepareNextBird();
+
+requestAnimationFrame(gameLoop);
+
+</script>
+
+</body>
+</html>
