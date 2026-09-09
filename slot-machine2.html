@@ -1,0 +1,885 @@
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Moonshiner Reels</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #3b145f, #13051f 55%, #07030c);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0 0 5px;
+    font-size: 42px;
+    color: #ffd84d;
+    text-shadow: 0 0 15px #ff9d00;
+}
+
+.subtitle {
+    margin-bottom: 20px;
+    color: #d8c9e8;
+}
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.infoBox {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.infoBox span {
+    display: block;
+    font-size: 13px;
+    color: #cbbbd9;
+}
+
+.infoBox strong {
+    font-size: 21px;
+    color: #ffd84d;
+}
+
+.machine {
+    background: linear-gradient(145deg, #33104d, #170820);
+    border: 4px solid #ffd84d;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow:
+        0 0 25px rgba(255,190,50,.35),
+        inset 0 0 30px rgba(0,0,0,.6);
+}
+
+.reels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    background: #08030d;
+    padding: 10px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.reel {
+    background: linear-gradient(#f8f4ff, #d9d0e5);
+    border-radius: 10px;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 4px;
+    box-shadow:
+        inset 0 0 12px rgba(0,0,0,.5),
+        0 0 5px rgba(255,255,255,.15);
+}
+
+.symbol {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    border-radius: 8px;
+    color: #181020;
+}
+
+.symbol.middle {
+    background: rgba(255,216,77,.35);
+    box-shadow: inset 0 0 10px rgba(255,180,0,.3);
+}
+
+.spinning .symbol {
+    animation: blur .12s linear infinite;
+}
+
+@keyframes blur {
+    0% {
+        transform: translateY(-8px);
+        opacity: .5;
+    }
+    50% {
+        transform: translateY(8px);
+        opacity: .8;
+    }
+    100% {
+        transform: translateY(-8px);
+        opacity: .5;
+    }
+}
+
+.win {
+    animation: winPulse .6s ease-in-out infinite alternate;
+}
+
+@keyframes winPulse {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 5px #ffd84d;
+    }
+    to {
+        transform: scale(1.08);
+        box-shadow: 0 0 25px #ffd84d;
+    }
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.spin {
+    background: linear-gradient(180deg,#ffe96b,#ffae00);
+    color: #281200;
+    box-shadow: 0 5px 0 #a55d00;
+    min-width: 220px;
+}
+
+.spin:hover {
+    transform: translateY(-2px);
+}
+
+.spin:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #a55d00;
+}
+
+.spin:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.reset {
+    margin-left: 10px;
+    background: #442052;
+    color: white;
+}
+
+.message {
+    min-height: 32px;
+    margin-top: 15px;
+    font-size: 21px;
+    font-weight: bold;
+    color: #ffd84d;
+}
+
+.progress {
+    margin-top: 15px;
+}
+
+.progressBar {
+    height: 12px;
+    background: #211329;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,#ff8a00,#ffe45e);
+    transition: width .4s;
+}
+
+.paytable {
+    margin-top: 20px;
+    background: rgba(255,255,255,.06);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.paytable h2 {
+    margin-top: 0;
+    color: #ffd84d;
+}
+
+.paytableGrid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 8px;
+}
+
+.pay {
+    background: rgba(0,0,0,.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.pay span {
+    font-size: 30px;
+}
+
+.pay strong {
+    display: block;
+    color: #ffd84d;
+}
+
+.bonus {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,216,77,.1);
+    color: #ffeeb0;
+}
+
+@media(max-width:700px) {
+    h1 {
+        font-size: 30px;
+    }
+
+    .info {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .reels {
+        gap: 4px;
+        padding: 5px;
+    }
+
+    .reel {
+        min-height: 210px;
+    }
+
+    .symbol {
+        height: 63px;
+        font-size: 35px;
+    }
+
+    .paytableGrid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    button {
+        width: 100%;
+        margin: 5px 0 !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🎰 Moonshiner Reels</h1>
+    <div class="subtitle">
+        Arcade-Reels • Punkte sammeln • Level aufsteigen
+    </div>
+
+    <div class="info">
+
+        <div class="infoBox">
+            <span>Punkte</span>
+            <strong id="score">0</strong>
+        </div>
+
+        <div class="infoBox">
+            <span>Level</span>
+            <strong id="level">1</strong>
+        </div>
+
+        <div class="infoBox">
+            <span>Combo</span>
+            <strong id="combo">0</strong>
+        </div>
+
+        <div class="infoBox">
+            <span>Highscore</span>
+            <strong id="highscore">0</strong>
+        </div>
+
+    </div>
+
+    <div class="machine">
+
+        <div class="reels" id="reels">
+
+            <div class="reel">
+                <div class="symbol">🍒</div>
+                <div class="symbol middle">🍋</div>
+                <div class="symbol">⭐</div>
+            </div>
+
+            <div class="reel">
+                <div class="symbol">🍋</div>
+                <div class="symbol middle">💎</div>
+                <div class="symbol">🍀</div>
+            </div>
+
+            <div class="reel">
+                <div class="symbol">⭐</div>
+                <div class="symbol middle">🍒</div>
+                <div class="symbol">🔔</div>
+            </div>
+
+            <div class="reel">
+                <div class="symbol">🍀</div>
+                <div class="symbol middle">🔔</div>
+                <div class="symbol">💎</div>
+            </div>
+
+            <div class="reel">
+                <div class="symbol">🔔</div>
+                <div class="symbol middle">⭐</div>
+                <div class="symbol">🍒</div>
+            </div>
+
+        </div>
+
+        <div class="message" id="message">
+            Sammle Punkte durch Kombinationen!
+        </div>
+
+        <div class="controls">
+
+            <button class="spin" id="spinButton" onclick="spin()">
+                🎰 DREHEN
+            </button>
+
+            <button class="reset" onclick="resetGame()">
+                ↻ Neustart
+            </button>
+
+        </div>
+
+        <div class="progress">
+
+            <div>
+                Nächstes Level:
+                <span id="levelProgress">0 / 500</span>
+            </div>
+
+            <div class="progressBar">
+                <div class="progressFill" id="progressFill"></div>
+            </div>
+
+        </div>
+
+        <div class="bonus">
+            ⭐ 3 gleiche Symbole = Bonus • 💎 Wild • 🍀 Combo-Bonus
+        </div>
+
+    </div>
+
+    <div class="paytable">
+
+        <h2>⭐ Punkte-Kombinationen</h2>
+
+        <div class="paytableGrid">
+
+            <div class="pay">
+                <span>🍒</span>
+                <strong>3 × Kirsche</strong>
+                +100 Punkte
+            </div>
+
+            <div class="pay">
+                <span>⭐</span>
+                <strong>3 × Stern</strong>
+                +150 Punkte
+            </div>
+
+            <div class="pay">
+                <span>💎</span>
+                <strong>3 × Diamant</strong>
+                +250 Punkte
+            </div>
+
+            <div class="pay">
+                <span>🔔</span>
+                <strong>3 × Glocke</strong>
+                +200 Punkte
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const symbols = [
+    "🍒",
+    "🍋",
+    "⭐",
+    "🍀",
+    "🔔",
+    "💎",
+    "🍇",
+    "🍉"
+];
+
+const reels = document.querySelectorAll(".reel");
+
+let score = 0;
+let level = 1;
+let combo = 0;
+let spinning = false;
+
+let highscore =
+    Number(localStorage.getItem("moonshinerHighscore")) || 0;
+
+document.getElementById("highscore").textContent = highscore;
+
+
+/* --------------------------------
+   ZUFALLSSYMBOL
+-------------------------------- */
+
+function randomSymbol() {
+    return symbols[
+        Math.floor(Math.random() * symbols.length)
+    ];
+}
+
+
+/* --------------------------------
+   LEVELZIEL
+-------------------------------- */
+
+function levelTarget() {
+
+    return 500 + ((level - 1) * 400);
+
+}
+
+
+/* --------------------------------
+   WALZEN DREHEN
+-------------------------------- */
+
+function spin() {
+
+    if (spinning) return;
+
+    spinning = true;
+
+    const button =
+        document.getElementById("spinButton");
+
+    button.disabled = true;
+
+    document.getElementById("message").textContent =
+        "🎰 Die Walzen drehen...";
+
+    reels.forEach(reel => {
+
+        reel.classList.add("spinning");
+
+        reel.querySelectorAll(".symbol")
+            .forEach(symbol => {
+                symbol.classList.remove("win");
+            });
+
+    });
+
+
+    /*
+       Unterschiedliche Stopzeiten,
+       damit die Walzen nacheinander
+       stehen bleiben.
+    */
+
+    reels.forEach((reel, index) => {
+
+        setTimeout(() => {
+
+            reel.classList.remove("spinning");
+
+            const cells =
+                reel.querySelectorAll(".symbol");
+
+            cells.forEach(cell => {
+
+                cell.textContent =
+                    randomSymbol();
+
+            });
+
+        }, 900 + index * 350);
+
+    });
+
+
+    setTimeout(() => {
+
+        evaluate();
+
+        spinning = false;
+
+        button.disabled = false;
+
+    }, 900 + reels.length * 350 + 100);
+
+}
+
+
+/* --------------------------------
+   ERGEBNIS AUSWERTEN
+-------------------------------- */
+
+function evaluate() {
+
+    const grid = [];
+
+    reels.forEach(reel => {
+
+        grid.push(
+            [...reel.querySelectorAll(".symbol")]
+            .map(x => x.textContent)
+        );
+
+    });
+
+
+    let gained = 0;
+    let winningCells = [];
+
+
+    /*
+       5 horizontale Linien
+    */
+
+    for (let row = 0; row < 3; row++) {
+
+        const line =
+            grid.map(column => column[row]);
+
+        const result =
+            evaluateLine(line);
+
+        gained += result.points;
+
+        if (result.count >= 3) {
+
+            for (let col = 0; col < 5; col++) {
+
+                winningCells.push(
+                    reels[col]
+                    .querySelectorAll(".symbol")[row]
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Mittlere Diagonalen
+    */
+
+    const diagonal1 = [
+        grid[0][0],
+        grid[1][1],
+        grid[2][2],
+        grid[3][1],
+        grid[4][0]
+    ];
+
+    const diagonal2 = [
+        grid[0][2],
+        grid[1][1],
+        grid[2][0],
+        grid[3][1],
+        grid[4][2]
+    ];
+
+
+    const d1 = evaluateLine(diagonal1);
+    const d2 = evaluateLine(diagonal2);
+
+    gained += d1.points + d2.points;
+
+
+    /*
+       Combo-System
+    */
+
+    if (gained > 0) {
+
+        combo++;
+
+        const comboBonus =
+            Math.min(combo * 25, 300);
+
+        gained += comboBonus;
+
+    } else {
+
+        combo = 0;
+
+    }
+
+
+    /*
+       Punkte vergeben
+    */
+
+    score += gained;
+
+
+    if (score > highscore) {
+
+        highscore = score;
+
+        localStorage.setItem(
+            "moonshinerHighscore",
+            highscore
+        );
+
+    }
+
+
+    /*
+       Gewinner hervorheben
+    */
+
+    winningCells.forEach(cell => {
+
+        cell.classList.add("win");
+
+    });
+
+
+    /*
+       Anzeige
+    */
+
+    if (gained > 0) {
+
+        document.getElementById("message").textContent =
+            "🎉 +" + gained +
+            " Punkte! Combo x" + combo;
+
+    } else {
+
+        document.getElementById("message").textContent =
+            "Kein Treffer – nächste Runde!";
+
+    }
+
+
+    checkLevel();
+
+    updateUI();
+
+}
+
+
+/* --------------------------------
+   LINIE AUSWERTEN
+-------------------------------- */
+
+function evaluateLine(line) {
+
+    let best = 0;
+
+    /*
+       Für jedes Symbol prüfen,
+       wie viele davon vorkommen.
+    */
+
+    symbols.forEach(symbol => {
+
+        let count = 0;
+
+        line.forEach(x => {
+
+            if (x === symbol || x === "💎") {
+
+                count++;
+
+            }
+
+        });
+
+        best = Math.max(best, count);
+
+    });
+
+
+    /*
+       Punkte abhängig von
+       der Anzahl
+    */
+
+    let points = 0;
+
+    if (best === 3)
+        points = 100;
+
+    if (best === 4)
+        points = 250;
+
+    if (best === 5)
+        points = 600;
+
+
+    return {
+        count: best,
+        points: points
+    };
+
+}
+
+
+/* --------------------------------
+   LEVELSYSTEM
+-------------------------------- */
+
+function checkLevel() {
+
+    const target = levelTarget();
+
+    if (score >= target) {
+
+        level++;
+
+        document.getElementById("message").textContent =
+            "🚀 LEVEL " + level +
+            " erreicht! Bonus aktiviert!";
+
+        /*
+           Levelbonus als reine
+           Arcade-Punkte
+        */
+
+        score += level * 100;
+
+    }
+
+}
+
+
+/* --------------------------------
+   UI AKTUALISIEREN
+-------------------------------- */
+
+function updateUI() {
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.getElementById("level")
+        .textContent = level;
+
+    document.getElementById("combo")
+        .textContent = combo;
+
+    document.getElementById("highscore")
+        .textContent = highscore;
+
+
+    const previousTarget =
+        level === 1
+        ? 0
+        : levelTarget() - 400;
+
+    const target =
+        levelTarget();
+
+    const progress =
+        Math.max(
+            0,
+            score - previousTarget
+        );
+
+    const needed =
+        target - previousTarget;
+
+    const percentage =
+        Math.min(
+            100,
+            (progress / needed) * 100
+        );
+
+
+    document.getElementById("levelProgress")
+        .textContent =
+        progress + " / " + needed;
+
+    document.getElementById("progressFill")
+        .style.width =
+        percentage + "%";
+
+}
+
+
+/* --------------------------------
+   NEUSTART
+-------------------------------- */
+
+function resetGame() {
+
+    score = 0;
+    level = 1;
+    combo = 0;
+
+    document.getElementById("message").textContent =
+        "Spiel zurückgesetzt! Viel Erfolg.";
+
+    reels.forEach(reel => {
+
+        reel.querySelectorAll(".symbol")
+            .forEach(cell => {
+
+                cell.classList.remove("win");
+
+                cell.textContent =
+                    randomSymbol();
+
+            });
+
+    });
+
+    updateUI();
+
+}
+
+
+updateUI();
+
+</script>
+
+</body>
+</html>
+```
