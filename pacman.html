@@ -8,112 +8,112 @@
 <title>Labyrinth-Jäger</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        background: #111;
-        color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: center;
-        overflow-x: hidden;
-    }
+body {
+    margin: 0;
+    background: #111;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    overflow-x: hidden;
+}
 
-    h1 {
-        margin: 20px 0 8px;
-        color: #ffd800;
-    }
+h1 {
+    margin: 20px 0 8px;
+    color: #ffd800;
+}
 
-    #info {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin: 10px 0 15px;
-        font-size: 18px;
-        font-weight: bold;
-        flex-wrap: wrap;
-    }
+#info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 10px 0 15px;
+    font-size: 18px;
+    font-weight: bold;
+    flex-wrap: wrap;
+}
 
-    #game {
-        display: block;
-        margin: 0 auto;
-        background: #000;
-        border: 4px solid #333;
-        max-width: 95vw;
-        height: auto;
-        image-rendering: pixelated;
-    }
+#game {
+    display: block;
+    margin: 0 auto;
+    background: #000;
+    border: 4px solid #333;
+    max-width: 95vw;
+    height: auto;
+    image-rendering: pixelated;
+}
 
-    button {
-        margin-top: 15px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        background: #ffd800;
-        color: #111;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-    }
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #ffd800;
+    color: #111;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    button:hover {
-        background: #fff000;
-    }
+button:hover {
+    background: #fff000;
+}
 
-    #message {
-        margin-top: 12px;
-        min-height: 25px;
-        font-weight: bold;
-    }
+#message {
+    margin-top: 12px;
+    min-height: 25px;
+    font-weight: bold;
+}
 
-    /* Touch-Steuerung */
+/* Touch-Steuerung */
 
-    #controls {
-        margin: 18px auto;
-        width: 180px;
-        display: grid;
-        grid-template-columns: 60px 60px 60px;
-        grid-template-rows: 55px 55px;
-        gap: 5px;
-        justify-content: center;
-    }
+#controls {
+    margin: 18px auto;
+    width: 180px;
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 55px 55px;
+    gap: 5px;
+    justify-content: center;
+}
 
-    .control {
-        width: 60px;
-        height: 55px;
-        margin: 0;
-        padding: 0;
-        font-size: 25px;
-        background: #333;
-        color: white;
-        border: 1px solid #555;
-    }
+.control {
+    width: 60px;
+    height: 55px;
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
 
-    .control:active {
-        background: #ffd800;
-        color: #111;
-    }
+.control:active {
+    background: #ffd800;
+    color: #111;
+}
 
-    #up {
-        grid-column: 2;
-    }
+#up {
+    grid-column: 2;
+}
 
-    #left {
-        grid-column: 1;
-        grid-row: 2;
-    }
+#left {
+    grid-column: 1;
+    grid-row: 2;
+}
 
-    #down {
-        grid-column: 2;
-        grid-row: 2;
-    }
+#down {
+    grid-column: 2;
+    grid-row: 2;
+}
 
-    #right {
-        grid-column: 3;
-        grid-row: 2;
-    }
+#right {
+    grid-column: 3;
+    grid-row: 2;
+}
 </style>
 </head>
 
@@ -151,128 +151,436 @@ const TILE = 30;
 const ROWS = 14;
 const COLS = 14;
 
+
 /*
-    1 = Wand
-    0 = Weg
-    2 = Punkt
-    3 = Power-Punkt
+====================================================
+10 VERSCHIEDENE LEVEL
+====================================================
+
+1 = Wand
+0 = Weg
 */
 
-const originalMap = [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,3,0,0,0,1,0,0,0,1,0,0,3,1],
-    [1,0,1,1,0,1,0,1,0,1,0,1,0,1],
-    [1,0,0,0,0,0,0,1,0,0,0,0,0,1],
-    [1,0,1,1,0,1,1,1,1,1,0,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,1,1,1,0,1,0,0,0,1,1,1,0,1],
-    [1,0,0,0,0,1,0,1,0,1,0,0,0,1],
-    [1,0,1,1,0,0,0,1,0,0,0,1,0,1],
-    [1,0,0,0,0,1,0,0,0,1,0,0,0,1],
-    [1,0,1,1,0,1,1,1,1,1,0,1,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,3,0,1,0,1,0,0,0,1,0,1,3,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+const levels = [
+
+/* LEVEL 1 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,0,1,1,0,1,0,1,0,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,0,1,0,0,0,1,1,1,0,1],
+[1,0,0,0,0,1,0,1,0,1,0,0,0,1],
+[1,0,1,1,0,0,0,1,0,0,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,0,1,0,1,0,0,0,1,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 2 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,0,1],
+[1,0,1,0,1,0,1,1,1,0,1,0,0,1],
+[1,0,1,0,0,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1,1,0,0,1],
+[1,0,0,0,0,0,0,0,1,0,0,0,0,1],
+[1,1,1,0,1,1,1,0,1,0,1,1,0,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,1,1,0,1,0,1,1],
+[1,0,0,0,0,0,1,0,0,0,1,0,0,1],
+[1,1,1,1,1,0,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,0,1,1,1,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 3 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,1,0,0,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,0,1,1,0,1],
+[1,0,0,0,1,0,0,0,1,0,0,0,0,1],
+[1,1,1,0,1,1,1,1,1,0,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,1,0,0,1],
+[1,0,1,1,1,1,0,1,1,0,1,0,1,1],
+[1,0,0,0,0,1,0,0,0,0,0,0,0,1],
+[1,1,1,0,1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,1,0,0,0,0,1,0,0,0,1],
+[1,1,0,0,0,1,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 4 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,1,0,0,0,1,0,0,0,1,0,1],
+[1,1,0,1,0,1,0,1,0,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,0,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,1,1,0,1,1,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,1,1,0,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,0,0,0,0,1,1,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 5 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,1,0,0,0,1,0,0,1],
+[1,1,1,1,0,0,1,0,1,0,1,1,0,1],
+[1,0,0,0,0,1,0,0,1,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,1,1,0,1,0,1],
+[1,0,0,1,0,0,0,0,0,0,0,1,0,1],
+[1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,0,1,1,1,1,0,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,0,0,0,0,1,1,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 6 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,1,0,0,0,0,1,0,0,1,0,1],
+[1,0,1,1,0,1,1,0,1,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,1,1,0,1,1,0,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,0,1,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,1,0,1,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,0,0,0,0,1,1,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 7 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,1,0,0,0,0,0,1],
+[1,1,1,0,1,0,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,1,0,0,1,0,0,0,1],
+[1,0,1,1,1,1,1,0,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,1,0,0,1,0,1],
+[1,1,1,1,1,0,1,1,1,0,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,0,1,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,0,1,1,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+[1,0,1,1,1,1,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 8 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,1,0,0,0,0,1,0,0,1,0,0,1],
+[1,0,1,1,1,1,0,1,0,1,1,0,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,0,1,1,1,0,1,0,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,0,1,1,1,1,0,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,0,1,1,1,1,0,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,0,0,1,1,1,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 9 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,1,0,0,0,1,0,0,0,1,0,1],
+[1,1,0,1,0,1,0,1,0,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,0,1,1,1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,0,1,1,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+[1,0,1,1,1,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,1],
+[1,1,1,1,1,1,0,1,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,0,1,1,1,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+],
+
+/* LEVEL 10 */
+[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,1,1,1,0,1,0,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,1,0,1],
+[1,0,1,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+[1,0,1,1,1,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,1,0,0,1,1,1,0,1,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+]
+
 ];
+
 
 let map;
 let score = 0;
 let lives = 3;
 let level = 1;
+
 let gameRunning = true;
+
 let powerMode = false;
 let powerTimer = 0;
 
 let player;
 let enemies;
 
+
+/* Geschwindigkeit */
+
+let playerSpeed = 120;
+let enemySpeed = 180;
+
+
+/* Richtungen */
+
 const directions = {
-    up:    {x:0, y:-1},
-    down:  {x:0, y:1},
-    left:  {x:-1, y:0},
-    right: {x:1, y:0}
+
+    up: {
+        x: 0,
+        y: -1
+    },
+
+    down: {
+        x: 0,
+        y: 1
+    },
+
+    left: {
+        x: -1,
+        y: 0
+    },
+
+    right: {
+        x: 1,
+        y: 0
+    }
+
 };
 
-function copyMap() {
-    map = originalMap.map(row => row.slice());
 
-    // Gegnerbereich freihalten
-    map[6][6] = 0;
-    map[6][7] = 0;
-    map[7][6] = 0;
-    map[7][7] = 0;
-}
+/* ==================================================
+   LEVEL LADEN
+================================================== */
 
-function createPlayer() {
-    player = {
-        x: 1,
-        y: 1,
-        dir: directions.right,
-        nextDir: directions.right
-    };
-}
+function loadLevel() {
 
-function createEnemies() {
+    let selectedLevel = (level - 1) % levels.length;
 
-    enemies = [
-        {
-            x: 6,
-            y: 6,
-            dir: directions.left,
-            color: "#ff4040"
-        },
-        {
-            x: 7,
-            y: 6,
-            dir: directions.right,
-            color: "#40a0ff"
-        },
-        {
-            x: 6,
-            y: 7,
-            dir: directions.up,
-            color: "#ff70c0"
-        }
-    ];
-}
+    map = levels[selectedLevel].map(row => row.slice());
 
-function resetGame() {
-
-    copyMap();
-
-    score = 0;
-    lives = 3;
-    level = 1;
-    gameRunning = true;
-    powerMode = false;
-    powerTimer = 0;
+    addDots();
 
     createPlayer();
     createEnemies();
 
+    powerMode = false;
+    powerTimer = 0;
+
     updateInfo();
 }
 
+
+/* ==================================================
+   PUNKTE VERTEILEN
+================================================== */
+
+function addDots() {
+
+    for (let y = 0; y < ROWS; y++) {
+
+        for (let x = 0; x < COLS; x++) {
+
+            if (
+                map[y][x] === 0 &&
+                !(x === 1 && y === 1) &&
+                !(x >= 6 && x <= 7 && y >= 6 && y <= 7)
+            ) {
+
+                map[y][x] = 2;
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Vier Power-Punkte
+    */
+
+    if (isWalkable(1,1))
+        map[1][1] = 3;
+
+    if (isWalkable(12,1))
+        map[1][12] = 3;
+
+    if (isWalkable(1,12))
+        map[12][1] = 3;
+
+    if (isWalkable(12,12))
+        map[12][12] = 3;
+
+}
+
+
+/* ==================================================
+   SPIELER
+================================================== */
+
+function createPlayer() {
+
+    player = {
+
+        x: 1,
+        y: 1,
+
+        dir: directions.right,
+
+        nextDir: directions.right
+
+    };
+
+}
+
+
+/* ==================================================
+   GEGNER
+================================================== */
+
+function createEnemies() {
+
+    enemies = [
+
+        {
+            x: 6,
+            y: 6,
+
+            dir: directions.left,
+
+            color: "#ff4040"
+        },
+
+        {
+            x: 7,
+            y: 6,
+
+            dir: directions.right,
+
+            color: "#40a0ff"
+        },
+
+        {
+            x: 6,
+            y: 7,
+
+            dir: directions.up,
+
+            color: "#ff70c0"
+        }
+
+    ];
+
+}
+
+
+/* ==================================================
+   NEUSTART
+================================================== */
+
 function restartGame() {
-    resetGame();
+
+    score = 0;
+
+    lives = 3;
+
+    level = 1;
+
+    gameRunning = true;
+
+    playerSpeed = 120;
+
+    enemySpeed = 180;
+
     document.getElementById("message").textContent =
         "Sammle alle Punkte und weiche den Gegnern aus!";
+
+    loadLevel();
+
 }
+
+
+/* ==================================================
+   INFO
+================================================== */
 
 function updateInfo() {
 
     document.getElementById("score").textContent = score;
+
     document.getElementById("lives").textContent = lives;
+
     document.getElementById("level").textContent = level;
+
 }
+
+
+/* ==================================================
+   BEWEGUNG PRÜFEN
+================================================== */
 
 function isWalkable(x, y) {
 
-    if (x < 0 || y < 0 || x >= COLS || y >= ROWS)
+    if (
+        x < 0 ||
+        y < 0 ||
+        x >= COLS ||
+        y >= ROWS
+    ) {
+
         return false;
 
+    }
+
     return map[y][x] !== 1;
+
 }
+
 
 function canMove(entity, dir) {
 
@@ -280,151 +588,298 @@ function canMove(entity, dir) {
         entity.x + dir.x,
         entity.y + dir.y
     );
+
 }
+
+
+/* ==================================================
+   SPIELER BEWEGEN
+================================================== */
 
 function movePlayer() {
 
-    if (!gameRunning) return;
+    if (!gameRunning)
+        return;
 
-    // Richtungswechsel versuchen
+
+    /*
+       Neue Richtung übernehmen
+    */
 
     if (canMove(player, player.nextDir)) {
+
         player.dir = player.nextDir;
+
     }
+
+
+    /*
+       Spieler bewegen
+    */
 
     if (canMove(player, player.dir)) {
 
         player.x += player.dir.x;
+
         player.y += player.dir.y;
 
         collectItem();
+
     }
 
+
     checkEnemyCollision();
+
 }
+
+
+/* ==================================================
+   PUNKTE EINSAMMELN
+================================================== */
 
 function collectItem() {
 
     if (map[player.y][player.x] === 2) {
 
         map[player.y][player.x] = 0;
+
         score += 10;
+
     }
+
 
     if (map[player.y][player.x] === 3) {
 
         map[player.y][player.x] = 0;
+
         score += 50;
 
         powerMode = true;
+
         powerTimer = 300;
+
     }
 
+
     checkLevelComplete();
+
     updateInfo();
+
 }
+
+
+/* ==================================================
+   LEVEL FERTIG?
+================================================== */
 
 function checkLevelComplete() {
 
     let dots = 0;
 
+
     for (let y = 0; y < ROWS; y++) {
+
         for (let x = 0; x < COLS; x++) {
 
-            if (map[y][x] === 2 || map[y][x] === 3) {
+            if (
+                map[y][x] === 2 ||
+                map[y][x] === 3
+            ) {
+
                 dots++;
+
             }
+
         }
+
     }
+
 
     if (dots === 0) {
 
         level++;
 
-        document.getElementById("message").textContent =
-            "Level " + level + "! Das wird jetzt etwas schneller.";
 
-        copyMap();
-        createPlayer();
-        createEnemies();
+        if (level > 10) {
 
-        powerMode = false;
-        powerTimer = 0;
+            level = 1;
 
-        updateInfo();
+            document.getElementById("message").textContent =
+                "🎉 Alle 10 Level geschafft! Runde 2 beginnt!";
+
+        } else {
+
+            document.getElementById("message").textContent =
+                "🎉 Level geschafft! Weiter mit Level " + level;
+
+        }
+
+
+        /*
+           Gegner werden schneller
+        */
+
+        playerSpeed =
+            Math.max(
+                70,
+                120 - ((level - 1) * 5)
+            );
+
+        enemySpeed =
+            Math.max(
+                100,
+                180 - ((level - 1) * 8)
+            );
+
+
+        loadLevel();
+
     }
+
 }
+
+
+/* ==================================================
+   GEGNER BEWEGEN
+================================================== */
 
 function moveEnemies() {
 
-    if (!gameRunning) return;
+    if (!gameRunning)
+        return;
+
 
     enemies.forEach(enemy => {
 
         let possible = [];
 
+
         Object.values(directions).forEach(dir => {
 
             if (canMove(enemy, dir)) {
+
                 possible.push(dir);
+
             }
+
         });
 
-        if (possible.length === 0) return;
 
-        // Nicht ständig umdrehen
+        if (possible.length === 0)
+            return;
+
+
+        /*
+           Rückwärtsrichtung
+        */
 
         let reverse = {
+
             x: -enemy.dir.x,
+
             y: -enemy.dir.y
+
         };
 
+
         let choices = possible.filter(dir =>
-            !(dir.x === reverse.x && dir.y === reverse.y)
+
+            !(
+                dir.x === reverse.x &&
+                dir.y === reverse.y
+            )
+
         );
 
-        if (choices.length === 0)
+
+        if (choices.length === 0) {
+
             choices = possible;
 
-        // Im Power-Modus eher zufällig
+        }
+
+
+        /*
+           Power-Modus:
+           Gegner bewegen sich zufälliger
+        */
+
         if (powerMode) {
 
             enemy.dir =
-                choices[Math.floor(Math.random() * choices.length)];
+                choices[
+                    Math.floor(
+                        Math.random() *
+                        choices.length
+                    )
+                ];
 
         } else {
 
-            // Teilweise Spieler verfolgen
+
+            /*
+               Gegner verfolgen Spieler
+            */
+
             if (Math.random() < 0.65) {
 
                 choices.sort((a,b) => {
 
                     let da =
-                        Math.abs(enemy.x + a.x - player.x) +
-                        Math.abs(enemy.y + a.y - player.y);
+                        Math.abs(
+                            enemy.x + a.x - player.x
+                        ) +
+                        Math.abs(
+                            enemy.y + a.y - player.y
+                        );
+
 
                     let db =
-                        Math.abs(enemy.x + b.x - player.x) +
-                        Math.abs(enemy.y + b.y - player.y);
+                        Math.abs(
+                            enemy.x + b.x - player.x
+                        ) +
+                        Math.abs(
+                            enemy.y + b.y - player.y
+                        );
+
 
                     return da - db;
+
                 });
+
 
                 enemy.dir = choices[0];
 
             } else {
 
                 enemy.dir =
-                    choices[Math.floor(Math.random() * choices.length)];
+                    choices[
+                        Math.floor(
+                            Math.random() *
+                            choices.length
+                        )
+                    ];
+
             }
+
         }
 
+
         enemy.x += enemy.dir.x;
+
         enemy.y += enemy.dir.y;
+
     });
 
+
     checkEnemyCollision();
+
 }
+
+
+/* ==================================================
+   KOLLISION MIT GEGNERN
+================================================== */
 
 function checkEnemyCollision() {
 
@@ -435,49 +890,81 @@ function checkEnemyCollision() {
             enemy.y === player.y
         ) {
 
+
             if (powerMode) {
 
                 score += 200;
 
-                // Gegner zurücksetzen
+
+                /*
+                   Gegner zurücksetzen
+                */
 
                 enemy.x = 6;
+
                 enemy.y = 6;
 
+
                 updateInfo();
+
 
             } else {
 
                 loseLife();
+
             }
+
         }
+
     });
+
 }
+
+
+/* ==================================================
+   LEBEN VERLIEREN
+================================================== */
 
 function loseLife() {
 
-    if (!gameRunning) return;
+    if (!gameRunning)
+        return;
+
 
     lives--;
 
+
     updateInfo();
+
 
     if (lives <= 0) {
 
         gameRunning = false;
 
+
         document.getElementById("message").textContent =
-            "Game Over! Punkte: " + score;
+            "💀 Game Over! Punkte: " + score;
+
 
         return;
+
     }
+
 
     document.getElementById("message").textContent =
         "Autsch! Noch " + lives + " Leben.";
 
+
     createPlayer();
+
     createEnemies();
+
 }
+
+
+/* ==================================================
+   LABYRINTH ZEICHNEN
+================================================== */
 
 function drawMap() {
 
@@ -486,14 +973,28 @@ function drawMap() {
         for (let x = 0; x < COLS; x++) {
 
             let px = x * TILE;
+
             let py = y * TILE;
+
+
+            /*
+               Wand
+            */
 
             if (map[y][x] === 1) {
 
                 ctx.fillStyle = "#1738c9";
-                ctx.fillRect(px, py, TILE, TILE);
+
+                ctx.fillRect(
+                    px,
+                    py,
+                    TILE,
+                    TILE
+                );
+
 
                 ctx.strokeStyle = "#305cff";
+
                 ctx.strokeRect(
                     px + 2,
                     py + 2,
@@ -501,17 +1002,34 @@ function drawMap() {
                     TILE - 4
                 );
 
+
             } else {
 
-                ctx.fillStyle = "#000";
-                ctx.fillRect(px, py, TILE, TILE);
 
-                // Punkte
+                /*
+                   Boden
+                */
+
+                ctx.fillStyle = "#000";
+
+                ctx.fillRect(
+                    px,
+                    py,
+                    TILE,
+                    TILE
+                );
+
+
+                /*
+                   Normaler Punkt
+                */
 
                 if (map[y][x] === 2) {
 
                     ctx.fillStyle = "#fff";
+
                     ctx.beginPath();
+
                     ctx.arc(
                         px + TILE / 2,
                         py + TILE / 2,
@@ -519,15 +1037,22 @@ function drawMap() {
                         0,
                         Math.PI * 2
                     );
+
                     ctx.fill();
+
                 }
 
-                // Power-Punkte
+
+                /*
+                   Power-Punkt
+                */
 
                 if (map[y][x] === 3) {
 
                     ctx.fillStyle = "#fff";
+
                     ctx.beginPath();
+
                     ctx.arc(
                         px + TILE / 2,
                         py + TILE / 2,
@@ -535,19 +1060,38 @@ function drawMap() {
                         0,
                         Math.PI * 2
                     );
+
                     ctx.fill();
+
                 }
+
             }
+
         }
+
     }
+
 }
+
+
+/* ==================================================
+   SPIELER ZEICHNEN
+================================================== */
 
 function drawPlayer() {
 
-    let cx = player.x * TILE + TILE / 2;
-    let cy = player.y * TILE + TILE / 2;
+    let cx =
+        player.x * TILE +
+        TILE / 2;
+
+
+    let cy =
+        player.y * TILE +
+        TILE / 2;
+
 
     let angle = 0;
+
 
     if (player.dir === directions.right)
         angle = 0;
@@ -561,12 +1105,16 @@ function drawPlayer() {
     if (player.dir === directions.up)
         angle = -Math.PI / 2;
 
+
     ctx.save();
 
     ctx.translate(cx, cy);
+
     ctx.rotate(angle);
 
+
     ctx.fillStyle = "#ffd800";
+
 
     ctx.beginPath();
 
@@ -581,23 +1129,43 @@ function drawPlayer() {
     );
 
     ctx.closePath();
+
     ctx.fill();
 
+
     ctx.restore();
+
 }
+
+
+/* ==================================================
+   GEGNER ZEICHNEN
+================================================== */
 
 function drawEnemy(enemy) {
 
-    let cx = enemy.x * TILE + TILE / 2;
-    let cy = enemy.y * TILE + TILE / 2;
+    let cx =
+        enemy.x * TILE +
+        TILE / 2;
+
+
+    let cy =
+        enemy.y * TILE +
+        TILE / 2;
+
 
     let color = enemy.color;
 
+
     if (powerMode) {
+
         color = "#2255ff";
+
     }
 
+
     ctx.fillStyle = color;
+
 
     ctx.beginPath();
 
@@ -609,37 +1177,89 @@ function drawEnemy(enemy) {
         0
     );
 
+
     ctx.lineTo(cx + 11, cy + 11);
+
     ctx.lineTo(cx + 5, cy + 6);
+
     ctx.lineTo(cx, cy + 11);
+
     ctx.lineTo(cx - 5, cy + 6);
+
     ctx.lineTo(cx - 11, cy + 11);
 
     ctx.closePath();
+
     ctx.fill();
 
-    // Augen
+
+    /*
+       Augen
+    */
 
     ctx.fillStyle = "white";
 
-    ctx.beginPath();
-    ctx.arc(cx - 5, cy - 3, 4, 0, Math.PI * 2);
-    ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx + 5, cy - 3, 4, 0, Math.PI * 2);
+
+    ctx.arc(
+        cx - 5,
+        cy - 3,
+        4,
+        0,
+        Math.PI * 2
+    );
+
     ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx + 5,
+        cy - 3,
+        4,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
 
     ctx.fillStyle = "#111";
 
-    ctx.beginPath();
-    ctx.arc(cx - 5, cy - 3, 2, 0, Math.PI * 2);
-    ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx + 5, cy - 3, 2, 0, Math.PI * 2);
+
+    ctx.arc(
+        cx - 5,
+        cy - 3,
+        2,
+        0,
+        Math.PI * 2
+    );
+
     ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx + 5,
+        cy - 3,
+        2,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
 }
+
+
+/* ==================================================
+   ZEICHNEN
+================================================== */
 
 function draw() {
 
@@ -650,139 +1270,225 @@ function draw() {
         canvas.height
     );
 
+
     drawMap();
+
     drawPlayer();
 
     enemies.forEach(drawEnemy);
+
 }
+
 
 function gameLoop() {
 
     draw();
 
     requestAnimationFrame(gameLoop);
+
 }
 
-// Tastatur
+
+/* ==================================================
+   TASTATUR
+================================================== */
 
 document.addEventListener("keydown", function(e) {
+
 
     if (
         e.key === "ArrowUp" ||
         e.key.toLowerCase() === "w"
     ) {
+
         player.nextDir = directions.up;
+
         e.preventDefault();
+
     }
+
 
     if (
         e.key === "ArrowDown" ||
         e.key.toLowerCase() === "s"
     ) {
+
         player.nextDir = directions.down;
+
         e.preventDefault();
+
     }
+
 
     if (
         e.key === "ArrowLeft" ||
         e.key.toLowerCase() === "a"
     ) {
+
         player.nextDir = directions.left;
+
         e.preventDefault();
+
     }
+
 
     if (
         e.key === "ArrowRight" ||
         e.key.toLowerCase() === "d"
     ) {
+
         player.nextDir = directions.right;
+
         e.preventDefault();
+
     }
 
-    if (e.key === "Enter" && !gameRunning) {
+
+    if (
+        e.key === "Enter" &&
+        !gameRunning
+    ) {
+
         restartGame();
+
     }
+
 });
 
-// Touch-Buttons
+
+/* ==================================================
+   TOUCH-STEUERUNG
+================================================== */
 
 function setDirection(direction) {
-    if (player && gameRunning) {
-        player.nextDir = directions[direction];
-    }
-}
 
-document.getElementById("up").addEventListener("click", () => {
-    setDirection("up");
-});
+    if (
+        player &&
+        gameRunning
+    ) {
 
-document.getElementById("down").addEventListener("click", () => {
-    setDirection("down");
-});
+        player.nextDir =
+            directions[direction];
 
-document.getElementById("left").addEventListener("click", () => {
-    setDirection("left");
-});
-
-document.getElementById("right").addEventListener("click", () => {
-    setDirection("right");
-});
-
-// Punkte auf Wegen verteilen
-
-function addDots() {
-
-    for (let y = 0; y < ROWS; y++) {
-
-        for (let x = 0; x < COLS; x++) {
-
-            if (
-                map[y][x] === 0 &&
-                !(x === 1 && y === 1) &&
-                !(x >= 6 && x <= 7 && y >= 6 && y <= 7)
-            ) {
-                map[y][x] = 2;
-            }
-        }
     }
 
-    // Power-Punkte
-
-    map[1][1] = 3;
-    map[1][12] = 3;
-    map[12][1] = 3;
-    map[12][12] = 3;
 }
 
-// Start
 
-resetGame();
-addDots();
+document.getElementById("up")
+.addEventListener(
+    "click",
+    () => setDirection("up")
+);
+
+
+document.getElementById("down")
+.addEventListener(
+    "click",
+    () => setDirection("down")
+);
+
+
+document.getElementById("left")
+.addEventListener(
+    "click",
+    () => setDirection("left")
+);
+
+
+document.getElementById("right")
+.addEventListener(
+    "click",
+    () => setDirection("right")
+);
+
+
+/* ==================================================
+   SPIEL STARTEN
+================================================== */
+
+loadLevel();
 
 gameLoop();
 
-// Spielerbewegung
-// Je kleiner das Intervall, desto schneller.
+
+/* ==================================================
+   SPIELER GESCHWINDIGKEIT
+================================================== */
 
 setInterval(() => {
 
-    if (!gameRunning) return;
+    if (gameRunning) {
 
-    movePlayer();
+        movePlayer();
 
-}, 120);
+    }
 
-// Gegnerbewegung
+}, playerSpeed);
 
-setInterval(() => {
 
-    if (!gameRunning) return;
+/*
+   Da setInterval die Geschwindigkeit nicht
+   dynamisch übernimmt, verwenden wir zusätzlich
+   einen festen Timer mit der aktuellen Level-
+   Geschwindigkeit.
+*/
 
-    moveEnemies();
+let playerTimer = null;
+let enemyTimer = null;
 
-}, 180);
 
-// Power-Modus
+function startTimers() {
+
+    clearInterval(playerTimer);
+    clearInterval(enemyTimer);
+
+
+    playerTimer = setInterval(() => {
+
+        if (gameRunning) {
+
+            movePlayer();
+
+        }
+
+    }, playerSpeed);
+
+
+    enemyTimer = setInterval(() => {
+
+        if (gameRunning) {
+
+            moveEnemies();
+
+        }
+
+    }, enemySpeed);
+
+}
+
+
+startTimers();
+
+
+/*
+   Timer bei jedem neuen Level aktualisieren
+*/
+
+const originalLoadLevel = loadLevel;
+
+loadLevel = function() {
+
+    originalLoadLevel();
+
+    startTimers();
+
+};
+
+
+/* ==================================================
+   POWER-MODUS
+================================================== */
 
 setInterval(() => {
 
@@ -790,9 +1496,13 @@ setInterval(() => {
 
         powerTimer--;
 
+
         if (powerTimer <= 0) {
+
             powerMode = false;
+
         }
+
     }
 
 }, 100);
