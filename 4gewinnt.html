@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>4 Gewinnt</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #111, #222);
+        color: white;
+        text-align: center;
+        min-height: 100vh;
+    }
+
+    h1 {
+        margin: 20px 0 10px;
+        font-size: 42px;
+    }
+
+    .info {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    #board {
+        display: grid;
+        grid-template-columns: repeat(7, 70px);
+        grid-template-rows: repeat(6, 70px);
+        gap: 7px;
+        background: #1455a0;
+        padding: 10px;
+        width: max-content;
+        margin: 20px auto;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    .cell {
+        width: 70px;
+        height: 70px;
+        background: white;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: inset 0 3px 5px rgba(0,0,0,0.3);
+        transition: transform 0.1s;
+    }
+
+    .cell:hover {
+        transform: scale(0.95);
+    }
+
+    .red {
+        background: #e53935;
+    }
+
+    .yellow {
+        background: #ffd600;
+    }
+
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    button:hover {
+        background: #218838;
+    }
+
+    #message {
+        font-size: 24px;
+        font-weight: bold;
+        min-height: 30px;
+        margin: 10px;
+    }
+
+    @media (max-width: 600px) {
+        #board {
+            grid-template-columns: repeat(7, 42px);
+            grid-template-rows: repeat(6, 42px);
+            gap: 5px;
+            padding: 7px;
+        }
+
+        .cell {
+            width: 42px;
+            height: 42px;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        .info {
+            font-size: 17px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🔴 4 Gewinnt 🟡</h1>
+
+<div class="info">
+    Spieler: <span id="player">🔴 Rot</span>
+</div>
+
+<div id="message"></div>
+
+<div id="board"></div>
+
+<button onclick="restartGame()">Neues Spiel</button>
+
+<script>
+
+const ROWS = 6;
+const COLS = 7;
+
+let board = [];
+let currentPlayer = 1;
+let gameOver = false;
+
+const boardElement = document.getElementById("board");
+const playerElement = document.getElementById("player");
+const messageElement = document.getElementById("message");
+
+function createBoard() {
+
+    board = [];
+
+    for (let row = 0; row < ROWS; row++) {
+        board[row] = [];
+
+        for (let col = 0; col < COLS; col++) {
+            board[row][col] = 0;
+        }
+    }
+
+    drawBoard();
+}
+
+function drawBoard() {
+
+    boardElement.innerHTML = "";
+
+    for (let row = 0; row < ROWS; row++) {
+
+        for (let col = 0; col < COLS; col++) {
+
+            const cell = document.createElement("div");
+
+            cell.classList.add("cell");
+
+            if (board[row][col] === 1) {
+                cell.classList.add("red");
+            }
+
+            if (board[row][col] === 2) {
+                cell.classList.add("yellow");
+            }
+
+            cell.addEventListener("click", function() {
+                dropPiece(col);
+            });
+
+            boardElement.appendChild(cell);
+        }
+    }
+}
+
+function dropPiece(col) {
+
+    if (gameOver) {
+        return;
+    }
+
+    // Von unten nach oben nach freiem Platz suchen
+    for (let row = ROWS - 1; row >= 0; row--) {
+
+        if (board[row][col] === 0) {
+
+            board[row][col] = currentPlayer;
+
+            drawBoard();
+
+            if (checkWin(row, col)) {
+
+                gameOver = true;
+
+                if (currentPlayer === 1) {
+                    messageElement.textContent = "🔴 Rot gewinnt!";
+                } else {
+                    messageElement.textContent = "🟡 Gelb gewinnt!";
+                }
+
+                playerElement.textContent = "Spiel beendet";
+                return;
+            }
+
+            if (checkDraw()) {
+
+                gameOver = true;
+
+                messageElement.textContent = "🤝 Unentschieden!";
+                playerElement.textContent = "Spiel beendet";
+
+                return;
+            }
+
+            // Spieler wechseln
+            if (currentPlayer === 1) {
+                currentPlayer = 2;
+            } else {
+                currentPlayer = 1;
+            }
+
+            updatePlayer();
+
+            return;
+        }
+    }
+
+    // Spalte ist voll
+}
+
+function updatePlayer() {
+
+    if (currentPlayer === 1) {
+        playerElement.textContent = "🔴 Rot";
+    } else {
+        playerElement.textContent = "🟡 Gelb";
+    }
+}
+
+function checkWin(row, col) {
+
+    const player = board[row][col];
+
+    const directions = [
+        [0, 1],   // horizontal
+        [1, 0],   // vertikal
+        [1, 1],   // diagonal \
+        [1, -1]   // diagonal /
+    ];
+
+    for (const direction of directions) {
+
+        const dr = direction[0];
+        const dc = direction[1];
+
+        let count = 1;
+
+        // Eine Richtung prüfen
+        count += countPieces(row, col, dr, dc, player);
+
+        // Gegenrichtung prüfen
+        count += countPieces(row, col, -dr, -dc, player);
+
+        if (count >= 4) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function countPieces(row, col, dr, dc, player) {
+
+    let count = 0;
+
+    let r = row + dr;
+    let c = col + dc;
+
+    while (
+        r >= 0 &&
+        r < ROWS &&
+        c >= 0 &&
+        c < COLS &&
+        board[r][c] === player
+    ) {
+
+        count++;
+
+        r += dr;
+        c += dc;
+    }
+
+    return count;
+}
+
+function checkDraw() {
+
+    for (let col = 0; col < COLS; col++) {
+
+        if (board[0][col] === 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function restartGame() {
+
+    currentPlayer = 1;
+    gameOver = false;
+
+    messageElement.textContent = "";
+
+    updatePlayer();
+    createBoard();
+}
+
+// Spiel starten
+createBoard();
+
+</script>
+
+</body>
+</html>
