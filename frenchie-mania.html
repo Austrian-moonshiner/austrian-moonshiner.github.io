@@ -4,5249 +4,1471 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Frenchie Mania</title>
+<title>Bulldog Crush – 70 Level</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
+    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    background: #111;
-    color: white;
-}
-
-header {
-    text-align: center;
-    padding: 15px;
-    background: linear-gradient(135deg,#171717,#333);
-    border-bottom: 3px solid #777;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 34px;
-}
-
-header p {
-    margin: 5px 0 0;
-    opacity: .8;
-}
-
-#game {
-    width: 100%;
-    max-width: 1250px;
-    margin: auto;
-}
-
-#info {
+    background:
+        radial-gradient(circle at top, #ffe5ef 0%, #ffc4d8 35%, #a52c55 100%);
+    color: #35121f;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px;
-    background: #1c1c1c;
+    align-items: center;
 }
 
-.infoBox {
-    background: #2b2b2b;
-    border-radius: 10px;
-    padding: 8px 15px;
+.game {
+    width: min(96vw, 760px);
+    margin: 20px auto;
+    background: rgba(255,255,255,0.94);
+    border-radius: 28px;
+    padding: 20px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+}
+
+h1 {
     text-align: center;
-    min-width: 110px;
+    margin: 0 0 5px;
+    font-size: clamp(28px, 6vw, 46px);
 }
 
-.infoBox span {
+.subtitle {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #7b3851;
+}
+
+.topbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.info {
+    background: #fff0f5;
+    border: 2px solid #f2b4c9;
+    border-radius: 15px;
+    padding: 9px 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.info span {
     display: block;
     font-size: 12px;
-    opacity: .7;
+    color: #8d5368;
 }
 
-.infoBox strong {
-    font-size: 18px;
+.info strong {
+    font-size: 20px;
 }
 
-#canvasContainer {
-    position: relative;
-    width: 100%;
-}
-
-canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-    background: #87ceeb;
-    touch-action: none;
-    cursor: crosshair;
-}
-
-#controls {
-    background: #191919;
+.goal {
+    background: #fff8dc;
+    border: 2px solid #e9cb6b;
+    border-radius: 15px;
+    padding: 10px;
     text-align: center;
-    padding: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+#board {
+    width: min(92vw, 620px);
+    aspect-ratio: 1 / 1;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    padding: 7px;
+    background: #59263a;
+    border-radius: 20px;
+    box-shadow:
+        inset 0 0 0 4px #7c3c54,
+        0 8px 20px rgba(0,0,0,0.25);
+}
+
+.cell {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform .15s, filter .15s;
+    background: rgba(255,255,255,0.13);
+}
+
+.cell:hover {
+    filter: brightness(1.12);
+}
+
+.cell.empty {
+    background: transparent;
+    cursor: default;
+}
+
+.cell.blocked {
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #777,
+            #777 8px,
+            #626262 8px,
+            #626262 16px
+        );
+    cursor: default;
+    box-shadow: inset 0 0 0 3px #444;
+}
+
+.cell.ice {
+    background: #bdeaff;
+    box-shadow: inset 0 0 0 4px #74c8ed;
+}
+
+.cell.ice::after {
+    content: "❄️";
+    position: absolute;
+    right: 2px;
+    top: 1px;
+    font-size: 12px;
+}
+
+.tile {
+    width: 86%;
+    height: 86%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 18px;
+    font-size: clamp(25px, 6vw, 45px);
+    background: linear-gradient(145deg, #fff, #f3d8e2);
+    box-shadow:
+        0 5px 7px rgba(0,0,0,.28),
+        inset 0 2px 3px rgba(255,255,255,.8);
+    transition: transform .15s;
+}
+
+.tile.selected {
+    transform: scale(1.12);
+    box-shadow:
+        0 0 0 4px #ffd83d,
+        0 5px 10px rgba(0,0,0,.35);
+}
+
+.tile.special-row {
+    background: linear-gradient(145deg, #fff6a8, #ffd83d);
+}
+
+.tile.special-bomb {
+    background: linear-gradient(145deg, #ffb6d0, #ff5790);
+}
+
+.tile.special-color {
+    background: linear-gradient(145deg, #b9f5ff, #48cce8);
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
 button {
-    padding: 10px 16px;
-    margin: 4px;
-    border: 0;
-    border-radius: 9px;
+    border: none;
+    border-radius: 14px;
+    padding: 11px 18px;
     font-weight: bold;
     cursor: pointer;
-    background: #eee;
-    color: #111;
+    font-size: 15px;
+    background: #d94c78;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,.2);
 }
 
 button:hover {
-    transform: scale(1.04);
+    filter: brightness(1.08);
 }
 
-#levelPanel {
-    display: none;
-    background: #222;
-    padding: 15px;
+button.secondary {
+    background: #67384d;
+}
+
+button.green {
+    background: #329c68;
+}
+
+.message {
+    min-height: 28px;
     text-align: center;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.levelMap {
+    margin-top: 18px;
+    background: #fff0f5;
+    padding: 12px;
+    border-radius: 17px;
+    border: 2px solid #f2b4c9;
+}
+
+.levelMapTitle {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.levelButtons {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
 }
 
 .levelButton {
-    width: 58px;
-    height: 52px;
-    margin: 3px;
-    padding: 3px;
-    font-size: 13px;
+    padding: 6px 2px;
+    font-size: 12px;
+    border-radius: 8px;
+    background: #dca0b6;
 }
 
-.levelLocked {
-    opacity: .35;
+.levelButton.current {
+    background: #d53d70;
 }
 
-#message {
+.levelButton.locked {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.overlay {
     position: fixed;
-    z-index: 100;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    width: min(90%,430px);
-    background: rgba(15,15,15,.97);
-    border: 2px solid #777;
-    border-radius: 20px;
-    padding: 25px;
-    text-align: center;
+    inset: 0;
+    background: rgba(35,10,20,.72);
     display: none;
-    box-shadow: 0 0 30px rgba(0,0,0,.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    padding: 20px;
 }
 
-#message h2 {
-    margin-top: 0;
-    font-size: 30px;
+.overlay.show {
+    display: flex;
 }
 
-#stars {
-    font-size: 35px;
-    margin: 12px;
-}
-
-#worldName {
+.popup {
+    background: white;
+    width: min(92vw, 450px);
+    border-radius: 25px;
+    padding: 28px;
     text-align: center;
-    background: #151515;
-    padding: 7px;
-    font-weight: bold;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
 }
 
-.small {
-    font-size: 13px;
-    opacity: .7;
+.popup h2 {
+    margin-top: 0;
+    font-size: 32px;
 }
 
+.stars {
+    font-size: 38px;
+    margin: 15px 0;
+}
+
+@media(max-width:520px) {
+    .game {
+        padding: 12px;
+        border-radius: 18px;
+    }
+
+    .topbar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #board {
+        gap: 3px;
+        padding: 4px;
+    }
+
+    .tile {
+        border-radius: 10px;
+    }
+
+    .levelButtons {
+        grid-template-columns: repeat(7, 1fr);
+    }
+}
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>🐶 Frenchie Mania 🐶</h1>
-    <p>70 Level voller Bulldoggen, Hindernisse und Chaos</p>
-</header>
+<div class="game">
 
-<div id="game">
-
-    <div id="worldName">
-        🌳 Garten
+    <h1>🐶 Bulldog Crush 🐶</h1>
+    <div class="subtitle">
+        70 Level voller Französischer Bulldoggen
     </div>
 
-    <div id="info">
-
-        <div class="infoBox">
+    <div class="topbar">
+        <div class="info">
             <span>LEVEL</span>
-            <strong id="levelDisplay">1 / 70</strong>
+            <strong id="level">1</strong>
         </div>
 
-        <div class="infoBox">
+        <div class="info">
             <span>PUNKTE</span>
-            <strong id="scoreDisplay">0</strong>
+            <strong id="score">0</strong>
         </div>
 
-        <div class="infoBox">
+        <div class="info">
+            <span>ZÜGE</span>
+            <strong id="moves">0</strong>
+        </div>
+
+        <div class="info">
             <span>ZIEL</span>
-            <strong id="targetDisplay">0</strong>
+            <strong id="target">0</strong>
         </div>
-
-        <div class="infoBox">
-            <span>BULLDOGGEN</span>
-            <strong id="shotsDisplay">0</strong>
-        </div>
-
-        <div class="infoBox">
-            <span>STERNE</span>
-            <strong id="starsDisplay">0</strong>
-        </div>
-
     </div>
 
-    <div id="canvasContainer">
-        <canvas id="gameCanvas"
-                width="1200"
-                height="650">
-        </canvas>
+    <div class="goal" id="goal">
+        Ziel wird geladen...
     </div>
 
-    <div id="controls">
+    <div id="board"></div>
 
-        <button onclick="restartLevel()">
-            🔄 Neustart
-        </button>
+    <div class="message" id="message"></div>
 
-        <button onclick="previousLevel()">
-            ◀ Zurück
-        </button>
-
-        <button onclick="nextLevel()">
-            Weiter ▶
-        </button>
-
-        <button onclick="toggleLevelPanel()">
-            🗺️ Levelauswahl
-        </button>
-
+    <div class="controls">
+        <button onclick="restartLevel()">🔄 Level neu</button>
+        <button class="secondary" onclick="resetProgress()">🗑️ Fortschritt löschen</button>
     </div>
 
-    <div id="levelPanel"></div>
+    <div class="levelMap">
+        <div class="levelMapTitle">🗺️ Bulldog-Crush-Level</div>
+        <div class="levelButtons" id="levelButtons"></div>
+    </div>
 
 </div>
 
+<div class="overlay" id="overlay">
+    <div class="popup">
+        <h2 id="popupTitle">Level geschafft!</h2>
+        <div class="stars" id="popupStars">⭐⭐⭐</div>
+        <p id="popupText"></p>
 
-<div id="message">
+        <button class="green" onclick="nextLevel()">
+            ➡️ Nächstes Level
+        </button>
 
-    <h2 id="messageTitle"></h2>
-
-    <div id="stars"></div>
-
-    <div id="messageText"></div>
-
-    <button onclick="restartLevel()">
-        🔄 Nochmal
-    </button>
-
-    <button onclick="nextLevel()">
-        Nächstes Level ▶
-    </button>
-
+        <button class="secondary" onclick="closePopup()">
+            Weiter spielen
+        </button>
+    </div>
 </div>
 
 
 <script>
 
 /* =========================================================
-   FRENCHIE MANIA
-   KOMPLETT IN EINER HTML-DATEI
-   70 FESTE LEVEL
+   BULLDOG CRUSH
+   70 FEST DEFINIERTE LEVEL
    ========================================================= */
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const SIZE = 8;
 
-const W = canvas.width;
-const H = canvas.height;
+const symbols = [
+    "🐶",
+    "🐾",
+    "🦴",
+    "🎾",
+    "❤️",
+    "🎀"
+];
 
+let board = [];
+let selected = null;
 let currentLevel = 1;
 let score = 0;
-let shotsLeft = 0;
-
-let bulldogs = [];
-let currentBulldog = null;
-
-let blocks = [];
-let targets = [];
-let particles = [];
-
-let dragging = false;
-let gameOver = false;
-let levelFinished = false;
-
-let cameraShake = 0;
-
-
-/* =========================================================
-   FORTSCHRITT
-   ========================================================= */
-
-let unlockedLevel =
-    parseInt(
-        localStorage.getItem("frenchieUnlocked") || "1"
-    );
-
-let savedStars =
-    JSON.parse(
-        localStorage.getItem("frenchieStars") || "{}"
-    );
-
-
-/* =========================================================
-   WELTEN
-   ========================================================= */
-
-const worlds = [
-
-    {
-        name: "Garten",
-        emoji: "🌳",
-        sky: "#7ed7ff",
-        ground: "#5e9d45"
-    },
-
-    {
-        name: "Bauernhof",
-        emoji: "🚜",
-        sky: "#91d5ff",
-        ground: "#8d693e"
-    },
-
-    {
-        name: "Stadt",
-        emoji: "🏙️",
-        sky: "#aeb7c0",
-        ground: "#4d4d4d"
-    },
-
-    {
-        name: "Strand",
-        emoji: "🏖️",
-        sky: "#54d9ff",
-        ground: "#e5c47b"
-    },
-
-    {
-        name: "Wald",
-        emoji: "🌲",
-        sky: "#74b879",
-        ground: "#3d6638"
-    },
-
-    {
-        name: "Berge",
-        emoji: "🏔️",
-        sky: "#b6dcfa",
-        ground: "#737373"
-    },
-
-    {
-        name: "Schnee",
-        emoji: "❄️",
-        sky: "#d8f3ff",
-        ground: "#edf8ff"
-    },
-
-    {
-        name: "Vulkan",
-        emoji: "🌋",
-        sky: "#4d2020",
-        ground: "#422421"
-    },
-
-    {
-        name: "Nachtstadt",
-        emoji: "🌃",
-        sky: "#111a3e",
-        ground: "#282d42"
-    },
-
-    {
-        name: "Mondstation",
-        emoji: "🌙",
-        sky: "#080815",
-        ground: "#555"
-    }
-
-];
-
-
-/* =========================================================
-   HILFSFUNKTIONEN FÜR LEVEL
-   ========================================================= */
-
-function B(x,y,w,h,hp=1,type="wood") {
-    return {
-        x:x,
-        y:y,
-        w:w,
-        h:h,
-        hp:hp,
-        type:type
-    };
-}
-
-function T(x,y,hp=1) {
-    return {
-        x:x,
-        y:y,
-        r:20,
-        hp:hp,
-        alive:true
-    };
-}
-
-
-/* =========================================================
-   70 FESTE LEVEL
-   =========================================================
-
-   Jede Welt hat 7 Level.
-
-   Die Level werden absichtlich einzeln
-   definiert und nicht zufällig erzeugt.
-   ========================================================= */
-
-const levels = [
-
-/* =========================
-   WELT 1 GARTEN
-   ========================= */
-
-{
-    level:1,
-    world:0,
-    target:1200,
-    shots:6,
-    bulldogs:["bruno"],
-    blocks:[
-        B(650,470,80,50,1),
-        B(730,470,80,50,1),
-        B(690,420,80,50,1)
-    ],
-    targets:[
-        T(770,430)
-    ]
-},
-
-{
-    level:2,
-    world:0,
-    target:1800,
-    shots:6,
-    bulldogs:["bruno","rocky"],
-    blocks:[
-        B(600,470,80,50,1),
-        B(680,470,80,50,1),
-        B(760,470,80,50,1),
-        B(640,420,80,50,1),
-        B(720,420,80,50,1),
-        B(680,370,80,50,1)
-    ],
-    targets:[
-        T(720,330),
-        T(820,430)
-    ]
-},
-
-{
-    level:3,
-    world:0,
-    target:2500,
-    shots:6,
-    bulldogs:["bruno","rocky"],
-    blocks:[
-        B(560,470,70,50,1),
-        B(630,470,70,50,1),
-        B(770,470,70,50,1),
-        B(840,470,70,50,1),
-        B(600,420,70,50,1),
-        B(800,420,70,50,1),
-        B(700,350,70,50,2)
-    ],
-    targets:[
-        T(700,300),
-        T(870,420)
-    ]
-},
-
-{
-    level:4,
-    world:0,
-    target:3200,
-    shots:6,
-    bulldogs:["bruno","rocky","luna"],
-    blocks:[
-        B(600,470,70,50,2),
-        B(670,470,70,50,1),
-        B(740,470,70,50,2),
-        B(635,420,70,50,2),
-        B(705,420,70,50,2),
-        B(670,370,70,50,2),
-        B(850,470,70,50,1),
-        B(850,420,70,50,1)
-    ],
-    targets:[
-        T(705,320,1),
-        T(880,380,1)
-    ]
-},
-
-{
-    level:5,
-    world:0,
-    target:4200,
-    shots:5,
-    bulldogs:["bruno","rocky","luna"],
-    blocks:[
-        B(550,470,70,50,2),
-        B(620,470,70,50,2),
-        B(690,470,70,50,2),
-        B(760,470,70,50,2),
-        B(830,470,70,50,2),
-        B(585,420,70,50,2),
-        B(655,420,70,50,2),
-        B(725,420,70,50,2),
-        B(795,420,70,50,2),
-        B(690,370,70,50,2),
-        B(760,370,70,50,2)
-    ],
-    targets:[
-        T(725,320,1),
-        T(850,390,1),
-        T(620,390,1)
-    ]
-},
-
-{
-    level:6,
-    world:0,
-    target:5200,
-    shots:5,
-    bulldogs:["bruno","rocky","luna","tyson"],
-    blocks:[
-        B(560,470,60,50,2),
-        B(620,470,60,50,2),
-        B(680,470,60,50,2),
-        B(740,470,60,50,2),
-        B(800,470,60,50,2),
-        B(860,470,60,50,2),
-
-        B(590,420,60,50,2),
-        B(650,420,60,50,2),
-        B(710,420,60,50,2),
-        B(770,420,60,50,2),
-        B(830,420,60,50,2),
-
-        B(650,370,60,50,2),
-        B(710,370,60,50,2),
-        B(770,370,60,50,2)
-    ],
-    targets:[
-        T(710,320,2),
-        T(810,370,1),
-        T(600,380,1)
-    ]
-},
-
-{
-    level:7,
-    world:0,
-    target:7000,
-    shots:5,
-    bulldogs:["bruno","rocky","luna","tyson"],
-    blocks:[
-        B(520,470,70,50,2),
-        B(590,470,70,50,2),
-        B(660,470,70,50,2),
-        B(730,470,70,50,2),
-        B(800,470,70,50,2),
-        B(870,470,70,50,2),
-
-        B(555,420,70,50,2),
-        B(625,420,70,50,3),
-        B(695,420,70,50,3),
-        B(765,420,70,50,3),
-        B(835,420,70,50,2),
-
-        B(625,370,70,50,3),
-        B(695,370,70,50,3),
-        B(765,370,70,50,3),
-
-        B(695,320,70,50,3)
-    ],
-    targets:[
-        T(730,275,2),
-        T(620,365,1),
-        T(850,365,2)
-    ]
-},
-
-
-/* =========================
-   WELT 2 BAUERNHOF
-   ========================= */
-
-{
-    level:8,
-    world:1,
-    target:8000,
-    shots:5,
-    bulldogs:["bruno","rocky","luna","tyson"],
-    blocks:[
-        B(600,470,90,50,2),
-        B(690,470,90,50,2),
-        B(780,470,90,50,2),
-        B(645,420,90,50,2),
-        B(735,420,90,50,2),
-        B(690,370,90,50,3)
-    ],
-    targets:[
-        T(735,320,2),
-        T(830,420,1)
-    ]
-},
-
-{
-    level:9,
-    world:1,
-    target:9000,
-    shots:5,
-    bulldogs:["bruno","rocky","luna","tyson"],
-    blocks:[
-        B(560,470,70,50,2),
-        B(630,470,70,50,2),
-        B(700,470,70,50,2),
-        B(770,470,70,50,2),
-        B(840,470,70,50,2),
-
-        B(595,420,70,50,2),
-        B(665,420,70,50,3),
-        B(735,420,70,50,3),
-        B(805,420,70,50,2),
-
-        B(665,370,70,50,3),
-        B(735,370,70,50,3)
-    ],
-    targets:[
-        T(700,320,2),
-        T(830,390,2),
-        T(610,390,1)
-    ]
-},
-
-{
-    level:10,
-    world:1,
-    target:11000,
-    shots:5,
-    bulldogs:["bruno","rocky","luna","tyson","coco"],
-    blocks:[
-        B(540,470,70,50,3),
-        B(610,470,70,50,3),
-        B(680,470,70,50,3),
-        B(750,470,70,50,3),
-        B(820,470,70,50,3),
-        B(890,470,70,50,3),
-
-        B(575,420,70,50,3),
-        B(645,420,70,50,3),
-        B(715,420,70,50,3),
-        B(785,420,70,50,3),
-        B(855,420,70,50,3),
-
-        B(645,370,70,50,3),
-        B(715,370,70,50,3),
-        B(785,370,70,50,3),
-
-        B(715,320,70,50,3)
-    ],
-    targets:[
-        T(750,275,2),
-        T(650,350,2),
-        T(850,350,2)
-    ]
-},
-
-{
-    level:11,
-    world:1,
-    target:12500,
-    shots:5,
-    bulldogs:["rocky","luna","tyson","coco"],
-    blocks:[
-        B(530,470,60,50,3),
-        B(590,470,60,50,3),
-        B(650,470,60,50,3),
-        B(710,470,60,50,3),
-        B(770,470,60,50,3),
-        B(830,470,60,50,3),
-        B(890,470,60,50,3),
-
-        B(560,420,60,50,3),
-        B(620,420,60,50,3),
-        B(680,420,60,50,3),
-        B(740,420,60,50,3),
-        B(800,420,60,50,3),
-        B(860,420,60,50,3),
-
-        B(620,370,60,50,3),
-        B(680,370,60,50,3),
-        B(740,370,60,50,3),
-        B(800,370,60,50,3),
-
-        B(680,320,60,50,3),
-        B(740,320,60,50,3)
-    ],
-    targets:[
-        T(710,275,2),
-        T(610,350,2),
-        T(830,350,2)
-    ]
-},
-
-{
-    level:12,
-    world:1,
-    target:14000,
-    shots:4,
-    bulldogs:["rocky","luna","tyson","coco"],
-    blocks:[
-        B(560,470,75,50,3),
-        B(635,470,75,50,3),
-        B(710,470,75,50,3),
-        B(785,470,75,50,3),
-        B(860,470,75,50,3),
-
-        B(598,420,75,50,3),
-        B(673,420,75,50,3),
-        B(748,420,75,50,3),
-        B(823,420,75,50,3),
-
-        B(635,370,75,50,3),
-        B(710,370,75,50,3),
-        B(785,370,75,50,3),
-
-        B(673,320,75,50,3),
-        B(748,320,75,50,3)
-    ],
-    targets:[
-        T(710,275,2),
-        T(830,365,2),
-        T(610,365,2)
-    ]
-},
-
-{
-    level:13,
-    world:1,
-    target:16000,
-    shots:4,
-    bulldogs:["luna","tyson","coco","max"],
-    blocks:[
-        B(520,470,65,50,3),
-        B(585,470,65,50,3),
-        B(650,470,65,50,3),
-        B(715,470,65,50,3),
-        B(780,470,65,50,3),
-        B(845,470,65,50,3),
-        B(910,470,65,50,3),
-
-        B(552,420,65,50,3),
-        B(617,420,65,50,3),
-        B(682,420,65,50,3),
-        B(747,420,65,50,3),
-        B(812,420,65,50,3),
-        B(877,420,65,50,3),
-
-        B(617,370,65,50,3),
-        B(682,370,65,50,4),
-        B(747,370,65,50,4),
-        B(812,370,65,50,3),
-
-        B(682,320,65,50,4),
-        B(747,320,65,50,4)
-    ],
-    targets:[
-        T(715,275,3),
-        T(610,350,2),
-        T(850,350,2)
-    ]
-},
-
-{
-    level:14,
-    world:1,
-    target:18500,
-    shots:4,
-    bulldogs:["luna","tyson","coco","max"],
-    blocks:[
-        B(500,470,70,50,4),
-        B(570,470,70,50,4),
-        B(640,470,70,50,4),
-        B(710,470,70,50,4),
-        B(780,470,70,50,4),
-        B(850,470,70,50,4),
-        B(920,470,70,50,4),
-
-        B(535,420,70,50,4),
-        B(605,420,70,50,4),
-        B(675,420,70,50,4),
-        B(745,420,70,50,4),
-        B(815,420,70,50,4),
-        B(885,420,70,50,4),
-
-        B(605,370,70,50,4),
-        B(675,370,70,50,4),
-        B(745,370,70,50,4),
-        B(815,370,70,50,4),
-
-        B(675,320,70,50,4),
-        B(745,320,70,50,4),
-
-        B(710,270,70,50,4)
-    ],
-    targets:[
-        T(745,225,3),
-        T(610,350,2),
-        T(850,350,2),
-        T(710,410,2)
-    ]
-},
-
-
-/* =========================
-   WELT 3 STADT
-   ========================= */
-
-{
-    level:15,
-    world:2,
-    target:19000,
-    shots:4,
-    bulldogs:["luna","tyson","coco","max"],
-    blocks:[
-        B(560,470,80,50,4),
-        B(640,470,80,50,4),
-        B(720,470,80,50,4),
-        B(800,470,80,50,4),
-
-        B(600,420,80,50,4),
-        B(680,420,80,50,4),
-        B(760,420,80,50,4),
-
-        B(640,370,80,50,4),
-        B(720,370,80,50,4)
-    ],
-    targets:[
-        T(680,320,3),
-        T(820,400,2)
-    ]
-},
-
-{
-    level:16,
-    world:2,
-    target:20500,
-    shots:4,
-    bulldogs:["luna","tyson","coco","max"],
-    blocks:[
-        B(530,470,70,50,4),
-        B(600,470,70,50,4),
-        B(670,470,70,50,4),
-        B(740,470,70,50,4),
-        B(810,470,70,50,4),
-        B(880,470,70,50,4),
-
-        B(565,420,70,50,4),
-        B(635,420,70,50,4),
-        B(705,420,70,50,4),
-        B(775,420,70,50,4),
-        B(845,420,70,50,4),
-
-        B(635,370,70,50,4),
-        B(705,370,70,50,4),
-        B(775,370,70,50,4),
-
-        B(705,320,70,50,4)
-    ],
-    targets:[
-        T(740,275,3),
-        T(620,350,2),
-        T(830,350,2)
-    ]
-},
-
-{
-    level:17,
-    world:2,
-    target:22500,
-    shots:4,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(520,470,60,50,4),
-        B(580,470,60,50,4),
-        B(640,470,60,50,4),
-        B(700,470,60,50,4),
-        B(760,470,60,50,4),
-        B(820,470,60,50,4),
-        B(880,470,60,50,4),
-
-        B(550,420,60,50,4),
-        B(610,420,60,50,4),
-        B(670,420,60,50,4),
-        B(730,420,60,50,4),
-        B(790,420,60,50,4),
-        B(850,420,60,50,4),
-
-        B(610,370,60,50,4),
-        B(670,370,60,50,5),
-        B(730,370,60,50,5),
-        B(790,370,60,50,4),
-
-        B(670,320,60,50,5),
-        B(730,320,60,50,5)
-    ],
-    targets:[
-        T(700,275,3),
-        T(600,350,2),
-        T(820,350,3)
-    ]
-},
-
-{
-    level:18,
-    world:2,
-    target:24500,
-    shots:4,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(500,470,75,50,4),
-        B(575,470,75,50,4),
-        B(650,470,75,50,4),
-        B(725,470,75,50,4),
-        B(800,470,75,50,4),
-        B(875,470,75,50,4),
-
-        B(538,420,75,50,4),
-        B(613,420,75,50,5),
-        B(688,420,75,50,5),
-        B(763,420,75,50,5),
-        B(838,420,75,50,4),
-
-        B(613,370,75,50,5),
-        B(688,370,75,50,5),
-        B(763,370,75,50,5),
-
-        B(650,320,75,50,5),
-        B(725,320,75,50,5)
-    ],
-    targets:[
-        T(688,275,3),
-        T(800,350,3),
-        T(590,350,2)
-    ]
-},
-
-{
-    level:19,
-    world:2,
-    target:27000,
-    shots:3,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(510,470,65,50,5),
-        B(575,470,65,50,5),
-        B(640,470,65,50,5),
-        B(705,470,65,50,5),
-        B(770,470,65,50,5),
-        B(835,470,65,50,5),
-        B(900,470,65,50,5),
-
-        B(542,420,65,50,5),
-        B(607,420,65,50,5),
-        B(672,420,65,50,5),
-        B(737,420,65,50,5),
-        B(802,420,65,50,5),
-        B(867,420,65,50,5),
-
-        B(607,370,65,50,5),
-        B(672,370,65,50,5),
-        B(737,370,65,50,5),
-        B(802,370,65,50,5),
-
-        B(672,320,65,50,5),
-        B(737,320,65,50,5),
-
-        B(705,270,65,50,5)
-    ],
-    targets:[
-        T(737,225,3),
-        T(600,350,3),
-        T(840,350,3)
-    ]
-},
-
-{
-    level:20,
-    world:2,
-    target:30000,
-    shots:3,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(480,470,70,50,5),
-        B(550,470,70,50,5),
-        B(620,470,70,50,5),
-        B(690,470,70,50,5),
-        B(760,470,70,50,5),
-        B(830,470,70,50,5),
-        B(900,470,70,50,5),
-
-        B(515,420,70,50,5),
-        B(585,420,70,50,5),
-        B(655,420,70,50,5),
-        B(725,420,70,50,5),
-        B(795,420,70,50,5),
-        B(865,420,70,50,5),
-
-        B(585,370,70,50,5),
-        B(655,370,70,50,6),
-        B(725,370,70,50,6),
-        B(795,370,70,50,5),
-
-        B(655,320,70,50,6),
-        B(725,320,70,50,6),
-
-        B(690,270,70,50,6),
-        B(760,270,70,50,6)
-    ],
-    targets:[
-        T(725,225,4),
-        T(585,345,3),
-        T(865,345,3),
-        T(760,370,2)
-    ]
-},
-
-{
-    level:21,
-    world:2,
-    target:33000,
-    shots:3,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(470,470,65,50,6),
-        B(535,470,65,50,6),
-        B(600,470,65,50,6),
-        B(665,470,65,50,6),
-        B(730,470,65,50,6),
-        B(795,470,65,50,6),
-        B(860,470,65,50,6),
-        B(925,470,65,50,6),
-
-        B(502,420,65,50,6),
-        B(567,420,65,50,6),
-        B(632,420,65,50,6),
-        B(697,420,65,50,6),
-        B(762,420,65,50,6),
-        B(827,420,65,50,6),
-        B(892,420,65,50,6),
-
-        B(567,370,65,50,6),
-        B(632,370,65,50,6),
-        B(697,370,65,50,6),
-        B(762,370,65,50,6),
-        B(827,370,65,50,6),
-
-        B(632,320,65,50,6),
-        B(697,320,65,50,6),
-        B(762,320,65,50,6),
-        B(827,320,65,50,6),
-
-        B(697,270,65,50,6),
-        B(762,270,65,50,6)
-    ],
-    targets:[
-        T(730,225,4),
-        T(600,350,3),
-        T(850,350,3),
-        T(700,300,2)
-    ]
-},
-
-
-/* =========================
-   WELT 4 STRAND
-   ========================= */
-
-{
-    level:22,
-    world:3,
-    target:35000,
-    shots:3,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(560,470,80,50,6),
-        B(640,470,80,50,6),
-        B(720,470,80,50,6),
-        B(800,470,80,50,6),
-        B(600,420,80,50,6),
-        B(680,420,80,50,6),
-        B(760,420,80,50,6),
-        B(680,370,80,50,6)
-    ],
-    targets:[
-        T(720,320,4),
-        T(840,400,3)
-    ]
-},
-
-{
-    level:23,
-    world:3,
-    target:37000,
-    shots:3,
-    bulldogs:["tyson","coco","max"],
-    blocks:[
-        B(520,470,70,50,6),
-        B(590,470,70,50,6),
-        B(660,470,70,50,6),
-        B(730,470,70,50,6),
-        B(800,470,70,50,6),
-        B(870,470,70,50,6),
-        B(555,420,70,50,6),
-        B(625,420,70,50,6),
-        B(695,420,70,50,6),
-        B(765,420,70,50,6),
-        B(835,420,70,50,6),
-        B(625,370,70,50,6),
-        B(695,370,70,50,6),
-        B(765,370,70,50,6),
-        B(695,320,70,50,6)
-    ],
-    targets:[
-        T(730,275,4),
-        T(610,350,3),
-        T(840,350,3)
-    ]
-},
-
-{
-    level:24,
-    world:3,
-    target:39500,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(500,470,60,50,6),
-        B(560,470,60,50,6),
-        B(620,470,60,50,6),
-        B(680,470,60,50,6),
-        B(740,470,60,50,6),
-        B(800,470,60,50,6),
-        B(860,470,60,50,6),
-        B(920,470,60,50,6),
-
-        B(530,420,60,50,6),
-        B(590,420,60,50,6),
-        B(650,420,60,50,7),
-        B(710,420,60,50,7),
-        B(770,420,60,50,7),
-        B(830,420,60,50,6),
-        B(890,420,60,50,6),
-
-        B(590,370,60,50,7),
-        B(650,370,60,50,7),
-        B(710,370,60,50,7),
-        B(770,370,60,50,7),
-        B(830,370,60,50,7),
-
-        B(650,320,60,50,7),
-        B(710,320,60,50,7),
-        B(770,320,60,50,7)
-    ],
-    targets:[
-        T(740,275,4),
-        T(620,350,3),
-        T(850,350,4)
-    ]
-},
-
-{
-    level:25,
-    world:3,
-    target:42000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(490,470,65,50,7),
-        B(555,470,65,50,7),
-        B(620,470,65,50,7),
-        B(685,470,65,50,7),
-        B(750,470,65,50,7),
-        B(815,470,65,50,7),
-        B(880,470,65,50,7),
-
-        B(522,420,65,50,7),
-        B(587,420,65,50,7),
-        B(652,420,65,50,7),
-        B(717,420,65,50,7),
-        B(782,420,65,50,7),
-        B(847,420,65,50,7),
-
-        B(587,370,65,50,7),
-        B(652,370,65,50,7),
-        B(717,370,65,50,7),
-        B(782,370,65,50,7),
-
-        B(652,320,65,50,7),
-        B(717,320,65,50,7),
-        B(782,320,65,50,7),
-
-        B(717,270,65,50,7)
-    ],
-    targets:[
-        T(750,225,4),
-        T(620,350,4),
-        T(850,350,4),
-        T(715,300,2)
-    ]
-},
-
-{
-    level:26,
-    world:3,
-    target:45000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(470,470,60,50,7),
-        B(530,470,60,50,7),
-        B(590,470,60,50,7),
-        B(650,470,60,50,7),
-        B(710,470,60,50,7),
-        B(770,470,60,50,7),
-        B(830,470,60,50,7),
-        B(890,470,60,50,7),
-        B(950,470,60,50,7),
-
-        B(500,420,60,50,7),
-        B(560,420,60,50,7),
-        B(620,420,60,50,7),
-        B(680,420,60,50,7),
-        B(740,420,60,50,7),
-        B(800,420,60,50,7),
-        B(860,420,60,50,7),
-        B(920,420,60,50,7),
-
-        B(560,370,60,50,7),
-        B(620,370,60,50,7),
-        B(680,370,60,50,8),
-        B(740,370,60,50,8),
-        B(800,370,60,50,8),
-        B(860,370,60,50,7),
-
-        B(620,320,60,50,8),
-        B(680,320,60,50,8),
-        B(740,320,60,50,8),
-        B(800,320,60,50,8),
-
-        B(680,270,60,50,8),
-        B(740,270,60,50,8)
-    ],
-    targets:[
-        T(710,225,5),
-        T(600,350,4),
-        T(850,350,4),
-        T(740,300,3)
-    ]
-},
-
-{
-    level:27,
-    world:3,
-    target:48000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,65,50,8),
-        B(515,470,65,50,8),
-        B(580,470,65,50,8),
-        B(645,470,65,50,8),
-        B(710,470,65,50,8),
-        B(775,470,65,50,8),
-        B(840,470,65,50,8),
-        B(905,470,65,50,8),
-        B(970,470,65,50,8),
-
-        B(482,420,65,50,8),
-        B(547,420,65,50,8),
-        B(612,420,65,50,8),
-        B(677,420,65,50,8),
-        B(742,420,65,50,8),
-        B(807,420,65,50,8),
-        B(872,420,65,50,8),
-        B(937,420,65,50,8),
-
-        B(547,370,65,50,8),
-        B(612,370,65,50,8),
-        B(677,370,65,8,8),
-        B(742,370,65,50,8),
-        B(807,370,65,50,8),
-        B(872,370,65,50,8),
-
-        B(612,320,65,50,8),
-        B(677,320,65,50,8),
-        B(742,320,65,50,8),
-        B(807,320,65,50,8),
-
-        B(677,270,65,50,8),
-        B(742,270,65,50,8),
-
-        B(710,220,65,50,8)
-    ],
-    targets:[
-        T(742,175,5),
-        T(580,350,4),
-        T(850,350,4),
-        T(710,300,3)
-    ]
-},
-
-{
-    level:28,
-    world:3,
-    target:52000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(440,470,60,50,8),
-        B(500,470,60,50,8),
-        B(560,470,60,50,8),
-        B(620,470,60,50,8),
-        B(680,470,60,50,8),
-        B(740,470,60,50,8),
-        B(800,470,60,50,8),
-        B(860,470,60,50,8),
-        B(920,470,60,50,8),
-        B(980,470,60,50,8),
-
-        B(470,420,60,50,8),
-        B(530,420,60,50,8),
-        B(590,420,60,50,8),
-        B(650,420,60,50,8),
-        B(710,420,60,50,8),
-        B(770,420,60,50,8),
-        B(830,420,60,50,8),
-        B(890,420,60,50,8),
-        B(950,420,60,50,8),
-
-        B(530,370,60,50,8),
-        B(590,370,60,50,8),
-        B(650,370,60,50,9),
-        B(710,370,60,50,9),
-        B(770,370,60,50,9),
-        B(830,370,60,50,9),
-        B(890,370,60,50,8),
-
-        B(590,320,60,50,9),
-        B(650,320,60,50,9),
-        B(710,320,60,50,9),
-        B(770,320,60,50,9),
-        B(830,320,60,50,9),
-
-        B(650,270,60,50,9),
-        B(710,270,60,50,9),
-        B(770,270,60,50,9),
-
-        B(710,220,60,50,9)
-    ],
-    targets:[
-        T(740,175,5),
-        T(570,350,4),
-        T(860,350,4),
-        T(710,300,4)
-    ]
-},
-
-
-/* =========================
-   WELT 5 WALD
-   ========================= */
-
-{
-    level:29,
-    world:4,
-    target:55000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(550,470,70,50,8),
-        B(620,470,70,50,8),
-        B(690,470,70,50,8),
-        B(760,470,70,50,8),
-        B(830,470,70,50,8),
-        B(585,420,70,50,8),
-        B(655,420,70,50,8),
-        B(725,420,70,50,8),
-        B(795,420,70,50,8),
-        B(655,370,70,50,9),
-        B(725,370,70,50,9),
-        B(795,370,70,50,9)
-    ],
-    targets:[
-        T(760,320,5),
-        T(620,370,4),
-        T(850,370,4)
-    ]
-},
-
-{
-    level:30,
-    world:4,
-    target:58000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(510,470,65,50,9),
-        B(575,470,65,50,9),
-        B(640,470,65,50,9),
-        B(705,470,65,50,9),
-        B(770,470,65,50,9),
-        B(835,470,65,50,9),
-        B(900,470,65,50,9),
-
-        B(542,420,65,50,9),
-        B(607,420,65,50,9),
-        B(672,420,65,50,9),
-        B(737,420,65,50,9),
-        B(802,420,65,50,9),
-        B(867,420,65,50,9),
-
-        B(607,370,65,50,9),
-        B(672,370,65,50,10),
-        B(737,370,65,50,10),
-        B(802,370,65,50,9),
-
-        B(672,320,65,50,10),
-        B(737,320,65,50,10),
-        B(802,320,65,50,10),
-
-        B(737,270,65,50,10)
-    ],
-    targets:[
-        T(770,225,5),
-        T(620,350,5),
-        T(850,350,5)
-    ]
-},
-
-{
-    level:31,
-    world:4,
-    target:62000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(480,470,60,50,9),
-        B(540,470,60,50,9),
-        B(600,470,60,50,9),
-        B(660,470,60,50,9),
-        B(720,470,60,50,9),
-        B(780,470,60,50,9),
-        B(840,470,60,50,9),
-        B(900,470,60,50,9),
-
-        B(510,420,60,50,9),
-        B(570,420,60,50,9),
-        B(630,420,60,50,10),
-        B(690,420,60,50,10),
-        B(750,420,60,50,10),
-        B(810,420,60,50,9),
-        B(870,420,60,50,9),
-
-        B(570,370,60,50,10),
-        B(630,370,60,50,10),
-        B(690,370,60,50,10),
-        B(750,370,60,50,10),
-        B(810,370,60,50,10),
-
-        B(630,320,60,50,10),
-        B(690,320,60,50,10),
-        B(750,320,60,50,10),
-
-        B(690,270,60,50,10),
-        B(750,270,60,50,10)
-    ],
-    targets:[
-        T(720,225,6),
-        T(600,350,5),
-        T(840,350,5),
-        T(720,300,3)
-    ]
-},
-
-{
-    level:32,
-    world:4,
-    target:66000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,65,50,10),
-        B(515,470,65,50,10),
-        B(580,470,65,50,10),
-        B(645,470,65,50,10),
-        B(710,470,65,50,10),
-        B(775,470,65,50,10),
-        B(840,470,65,50,10),
-        B(905,470,65,50,10),
-        B(970,470,65,50,10),
-
-        B(482,420,65,50,10),
-        B(547,420,65,50,10),
-        B(612,420,65,50,10),
-        B(677,420,65,50,10),
-        B(742,420,65,50,10),
-        B(807,420,65,50,10),
-        B(872,420,65,50,10),
-        B(937,420,65,50,10),
-
-        B(547,370,65,50,10),
-        B(612,370,65,50,10),
-        B(677,370,65,50,11),
-        B(742,370,65,50,11),
-        B(807,370,65,50,11),
-        B(872,370,65,50,10),
-
-        B(612,320,65,50,11),
-        B(677,320,65,50,11),
-        B(742,320,65,50,11),
-        B(807,320,65,50,11),
-
-        B(677,270,65,50,11),
-        B(742,270,65,50,11),
-
-        B(710,220,65,50,11)
-    ],
-    targets:[
-        T(742,175,6),
-        T(580,350,5),
-        T(850,350,5),
-        T(710,300,4)
-    ]
-},
-
-{
-    level:33,
-    world:4,
-    target:70000,
-    shots:3,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(430,470,60,50,11),
-        B(490,470,60,50,11),
-        B(550,470,60,50,11),
-        B(610,470,60,50,11),
-        B(670,470,60,50,11),
-        B(730,470,60,50,11),
-        B(790,470,60,50,11),
-        B(850,470,60,50,11),
-        B(910,470,60,50,11),
-        B(970,470,60,50,11),
-
-        B(460,420,60,50,11),
-        B(520,420,60,50,11),
-        B(580,420,60,50,11),
-        B(640,420,60,50,11),
-        B(700,420,60,50,11),
-        B(760,420,60,50,11),
-        B(820,420,60,50,11),
-        B(880,420,60,50,11),
-        B(940,420,60,50,11),
-
-        B(520,370,60,50,11),
-        B(580,370,60,50,11),
-        B(640,370,60,50,12),
-        B(700,370,60,50,12),
-        B(760,370,60,50,12),
-        B(820,370,60,50,12),
-        B(880,370,60,50,11),
-
-        B(580,320,60,50,12),
-        B(640,320,60,50,12),
-        B(700,320,60,50,12),
-        B(760,320,60,50,12),
-        B(820,320,60,50,12),
-
-        B(640,270,60,50,12),
-        B(700,270,60,50,12),
-        B(760,270,60,50,12),
-
-        B(700,220,60,50,12)
-    ],
-    targets:[
-        T(730,175,6),
-        T(550,350,5),
-        T(850,350,5),
-        T(700,290,4)
-    ]
-},
-
-{
-    level:34,
-    world:4,
-    target:75000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(420,470,65,50,12),
-        B(485,470,65,50,12),
-        B(550,470,65,50,12),
-        B(615,470,65,50,12),
-        B(680,470,65,50,12),
-        B(745,470,65,50,12),
-        B(810,470,65,50,12),
-        B(875,470,65,50,12),
-        B(940,470,65,50,12),
-
-        B(452,420,65,50,12),
-        B(517,420,65,50,12),
-        B(582,420,65,50,12),
-        B(647,420,65,50,12),
-        B(712,420,65,50,12),
-        B(777,420,65,50,12),
-        B(842,420,65,50,12),
-        B(907,420,65,50,12),
-
-        B(517,370,65,50,12),
-        B(582,370,65,50,12),
-        B(647,370,65,50,13),
-        B(712,370,65,50,13),
-        B(777,370,65,50,13),
-        B(842,370,65,50,12),
-
-        B(582,320,65,50,13),
-        B(647,320,65,50,13),
-        B(712,320,65,50,13),
-        B(777,320,65,50,13),
-
-        B(647,270,65,50,13),
-        B(712,270,65,50,13),
-        B(777,270,65,50,13),
-
-        B(680,220,65,50,13),
-        B(745,220,65,50,13)
-    ],
-    targets:[
-        T(710,175,7),
-        T(550,350,6),
-        T(850,350,6),
-        T(710,290,5)
-    ]
-},
-
-{
-    level:35,
-    world:4,
-    target:80000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(400,470,60,50,13),
-        B(460,470,60,50,13),
-        B(520,470,60,50,13),
-        B(580,470,60,50,13),
-        B(640,470,60,50,13),
-        B(700,470,60,50,13),
-        B(760,470,60,50,13),
-        B(820,470,60,50,13),
-        B(880,470,60,50,13),
-        B(940,470,60,50,13),
-
-        B(430,420,60,50,13),
-        B(490,420,60,50,13),
-        B(550,420,60,50,13),
-        B(610,420,60,50,13),
-        B(670,420,60,50,13),
-        B(730,420,60,50,13),
-        B(790,420,60,50,13),
-        B(850,420,60,50,13),
-        B(910,420,60,50,13),
-
-        B(490,370,60,50,13),
-        B(550,370,60,50,13),
-        B(610,370,60,50,14),
-        B(670,370,60,50,14),
-        B(730,370,60,50,14),
-        B(790,370,60,50,14),
-        B(850,370,60,50,13),
-
-        B(550,320,60,50,14),
-        B(610,320,60,50,14),
-        B(670,320,60,50,14),
-        B(730,320,60,50,14),
-        B(790,320,60,50,14),
-
-        B(610,270,60,50,14),
-        B(670,270,60,50,14),
-        B(730,270,60,50,14),
-
-        B(670,220,60,50,14),
-        B(730,220,60,50,14),
-
-        B(700,170,60,50,14)
-    ],
-    targets:[
-        T(730,125,7),
-        T(520,350,6),
-        T(850,350,6),
-        T(700,275,5)
-    ]
-},
-
-
-/* =========================
-   WELT 6 BERGE
-   ========================= */
-
-{
-    level:36,
-    world:5,
-    target:85000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(500,470,70,50,13),
-        B(570,470,70,50,13),
-        B(640,470,70,50,13),
-        B(710,470,70,50,13),
-        B(780,470,70,50,13),
-        B(850,470,70,50,13),
-        B(605,420,70,50,13),
-        B(675,420,70,50,13),
-        B(745,420,70,50,13),
-        B(815,420,70,50,13),
-        B(675,370,70,50,14),
-        B(745,370,70,50,14),
-        B(780,320,70,50,14)
-    ],
-    targets:[
-        T(815,270,7),
-        T(620,370,6),
-        T(850,390,5)
-    ]
-},
-
-{
-    level:37,
-    world:5,
-    target:90000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(460,470,60,50,14),
-        B(520,470,60,50,14),
-        B(580,470,60,50,14),
-        B(640,470,60,50,14),
-        B(700,470,60,50,14),
-        B(760,470,60,50,14),
-        B(820,470,60,50,14),
-        B(880,470,60,50,14),
-
-        B(490,420,60,50,14),
-        B(550,420,60,50,14),
-        B(610,420,60,50,14),
-        B(670,420,60,50,14),
-        B(730,420,60,50,14),
-        B(790,420,60,50,14),
-        B(850,420,60,50,14),
-
-        B(550,370,60,50,15),
-        B(610,370,60,50,15),
-        B(670,370,60,50,15),
-        B(730,370,60,50,15),
-        B(790,370,60,50,15),
-
-        B(610,320,60,50,15),
-        B(670,320,60,50,15),
-        B(730,320,60,50,15),
-
-        B(670,270,60,50,15),
-        B(730,270,60,50,15)
-    ],
-    targets:[
-        T(710,225,8),
-        T(560,350,6),
-        T(820,350,6)
-    ]
-},
-
-{
-    level:38,
-    world:5,
-    target:95000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(440,470,65,50,15),
-        B(505,470,65,50,15),
-        B(570,470,65,50,15),
-        B(635,470,65,50,15),
-        B(700,470,65,50,15),
-        B(765,470,65,50,15),
-        B(830,470,65,50,15),
-        B(895,470,65,50,15),
-
-        B(472,420,65,50,15),
-        B(537,420,65,50,15),
-        B(602,420,65,50,15),
-        B(667,420,65,50,15),
-        B(732,420,65,50,15),
-        B(797,420,65,50,15),
-        B(862,420,65,50,15),
-
-        B(537,370,65,50,16),
-        B(602,370,65,50,16),
-        B(667,370,65,50,16),
-        B(732,370,65,50,16),
-        B(797,370,65,50,16),
-
-        B(602,320,65,50,16),
-        B(667,320,65,50,16),
-        B(732,320,65,50,16),
-        B(797,320,65,50,16),
-
-        B(667,270,65,50,16),
-        B(732,270,65,50,16),
-
-        B(700,220,65,50,16)
-    ],
-    targets:[
-        T(735,175,8),
-        T(550,350,7),
-        T(830,350,7),
-        T(700,290,5)
-    ]
-},
-
-{
-    level:39,
-    world:5,
-    target:100000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(420,470,60,50,16),
-        B(480,470,60,50,16),
-        B(540,470,60,50,16),
-        B(600,470,60,50,16),
-        B(660,470,60,50,16),
-        B(720,470,60,50,16),
-        B(780,470,60,50,16),
-        B(840,470,60,50,16),
-        B(900,470,60,50,16),
-
-        B(450,420,60,50,16),
-        B(510,420,60,50,16),
-        B(570,420,60,50,16),
-        B(630,420,60,50,16),
-        B(690,420,60,50,16),
-        B(750,420,60,50,16),
-        B(810,420,60,50,16),
-        B(870,420,60,50,16),
-
-        B(510,370,60,50,17),
-        B(570,370,60,50,17),
-        B(630,370,60,50,17),
-        B(690,370,60,50,17),
-        B(750,370,60,50,17),
-        B(810,370,60,50,17),
-
-        B(570,320,60,50,17),
-        B(630,320,60,50,17),
-        B(690,320,60,50,17),
-        B(750,320,60,50,17),
-
-        B(630,270,60,50,17),
-        B(690,270,60,50,17),
-        B(750,270,60,50,17),
-
-        B(690,220,60,50,17)
-    ],
-    targets:[
-        T(720,175,9),
-        T(530,350,7),
-        T(840,350,7),
-        T(690,290,6)
-    ]
-},
-
-{
-    level:40,
-    world:5,
-    target:110000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(400,470,65,50,17),
-        B(465,470,65,50,17),
-        B(530,470,65,50,17),
-        B(595,470,65,50,17),
-        B(660,470,65,50,17),
-        B(725,470,65,50,17),
-        B(790,470,65,50,17),
-        B(855,470,65,50,17),
-        B(920,470,65,50,17),
-
-        B(432,420,65,50,17),
-        B(497,420,65,50,17),
-        B(562,420,65,50,17),
-        B(627,420,65,50,17),
-        B(692,420,65,50,17),
-        B(757,420,65,50,17),
-        B(822,420,65,50,17),
-        B(887,420,65,50,17),
-
-        B(497,370,65,50,18),
-        B(562,370,65,50,18),
-        B(627,370,65,50,18),
-        B(692,370,65,50,18),
-        B(757,370,65,50,18),
-        B(822,370,65,50,18),
-
-        B(562,320,65,50,18),
-        B(627,320,65,50,18),
-        B(692,320,65,50,18),
-        B(757,320,65,50,18),
-
-        B(627,270,65,50,18),
-        B(692,270,65,50,18),
-        B(757,270,65,50,18),
-
-        B(660,220,65,50,18),
-        B(725,220,65,50,18),
-
-        B(692,170,65,50,18)
-    ],
-    targets:[
-        T(725,125,9),
-        T(530,350,8),
-        T(850,350,8),
-        T(690,275,6)
-    ]
-},
-
-{
-    level:41,
-    world:5,
-    target:120000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(390,470,60,50,18),
-        B(450,470,60,50,18),
-        B(510,470,60,50,18),
-        B(570,470,60,50,18),
-        B(630,470,60,50,18),
-        B(690,470,60,50,18),
-        B(750,470,60,50,18),
-        B(810,470,60,50,18),
-        B(870,470,60,50,18),
-        B(930,470,60,50,18),
-
-        B(420,420,60,50,18),
-        B(480,420,60,50,18),
-        B(540,420,60,50,18),
-        B(600,420,60,50,18),
-        B(660,420,60,50,18),
-        B(720,420,60,50,18),
-        B(780,420,60,50,18),
-        B(840,420,60,50,18),
-        B(900,420,60,50,18),
-
-        B(480,370,60,50,19),
-        B(540,370,60,50,19),
-        B(600,370,60,50,19),
-        B(660,370,60,50,19),
-        B(720,370,60,50,19),
-        B(780,370,60,50,19),
-        B(840,370,60,50,19),
-
-        B(540,320,60,50,19),
-        B(600,320,60,50,19),
-        B(660,320,60,50,19),
-        B(720,320,60,50,19),
-        B(780,320,60,50,19),
-
-        B(600,270,60,50,19),
-        B(660,270,60,50,19),
-        B(720,270,60,50,19),
-        B(780,270,60,50,19),
-
-        B(660,220,60,50,19),
-        B(720,220,60,50,19),
-
-        B(690,170,60,50,19)
-    ],
-    targets:[
-        T(720,125,10),
-        T(500,350,8),
-        T(860,350,8),
-        T(690,275,7)
-    ]
-},
-
-{
-    level:42,
-    world:5,
-    target:130000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(380,470,60,50,19),
-        B(440,470,60,50,19),
-        B(500,470,60,50,19),
-        B(560,470,60,50,19),
-        B(620,470,60,50,19),
-        B(680,470,60,50,19),
-        B(740,470,60,50,19),
-        B(800,470,60,50,19),
-        B(860,470,60,50,19),
-        B(920,470,60,50,19),
-
-        B(410,420,60,50,19),
-        B(470,420,60,50,19),
-        B(530,420,60,50,19),
-        B(590,420,60,50,19),
-        B(650,420,60,50,19),
-        B(710,420,60,50,19),
-        B(770,420,60,50,19),
-        B(830,420,60,50,19),
-        B(890,420,60,50,19),
-
-        B(470,370,60,50,20),
-        B(530,370,60,50,20),
-        B(590,370,60,50,20),
-        B(650,370,60,50,20),
-        B(710,370,60,50,20),
-        B(770,370,60,50,20),
-        B(830,370,60,50,20),
-
-        B(530,320,60,50,20),
-        B(590,320,60,50,20),
-        B(650,320,60,50,20),
-        B(710,320,60,50,20),
-        B(770,320,60,50,20),
-
-        B(590,270,60,50,20),
-        B(650,270,60,50,20),
-        B(710,270,60,50,20),
-        B(770,270,60,50,20),
-
-        B(650,220,60,50,20),
-        B(710,220,60,50,20),
-
-        B(680,170,60,50,20),
-        B(740,170,60,50,20)
-    ],
-    targets:[
-        T(710,125,10),
-        T(480,350,9),
-        T(860,350,9),
-        T(690,275,8)
-    ]
-},
-
-
-/* =========================
-   WELT 7 SCHNEE
-   ========================= */
-
-{
-    level:43,
-    world:6,
-    target:140000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(480,470,70,50,20),
-        B(550,470,70,50,20),
-        B(620,470,70,50,20),
-        B(690,470,70,50,20),
-        B(760,470,70,50,20),
-        B(830,470,70,50,20),
-        B(590,420,70,50,20),
-        B(660,420,70,50,20),
-        B(730,420,70,50,20),
-        B(800,420,70,50,20),
-        B(660,370,70,50,21),
-        B(730,370,70,50,21),
-        B(695,320,70,50,21)
-    ],
-    targets:[
-        T(730,275,10),
-        T(610,370,9),
-        T(830,370,9)
-    ]
-},
-
-{
-    level:44,
-    world:6,
-    target:150000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,60,50,21),
-        B(510,470,60,50,21),
-        B(570,470,60,50,21),
-        B(630,470,60,50,21),
-        B(690,470,60,50,21),
-        B(750,470,60,50,21),
-        B(810,470,60,50,21),
-        B(870,470,60,50,21),
-
-        B(480,420,60,50,21),
-        B(540,420,60,50,21),
-        B(600,420,60,50,21),
-        B(660,420,60,50,21),
-        B(720,420,60,50,21),
-        B(780,420,60,50,21),
-        B(840,420,60,50,21),
-
-        B(540,370,60,50,22),
-        B(600,370,60,50,22),
-        B(660,370,60,50,22),
-        B(720,370,60,50,22),
-        B(780,370,60,50,22),
-
-        B(600,320,60,50,22),
-        B(660,320,60,50,22),
-        B(720,320,60,50,22),
-        B(780,320,60,50,22),
-
-        B(660,270,60,50,22),
-        B(720,270,60,50,22)
-    ],
-    targets:[
-        T(750,225,11),
-        T(580,350,9),
-        T(840,350,9),
-        T(710,290,7)
-    ]
-},
-
-{
-    level:45,
-    world:6,
-    target:160000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(420,470,65,50,22),
-        B(485,470,65,50,22),
-        B(550,470,65,50,22),
-        B(615,470,65,50,22),
-        B(680,470,65,50,22),
-        B(745,470,65,50,22),
-        B(810,470,65,50,22),
-        B(875,470,65,50,22),
-        B(940,470,65,50,22),
-
-        B(452,420,65,50,22),
-        B(517,420,65,50,22),
-        B(582,420,65,50,22),
-        B(647,420,65,50,22),
-        B(712,420,65,50,22),
-        B(777,420,65,50,22),
-        B(842,420,65,50,22),
-        B(907,420,65,50,22),
-
-        B(517,370,65,50,23),
-        B(582,370,65,50,23),
-        B(647,370,65,50,23),
-        B(712,370,65,50,23),
-        B(777,370,65,50,23),
-        B(842,370,65,50,23),
-
-        B(582,320,65,50,23),
-        B(647,320,65,50,23),
-        B(712,320,65,50,23),
-        B(777,320,65,50,23),
-
-        B(647,270,65,50,23),
-        B(712,270,65,50,23),
-        B(777,270,65,50,23),
-
-        B(680,220,65,50,23),
-        B(745,220,65,50,23),
-
-        B(712,170,65,50,23)
-    ],
-    targets:[
-        T(745,125,11),
-        T(550,350,10),
-        T(850,350,10),
-        T(710,275,8)
-    ]
-},
-
-{
-    level:46,
-    world:6,
-    target:170000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(400,470,60,50,23),
-        B(460,470,60,50,23),
-        B(520,470,60,50,23),
-        B(580,470,60,50,23),
-        B(640,470,60,50,23),
-        B(700,470,60,50,23),
-        B(760,470,60,50,23),
-        B(820,470,60,50,23),
-        B(880,470,60,50,23),
-        B(940,470,60,50,23),
-
-        B(430,420,60,50,23),
-        B(490,420,60,50,23),
-        B(550,420,60,50,23),
-        B(610,420,60,50,23),
-        B(670,420,60,50,23),
-        B(730,420,60,50,23),
-        B(790,420,60,50,23),
-        B(850,420,60,50,23),
-        B(910,420,60,50,23),
-
-        B(490,370,60,50,24),
-        B(550,370,60,50,24),
-        B(610,370,60,50,24),
-        B(670,370,60,50,24),
-        B(730,370,60,50,24),
-        B(790,370,60,50,24),
-        B(850,370,60,50,24),
-
-        B(550,320,60,50,24),
-        B(610,320,60,50,24),
-        B(670,320,60,50,24),
-        B(730,320,60,50,24),
-        B(790,320,60,50,24),
-
-        B(610,270,60,50,24),
-        B(670,270,60,50,24),
-        B(730,270,60,50,24),
-        B(790,270,60,50,24),
-
-        B(670,220,60,50,24),
-        B(730,220,60,50,24),
-
-        B(700,170,60,50,24)
-    ],
-    targets:[
-        T(730,125,12),
-        T(520,350,10),
-        T(850,350,10),
-        T(700,275,9)
-    ]
-},
-
-{
-    level:47,
-    world:6,
-    target:180000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(390,470,65,50,24),
-        B(455,470,65,50,24),
-        B(520,470,65,50,24),
-        B(585,470,65,50,24),
-        B(650,470,65,50,24),
-        B(715,470,65,50,24),
-        B(780,470,65,50,24),
-        B(845,470,65,50,24),
-        B(910,470,65,50,24),
-
-        B(422,420,65,50,24),
-        B(487,420,65,50,24),
-        B(552,420,65,50,24),
-        B(617,420,65,50,24),
-        B(682,420,65,50,24),
-        B(747,420,65,50,24),
-        B(812,420,65,50,24),
-        B(877,420,65,50,24),
-
-        B(487,370,65,50,25),
-        B(552,370,65,50,25),
-        B(617,370,65,50,25),
-        B(682,370,65,50,25),
-        B(747,370,65,50,25),
-        B(812,370,65,50,25),
-
-        B(552,320,65,50,25),
-        B(617,320,65,50,25),
-        B(682,320,65,50,25),
-        B(747,320,65,50,25),
-        B(812,320,65,50,25),
-
-        B(617,270,65,50,25),
-        B(682,270,65,50,25),
-        B(747,270,65,50,25),
-
-        B(682,220,65,50,25),
-        B(747,220,65,50,25),
-
-        B(715,170,65,50,25)
-    ],
-    targets:[
-        T(750,125,12),
-        T(530,350,11),
-        T(850,350,11),
-        T(715,275,9)
-    ]
-},
-
-{
-    level:48,
-    world:6,
-    target:190000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(370,470,60,50,25),
-        B(430,470,60,50,25),
-        B(490,470,60,50,25),
-        B(550,470,60,50,25),
-        B(610,470,60,50,25),
-        B(670,470,60,50,25),
-        B(730,470,60,50,25),
-        B(790,470,60,50,25),
-        B(850,470,60,50,25),
-        B(910,470,60,50,25),
-        B(970,470,60,50,25),
-
-        B(400,420,60,50,25),
-        B(460,420,60,50,25),
-        B(520,420,60,50,25),
-        B(580,420,60,50,25),
-        B(640,420,60,50,25),
-        B(700,420,60,50,25),
-        B(760,420,60,50,25),
-        B(820,420,60,50,25),
-        B(880,420,60,50,25),
-        B(940,420,60,50,25),
-
-        B(460,370,60,50,26),
-        B(520,370,60,50,26),
-        B(580,370,60,50,26),
-        B(640,370,60,50,26),
-        B(700,370,60,50,26),
-        B(760,370,60,50,26),
-        B(820,370,60,50,26),
-        B(880,370,60,50,26),
-
-        B(520,320,60,50,26),
-        B(580,320,60,50,26),
-        B(640,320,60,50,26),
-        B(700,320,60,50,26),
-        B(760,320,60,50,26),
-        B(820,320,60,50,26),
-
-        B(580,270,60,50,26),
-        B(640,270,60,50,26),
-        B(700,270,60,50,26),
-        B(760,270,60,50,26),
-
-        B(640,220,60,50,26),
-        B(700,220,60,50,26),
-        B(760,220,60,50,26),
-
-        B(670,170,60,50,26),
-        B(730,170,60,50,26)
-    ],
-    targets:[
-        T(730,125,13),
-        T(500,350,11),
-        T(860,350,11),
-        T(700,275,10)
-    ]
-},
-
-{
-    level:49,
-    world:6,
-    target:200000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(350,470,65,50,26),
-        B(415,470,65,50,26),
-        B(480,470,65,50,26),
-        B(545,470,65,50,26),
-        B(610,470,65,50,26),
-        B(675,470,65,50,26),
-        B(740,470,65,50,26),
-        B(805,470,65,50,26),
-        B(870,470,65,50,26),
-        B(935,470,65,50,26),
-
-        B(382,420,65,50,26),
-        B(447,420,65,50,26),
-        B(512,420,65,50,26),
-        B(577,420,65,50,26),
-        B(642,420,65,50,26),
-        B(707,420,65,50,26),
-        B(772,420,65,50,26),
-        B(837,420,65,50,26),
-        B(902,420,65,50,26),
-
-        B(447,370,65,50,27),
-        B(512,370,65,50,27),
-        B(577,370,65,50,27),
-        B(642,370,65,50,27),
-        B(707,370,65,50,27),
-        B(772,370,65,50,27),
-        B(837,370,65,50,27),
-
-        B(512,320,65,50,27),
-        B(577,320,65,50,27),
-        B(642,320,65,50,27),
-        B(707,320,65,50,27),
-        B(772,320,65,50,27),
-
-        B(577,270,65,50,27),
-        B(642,270,65,50,27),
-        B(707,270,65,50,27),
-        B(772,270,65,50,27),
-
-        B(642,220,65,50,27),
-        B(707,220,65,50,27),
-
-        B(675,170,65,50,27),
-        B(740,170,65,50,27)
-    ],
-    targets:[
-        T(720,125,14),
-        T(490,350,12),
-        T(850,350,12),
-        T(700,275,10)
-    ]
-},
-
-
-/* =========================
-   WELT 8 VULKAN
-   ========================= */
-
-{
-    level:50,
-    world:7,
-    target:215000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,70,50,27),
-        B(520,470,70,50,27),
-        B(590,470,70,50,27),
-        B(660,470,70,50,27),
-        B(730,470,70,50,27),
-        B(800,470,70,50,27),
-        B(870,470,70,50,27),
-
-        B(485,420,70,50,27),
-        B(555,420,70,50,27),
-        B(625,420,70,50,27),
-        B(695,420,70,50,27),
-        B(765,420,70,50,27),
-        B(835,420,70,50,27),
-
-        B(555,370,70,50,28),
-        B(625,370,70,50,28),
-        B(695,370,70,50,28),
-        B(765,370,70,50,28),
-
-        B(625,320,70,50,28),
-        B(695,320,70,50,28),
-        B(765,320,70,50,28),
-
-        B(660,270,70,50,28),
-        B(730,270,70,50,28),
-
-        B(695,220,70,50,28)
-    ],
-    targets:[
-        T(730,175,14),
-        T(580,350,12),
-        T(850,350,12),
-        T(700,290,10)
-    ]
-},
-
-{
-    level:51,
-    world:7,
-    target:230000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(420,470,60,50,28),
-        B(480,470,60,50,28),
-        B(540,470,60,50,28),
-        B(600,470,60,50,28),
-        B(660,470,60,50,28),
-        B(720,470,60,50,28),
-        B(780,470,60,50,28),
-        B(840,470,60,50,28),
-        B(900,470,60,50,28),
-
-        B(450,420,60,50,28),
-        B(510,420,60,50,28),
-        B(570,420,60,50,28),
-        B(630,420,60,50,28),
-        B(690,420,60,50,28),
-        B(750,420,60,50,28),
-        B(810,420,60,50,28),
-        B(870,420,60,50,28),
-
-        B(510,370,60,50,29),
-        B(570,370,60,50,29),
-        B(630,370,60,50,29),
-        B(690,370,60,50,29),
-        B(750,370,60,50,29),
-        B(810,370,60,50,29),
-
-        B(570,320,60,50,29),
-        B(630,320,60,50,29),
-        B(690,320,60,50,29),
-        B(750,320,60,50,29),
-        B(810,320,60,50,29),
-
-        B(630,270,60,50,29),
-        B(690,270,60,50,29),
-        B(750,270,60,50,29),
-
-        B(690,220,60,50,29),
-        B(750,220,60,50,29),
-
-        B(720,170,60,50,29)
-    ],
-    targets:[
-        T(750,125,15),
-        T(540,350,13),
-        T(850,350,13),
-        T(710,275,11)
-    ]
-},
-
-{
-    level:52,
-    world:7,
-    target:245000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(390,470,65,50,29),
-        B(455,470,65,50,29),
-        B(520,470,65,50,29),
-        B(585,470,65,50,29),
-        B(650,470,65,50,29),
-        B(715,470,65,50,29),
-        B(780,470,65,50,29),
-        B(845,470,65,50,29),
-        B(910,470,65,50,29),
-
-        B(422,420,65,50,29),
-        B(487,420,65,50,29),
-        B(552,420,65,50,29),
-        B(617,420,65,50,29),
-        B(682,420,65,50,29),
-        B(747,420,65,50,29),
-        B(812,420,65,50,29),
-        B(877,420,65,50,29),
-
-        B(487,370,65,50,30),
-        B(552,370,65,50,30),
-        B(617,370,65,50,30),
-        B(682,370,65,50,30),
-        B(747,370,65,50,30),
-        B(812,370,65,50,30),
-
-        B(552,320,65,50,30),
-        B(617,320,65,50,30),
-        B(682,320,65,50,30),
-        B(747,320,65,50,30),
-        B(812,320,65,50,30),
-
-        B(617,270,65,50,30),
-        B(682,270,65,50,30),
-        B(747,270,65,50,30),
-
-        B(682,220,65,50,30),
-        B(747,220,65,50,30),
-
-        B(715,170,65,50,30)
-    ],
-    targets:[
-        T(745,125,15),
-        T(520,350,13),
-        T(850,350,13),
-        T(710,275,11)
-    ]
-},
-
-{
-    level:53,
-    world:7,
-    target:265000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(370,470,60,50,30),
-        B(430,470,60,50,30),
-        B(490,470,60,50,30),
-        B(550,470,60,50,30),
-        B(610,470,60,50,30),
-        B(670,470,60,50,30),
-        B(730,470,60,50,30),
-        B(790,470,60,50,30),
-        B(850,470,60,50,30),
-        B(910,470,60,50,30),
-
-        B(400,420,60,50,30),
-        B(460,420,60,50,30),
-        B(520,420,60,50,30),
-        B(580,420,60,50,30),
-        B(640,420,60,50,30),
-        B(700,420,60,50,30),
-        B(760,420,60,50,30),
-        B(820,420,60,50,30),
-        B(880,420,60,50,30),
-
-        B(460,370,60,50,31),
-        B(520,370,60,50,31),
-        B(580,370,60,50,31),
-        B(640,370,60,50,31),
-        B(700,370,60,50,31),
-        B(760,370,60,50,31),
-        B(820,370,60,50,31),
-
-        B(520,320,60,50,31),
-        B(580,320,60,50,31),
-        B(640,320,60,50,31),
-        B(700,320,60,50,31),
-        B(760,320,60,50,31),
-
-        B(580,270,60,50,31),
-        B(640,270,60,50,31),
-        B(700,270,60,50,31),
-        B(760,270,60,50,31),
-
-        B(640,220,60,50,31),
-        B(700,220,60,50,31),
-
-        B(670,170,60,50,31),
-        B(730,170,60,50,31)
-    ],
-    targets:[
-        T(710,125,16),
-        T(500,350,14),
-        T(850,350,14),
-        T(700,275,12)
-    ]
-},
-
-{
-    level:54,
-    world:7,
-    target:285000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(350,470,65,50,31),
-        B(415,470,65,50,31),
-        B(480,470,65,50,31),
-        B(545,470,65,50,31),
-        B(610,470,65,50,31),
-        B(675,470,65,50,31),
-        B(740,470,65,50,31),
-        B(805,470,65,50,31),
-        B(870,470,65,50,31),
-        B(935,470,65,50,31),
-
-        B(382,420,65,50,31),
-        B(447,420,65,50,31),
-        B(512,420,65,50,31),
-        B(577,420,65,50,31),
-        B(642,420,65,50,31),
-        B(707,420,65,50,31),
-        B(772,420,65,50,31),
-        B(837,420,65,50,31),
-        B(902,420,65,50,31),
-
-        B(447,370,65,50,32),
-        B(512,370,65,50,32),
-        B(577,370,65,50,32),
-        B(642,370,65,50,32),
-        B(707,370,65,50,32),
-        B(772,370,65,50,32),
-        B(837,370,65,50,32),
-
-        B(512,320,65,50,32),
-        B(577,320,65,50,32),
-        B(642,320,65,50,32),
-        B(707,320,65,50,32),
-        B(772,320,65,50,32),
-
-        B(577,270,65,50,32),
-        B(642,270,65,50,32),
-        B(707,270,65,50,32),
-        B(772,270,65,50,32),
-
-        B(642,220,65,50,32),
-        B(707,220,65,50,32),
-
-        B(675,170,65,50,32),
-        B(740,170,65,50,32)
-    ],
-    targets:[
-        T(720,125,17),
-        T(480,350,15),
-        T(860,350,15),
-        T(700,275,13)
-    ]
-},
-
-{
-    level:55,
-    world:7,
-    target:310000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(330,470,60,50,32),
-        B(390,470,60,50,32),
-        B(450,470,60,50,32),
-        B(510,470,60,50,32),
-        B(570,470,60,50,32),
-        B(630,470,60,50,32),
-        B(690,470,60,50,32),
-        B(750,470,60,50,32),
-        B(810,470,60,50,32),
-        B(870,470,60,50,32),
-        B(930,470,60,50,32),
-
-        B(360,420,60,50,32),
-        B(420,420,60,50,32),
-        B(480,420,60,50,32),
-        B(540,420,60,50,32),
-        B(600,420,60,50,32),
-        B(660,420,60,50,32),
-        B(720,420,60,50,32),
-        B(780,420,60,50,32),
-        B(840,420,60,50,32),
-        B(900,420,60,50,32),
-
-        B(420,370,60,50,33),
-        B(480,370,60,50,33),
-        B(540,370,60,50,33),
-        B(600,370,60,50,33),
-        B(660,370,60,50,33),
-        B(720,370,60,50,33),
-        B(780,370,60,50,33),
-        B(840,370,60,50,33),
-
-        B(480,320,60,50,33),
-        B(540,320,60,50,33),
-        B(600,320,60,50,33),
-        B(660,320,60,50,33),
-        B(720,320,60,50,33),
-        B(780,320,60,50,33),
-
-        B(540,270,60,50,33),
-        B(600,270,60,50,33),
-        B(660,270,60,50,33),
-        B(720,270,60,50,33),
-        B(780,270,60,50,33),
-
-        B(600,220,60,50,33),
-        B(660,220,60,50,33),
-        B(720,220,60,50,33),
-
-        B(630,170,60,50,33),
-        B(690,170,60,50,33),
-
-        B(660,120,60,50,33)
-    ],
-    targets:[
-        T(690,75,18),
-        T(450,350,15),
-        T(850,350,15),
-        T(660,275,14)
-    ]
-},
-
-{
-    level:56,
-    world:7,
-    target:335000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(310,470,60,50,33),
-        B(370,470,60,50,33),
-        B(430,470,60,50,33),
-        B(490,470,60,50,33),
-        B(550,470,60,50,33),
-        B(610,470,60,50,33),
-        B(670,470,60,50,33),
-        B(730,470,60,50,33),
-        B(790,470,60,50,33),
-        B(850,470,60,50,33),
-        B(910,470,60,50,33),
-        B(970,470,60,50,33),
-
-        B(340,420,60,50,33),
-        B(400,420,60,50,33),
-        B(460,420,60,50,33),
-        B(520,420,60,50,33),
-        B(580,420,60,50,33),
-        B(640,420,60,50,33),
-        B(700,420,60,50,33),
-        B(760,420,60,50,33),
-        B(820,420,60,50,33),
-        B(880,420,60,50,33),
-        B(940,420,60,50,33),
-
-        B(400,370,60,50,34),
-        B(460,370,60,50,34),
-        B(520,370,60,50,34),
-        B(580,370,60,50,34),
-        B(640,370,60,50,34),
-        B(700,370,60,50,34),
-        B(760,370,60,50,34),
-        B(820,370,60,50,34),
-        B(880,370,60,50,34),
-
-        B(460,320,60,50,34),
-        B(520,320,60,50,34),
-        B(580,320,60,50,34),
-        B(640,320,60,50,34),
-        B(700,320,60,50,34),
-        B(760,320,60,50,34),
-        B(820,320,60,50,34),
-
-        B(520,270,60,50,34),
-        B(580,270,60,50,34),
-        B(640,270,60,50,34),
-        B(700,270,60,50,34),
-        B(760,270,60,50,34),
-
-        B(580,220,60,50,34),
-        B(640,220,60,50,34),
-        B(700,220,60,50,34),
-
-        B(640,170,60,50,34),
-        B(700,170,60,50,34),
-
-        B(670,120,60,50,34)
-    ],
-    targets:[
-        T(700,75,18),
-        T(430,350,16),
-        T(850,350,16),
-        T(670,275,14)
-    ]
-},
-
-{
-    level:57,
-    world:7,
-    target:360000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(300,470,60,50,34),
-        B(360,470,60,50,34),
-        B(420,470,60,50,34),
-        B(480,470,60,50,34),
-        B(540,470,60,50,34),
-        B(600,470,60,50,34),
-        B(660,470,60,50,34),
-        B(720,470,60,50,34),
-        B(780,470,60,50,34),
-        B(840,470,60,50,34),
-        B(900,470,60,50,34),
-        B(960,470,60,50,34),
-
-        B(330,420,60,50,34),
-        B(390,420,60,50,34),
-        B(450,420,60,50,34),
-        B(510,420,60,50,34),
-        B(570,420,60,50,34),
-        B(630,420,60,50,34),
-        B(690,420,60,50,34),
-        B(750,420,60,50,34),
-        B(810,420,60,50,34),
-        B(870,420,60,50,34),
-        B(930,420,60,50,34),
-
-        B(390,370,60,50,35),
-        B(450,370,60,50,35),
-        B(510,370,60,50,35),
-        B(570,370,60,50,35),
-        B(630,370,60,50,35),
-        B(690,370,60,50,35),
-        B(750,370,60,50,35),
-        B(810,370,60,50,35),
-        B(870,370,60,50,35),
-
-        B(450,320,60,50,35),
-        B(510,320,60,50,35),
-        B(570,320,60,50,35),
-        B(630,320,60,50,35),
-        B(690,320,60,50,35),
-        B(750,320,60,50,35),
-        B(810,320,60,50,35),
-
-        B(510,270,60,50,35),
-        B(570,270,60,50,35),
-        B(630,270,60,50,35),
-        B(690,270,60,50,35),
-        B(750,270,60,50,35),
-
-        B(570,220,60,50,35),
-        B(630,220,60,50,35),
-        B(690,220,60,50,35),
-
-        B(630,170,60,50,35),
-        B(690,170,60,50,35),
-
-        B(660,120,60,50,35)
-    ],
-    targets:[
-        T(690,75,19),
-        T(420,350,17),
-        T(850,350,17),
-        T(660,275,15)
-    ]
-},
-
-
-/* =========================
-   WELT 9 NACHTSTADT
-   ========================= */
-
-{
-    level:58,
-    world:8,
-    target:385000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,70,50,35),
-        B(520,470,70,50,35),
-        B(590,470,70,50,35),
-        B(660,470,70,50,35),
-        B(730,470,70,50,35),
-        B(800,470,70,50,35),
-        B(870,470,70,50,35),
-
-        B(485,420,70,50,35),
-        B(555,420,70,50,35),
-        B(625,420,70,50,35),
-        B(695,420,70,50,35),
-        B(765,420,70,50,35),
-        B(835,420,70,50,35),
-
-        B(555,370,70,50,36),
-        B(625,370,70,50,36),
-        B(695,370,70,50,36),
-        B(765,370,70,50,36),
-
-        B(625,320,70,50,36),
-        B(695,320,70,50,36),
-        B(765,320,70,50,36),
-
-        B(660,270,70,50,36),
-        B(730,270,70,50,36),
-
-        B(695,220,70,50,36)
-    ],
-    targets:[
-        T(730,175,19),
-        T(570,350,17),
-        T(850,350,17)
-    ]
-},
-
-{
-    level:59,
-    world:8,
-    target:410000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(400,470,60,50,36),
-        B(460,470,60,50,36),
-        B(520,470,60,50,36),
-        B(580,470,60,50,36),
-        B(640,470,60,50,36),
-        B(700,470,60,50,36),
-        B(760,470,60,50,36),
-        B(820,470,60,50,36),
-        B(880,470,60,50,36),
-        B(940,470,60,50,36),
-
-        B(430,420,60,50,36),
-        B(490,420,60,50,36),
-        B(550,420,60,50,36),
-        B(610,420,60,50,36),
-        B(670,420,60,50,36),
-        B(730,420,60,50,36),
-        B(790,420,60,50,36),
-        B(850,420,60,50,36),
-        B(910,420,60,50,36),
-
-        B(490,370,60,50,37),
-        B(550,370,60,50,37),
-        B(610,370,60,50,37),
-        B(670,370,60,50,37),
-        B(730,370,60,50,37),
-        B(790,370,60,50,37),
-        B(850,370,60,50,37),
-
-        B(550,320,60,50,37),
-        B(610,320,60,50,37),
-        B(670,320,60,50,37),
-        B(730,320,60,50,37),
-        B(790,320,60,50,37),
-
-        B(610,270,60,50,37),
-        B(670,270,60,50,37),
-        B(730,270,60,50,37),
-
-        B(670,220,60,50,37),
-        B(730,220,60,50,37)
-    ],
-    targets:[
-        T(750,175,20),
-        T(520,350,18),
-        T(850,350,18),
-        T(700,275,15)
-    ]
-},
-
-{
-    level:60,
-    world:8,
-    target:440000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(370,470,65,50,37),
-        B(435,470,65,50,37),
-        B(500,470,65,50,37),
-        B(565,470,65,50,37),
-        B(630,470,65,50,37),
-        B(695,470,65,50,37),
-        B(760,470,65,50,37),
-        B(825,470,65,50,37),
-        B(890,470,65,50,37),
-        B(955,470,65,50,37),
-
-        B(402,420,65,50,37),
-        B(467,420,65,50,37),
-        B(532,420,65,50,37),
-        B(597,420,65,50,37),
-        B(662,420,65,50,37),
-        B(727,420,65,50,37),
-        B(792,420,65,50,37),
-        B(857,420,65,50,37),
-        B(922,420,65,50,37),
-
-        B(467,370,65,50,38),
-        B(532,370,65,50,38),
-        B(597,370,65,50,38),
-        B(662,370,65,50,38),
-        B(727,370,65,50,38),
-        B(792,370,65,50,38),
-        B(857,370,65,50,38),
-
-        B(532,320,65,50,38),
-        B(597,320,65,50,38),
-        B(662,320,65,50,38),
-        B(727,320,65,50,38),
-        B(792,320,65,50,38),
-
-        B(597,270,65,50,38),
-        B(662,270,65,50,38),
-        B(727,270,65,50,38),
-        B(792,270,65,50,38),
-
-        B(662,220,65,50,38),
-        B(727,220,65,50,38),
-
-        B(695,170,65,50,38)
-    ],
-    targets:[
-        T(730,125,20),
-        T(500,350,18),
-        T(860,350,18),
-        T(700,275,16)
-    ]
-},
-
-{
-    level:61,
-    world:8,
-    target:470000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(350,470,60,50,38),
-        B(410,470,60,50,38),
-        B(470,470,60,50,38),
-        B(530,470,60,50,38),
-        B(590,470,60,50,38),
-        B(650,470,60,50,38),
-        B(710,470,60,50,38),
-        B(770,470,60,50,38),
-        B(830,470,60,50,38),
-        B(890,470,60,50,38),
-        B(950,470,60,50,38),
-
-        B(380,420,60,50,38),
-        B(440,420,60,50,38),
-        B(500,420,60,50,38),
-        B(560,420,60,50,38),
-        B(620,420,60,50,38),
-        B(680,420,60,50,38),
-        B(740,420,60,50,38),
-        B(800,420,60,50,38),
-        B(860,420,60,50,38),
-        B(920,420,60,50,38),
-
-        B(440,370,60,50,39),
-        B(500,370,60,50,39),
-        B(560,370,60,50,39),
-        B(620,370,60,50,39),
-        B(680,370,60,50,39),
-        B(740,370,60,50,39),
-        B(800,370,60,50,39),
-        B(860,370,60,50,39),
-
-        B(500,320,60,50,39),
-        B(560,320,60,50,39),
-        B(620,320,60,50,39),
-        B(680,320,60,50,39),
-        B(740,320,60,50,39),
-        B(800,320,60,50,39),
-
-        B(560,270,60,50,39),
-        B(620,270,60,50,39),
-        B(680,270,60,50,39),
-        B(740,270,60,50,39),
-
-        B(620,220,60,50,39),
-        B(680,220,60,50,39),
-        B(740,220,60,50,39),
-
-        B(650,170,60,50,39),
-        B(710,170,60,50,39)
-    ],
-    targets:[
-        T(710,125,21),
-        T(470,350,19),
-        T(850,350,19),
-        T(680,275,17)
-    ]
-},
-
-{
-    level:62,
-    world:8,
-    target:500000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(330,470,65,50,39),
-        B(395,470,65,50,39),
-        B(460,470,65,50,39),
-        B(525,470,65,50,39),
-        B(590,470,65,50,39),
-        B(655,470,65,50,39),
-        B(720,470,65,50,39),
-        B(785,470,65,50,39),
-        B(850,470,65,50,39),
-        B(915,470,65,50,39),
-        B(980,470,65,50,39),
-
-        B(362,420,65,50,39),
-        B(427,420,65,50,39),
-        B(492,420,65,50,39),
-        B(557,420,65,50,39),
-        B(622,420,65,50,39),
-        B(687,420,65,50,39),
-        B(752,420,65,50,39),
-        B(817,420,65,50,39),
-        B(882,420,65,50,39),
-        B(947,420,65,50,39),
-
-        B(427,370,65,50,40),
-        B(492,370,65,50,40),
-        B(557,370,65,50,40),
-        B(622,370,65,50,40),
-        B(687,370,65,50,40),
-        B(752,370,65,50,40),
-        B(817,370,65,50,40),
-        B(882,370,65,50,40),
-
-        B(492,320,65,50,40),
-        B(557,320,65,50,40),
-        B(622,320,65,50,40),
-        B(687,320,65,50,40),
-        B(752,320,65,50,40),
-        B(817,320,65,50,40),
-
-        B(557,270,65,50,40),
-        B(622,270,65,50,40),
-        B(687,270,65,50,40),
-        B(752,270,65,50,40),
-
-        B(622,220,65,50,40),
-        B(687,220,65,50,40),
-        B(752,220,65,50,40),
-
-        B(652,170,65,50,40),
-        B(717,170,65,50,40),
-
-        B(682,120,65,50,40)
-    ],
-    targets:[
-        T(715,75,22),
-        T(450,350,20),
-        T(850,350,20),
-        T(680,275,18)
-    ]
-},
-
-{
-    level:63,
-    world:8,
-    target:530000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(310,470,60,50,40),
-        B(370,470,60,50,40),
-        B(430,470,60,50,40),
-        B(490,470,60,50,40),
-        B(550,470,60,50,40),
-        B(610,470,60,50,40),
-        B(670,470,60,50,40),
-        B(730,470,60,50,40),
-        B(790,470,60,50,40),
-        B(850,470,60,50,40),
-        B(910,470,60,50,40),
-        B(970,470,60,50,40),
-
-        B(340,420,60,50,40),
-        B(400,420,60,50,40),
-        B(460,420,60,50,40),
-        B(520,420,60,50,40),
-        B(580,420,60,50,40),
-        B(640,420,60,50,40),
-        B(700,420,60,50,40),
-        B(760,420,60,50,40),
-        B(820,420,60,50,40),
-        B(880,420,60,50,40),
-        B(940,420,60,50,40),
-
-        B(400,370,60,50,41),
-        B(460,370,60,50,41),
-        B(520,370,60,50,41),
-        B(580,370,60,50,41),
-        B(640,370,60,50,41),
-        B(700,370,60,50,41),
-        B(760,370,60,50,41),
-        B(820,370,60,50,41),
-        B(880,370,60,50,41),
-
-        B(460,320,60,50,41),
-        B(520,320,60,50,41),
-        B(580,320,60,50,41),
-        B(640,320,60,50,41),
-        B(700,320,60,50,41),
-        B(760,320,60,50,41),
-        B(820,320,60,50,41),
-
-        B(520,270,60,50,41),
-        B(580,270,60,50,41),
-        B(640,270,60,50,41),
-        B(700,270,60,50,41),
-        B(760,270,60,50,41),
-
-        B(580,220,60,50,41),
-        B(640,220,60,50,41),
-        B(700,220,60,50,41),
-        B(760,220,60,50,41),
-
-        B(640,170,60,50,41),
-        B(700,170,60,50,41),
-
-        B(670,120,60,50,41)
-    ],
-    targets:[
-        T(700,75,22),
-        T(420,350,20),
-        T(850,350,20),
-        T(670,275,18)
-    ]
-},
-
-
-/* =========================
-   WELT 10 MONDSTATION
-   ========================= */
-
-{
-    level:64,
-    world:9,
-    target:560000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(450,470,70,50,41),
-        B(520,470,70,50,41),
-        B(590,470,70,50,41),
-        B(660,470,70,50,41),
-        B(730,470,70,50,41),
-        B(800,470,70,50,41),
-        B(870,470,70,50,41),
-
-        B(485,420,70,50,41),
-        B(555,420,70,50,41),
-        B(625,420,70,50,41),
-        B(695,420,70,50,41),
-        B(765,420,70,50,41),
-        B(835,420,70,50,41),
-
-        B(555,370,70,50,42),
-        B(625,370,70,50,42),
-        B(695,370,70,50,42),
-        B(765,370,70,50,42),
-
-        B(625,320,70,50,42),
-        B(695,320,70,50,42),
-        B(765,320,70,50,42),
-
-        B(660,270,70,50,42),
-        B(730,270,70,50,42),
-
-        B(695,220,70,50,42)
-    ],
-    targets:[
-        T(730,175,23),
-        T(570,350,21),
-        T(850,350,21)
-    ]
-},
-
-{
-    level:65,
-    world:9,
-    target:590000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(400,470,60,50,42),
-        B(460,470,60,50,42),
-        B(520,470,60,50,42),
-        B(580,470,60,50,42),
-        B(640,470,60,50,42),
-        B(700,470,60,50,42),
-        B(760,470,60,50,42),
-        B(820,470,60,50,42),
-        B(880,470,60,50,42),
-        B(940,470,60,50,42),
-
-        B(430,420,60,50,42),
-        B(490,420,60,50,42),
-        B(550,420,60,50,42),
-        B(610,420,60,50,42),
-        B(670,420,60,50,42),
-        B(730,420,60,50,42),
-        B(790,420,60,50,42),
-        B(850,420,60,50,42),
-        B(910,420,60,50,42),
-
-        B(490,370,60,50,43),
-        B(550,370,60,50,43),
-        B(610,370,60,50,43),
-        B(670,370,60,50,43),
-        B(730,370,60,50,43),
-        B(790,370,60,50,43),
-        B(850,370,60,50,43),
-
-        B(550,320,60,50,43),
-        B(610,320,60,50,43),
-        B(670,320,60,50,43),
-        B(730,320,60,50,43),
-        B(790,320,60,50,43),
-
-        B(610,270,60,50,43),
-        B(670,270,60,50,43),
-        B(730,270,60,50,43),
-        B(790,270,60,50,43),
-
-        B(670,220,60,50,43),
-        B(730,220,60,50,43),
-
-        B(700,170,60,50,43)
-    ],
-    targets:[
-        T(730,125,23),
-        T(520,350,21),
-        T(850,350,21),
-        T(700,275,18)
-    ]
-},
-
-{
-    level:66,
-    world:9,
-    target:620000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(370,470,65,50,43),
-        B(435,470,65,50,43),
-        B(500,470,65,50,43),
-        B(565,470,65,50,43),
-        B(630,470,65,50,43),
-        B(695,470,65,50,43),
-        B(760,470,65,50,43),
-        B(825,470,65,50,43),
-        B(890,470,65,50,43),
-        B(955,470,65,50,43),
-
-        B(402,420,65,50,43),
-        B(467,420,65,50,43),
-        B(532,420,65,50,43),
-        B(597,420,65,50,43),
-        B(662,420,65,50,43),
-        B(727,420,65,50,43),
-        B(792,420,65,50,43),
-        B(857,420,65,50,43),
-        B(922,420,65,50,43),
-
-        B(467,370,65,50,44),
-        B(532,370,65,50,44),
-        B(597,370,65,50,44),
-        B(662,370,65,50,44),
-        B(727,370,65,50,44),
-        B(792,370,65,50,44),
-        B(857,370,65,50,44),
-
-        B(532,320,65,50,44),
-        B(597,320,65,50,44),
-        B(662,320,65,50,44),
-        B(727,320,65,50,44),
-        B(792,320,65,50,44),
-
-        B(597,270,65,50,44),
-        B(662,270,65,50,44),
-        B(727,270,65,50,44),
-        B(792,270,65,50,44),
-
-        B(662,220,65,50,44),
-        B(727,220,65,50,44),
-
-        B(695,170,65,50,44)
-    ],
-    targets:[
-        T(725,125,24),
-        T(500,350,22),
-        T(850,350,22),
-        T(700,275,19)
-    ]
-},
-
-{
-    level:67,
-    world:9,
-    target:650000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(340,470,60,50,44),
-        B(400,470,60,50,44),
-        B(460,470,60,50,44),
-        B(520,470,60,50,44),
-        B(580,470,60,50,44),
-        B(640,470,60,50,44),
-        B(700,470,60,50,44),
-        B(760,470,60,50,44),
-        B(820,470,60,50,44),
-        B(880,470,60,50,44),
-        B(940,470,60,50,44),
-
-        B(370,420,60,50,44),
-        B(430,420,60,50,44),
-        B(490,420,60,50,44),
-        B(550,420,60,50,44),
-        B(610,420,60,50,44),
-        B(670,420,60,50,44),
-        B(730,420,60,50,44),
-        B(790,420,60,50,44),
-        B(850,420,60,50,44),
-        B(910,420,60,50,44),
-
-        B(430,370,60,50,45),
-        B(490,370,60,50,45),
-        B(550,370,60,50,45),
-        B(610,370,60,50,45),
-        B(670,370,60,50,45),
-        B(730,370,60,50,45),
-        B(790,370,60,50,45),
-        B(850,370,60,50,45),
-
-        B(490,320,60,50,45),
-        B(550,320,60,50,45),
-        B(610,320,60,50,45),
-        B(670,320,60,50,45),
-        B(730,320,60,50,45),
-        B(790,320,60,50,45),
-
-        B(550,270,60,50,45),
-        B(610,270,60,50,45),
-        B(670,270,60,50,45),
-        B(730,270,60,50,45),
-        B(790,270,60,50,45),
-
-        B(610,220,60,50,45),
-        B(670,220,60,50,45),
-        B(730,220,60,50,45),
-
-        B(640,170,60,50,45),
-        B(700,170,60,50,45),
-
-        B(670,120,60,50,45)
-    ],
-    targets:[
-        T(700,75,25),
-        T(460,350,23),
-        T(850,350,23),
-        T(670,275,20)
-    ]
-},
-
-{
-    level:68,
-    world:9,
-    target:680000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(320,470,60,50,45),
-        B(380,470,60,50,45),
-        B(440,470,60,50,45),
-        B(500,470,60,50,45),
-        B(560,470,60,50,45),
-        B(620,470,60,50,45),
-        B(680,470,60,50,45),
-        B(740,470,60,50,45),
-        B(800,470,60,50,45),
-        B(860,470,60,50,45),
-        B(920,470,60,50,45),
-        B(980,470,60,50,45),
-
-        B(350,420,60,50,45),
-        B(410,420,60,50,45),
-        B(470,420,60,50,45),
-        B(530,420,60,50,45),
-        B(590,420,60,50,45),
-        B(650,420,60,50,45),
-        B(710,420,60,50,45),
-        B(770,420,60,50,45),
-        B(830,420,60,50,45),
-        B(890,420,60,50,45),
-        B(950,420,60,50,45),
-
-        B(410,370,60,50,46),
-        B(470,370,60,50,46),
-        B(530,370,60,50,46),
-        B(590,370,60,50,46),
-        B(650,370,60,50,46),
-        B(710,370,60,50,46),
-        B(770,370,60,50,46),
-        B(830,370,60,50,46),
-        B(890,370,60,50,46),
-
-        B(470,320,60,50,46),
-        B(530,320,60,50,46),
-        B(590,320,60,50,46),
-        B(650,320,60,50,46),
-        B(710,320,60,50,46),
-        B(770,320,60,50,46),
-        B(830,320,60,50,46),
-
-        B(530,270,60,50,46),
-        B(590,270,60,50,46),
-        B(650,270,60,50,46),
-        B(710,270,60,50,46),
-        B(770,270,60,50,46),
-
-        B(590,220,60,50,46),
-        B(650,220,60,50,46),
-        B(710,220,60,50,46),
-        B(770,220,60,50,46),
-
-        B(650,170,60,50,46),
-        B(710,170,60,50,46),
-
-        B(680,120,60,50,46)
-    ],
-    targets:[
-        T(710,75,26),
-        T(440,350,24),
-        T(850,350,24),
-        T(680,275,21)
-    ]
-},
-
-{
-    level:69,
-    world:9,
-    target:720000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(300,470,60,50,46),
-        B(360,470,60,50,46),
-        B(420,470,60,50,46),
-        B(480,470,60,50,46),
-        B(540,470,60,50,46),
-        B(600,470,60,50,46),
-        B(660,470,60,50,46),
-        B(720,470,60,50,46),
-        B(780,470,60,50,46),
-        B(840,470,60,50,46),
-        B(900,470,60,50,46),
-        B(960,470,60,50,46),
-
-        B(330,420,60,50,46),
-        B(390,420,60,50,46),
-        B(450,420,60,50,46),
-        B(510,420,60,50,46),
-        B(570,420,60,50,46),
-        B(630,420,60,50,46),
-        B(690,420,60,50,46),
-        B(750,420,60,50,46),
-        B(810,420,60,50,46),
-        B(870,420,60,50,46),
-        B(930,420,60,50,46),
-
-        B(390,370,60,50,47),
-        B(450,370,60,50,47),
-        B(510,370,60,50,47),
-        B(570,370,60,50,47),
-        B(630,370,60,50,47),
-        B(690,370,60,50,47),
-        B(750,370,60,50,47),
-        B(810,370,60,50,47),
-        B(870,370,60,50,47),
-
-        B(450,320,60,50,47),
-        B(510,320,60,50,47),
-        B(570,320,60,50,47),
-        B(630,320,60,50,47),
-        B(690,320,60,50,47),
-        B(750,320,60,50,47),
-        B(810,320,60,50,47),
-
-        B(510,270,60,50,47),
-        B(570,270,60,50,47),
-        B(630,270,60,50,47),
-        B(690,270,60,50,47),
-        B(750,270,60,50,47),
-
-        B(570,220,60,50,47),
-        B(630,220,60,50,47),
-        B(690,220,60,50,47),
-        B(750,220,60,50,47),
-
-        B(630,170,60,50,47),
-        B(690,170,60,50,47),
-
-        B(660,120,60,50,47)
-    ],
-    targets:[
-        T(690,75,27),
-        T(420,350,25),
-        T(850,350,25),
-        T(660,275,22)
-    ]
-},
-
-{
-    level:70,
-    world:9,
-    target:800000,
-    shots:2,
-    bulldogs:["coco","max"],
-    blocks:[
-        B(280,470,60,50,48),
-        B(340,470,60,50,48),
-        B(400,470,60,50,48),
-        B(460,470,60,50,48),
-        B(520,470,60,50,48),
-        B(580,470,60,50,48),
-        B(640,470,60,50,48),
-        B(700,470,60,50,48),
-        B(760,470,60,50,48),
-        B(820,470,60,50,48),
-        B(880,470,60,50,48),
-        B(940,470,60,50,48),
-        B(1000,470,60,50,48),
-
-        B(310,420,60,50,48),
-        B(370,420,60,50,48),
-        B(430,420,60,50,48),
-        B(490,420,60,50,48),
-        B(550,420,60,50,48),
-        B(610,420,60,50,48),
-        B(670,420,60,50,48),
-        B(730,420,60,50,48),
-        B(790,420,60,50,48),
-        B(850,420,60,50,48),
-        B(910,420,60,50,48),
-        B(970,420,60,50,48),
-
-        B(370,370,60,50,49),
-        B(430,370,60,50,49),
-        B(490,370,60,50,49),
-        B(550,370,60,50,49),
-        B(610,370,60,50,49),
-        B(670,370,60,50,49),
-        B(730,370,60,50,49),
-        B(790,370,60,50,49),
-        B(850,370,60,50,49),
-        B(910,370,60,50,49),
-
-        B(430,320,60,50,49),
-        B(490,320,60,50,49),
-        B(550,320,60,50,49),
-        B(610,320,60,50,49),
-        B(670,320,60,50,49),
-        B(730,320,60,50,49),
-        B(790,320,60,50,49),
-        B(850,320,60,50,49),
-
-        B(490,270,60,50,49),
-        B(550,270,60,50,49),
-        B(610,270,60,50,49),
-        B(670,270,60,50,49),
-        B(730,270,60,50,49),
-        B(790,270,60,50,49),
-
-        B(550,220,60,50,49),
-        B(610,220,60,50,49),
-        B(670,220,60,50,49),
-        B(730,220,60,50,49),
-        B(790,220,60,50,49),
-
-        B(610,170,60,50,49),
-        B(670,170,60,50,49),
-        B(730,170,60,50,49),
-
-        B(640,120,60,50,49),
-        B(700,120,60,50,49),
-
-        B(670,70,60,50,49)
-    ],
-    targets:[
-        T(700,25,30),
-        T(400,350,27),
-        T(850,350,27),
-        T(670,270,24),
-        T(750,320,20)
-    ]
-}
-
-];
-
-
-/* =========================================================
-   BULLDOGGEN
-   ========================================================= */
-
-const bulldogInfo = {
-
-    bruno: {
-        name:"Bruno",
-        color:"#b9a99a",
-        power:1
-    },
-
-    rocky: {
-        name:"Rocky",
-        color:"#999",
-        power:1.2
-    },
-
-    luna: {
-        name:"Luna",
-        color:"#d2bfae",
-        power:1
-    },
-
-    tyson: {
-        name:"Tyson",
-        color:"#777",
-        power:1.35
-    },
-
-    coco: {
-        name:"Coco",
-        color:"#c7b39e",
-        power:1.5
-    },
-
-    max: {
-        name:"Max",
-        color:"#555",
-        power:2
-    }
-
+let moves = 0;
+let locked = false;
+
+let collected = {
+    "🐶": 0,
+    "🐾": 0,
+    "🦴": 0,
+    "🎾": 0,
+    "❤️": 0,
+    "🎀": 0
 };
 
 
 /* =========================================================
-   LEVEL LADEN
+   70 LEVEL
+   JEDES LEVEL IST EIN EIGENER EINTRAG
    ========================================================= */
 
-function loadLevel(number) {
+const levels = [
 
-    const data = levels[number - 1];
+{level:1,target:800,moves:30,type:"score",map:0},
+{level:2,target:1100,moves:30,type:"score",map:0},
+{level:3,target:1400,moves:29,type:"score",map:0},
+{level:4,target:1800,moves:28,type:"score",map:0},
+{level:5,target:2200,moves:28,type:"score",map:1},
 
-    if (!data) return;
+{level:6,target:2600,moves:27,type:"score",map:1},
+{level:7,target:3000,moves:27,type:"score",map:1},
+{level:8,target:3400,moves:26,type:"score",map:1},
+{level:9,target:3800,moves:25,type:"score",map:1},
+{level:10,target:4300,moves:25,type:"score",map:2},
 
-    currentLevel = number;
+{level:11,target:4700,moves:25,type:"score",map:2},
+{level:12,target:5200,moves:24,type:"score",map:2},
+{level:13,target:5700,moves:24,type:"score",map:2},
+{level:14,target:6200,moves:23,type:"score",map:2},
+{level:15,target:6800,moves:23,type:"score",map:3},
+
+{level:16,target:7300,moves:23,type:"score",map:3},
+{level:17,target:7900,moves:22,type:"score",map:3},
+{level:18,target:8500,moves:22,type:"score",map:3},
+{level:19,target:9200,moves:21,type:"score",map:3},
+{level:20,target:10000,moves:21,type:"score",map:4},
+
+{level:21,target:10800,moves:21,type:"score",map:4},
+{level:22,target:11600,moves:20,type:"score",map:4},
+{level:23,target:12400,moves:20,type:"score",map:4},
+{level:24,target:13200,moves:19,type:"score",map:4},
+{level:25,target:14000,moves:19,type:"score",map:5},
+
+{level:26,target:15000,moves:19,type:"score",map:5},
+{level:27,target:16000,moves:18,type:"score",map:5},
+{level:28,target:17000,moves:18,type:"score",map:5},
+{level:29,target:18000,moves:17,type:"score",map:5},
+{level:30,target:19000,moves:17,type:"score",map:6},
+
+{level:31,target:20000,moves:17,type:"score",map:6},
+{level:32,target:21200,moves:16,type:"score",map:6},
+{level:33,target:22400,moves:16,type:"score",map:6},
+{level:34,target:23600,moves:16,type:"score",map:6},
+{level:35,target:24800,moves:15,type:"score",map:7},
+
+{level:36,target:26000,moves:15,type:"score",map:7},
+{level:37,target:27200,moves:15,type:"score",map:7},
+{level:38,target:28500,moves:14,type:"score",map:7},
+{level:39,target:29800,moves:14,type:"score",map:7},
+{level:40,target:31000,moves:14,type:"score",map:8},
+
+{level:41,target:32500,moves:14,type:"score",map:8},
+{level:42,target:34000,moves:13,type:"score",map:8},
+{level:43,target:35500,moves:13,type:"score",map:8},
+{level:44,target:37000,moves:13,type:"score",map:8},
+{level:45,target:38500,moves:12,type:"score",map:9},
+
+{level:46,target:40000,moves:12,type:"score",map:9},
+{level:47,target:42000,moves:12,type:"score",map:9},
+{level:48,target:44000,moves:11,type:"score",map:9},
+{level:49,target:46000,moves:11,type:"score",map:9},
+{level:50,target:48000,moves:11,type:"score",map:10},
+
+{level:51,target:50000,moves:11,type:"score",map:10},
+{level:52,target:52500,moves:10,type:"score",map:10},
+{level:53,target:55000,moves:10,type:"score",map:10},
+{level:54,target:57500,moves:10,type:"score",map:10},
+{level:55,target:60000,moves:9,type:"score",map:11},
+
+{level:56,target:62500,moves:9,type:"score",map:11},
+{level:57,target:65000,moves:9,type:"score",map:11},
+{level:58,target:67500,moves:9,type:"score",map:11},
+{level:59,target:70000,moves:8,type:"score",map:11},
+{level:60,target:72500,moves:8,type:"score",map:12},
+
+{level:61,target:75000,moves:8,type:"score",map:12},
+{level:62,target:78000,moves:8,type:"score",map:12},
+{level:63,target:81000,moves:7,type:"score",map:12},
+{level:64,target:84000,moves:7,type:"score",map:12},
+{level:65,target:87000,moves:7,type:"score",map:13},
+
+{level:66,target:90000,moves:7,type:"score",map:13},
+{level:67,target:93000,moves:6,type:"score",map:13},
+{level:68,target:96000,moves:6,type:"score",map:13},
+{level:69,target:99000,moves:6,type:"score",map:13},
+{level:70,target:105000,moves:6,type:"score",map:14}
+
+];
+
+
+/* =========================================================
+   KARTEN
+   0 = normale Karte
+   X = Block
+   I = Eis
+   ========================================================= */
+
+const maps = [
+
+[
+"........",
+"........",
+"........",
+"........",
+"........",
+"........",
+"........",
+"........"
+],
+
+[
+"........",
+"..XXXX..",
+"........",
+"........",
+"........",
+"........",
+"..XXXX..",
+"........"
+],
+
+[
+".XXXXXX.",
+"........",
+"........",
+"........",
+"........",
+"........",
+"........",
+".XXXXXX."
+],
+
+[
+"........",
+"...XX...",
+"..XXXX..",
+".XXXXXX.",
+".XXXXXX.",
+"..XXXX..",
+"...XX...",
+"........"
+],
+
+[
+"..XX....",
+"..XX....",
+"........",
+"....XX..",
+"....XX..",
+"........",
+"..XX....",
+"..XX...."
+],
+
+[
+"........",
+".XX..XX.",
+".XX..XX.",
+"........",
+"........",
+".XX..XX.",
+".XX..XX.",
+"........"
+],
+
+[
+"...XX...",
+"...XX...",
+".XX..XX.",
+".XX..XX.",
+".XX..XX.",
+".XX..XX.",
+"...XX...",
+"...XX..."
+],
+
+[
+"........",
+"..XXXX..",
+".X....X.",
+".X....X.",
+".X....X.",
+".X....X.",
+"..XXXX..",
+"........"
+],
+
+[
+"X......X",
+".X....X.",
+"..X..X..",
+"...XX...",
+"...XX...",
+"..X..X..",
+".X....X.",
+"X......X"
+],
+
+[
+"........",
+".XXXXXX.",
+".X....X.",
+".X....X.",
+".X....X.",
+".X....X.",
+".XXXXXX.",
+"........"
+],
+
+[
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X"
+],
+
+[
+"..XXXX..",
+".X....X.",
+"X......X",
+"........",
+"........",
+"X......X",
+".X....X.",
+"..XXXX.."
+],
+
+[
+"X......X",
+"X.XXXX.X",
+"X.X..X.X",
+"X.X..X.X",
+"X.X..X.X",
+"X.X..X.X",
+"X.XXXX.X",
+"X......X"
+],
+
+[
+".XXXXXX.",
+"X......X",
+"X.XXXX.X",
+"X.X..X.X",
+"X.X..X.X",
+"X.XXXX.X",
+"X......X",
+".XXXXXX."
+],
+
+[
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X",
+"X.X.X.X.",
+".X.X.X.X"
+]
+
+];
+
+
+/* =========================================================
+   HILFSFUNKTIONEN
+   ========================================================= */
+
+function getLevelData() {
+    return levels[currentLevel - 1];
+}
+
+function isBlocked(r,c) {
+    return maps[getLevelData().map][r][c] === "X";
+}
+
+function isIce(r,c) {
+    return maps[getLevelData().map][r][c] === "I";
+}
+
+function randomSymbol() {
+    return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function createTile() {
+    return {
+        symbol: randomSymbol(),
+        special: null
+    };
+}
+
+
+/* =========================================================
+   SPIEL STARTEN
+   ========================================================= */
+
+function startLevel() {
+
+    const data = getLevelData();
 
     score = 0;
+    moves = data.moves;
+    selected = null;
+    locked = false;
 
-    shotsLeft = data.shots;
+    for (const key in collected) {
+        collected[key] = 0;
+    }
 
-    blocks = data.blocks.map(b => ({
-        ...b
-    }));
+    createBoard();
 
-    targets = data.targets.map(t => ({
-        ...t
-    }));
+    /*
+       Solange zufällig erzeugte Steine bereits
+       Kombinationen enthalten, wird neu erzeugt.
+    */
+    let safety = 0;
 
-    particles = [];
+    while (findMatches().length > 0 && safety < 100) {
+        createBoard();
+        safety++;
+    }
 
-    bulldogs = data.bulldogs.map(type => ({
-        type:type,
-        used:false
-    }));
-
-    currentBulldog = null;
-
-    dragging = false;
-
-    gameOver = false;
-    levelFinished = false;
-
-    document.getElementById("message")
-        .style.display = "none";
-
-    updateInterface();
-
-    prepareNextBulldog();
-
+    updateUI();
 }
 
 
 /* =========================================================
-   NÄCHSTE BULLDOGGE
+   SPIELBRETT ERZEUGEN
    ========================================================= */
 
-function prepareNextBulldog() {
+function createBoard() {
 
-    if (shotsLeft <= 0) {
-        currentBulldog = null;
-        return;
+    board = [];
+
+    for (let r = 0; r < SIZE; r++) {
+
+        board[r] = [];
+
+        for (let c = 0; c < SIZE; c++) {
+
+            if (isBlocked(r,c)) {
+                board[r][c] = null;
+            } else {
+
+                board[r][c] = createTile();
+
+            }
+        }
     }
 
-    const available =
-        bulldogs.find(b => !b.used);
-
-    if (!available) {
-        currentBulldog = null;
-        return;
-    }
-
-    currentBulldog = {
-
-        x:150,
-        y:470,
-
-        vx:0,
-        vy:0,
-
-        radius:27,
-
-        type:available.type,
-
-        active:false,
-
-        used:false
-
-    };
-
+    renderBoard();
 }
 
 
 /* =========================================================
-   BULLDOGGE ZEICHNEN
+   BOARD DARSTELLEN
    ========================================================= */
 
-function drawBulldog(b) {
+function renderBoard() {
 
-    if (!b) return;
+    const boardElement = document.getElementById("board");
 
-    ctx.save();
+    boardElement.innerHTML = "";
 
-    ctx.translate(b.x,b.y);
+    for (let r = 0; r < SIZE; r++) {
 
-    const info =
-        bulldogInfo[b.type];
+        for (let c = 0; c < SIZE; c++) {
 
-    ctx.fillStyle =
-        info.color;
+            const cell = document.createElement("div");
 
-    /* Körper */
+            cell.className = "cell";
 
-    ctx.beginPath();
+            if (isBlocked(r,c)) {
 
-    ctx.ellipse(
-        0,
-        8,
-        28,
-        21,
-        0,
-        0,
-        Math.PI * 2
-    );
+                cell.classList.add("blocked");
 
-    ctx.fill();
+            } else {
 
-    /* Kopf */
+                if (isIce(r,c)) {
+                    cell.classList.add("ice");
+                }
 
-    ctx.beginPath();
+                if (board[r][c]) {
 
-    ctx.arc(
-        0,
-        -14,
-        25,
-        0,
-        Math.PI * 2
-    );
+                    const tile = document.createElement("div");
 
-    ctx.fill();
+                    tile.className = "tile";
 
-    /* Ohren */
+                    if (board[r][c].special === "row") {
+                        tile.classList.add("special-row");
+                    }
 
-    ctx.fillStyle =
-        "#555";
+                    if (board[r][c].special === "bomb") {
+                        tile.classList.add("special-bomb");
+                    }
 
-    ctx.beginPath();
+                    if (board[r][c].special === "color") {
+                        tile.classList.add("special-color");
+                    }
 
-    ctx.moveTo(-18,-29);
-    ctx.lineTo(-30,-48);
-    ctx.lineTo(-7,-37);
+                    tile.textContent = board[r][c].special
+                        ? specialIcon(board[r][c].special)
+                        : board[r][c].symbol;
 
-    ctx.fill();
+                    if (
+                        selected &&
+                        selected.r === r &&
+                        selected.c === c
+                    ) {
+                        tile.classList.add("selected");
+                    }
 
-    ctx.beginPath();
+                    cell.appendChild(tile);
+                }
 
-    ctx.moveTo(18,-29);
-    ctx.lineTo(30,-48);
-    ctx.lineTo(7,-37);
+                cell.addEventListener("click", () => selectCell(r,c));
+            }
 
-    ctx.fill();
-
-    /* Augen */
-
-    ctx.fillStyle =
-        "#111";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        -9,
-        -17,
-        5,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    ctx.beginPath();
-
-    ctx.arc(
-        9,
-        -17,
-        5,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    /* Nase */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        -6,
-        7,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    /* Spezialanzeige */
-
-    if (b.type === "rocky") {
-
-        ctx.strokeStyle="#fff";
-        ctx.lineWidth=3;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            0,
-            34,
-            0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
+            boardElement.appendChild(cell);
+        }
     }
-
-    if (b.type === "tyson") {
-
-        ctx.strokeStyle="#ff4444";
-        ctx.lineWidth=4;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            0,
-            34,
-            0,
-            Math.PI*2
-        );
-
-        ctx.stroke();
-
-    }
-
-    if (b.type === "coco") {
-
-        ctx.fillStyle="#ffd83d";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            -52,
-            7,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-    if (b.type === "max") {
-
-        ctx.strokeStyle="#ffffff";
-        ctx.lineWidth=4;
-
-        ctx.strokeRect(
-            -29,
-            -43,
-            58,
-            70
-        );
-
-    }
-
-    ctx.restore();
-
 }
 
 
 /* =========================================================
-   HINTERGRÜNDE
+   SPEZIALSTEINE
    ========================================================= */
 
-function drawBackground(world) {
+function specialIcon(type) {
 
-    ctx.fillStyle =
-        world.sky;
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* Garten */
-
-    if (world.name === "Garten") {
-
-        ctx.fillStyle="#4d923d";
-
-        for(let i=0;i<8;i++) {
-
-            ctx.beginPath();
-
-            ctx.arc(
-                80+i*160,
-                480,
-                65,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fill();
-
-        }
-
+    if (type === "row") {
+        return "🐶↔️";
     }
 
-
-    /* Bauernhof */
-
-    if (world.name === "Bauernhof") {
-
-        ctx.fillStyle="#bd3535";
-
-        ctx.fillRect(
-            900,
-            280,
-            190,
-            190
-        );
-
-        ctx.beginPath();
-
-        ctx.moveTo(870,280);
-        ctx.lineTo(995,190);
-        ctx.lineTo(1120,280);
-
-        ctx.fill();
-
+    if (type === "bomb") {
+        return "💣🐶";
     }
 
-
-    /* Stadt */
-
-    if (world.name === "Stadt") {
-
-        ctx.fillStyle="#4b4b4b";
-
-        for(let i=0;i<8;i++) {
-
-            let height =
-                130+(i*43)%230;
-
-            ctx.fillRect(
-                i*160,
-                520-height,
-                115,
-                height
-            );
-
-        }
-
+    if (type === "color") {
+        return "🌈🐶";
     }
 
-
-    /* Strand */
-
-    if (world.name === "Strand") {
-
-        ctx.fillStyle="#34a9c5";
-
-        ctx.fillRect(
-            0,
-            390,
-            W,
-            130
-        );
-
-        ctx.fillStyle="#dbb86c";
-
-        for(let i=0;i<5;i++) {
-
-            ctx.beginPath();
-
-            ctx.arc(
-                120+i*240,
-                480,
-                55,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fill();
-
-        }
-
-    }
-
-
-    /* Wald */
-
-    if (world.name === "Wald") {
-
-        for(let i=0;i<10;i++) {
-
-            ctx.fillStyle="#3d713d";
-
-            ctx.fillRect(
-                i*130+30,
-                340,
-                25,
-                180
-            );
-
-            ctx.beginPath();
-
-            ctx.arc(
-                i*130+40,
-                320,
-                65,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fill();
-
-        }
-
-    }
-
-
-    /* Berge */
-
-    if (world.name === "Berge") {
-
-        ctx.fillStyle="#707070";
-
-        ctx.beginPath();
-
-        ctx.moveTo(0,450);
-        ctx.lineTo(190,170);
-        ctx.lineTo(380,450);
-        ctx.lineTo(620,120);
-        ctx.lineTo(880,450);
-        ctx.lineTo(1100,170);
-        ctx.lineTo(1200,300);
-        ctx.lineTo(1200,520);
-        ctx.lineTo(0,520);
-
-        ctx.fill();
-
-    }
-
-
-    /* Schnee */
-
-    if (world.name === "Schnee") {
-
-        ctx.fillStyle="#fff";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            1030,
-            100,
-            55,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-
-    /* Vulkan */
-
-    if (world.name === "Vulkan") {
-
-        ctx.fillStyle="#7d2720";
-
-        ctx.beginPath();
-
-        ctx.moveTo(750,520);
-        ctx.lineTo(930,190);
-        ctx.lineTo(1120,520);
-
-        ctx.fill();
-
-        ctx.fillStyle="#ff6b16";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            930,
-            260,
-            45,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-
-    /* Nachtstadt */
-
-    if (world.name === "Nachtstadt") {
-
-        ctx.fillStyle="#fff";
-
-        for(let i=0;i<80;i++) {
-
-            ctx.fillRect(
-                (i*73)%1200,
-                (i*41)%350,
-                3,
-                3
-            );
-
-        }
-
-        ctx.fillStyle="#333955";
-
-        for(let i=0;i<8;i++) {
-
-            ctx.fillRect(
-                i*160,
-                300-(i*23%120),
-                110,
-                220
-            );
-
-        }
-
-    }
-
-
-    /* Mondstation */
-
-    if (world.name === "Mondstation") {
-
-        ctx.fillStyle="#aaa";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            1000,
-            150,
-            110,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-        ctx.fillStyle="#111";
-
-        for(let i=0;i<10;i++) {
-
-            ctx.beginPath();
-
-            ctx.arc(
-                950+(i*37)%90,
-                100+(i*29)%100,
-                8,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fill();
-
-        }
-
-    }
-
-
-    /* Boden */
-
-    ctx.fillStyle =
-        world.ground;
-
-    ctx.fillRect(
-        0,
-        520,
-        W,
-        130
-    );
-
-
-    /* Schleuder */
-
-    ctx.strokeStyle="#654321";
-    ctx.lineWidth=9;
-
-    ctx.beginPath();
-
-    ctx.moveTo(125,515);
-    ctx.lineTo(125,450);
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    ctx.moveTo(175,515);
-    ctx.lineTo(175,450);
-
-    ctx.stroke();
-
+    return "🐶";
 }
 
 
 /* =========================================================
-   BLÖCKE
+   FELD AUSWÄHLEN
    ========================================================= */
 
-function drawBlock(b) {
+function selectCell(r,c) {
 
-    if (b.hp <= 0)
+    if (locked || isBlocked(r,c) || !board[r][c]) {
         return;
-
-    let color="#a66b3f";
-
-    if (b.type === "stone")
-        color="#777";
-
-    if (b.type === "ice")
-        color="#9de6ff";
-
-    if (b.hp >= 20)
-        color="#555";
-
-    ctx.fillStyle =
-        color;
-
-    ctx.fillRect(
-        b.x,
-        b.y,
-        b.w,
-        b.h
-    );
-
-    ctx.strokeStyle="#222";
-    ctx.lineWidth=2;
-
-    ctx.strokeRect(
-        b.x,
-        b.y,
-        b.w,
-        b.h
-    );
-
-    /* Rissanzeige */
-
-    if (b.hp > 5) {
-
-        ctx.strokeStyle =
-            "rgba(255,255,255,.18)";
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            b.x+10,
-            b.y+10
-        );
-
-        ctx.lineTo(
-            b.x+b.w-10,
-            b.y+b.h-10
-        );
-
-        ctx.stroke();
-
     }
 
+    if (!selected) {
+
+        selected = {r,c};
+        renderBoard();
+        return;
+    }
+
+    if (selected.r === r && selected.c === c) {
+
+        selected = null;
+        renderBoard();
+        return;
+    }
+
+    if (isAdjacent(selected.r,selected.c,r,c)) {
+
+        swapTiles(
+            selected.r,
+            selected.c,
+            r,
+            c
+        );
+
+        selected = null;
+
+    } else {
+
+        selected = {r,c};
+        renderBoard();
+    }
 }
 
 
 /* =========================================================
-   ZIELE
+   NACHBARSCHAFT
    ========================================================= */
 
-function drawTarget(t) {
-
-    if (!t.alive)
-        return;
-
-    ctx.fillStyle="#ffd43b";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        t.x,
-        t.y,
-        t.r,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.strokeStyle="#222";
-    ctx.lineWidth=3;
-
-    ctx.stroke();
-
-    ctx.fillStyle="#222";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        t.x,
-        t.y,
-        7,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-}
-
-
-/* =========================================================
-   ZIELEN
-   ========================================================= */
-
-function getPointerPosition(e) {
-
-    const rect =
-        canvas.getBoundingClientRect();
-
-    return {
-
-        x:
-            (e.clientX - rect.left)
-            * W / rect.width,
-
-        y:
-            (e.clientY - rect.top)
-            * H / rect.height
-
-    };
-
-}
-
-
-canvas.addEventListener(
-    "pointerdown",
-    startDrag
-);
-
-canvas.addEventListener(
-    "pointermove",
-    moveDrag
-);
-
-canvas.addEventListener(
-    "pointerup",
-    releaseDrag
-);
-
-canvas.addEventListener(
-    "pointercancel",
-    releaseDrag
-);
-
-
-function startDrag(e) {
-
-    if (
-        gameOver ||
-        levelFinished ||
-        !currentBulldog ||
-        currentBulldog.active ||
-        currentBulldog.used
-    )
-        return;
-
-    const p =
-        getPointerPosition(e);
-
-    const distance =
-        Math.hypot(
-            p.x-currentBulldog.x,
-            p.y-currentBulldog.y
-        );
-
-    if(distance < 55) {
-
-        dragging=true;
-
-        canvas.setPointerCapture(
-            e.pointerId
-        );
-
-    }
-
-}
-
-
-function moveDrag(e) {
-
-    if(!dragging)
-        return;
-
-    const p =
-        getPointerPosition(e);
-
-    let dx =
-        p.x-150;
-
-    let dy =
-        p.y-470;
-
-    const maxPull=130;
-
-    const distance =
-        Math.hypot(dx,dy);
-
-    if(distance > maxPull) {
-
-        dx =
-            dx/distance*maxPull;
-
-        dy =
-            dy/distance*maxPull;
-
-    }
-
-    currentBulldog.x =
-        150+dx;
-
-    currentBulldog.y =
-        470+dy;
-
-}
-
-
-function releaseDrag() {
-
-    if(!dragging)
-        return;
-
-    dragging=false;
-
-    if(!currentBulldog)
-        return;
-
-    currentBulldog.vx =
-        (150-currentBulldog.x)
-        *0.115;
-
-    currentBulldog.vy =
-        (470-currentBulldog.y)
-        *0.115;
-
-    currentBulldog.active=true;
-
-    currentBulldog.used=true;
-
-    shotsLeft--;
-
-    const used =
-        bulldogs.find(
-            b => b.type === currentBulldog.type &&
-                 !b.used
-        );
-
-    if(used)
-        used.used=true;
-
-    updateInterface();
-
-}
-
-
-/* =========================================================
-   KOLLISION
-   ========================================================= */
-
-function circleRectCollision(circle,rect) {
-
-    const closestX =
-        Math.max(
-            rect.x,
-            Math.min(
-                circle.x,
-                rect.x+rect.w
-            )
-        );
-
-    const closestY =
-        Math.max(
-            rect.y,
-            Math.min(
-                circle.y,
-                rect.y+rect.h
-            )
-        );
-
-    const dx =
-        circle.x-closestX;
-
-    const dy =
-        circle.y-closestY;
+function isAdjacent(r1,c1,r2,c2) {
 
     return (
-        dx*dx+
-        dy*dy
-        <
-        circle.radius*
-        circle.radius
-    );
-
+        Math.abs(r1-r2) +
+        Math.abs(c1-c2)
+    ) === 1;
 }
 
 
 /* =========================================================
-   EXPLOSION
+   TAUSCHEN
    ========================================================= */
 
-function explosion(x,y,big=false) {
+async function swapTiles(r1,c1,r2,c2) {
 
-    const amount =
-        big ? 35 : 15;
+    locked = true;
 
-    for(let i=0;i<amount;i++) {
+    const temp = board[r1][c1];
 
-        particles.push({
+    board[r1][c1] = board[r2][c2];
 
-            x:x,
-            y:y,
+    board[r2][c2] = temp;
 
-            vx:
-                (Math.random()-.5)
-                * (big ? 10 : 6),
+    renderBoard();
 
-            vy:
-                (Math.random()-.5)
-                * (big ? 10 : 6),
+    await sleep(130);
 
-            size:
-                3+
-                Math.random()*5,
+    let matches = findMatches();
 
-            life:
-                30+
-                Math.random()*30
+    if (matches.length === 0) {
 
-        });
+        const specialMove =
+            activateSpecialIfNeeded(r1,c1,r2,c2);
 
+        if (!specialMove) {
+
+            const temp2 = board[r1][c1];
+
+            board[r1][c1] = board[r2][c2];
+
+            board[r2][c2] = temp2;
+
+            renderBoard();
+
+            locked = false;
+
+            document.getElementById("message").textContent =
+                "❌ Keine Kombination!";
+            
+            return;
+        }
     }
 
-    cameraShake =
-        big ? 10 : 5;
+    moves--;
 
+    await processMatches();
+
+    locked = false;
+
+    updateUI();
+
+    checkLevelEnd();
 }
 
 
 /* =========================================================
-   PHYSIK
+   SPEZIALSTEIN AKTIVIEREN
    ========================================================= */
 
-function updatePhysics() {
+function activateSpecialIfNeeded(r1,c1,r2,c2) {
 
-    if(
-        currentBulldog &&
-        currentBulldog.active
-    ) {
+    let activated = false;
 
-        let power =
-            bulldogInfo[
-                currentBulldog.type
-            ].power;
+    const a = board[r1][c1];
+    const b = board[r2][c2];
 
-        currentBulldog.vy +=
-            0.34;
+    if (a && a.special) {
 
-        currentBulldog.x +=
-            currentBulldog.vx;
+        triggerSpecial(r1,c1);
+        activated = true;
+    }
 
-        currentBulldog.y +=
-            currentBulldog.vy;
+    if (b && b.special) {
 
+        triggerSpecial(r2,c2);
+        activated = true;
+    }
 
-        /* Coco kann Flugbahn verändern */
-
-        if(
-            currentBulldog.type === "coco" &&
-            currentBulldog.x > 650
-        ) {
-
-            currentBulldog.vy -=
-                0.018 * power;
-
-        }
+    return activated;
+}
 
 
-        /* Max ist schwerer */
+function triggerSpecial(r,c) {
 
-        if(
-            currentBulldog.type === "max"
-        ) {
+    const tile = board[r][c];
 
-            currentBulldog.vy +=
-                0.08;
+    if (!tile) return;
 
-        }
+    if (tile.special === "row") {
 
+        for (let x = 0; x < SIZE; x++) {
 
-        /* Ziel treffen */
+            if (board[r][x]) {
 
-        targets.forEach(t => {
+                addScore(120);
 
-            if(!t.alive)
-                return;
-
-            const d =
-                Math.hypot(
-                    currentBulldog.x-t.x,
-                    currentBulldog.y-t.y
-                );
-
-            if(
-                d <
-                currentBulldog.radius+t.r
-            ) {
-
-                t.hp--;
-
-                score +=
-                    1000+
-                    currentLevel*50;
-
-                explosion(
-                    t.x,
-                    t.y,
-                    true
-                );
-
-                if(t.hp <= 0) {
-
-                    t.alive=false;
-
-                    score +=
-                        2500+
-                        currentLevel*100;
-
+                if (board[r][x].symbol) {
+                    collected[board[r][x].symbol]++;
                 }
 
-                /* Tyson / Coco / Max */
+                board[r][x] = null;
+            }
+        }
+    }
 
-                if(
-                    currentBulldog.type === "tyson" ||
-                    currentBulldog.type === "max"
+    else if (tile.special === "bomb") {
+
+        for (let y = r-1; y <= r+1; y++) {
+
+            for (let x = c-1; x <= c+1; x++) {
+
+                if (
+                    y >= 0 &&
+                    y < SIZE &&
+                    x >= 0 &&
+                    x < SIZE &&
+                    board[y][x]
                 ) {
 
-                    blocks.forEach(b => {
+                    addScore(150);
 
-                        if(b.hp <= 0)
-                            return;
+                    if (board[y][x].symbol) {
+                        collected[board[y][x].symbol]++;
+                    }
 
-                        const bd =
-                            Math.hypot(
-                                currentBulldog.x -
-                                (b.x+b.w/2),
-
-                                currentBulldog.y -
-                                (b.y+b.h/2)
-                            );
-
-                        if(bd < 150) {
-
-                            b.hp -=
-                                currentBulldog.type === "max"
-                                ? 3
-                                : 2;
-
-                        }
-
-                    });
-
+                    board[y][x] = null;
                 }
+            }
+        }
+    }
 
+    else if (tile.special === "color") {
+
+        const target = tile.symbol;
+
+        for (let y = 0; y < SIZE; y++) {
+
+            for (let x = 0; x < SIZE; x++) {
+
+                if (
+                    board[y][x] &&
+                    board[y][x].symbol === target
+                ) {
+
+                    addScore(180);
+
+                    collected[target]++;
+
+                    board[y][x] = null;
+                }
+            }
+        }
+    }
+
+    board[r][c] = null;
+}
+
+
+/* =========================================================
+   MATCHES FINDEN
+   ========================================================= */
+
+function findMatches() {
+
+    const matches = [];
+
+    /* horizontal */
+
+    for (let r = 0; r < SIZE; r++) {
+
+        let start = 0;
+
+        for (let c = 1; c <= SIZE; c++) {
+
+            const current =
+                c < SIZE &&
+                board[r][c] &&
+                board[r][c].symbol;
+
+            const previous =
+                board[r][c-1] &&
+                board[r][c-1].symbol;
+
+            if (
+                c < SIZE &&
+                current &&
+                current === previous
+            ) {
+                continue;
             }
 
-        });
+            const length = c - start;
 
-
-        /* Block treffen */
-
-        blocks.forEach(b => {
-
-            if(b.hp <= 0)
-                return;
-
-            if(
-                circleRectCollision(
-                    currentBulldog,
-                    b
-                )
+            if (
+                length >= 3 &&
+                previous
             ) {
 
-                b.hp -=
-                    Math.max(
-                        1,
-                        Math.round(power)
-                    );
-
-                score +=
-                    200+
-                    currentLevel*15;
-
-                explosion(
-                    currentBulldog.x,
-                    currentBulldog.y
-                );
-
-                /*
-                   Geschwindigkeit reduzieren
-                */
-
-                currentBulldog.vx *=
-                    -0.55;
-
-                currentBulldog.vy *=
-                    -0.55;
-
+                for (
+                    let x = start;
+                    x < c;
+                    x++
+                ) {
+                    matches.push({
+                        r,
+                        c:x,
+                        length,
+                        direction:"horizontal"
+                    });
+                }
             }
 
-        });
-
-
-        /* Boden */
-
-        if(
-            currentBulldog.y >
-            510
-        ) {
-
-            currentBulldog.y=510;
-
-            currentBulldog.vy *=
-                -0.35;
-
-            currentBulldog.vx *=
-                0.75;
-
-            if(
-                Math.abs(
-                    currentBulldog.vx
-                ) < .6 &&
-                Math.abs(
-                    currentBulldog.vy
-                ) < .6
-            ) {
-
-                currentBulldog.active=false;
-
-                nextShot();
-
-            }
-
+            start = c;
         }
-
-
-        /* außerhalb */
-
-        if(
-            currentBulldog.x >
-            W+100 ||
-            currentBulldog.x <
-            -100 ||
-            currentBulldog.y >
-            H+100
-        ) {
-
-            currentBulldog.active=false;
-
-            nextShot();
-
-        }
-
     }
 
 
-    /* Partikel */
+    /* vertical */
 
-    particles.forEach(p => {
+    for (let c = 0; c < SIZE; c++) {
 
-        p.x += p.vx;
-        p.y += p.vy;
+        let start = 0;
 
-        p.vy += .12;
+        for (let r = 1; r <= SIZE; r++) {
 
-        p.life--;
+            const current =
+                r < SIZE &&
+                board[r][c] &&
+                board[r][c].symbol;
 
+            const previous =
+                board[r-1][c] &&
+                board[r-1][c].symbol;
+
+            if (
+                r < SIZE &&
+                current &&
+                current === previous
+            ) {
+                continue;
+            }
+
+            const length = r - start;
+
+            if (
+                length >= 3 &&
+                previous
+            ) {
+
+                for (
+                    let y = start;
+                    y < r;
+                    y++
+                ) {
+
+                    matches.push({
+                        r:y,
+                        c,
+                        length,
+                        direction:"vertical"
+                    });
+                }
+            }
+
+            start = r;
+        }
+    }
+
+    return uniqueMatches(matches);
+}
+
+
+/* =========================================================
+   DOPPELTE TREFFER ENTFERNEN
+   ========================================================= */
+
+function uniqueMatches(matches) {
+
+    const map = new Map();
+
+    matches.forEach(m => {
+
+        const key = `${m.r}-${m.c}`;
+
+        if (!map.has(key)) {
+            map.set(key,m);
+        }
     });
 
-    particles =
-        particles.filter(
-            p => p.life > 0
-        );
-
-
-    if(cameraShake > 0)
-        cameraShake *= .85;
-
-
-    /* Sieg */
-
-    const remaining =
-        targets.filter(
-            t => t.alive
-        ).length;
-
-    if(
-        remaining === 0 &&
-        !levelFinished
-    ) {
-
-        finishLevel();
-
-    }
-
+    return [...map.values()];
 }
 
 
 /* =========================================================
-   NÄCHSTER SCHUSS
+   MATCHES ABARBEITEN
    ========================================================= */
 
-function nextShot() {
+async function processMatches() {
 
-    if(levelFinished)
-        return;
+    let combo = 0;
 
-    if(shotsLeft > 0) {
+    while (true) {
 
-        prepareNextBulldog();
+        const matches = findMatches();
 
-    }
-    else {
-
-        const remaining =
-            targets.filter(
-                t => t.alive
-            ).length;
-
-        if(remaining > 0) {
-
-            loseLevel();
-
+        if (matches.length === 0) {
+            break;
         }
 
-    }
+        combo++;
 
+        let specialCandidates = [];
+
+        for (const match of matches) {
+
+            const tile = board[match.r][match.c];
+
+            if (!tile) continue;
+
+            if (match.length >= 5) {
+
+                specialCandidates.push({
+                    r:match.r,
+                    c:match.c,
+                    type:"color",
+                    symbol:tile.symbol
+                });
+
+            } else if (match.length === 4) {
+
+                specialCandidates.push({
+                    r:match.r,
+                    c:match.c,
+                    type:
+                        match.direction === "horizontal"
+                        ? "row"
+                        : "bomb",
+                    symbol:tile.symbol
+                });
+            }
+        }
+
+
+        /* Punkte */
+
+        const points =
+            matches.length *
+            100 *
+            combo;
+
+        addScore(points);
+
+
+        /* Gesammelte Symbole */
+
+        matches.forEach(m => {
+
+            if (
+                board[m.r][m.c] &&
+                board[m.r][m.c].symbol
+            ) {
+
+                collected[
+                    board[m.r][m.c].symbol
+                ]++;
+            }
+
+            board[m.r][m.c] = null;
+        });
+
+
+        /* Spezialstein erhalten */
+
+        if (specialCandidates.length > 0) {
+
+            const special =
+                specialCandidates[0];
+
+            board[special.r][special.c] = {
+                symbol:special.symbol,
+                special:special.type
+            };
+        }
+
+
+        renderBoard();
+
+        await sleep(180);
+
+        collapseBoard();
+
+        renderBoard();
+
+        await sleep(220);
+    }
 }
 
 
 /* =========================================================
-   LEVEL GEWONNEN
+   BOARD FALLEN LASSEN
    ========================================================= */
 
-function finishLevel() {
+function collapseBoard() {
 
-    levelFinished=true;
+    for (let c = 0; c < SIZE; c++) {
 
-    let stars=1;
+        let write = SIZE - 1;
 
-    const target =
-        levels[currentLevel-1].target;
+        for (let r = SIZE - 1; r >= 0; r--) {
 
-    if(score >= target)
-        stars=2;
+            if (
+                !isBlocked(r,c) &&
+                board[r][c]
+            ) {
 
-    if(score >= target*1.5)
-        stars=3;
+                board[write][c] =
+                    board[r][c];
 
+                if (write !== r) {
+                    board[r][c] = null;
+                }
 
-    if(
-        !savedStars[currentLevel] ||
-        stars >
-        savedStars[currentLevel]
-    ) {
+                write--;
+            }
+        }
 
-        savedStars[currentLevel]=stars;
+        for (let r = write; r >= 0; r--) {
 
-        localStorage.setItem(
-            "frenchieStars",
-            JSON.stringify(savedStars)
-        );
+            if (!isBlocked(r,c)) {
 
+                board[r][c] = createTile();
+            }
+        }
     }
+}
 
 
-    if(
-        currentLevel >= unlockedLevel
-    ) {
+/* =========================================================
+   PUNKTE
+   ========================================================= */
 
-        unlockedLevel =
-            Math.min(
-                70,
-                currentLevel+1
+function addScore(points) {
+
+    score += points;
+    updateUI();
+}
+
+
+/* =========================================================
+   UI
+   ========================================================= */
+
+function updateUI() {
+
+    const data = getLevelData();
+
+    document.getElementById("level").textContent =
+        currentLevel;
+
+    document.getElementById("score").textContent =
+        score.toLocaleString("de-DE");
+
+    document.getElementById("moves").textContent =
+        moves;
+
+    document.getElementById("target").textContent =
+        data.target.toLocaleString("de-DE");
+
+    document.getElementById("goal").textContent =
+        "🎯 Erreiche mindestens " +
+        data.target.toLocaleString("de-DE") +
+        " Punkte!";
+
+    createLevelButtons();
+}
+
+
+/* =========================================================
+   LEVEL ENDE
+   ========================================================= */
+
+function checkLevelEnd() {
+
+    const data = getLevelData();
+
+    if (score >= data.target) {
+
+        const stars =
+            score >= data.target * 1.8
+            ? 3
+            : score >= data.target * 1.35
+            ? 2
+            : 1;
+
+        if (
+            currentLevel >=
+            getUnlockedLevel()
+        ) {
+
+            localStorage.setItem(
+                "bulldogCrushUnlocked",
+                Math.min(
+                    70,
+                    currentLevel + 1
+                )
             );
+        }
 
-        localStorage.setItem(
-            "frenchieUnlocked",
-            unlockedLevel
-        );
+        document.getElementById("popupTitle").textContent =
+            "🐶 Level geschafft!";
 
+        document.getElementById("popupStars").textContent =
+            "⭐".repeat(stars);
+
+        document.getElementById("popupText").textContent =
+            "Du hast " +
+            score.toLocaleString("de-DE") +
+            " Punkte erreicht!";
+
+        document.getElementById("overlay")
+            .classList.add("show");
+
+        return;
     }
 
+    if (moves <= 0) {
 
-    if(currentLevel === 70) {
+        document.getElementById("popupTitle").textContent =
+            "😵 Keine Züge mehr!";
 
-        document.getElementById(
-            "messageTitle"
-        ).textContent =
-            "🏆 FRENCHIE CHAMPION! 🏆";
+        document.getElementById("popupStars").textContent =
+            "💥";
 
-        document.getElementById(
-            "messageText"
-        ).innerHTML =
-            "<p>Du hast alle 70 Level geschafft!</p>" +
-            "<p>Die Bulldoggen sind offiziell die Könige der Mondstation.</p>" +
-            "<p><b>Endpunktzahl: "+
-            score+
-            "</b></p>";
+        document.getElementById("popupText").textContent =
+            "Du brauchst " +
+            data.target.toLocaleString("de-DE") +
+            " Punkte. Erreicht wurden " +
+            score.toLocaleString("de-DE") +
+            ".";
 
+        document.getElementById("overlay")
+            .classList.add("show");
     }
-    else {
-
-        document.getElementById(
-            "messageTitle"
-        ).textContent =
-            "🎉 Level geschafft!";
-
-        document.getElementById(
-            "messageText"
-        ).innerHTML =
-            "<p>Punkte: <b>"+
-            score+
-            "</b></p>" +
-            "<p>Levelziel: "+
-            target+
-            "</p>";
-
-    }
-
-
-    document.getElementById(
-        "stars"
-    ).textContent =
-        "⭐".repeat(stars);
-
-
-    document.getElementById(
-        "message"
-    ).style.display="block";
-
-    updateInterface();
-
-}
-
-
-/* =========================================================
-   LEVEL VERLOREN
-   ========================================================= */
-
-function loseLevel() {
-
-    levelFinished=true;
-
-    document.getElementById(
-        "messageTitle"
-    ).textContent =
-        "🐶 Nicht geschafft!";
-
-    document.getElementById(
-        "messageText"
-    ).innerHTML =
-        "<p>Keine Bulldoggen mehr.</p>" +
-        "<p>Du hast "+
-        score+
-        " Punkte erreicht.</p>";
-
-    document.getElementById(
-        "stars"
-    ).textContent="";
-
-    document.getElementById(
-        "message"
-    ).style.display="block";
-
-}
-
-
-/* =========================================================
-   LEVEL NEUSTART
-   ========================================================= */
-
-function restartLevel() {
-
-    loadLevel(
-        currentLevel
-    );
-
 }
 
 
@@ -5256,299 +1478,200 @@ function restartLevel() {
 
 function nextLevel() {
 
-    if(currentLevel >= 70)
-        return;
+    closePopup();
 
-    if(
-        currentLevel+1 >
-        unlockedLevel
-    )
-        return;
+    if (currentLevel < 70) {
 
-    loadLevel(
-        currentLevel+1
-    );
+        currentLevel++;
 
-}
-
-
-/* =========================================================
-   VORHERIGES LEVEL
-   ========================================================= */
-
-function previousLevel() {
-
-    if(currentLevel <= 1)
-        return;
-
-    loadLevel(
-        currentLevel-1
-    );
-
-}
-
-
-/* =========================================================
-   LEVELAUSWAHL
-   ========================================================= */
-
-function toggleLevelPanel() {
-
-    const panel =
-        document.getElementById(
-            "levelPanel"
+        localStorage.setItem(
+            "bulldogCrushCurrent",
+            currentLevel
         );
 
-    if(
-        panel.style.display === "block"
-    ) {
+        startLevel();
 
-        panel.style.display="none";
+    } else {
 
-        return;
+        document.getElementById("popupTitle").textContent =
+            "🏆 ALLE 70 LEVEL GESCHAFFT!";
 
+        document.getElementById("popupStars").textContent =
+            "🐶 ⭐ 🐶 ⭐ 🐶";
+
+        document.getElementById("popupText").textContent =
+            "Du hast die komplette Bulldog-Crush-Karte bezwungen!";
+
+        document.getElementById("overlay")
+            .classList.add("show");
     }
+}
 
 
-    panel.innerHTML =
-        "<h3>🗺️ Levelauswahl</h3>";
+/* =========================================================
+   LEVEL NEU STARTEN
+   ========================================================= */
+
+function restartLevel() {
+
+    closePopup();
+    startLevel();
+
+    document.getElementById("message").textContent =
+        "🔄 Level wurde neu gestartet.";
+}
 
 
-    for(let i=1;i<=70;i++) {
+/* =========================================================
+   POPUP
+   ========================================================= */
+
+function closePopup() {
+
+    document.getElementById("overlay")
+        .classList.remove("show");
+}
+
+
+/* =========================================================
+   LEVEL FREISCHALTEN
+   ========================================================= */
+
+function getUnlockedLevel() {
+
+    return parseInt(
+        localStorage.getItem(
+            "bulldogCrushUnlocked"
+        ) || "1"
+    );
+}
+
+
+/* =========================================================
+   LEVEL BUTTONS
+   ========================================================= */
+
+function createLevelButtons() {
+
+    const container =
+        document.getElementById("levelButtons");
+
+    container.innerHTML = "";
+
+    const unlocked =
+        getUnlockedLevel();
+
+    for (
+        let i = 1;
+        i <= 70;
+        i++
+    ) {
 
         const button =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
-        button.className=
+        button.className =
             "levelButton";
 
+        if (i === currentLevel) {
+            button.classList.add("current");
+        }
 
-        if(i > unlockedLevel) {
+        if (i > unlocked) {
 
-            button.classList.add(
-                "levelLocked"
-            );
+            button.classList.add("locked");
 
             button.textContent =
-                "🔒 "+i;
+                "🔒";
 
-        }
-        else {
+            button.disabled = true;
 
-            const stars =
-                savedStars[i] || 0;
+        } else {
 
-            button.innerHTML =
-                i+
-                "<br>"+
-                "⭐".repeat(stars);
+            button.textContent =
+                i;
 
-            button.onclick =
-                function() {
+            button.onclick = () => {
 
-                    loadLevel(i);
+                currentLevel = i;
 
-                    panel.style.display=
-                        "none";
+                localStorage.setItem(
+                    "bulldogCrushCurrent",
+                    i
+                );
 
-                };
-
+                startLevel();
+            };
         }
 
-        panel.appendChild(
-            button
-        );
-
+        container.appendChild(button);
     }
-
-    panel.style.display="block";
-
 }
 
 
 /* =========================================================
-   BENUTZEROBERFLÄCHE
+   FORTSCHRITT LÖSCHEN
    ========================================================= */
 
-function updateInterface() {
+function resetProgress() {
 
-    const data =
-        levels[currentLevel-1];
+    const answer =
+        confirm(
+            "Möchtest du wirklich den gesamten Level-Fortschritt löschen?"
+        );
 
-    const world =
-        worlds[data.world];
+    if (!answer) return;
 
+    localStorage.removeItem(
+        "bulldogCrushUnlocked"
+    );
 
-    document.getElementById(
-        "levelDisplay"
-    ).textContent =
-        currentLevel+
-        " / 70";
+    localStorage.removeItem(
+        "bulldogCrushCurrent"
+    );
 
+    currentLevel = 1;
 
-    document.getElementById(
-        "scoreDisplay"
-    ).textContent =
-        score;
-
-
-    document.getElementById(
-        "targetDisplay"
-    ).textContent =
-        data.target;
-
-
-    document.getElementById(
-        "shotsDisplay"
-    ).textContent =
-        shotsLeft;
-
-
-    document.getElementById(
-        "starsDisplay"
-    ).textContent =
-        savedStars[currentLevel] || 0;
-
-
-    document.getElementById(
-        "worldName"
-    ).textContent =
-        world.emoji+
-        " "+
-        world.name;
-
+    startLevel();
 }
 
 
 /* =========================================================
-   ZEICHNEN
+   HILFSFUNKTION
    ========================================================= */
 
-function draw() {
+function sleep(ms) {
 
-    ctx.save();
-
-    if(cameraShake > .5) {
-
-        ctx.translate(
-            (Math.random()-.5)*
-            cameraShake,
-
-            (Math.random()-.5)*
-            cameraShake
-        );
-
-    }
-
-
-    const data =
-        levels[currentLevel-1];
-
-    const world =
-        worlds[data.world];
-
-
-    drawBackground(world);
-
-
-    blocks.forEach(
-        drawBlock
+    return new Promise(
+        resolve => setTimeout(resolve,ms)
     );
-
-
-    targets.forEach(
-        drawTarget
-    );
-
-
-    /* Schleuder-Linie */
-
-    if(
-        currentBulldog &&
-        !currentBulldog.active &&
-        !currentBulldog.used
-    ) {
-
-        ctx.strokeStyle=
-            "rgba(255,255,255,.35)";
-
-        ctx.lineWidth=2;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            150,
-            470
-        );
-
-        ctx.lineTo(
-            currentBulldog.x,
-            currentBulldog.y
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    drawBulldog(
-        currentBulldog
-    );
-
-
-    particles.forEach(p => {
-
-        ctx.fillStyle =
-            "#ffd43b";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    });
-
-
-    ctx.restore();
-
 }
 
 
 /* =========================================================
-   HAUPTSCHLEIFE
+   SPIEL LADEN
    ========================================================= */
 
-function gameLoop() {
-
-    updatePhysics();
-
-    draw();
-
-    updateInterface();
-
-    requestAnimationFrame(
-        gameLoop
+const savedLevel =
+    parseInt(
+        localStorage.getItem(
+            "bulldogCrushCurrent"
+        ) || "1"
     );
 
-}
+const unlocked =
+    getUnlockedLevel();
 
+currentLevel =
+    Math.min(
+        70,
+        Math.max(
+            1,
+            Math.min(savedLevel,unlocked)
+        )
+    );
 
-/* =========================================================
-   START
-   ========================================================= */
-
-loadLevel(1);
-
-gameLoop();
+startLevel();
 
 </script>
 
