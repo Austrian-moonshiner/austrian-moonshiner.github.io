@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🎰 Slotmaschine</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #12001f, #31004f, #09000f);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .game {
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+        text-shadow: 0 0 15px #ff00cc;
+    }
+
+    .subtitle {
+        color: #ddd;
+        margin-bottom: 25px;
+    }
+
+    .machine {
+        background: linear-gradient(145deg, #222, #080808);
+        border: 4px solid #d4af37;
+        border-radius: 25px;
+        padding: 25px;
+        box-shadow:
+            0 0 20px rgba(255, 215, 0, 0.4),
+            inset 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    .balance {
+        background: #111;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #ffd700;
+        border: 2px solid #444;
+    }
+
+    .reels {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 20px 0;
+    }
+
+    .reel {
+        width: 150px;
+        height: 150px;
+        background: white;
+        color: black;
+        border-radius: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 75px;
+        box-shadow:
+            inset 0 0 15px rgba(0,0,0,0.4),
+            0 0 10px rgba(255,255,255,0.2);
+        overflow: hidden;
+    }
+
+    .reel.spinning {
+        animation: spin 0.12s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: translateY(-8px);
+        }
+        50% {
+            transform: translateY(8px);
+        }
+        100% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .controls {
+        margin-top: 20px;
+    }
+
+    .bet-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .bet-row button {
+        width: 45px;
+        height: 40px;
+        border: none;
+        border-radius: 8px;
+        font-size: 22px;
+        cursor: pointer;
+        background: #333;
+        color: white;
+    }
+
+    .bet {
+        font-size: 20px;
+        min-width: 130px;
+    }
+
+    .spin-button {
+        width: 100%;
+        padding: 18px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #ff1744, #ff6d00);
+        color: white;
+        font-size: 26px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 5px 0 #9b102d;
+        transition: 0.15s;
+    }
+
+    .spin-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .spin-button:active {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0 #9b102d;
+    }
+
+    .spin-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .message {
+        min-height: 35px;
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .paytable {
+        margin-top: 25px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 15px;
+        padding: 15px;
+    }
+
+    .paytable h2 {
+        margin-top: 0;
+        color: #ffd700;
+    }
+
+    .paytable p {
+        margin: 8px;
+    }
+
+    .reset {
+        margin-top: 20px;
+        background: transparent;
+        border: 1px solid #777;
+        color: #aaa;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .reset:hover {
+        color: white;
+        border-color: white;
+    }
+
+    .win {
+        animation: win 0.5s ease-in-out 3;
+    }
+
+    @keyframes win {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.08);
+        }
+    }
+
+    @media (max-width: 550px) {
+
+        h1 {
+            font-size: 32px;
+        }
+
+        .reels {
+            gap: 7px;
+        }
+
+        .reel {
+            width: 95px;
+            height: 95px;
+            font-size: 50px;
+        }
+
+        .machine {
+            padding: 15px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🎰 SLOT MACHINE</h1>
+    <div class="subtitle">Spielautomat mit Spielpunkten</div>
+
+    <div class="machine">
+
+        <div class="balance">
+            💰 Guthaben: <span id="balance">1000</span>
+        </div>
+
+        <div class="reels">
+
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">🍋</div>
+            <div class="reel" id="reel3">🍊</div>
+
+        </div>
+
+        <div class="controls">
+
+            <div class="bet-row">
+
+                <button onclick="changeBet(-10)">−</button>
+
+                <div class="bet">
+                    Einsatz: <strong><span id="bet">10</span></strong>
+                </div>
+
+                <button onclick="changeBet(10)">+</button>
+
+            </div>
+
+            <button
+                class="spin-button"
+                id="spinButton"
+                onclick="spin()">
+                🎰 DREHEN
+            </button>
+
+        </div>
+
+        <div class="message" id="message">
+            Viel Glück! 🍀
+        </div>
+
+        <div class="paytable">
+
+            <h2>🏆 Gewinne</h2>
+
+            <p>🍒🍒🍒 = 10 × Einsatz</p>
+            <p>🍋🍋🍋 = 15 × Einsatz</p>
+            <p>🍊🍊🍊 = 20 × Einsatz</p>
+            <p>🔔🔔🔔 = 30 × Einsatz</p>
+            <p>⭐️⭐️⭐️ = 50 × Einsatz</p>
+            <p>7️⃣7️⃣7️⃣ = 100 × Einsatz</p>
+
+            <p style="color:#aaa;">
+                Zwei gleiche Symbole = 2 × Einsatz
+            </p>
+
+        </div>
+
+        <button class="reset" onclick="resetGame()">
+            Guthaben zurücksetzen
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const symbols = [
+    "🍒",
+    "🍋",
+    "🍊",
+    "🔔",
+    "⭐️",
+    "7️⃣"
+];
+
+const multipliers = {
+    "🍒": 10,
+    "🍋": 15,
+    "🍊": 20,
+    "🔔": 30,
+    "⭐️": 50,
+    "7️⃣": 100
+};
+
+let balance = Number(localStorage.getItem("slotBalance")) || 1000;
+let bet = Number(localStorage.getItem("slotBet")) || 10;
+
+let spinning = false;
+
+const balanceElement = document.getElementById("balance");
+const betElement = document.getElementById("bet");
+const messageElement = document.getElementById("message");
+const spinButton = document.getElementById("spinButton");
+
+const reels = [
+    document.getElementById("reel1"),
+    document.getElementById("reel2"),
+    document.getElementById("reel3")
+];
+
+function updateDisplay() {
+
+    balanceElement.textContent = balance;
+    betElement.textContent = bet;
+
+    localStorage.setItem("slotBalance", balance);
+    localStorage.setItem("slotBet", bet);
+}
+
+function changeBet(amount) {
+
+    if (spinning) return;
+
+    bet += amount;
+
+    if (bet < 10) {
+        bet = 10;
+    }
+
+    if (bet > 100) {
+        bet = 100;
+    }
+
+    if (bet > balance && balance > 0) {
+        bet = Math.max(10, Math.floor(balance / 10) * 10);
+    }
+
+    updateDisplay();
+}
+
+function randomSymbol() {
+
+    return symbols[
+        Math.floor(Math.random() * symbols.length)
+    ];
+}
+
+function spin() {
+
+    if (spinning) return;
+
+    if (balance < bet) {
+
+        messageElement.textContent =
+            "❌ Nicht genügend Spielpunkte!";
+
+        return;
+    }
+
+    spinning = true;
+
+    spinButton.disabled = true;
+
+    balance -= bet;
+
+    updateDisplay();
+
+    messageElement.textContent = "🎰 Die Walzen drehen sich...";
+
+    reels.forEach(reel => {
+        reel.classList.add("spinning");
+    });
+
+    let spinIntervals = [];
+
+    reels.forEach((reel, index) => {
+
+        spinIntervals[index] = setInterval(() => {
+
+            reel.textContent = randomSymbol();
+
+        }, 80);
+
+    });
+
+    setTimeout(() => {
+
+        clearInterval(spinIntervals[0]);
+
+        reels[0].textContent = randomSymbol();
+
+        reels[0].classList.remove("spinning");
+
+    }, 900);
+
+    setTimeout(() => {
+
+        clearInterval(spinIntervals[1]);
+
+        reels[1].textContent = randomSymbol();
+
+        reels[1].classList.remove("spinning");
+
+    }, 1300);
+
+    setTimeout(() => {
+
+        clearInterval(spinIntervals[2]);
+
+        reels[2].textContent = randomSymbol();
+
+        reels[2].classList.remove("spinning");
+
+        finishSpin();
+
+    }, 1700);
+}
+
+function finishSpin() {
+
+    const result = reels.map(reel => reel.textContent);
+
+    let win = 0;
+
+    if (
+        result[0] === result[1] &&
+        result[1] === result[2]
+    ) {
+
+        const symbol = result[0];
+
+        win = bet * multipliers[symbol];
+
+        messageElement.textContent =
+            "🎉 JACKPOT! +" + win + " Punkte!";
+
+        reels.forEach(reel => {
+            reel.classList.add("win");
+        });
+
+        setTimeout(() => {
+
+            reels.forEach(reel => {
+                reel.classList.remove("win");
+            });
+
+        }, 1600);
+
+    }
+
+    else if (
+        result[0] === result[1] ||
+        result[1] === result[2] ||
+        result[0] === result[2]
+    ) {
+
+        win = bet * 2;
+
+        messageElement.textContent =
+            "✨ Zwei gleiche Symbole! +" +
+            win +
+            " Punkte!";
+
+    }
+
+    else {
+
+        messageElement.textContent =
+            "😕 Kein Gewinn. Versuch dein Glück!";
+
+    }
+
+    balance += win;
+
+    updateDisplay();
+
+    spinning = false;
+
+    spinButton.disabled = false;
+
+    if (balance <= 0) {
+
+        messageElement.textContent =
+            "💀 Keine Punkte mehr! Setze dein Guthaben zurück.";
+
+        spinButton.disabled = true;
+    }
+}
+
+function resetGame() {
+
+    balance = 1000;
+    bet = 10;
+
+    localStorage.setItem("slotBalance", balance);
+    localStorage.setItem("slotBet", bet);
+
+    updateDisplay();
+
+    messageElement.textContent =
+        "🔄 Guthaben zurückgesetzt!";
+
+    spinButton.disabled = false;
+}
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
