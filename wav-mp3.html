@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WAV → MP3 Konverter</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #111827, #1f2937);
+        color: #f9fafb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .converter {
+        width: 100%;
+        max-width: 760px;
+        background: rgba(17, 24, 39, 0.96);
+        border: 1px solid rgba(255,255,255,0.10);
+        border-radius: 22px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .header .icon {
+        font-size: 55px;
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .subtitle {
+        margin-top: 10px;
+        color: #9ca3af;
+        font-size: 15px;
+    }
+
+    .drop-zone {
+        border: 2px dashed #4b5563;
+        border-radius: 18px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+        background: rgba(255,255,255,0.025);
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+        border-color: #60a5fa;
+        background: rgba(96,165,250,0.08);
+    }
+
+    .drop-icon {
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+
+    .drop-zone strong {
+        display: block;
+        font-size: 19px;
+        margin-bottom: 8px;
+    }
+
+    .drop-zone span {
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    #fileInput {
+        display: none;
+    }
+
+    .file-info {
+        display: none;
+        margin-top: 20px;
+        padding: 18px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 14px;
+    }
+
+    .file-info.active {
+        display: block;
+    }
+
+    .file-name {
+        font-size: 17px;
+        font-weight: bold;
+        word-break: break-word;
+    }
+
+    .file-details {
+        margin-top: 8px;
+        color: #9ca3af;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .settings {
+        margin-top: 22px;
+        padding: 20px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 16px;
+    }
+
+    .settings h2 {
+        margin: 0 0 18px;
+        font-size: 19px;
+    }
+
+    .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .setting-row:last-child {
+        margin-bottom: 0;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    select,
+    input[type="text"] {
+        width: 230px;
+        max-width: 55%;
+        padding: 11px 12px;
+        border-radius: 9px;
+        border: 1px solid #4b5563;
+        background: #111827;
+        color: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+        border-color: #60a5fa;
+    }
+
+    .buttons {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        border: none;
+        border-radius: 11px;
+        padding: 13px 20px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .convert-btn {
+        flex: 1;
+        min-width: 200px;
+        background: #2563eb;
+        color: white;
+    }
+
+    .convert-btn:hover:not(:disabled) {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .convert-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .clear-btn {
+        background: #374151;
+        color: white;
+    }
+
+    .clear-btn:hover {
+        background: #4b5563;
+    }
+
+    .progress-container {
+        display: none;
+        margin-top: 25px;
+    }
+
+    .progress-container.active {
+        display: block;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #374151;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: #60a5fa;
+        transition: width 0.15s;
+    }
+
+    .status {
+        margin-top: 10px;
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    .result {
+        display: none;
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 16px;
+        background: rgba(34,197,94,0.08);
+        border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    .result.active {
+        display: block;
+    }
+
+    .result-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .result-info {
+        color: #9ca3af;
+        font-size: 14px;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .download-btn {
+        display: inline-block;
+        text-decoration: none;
+        background: #16a34a;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .download-btn:hover {
+        background: #15803d;
+    }
+
+    .privacy {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        text-align: center;
+        color: #9ca3af;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 15px;
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .loading.active {
+        display: block;
+    }
+
+    @media (max-width: 600px) {
+        .converter {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        .setting-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .buttons {
+            flex-direction: column;
+        }
+
+        .convert-btn {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="converter">
+
+    <div class="header">
+        <div class="icon">🎵</div>
+        <h1>WAV → MP3 Konverter</h1>
+        <div class="subtitle">
+            Audiodateien direkt im Browser in MP3 umwandeln
+        </div>
+    </div>
+
+    <div class="drop-zone" id="dropZone">
+        <div class="drop-icon">📁</div>
+
+        <strong>WAV-Datei auswählen</strong>
+
+        <span>
+            Klicken oder WAV-Datei hierher ziehen
+        </span>
+
+        <input
+            type="file"
+            id="fileInput"
+            accept=".wav,audio/wav,audio/x-wav"
+        >
+    </div>
+
+    <div class="file-info" id="fileInfo">
+
+        <div class="file-name" id="fileName"></div>
+
+        <div class="file-details" id="fileDetails"></div>
+
+    </div>
+
+
+    <div class="settings">
+
+        <h2>⚙️ MP3-Einstellungen</h2>
+
+        <div class="setting-row">
+
+            <label for="bitrate">
+                MP3-Bitrate
+            </label>
+
+            <select id="bitrate">
+
+                <option value="128">128 kbps – Standard</option>
+
+                <option value="160">160 kbps – Gut</option>
+
+                <option value="192" selected>
+                    192 kbps – Sehr gut
+                </option>
+
+                <option value="256">
+                    256 kbps – Hoch
+                </option>
+
+                <option value="320">
+                    320 kbps – Maximum
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="setting-row">
+
+            <label for="outputName">
+                Dateiname
+            </label>
+
+            <input
+                type="text"
+                id="outputName"
+                placeholder="Dateiname ohne .mp3"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="convert-btn"
+            id="convertBtn"
+            disabled
+        >
+            ▶ WAV → MP3 konvertieren
+        </button>
+
+        <button
+            class="clear-btn"
+            id="clearBtn"
+        >
+            Zurücksetzen
+        </button>
+
+    </div>
+
+
+    <div class="loading" id="loading">
+        ⏳ MP3-Encoder wird geladen...
+    </div>
+
+
+    <div
+        class="progress-container"
+        id="progressContainer"
+    >
+
+        <div class="progress-header">
+
+            <span id="progressText">
+                Konvertierung...
+            </span>
+
+            <span id="progressPercent">
+                0%
+            </span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div
+                class="progress-fill"
+                id="progressFill"
+            ></div>
+
+        </div>
+
+        <div
+            class="status"
+            id="status"
+        >
+            Vorbereitung...
+        </div>
+
+    </div>
+
+
+    <div class="result" id="result">
+
+        <div class="result-title">
+            ✅ Konvertierung abgeschlossen
+        </div>
+
+        <div
+            class="result-info"
+            id="resultInfo"
+        ></div>
+
+        <a
+            class="download-btn"
+            id="downloadBtn"
+            href="#"
+        >
+            ⬇️ MP3 herunterladen
+        </a>
+
+    </div>
+
+
+    <div class="privacy">
+
+        🔒 <strong>Lokale Verarbeitung:</strong><br>
+
+        Deine WAV-Datei wird für die Konvertierung nicht
+        auf einen Server hochgeladen. Die Verarbeitung
+        erfolgt direkt in deinem Browser.
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+/*
+    FFmpeg WebAssembly
+    --------------------------------------------------
+    Der Encoder wird erst geladen, wenn tatsächlich
+    eine Konvertierung gestartet wird.
+*/
+
+import {
+    FFmpeg
+} from "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js";
+
+import {
+    fetchFile,
+    toBlobURL
+} from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js";
+
+
+const dropZone =
+    document.getElementById("dropZone");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const fileInfo =
+    document.getElementById("fileInfo");
+
+const fileName =
+    document.getElementById("fileName");
+
+const fileDetails =
+    document.getElementById("fileDetails");
+
+const bitrate =
+    document.getElementById("bitrate");
+
+const outputName =
+    document.getElementById("outputName");
+
+const convertBtn =
+    document.getElementById("convertBtn");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+const loading =
+    document.getElementById("loading");
+
+const progressContainer =
+    document.getElementById("progressContainer");
+
+const progressFill =
+    document.getElementById("progressFill");
+
+const progressPercent =
+    document.getElementById("progressPercent");
+
+const progressText =
+    document.getElementById("progressText");
+
+const status =
+    document.getElementById("status");
+
+const result =
+    document.getElementById("result");
+
+const resultInfo =
+    document.getElementById("resultInfo");
+
+const downloadBtn =
+    document.getElementById("downloadBtn");
+
+
+let selectedFile = null;
+
+let ffmpeg = null;
+
+let ffmpegLoaded = false;
+
+let outputURL = null;
+
+
+/*
+    Datei auswählen
+*/
+
+dropZone.addEventListener("click", () => {
+    fileInput.click();
+});
+
+
+fileInput.addEventListener("change", () => {
+
+    if (fileInput.files.length > 0) {
+
+        handleFile(fileInput.files[0]);
+
+    }
+
+});
+
+
+/*
+    Drag & Drop
+*/
+
+dropZone.addEventListener(
+    "dragover",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.add("dragover");
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragleave",
+    () => {
+
+        dropZone.classList.remove("dragover");
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "drop",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.remove("dragover");
+
+        const files =
+            event.dataTransfer.files;
+
+        if (files.length > 0) {
+
+            handleFile(files[0]);
+
+        }
+
+    }
+);
+
+
+/*
+    Datei verarbeiten
+*/
+
+function handleFile(file) {
+
+    if (
+        !file.name.toLowerCase().endsWith(".wav")
+    ) {
+
+        alert(
+            "Bitte eine WAV-Datei auswählen."
+        );
+
+        return;
+
+    }
+
+
+    selectedFile = file;
+
+
+    const sizeMB =
+        file.size / 1024 / 1024;
+
+
+    fileName.textContent =
+        "🎵 " + file.name;
+
+
+    fileDetails.innerHTML =
+        "Größe: " +
+        sizeMB.toFixed(2) +
+        " MB<br>" +
+
+        "Typ: " +
+        (file.type || "WAV-Audio");
+
+
+    fileInfo.classList.add("active");
+
+
+    /*
+        Dateiname automatisch übernehmen
+    */
+
+    const baseName =
+        file.name.replace(
+            /\.wav$/i,
+            ""
+        );
+
+
+    outputName.value =
+        baseName;
+
+
+    convertBtn.disabled = false;
+
+
+    result.classList.remove("active");
+
+
+    if (outputURL) {
+
+        URL.revokeObjectURL(outputURL);
+
+        outputURL = null;
+
+    }
+
+}
+
+
+/*
+    FFmpeg laden
+*/
+
+async function loadFFmpeg() {
+
+    if (ffmpegLoaded) {
+
+        return;
+
+    }
+
+
+    loading.classList.add("active");
+
+    status.textContent =
+        "MP3-Encoder wird geladen...";
+
+
+    ffmpeg =
+        new FFmpeg();
+
+
+    /*
+        Fortschritt von FFmpeg
+    */
+
+    ffmpeg.on(
+        "progress",
+        ({ progress }) => {
+
+            const percent =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        Math.round(
+                            progress * 100
+                        )
+                    )
+                );
+
+
+            progressFill.style.width =
+                percent + "%";
+
+
+            progressPercent.textContent =
+                percent + "%";
+
+
+            status.textContent =
+                "Audio wird verarbeitet...";
+
+        }
+    );
+
+
+    /*
+        FFmpeg Core laden
+    */
+
+    const baseURL =
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
+
+
+    await ffmpeg.load({
+
+        coreURL:
+            await toBlobURL(
+                `${baseURL}/ffmpeg-core.js`,
+                "text/javascript"
+            ),
+
+        wasmURL:
+            await toBlobURL(
+                `${baseURL}/ffmpeg-core.wasm`,
+                "application/wasm"
+            )
+
+    });
+
+
+    ffmpegLoaded = true;
+
+    loading.classList.remove("active");
+
+}
+
+
+/*
+    Konvertierung starten
+*/
+
+convertBtn.addEventListener(
+    "click",
+    async () => {
+
+        if (!selectedFile) {
+
+            alert(
+                "Bitte zuerst eine WAV-Datei auswählen."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            convertBtn.disabled = true;
+
+            result.classList.remove("active");
+
+            progressContainer.classList.add("active");
+
+            progressFill.style.width = "0%";
+
+            progressPercent.textContent = "0%";
+
+            progressText.textContent =
+                "Konvertierung...";
+
+            status.textContent =
+                "Encoder wird vorbereitet...";
+
+
+            /*
+                FFmpeg laden
+            */
+
+            await loadFFmpeg();
+
+
+            status.textContent =
+                "WAV-Datei wird vorbereitet...";
+
+
+            /*
+                Temporäre Dateinamen
+            */
+
+            const inputFile =
+                "input.wav";
+
+
+            let finalName =
+                outputName.value.trim();
+
+
+            if (!finalName) {
+
+                finalName =
+                    selectedFile.name.replace(
+                        /\.wav$/i,
+                        ""
+                    );
+
+            }
+
+
+            /*
+                Problematische Zeichen aus
+                dem Dateinamen entfernen
+            */
+
+            finalName =
+                finalName.replace(
+                    /[<>:"/\\|?*]/g,
+                    "_"
+                );
+
+
+            const outputFile =
+                "output.mp3";
+
+
+            /*
+                WAV in FFmpeg schreiben
+            */
+
+            await ffmpeg.writeFile(
+                inputFile,
+                await fetchFile(selectedFile)
+            );
+
+
+            status.textContent =
+                "Konvertierung läuft...";
+
+
+            /*
+                MP3 erzeugen
+            */
+
+            await ffmpeg.exec([
+
+                "-i",
+                inputFile,
+
+                "-codec:a",
+                "libmp3lame",
+
+                "-b:a",
+                bitrate.value + "k",
+
+                "-y",
+
+                outputFile
+
+            ]);
+
+
+            status.textContent =
+                "MP3 wird vorbereitet...";
+
+
+            /*
+                Ergebnis lesen
+            */
+
+            const data =
+                await ffmpeg.readFile(
+                    outputFile
+                );
+
+
+            /*
+                Blob erzeugen
+            */
+
+            const blob =
+                new Blob(
+                    [data.buffer],
+                    {
+                        type: "audio/mpeg"
+                    }
+                );
+
+
+            /*
+                Alten Download freigeben
+            */
+
+            if (outputURL) {
+
+                URL.revokeObjectURL(
+                    outputURL
+                );
+
+            }
+
+
+            outputURL =
+                URL.createObjectURL(blob);
+
+
+            /*
+                Download-Link
+            */
+
+            downloadBtn.href =
+                outputURL;
+
+
+            downloadBtn.download =
+                finalName + ".mp3";
+
+
+            const originalSize =
+                selectedFile.size /
+                1024 /
+                1024;
+
+
+            const mp3Size =
+                blob.size /
+                1024 /
+                1024;
+
+
+            resultInfo.innerHTML =
+                "<strong>" +
+                finalName +
+                ".mp3" +
+                "</strong><br>" +
+
+                "Bitrate: " +
+                bitrate.value +
+                " kbps<br>" +
+
+                "Original: " +
+                originalSize.toFixed(2) +
+                " MB<br>" +
+
+                "MP3: " +
+                mp3Size.toFixed(2) +
+                " MB";
+
+
+            progressFill.style.width =
+                "100%";
+
+
+            progressPercent.textContent =
+                "100%";
+
+
+            progressText.textContent =
+                "Fertig!";
+
+
+            status.textContent =
+                "Die MP3-Datei ist bereit.";
+
+
+            result.classList.add(
+                "active"
+            );
+
+
+            /*
+                Temporäre FFmpeg-Dateien löschen
+            */
+
+            try {
+
+                await ffmpeg.deleteFile(
+                    inputFile
+                );
+
+                await ffmpeg.deleteFile(
+                    outputFile
+                );
+
+            } catch (cleanupError) {
+
+                console.log(
+                    "Temporäre Dateien konnten nicht gelöscht werden:",
+                    cleanupError
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            status.textContent =
+                "Fehler bei der Konvertierung.";
+
+
+            alert(
+                "Die Konvertierung konnte nicht durchgeführt werden.\n\n" +
+                "Details: " +
+                error.message
+            );
+
+
+        } finally {
+
+            convertBtn.disabled =
+                !selectedFile;
+
+        }
+
+    }
+);
+
+
+/*
+    Zurücksetzen
+*/
+
+clearBtn.addEventListener(
+    "click",
+    () => {
+
+        selectedFile = null;
+
+        fileInput.value = "";
+
+        fileInfo.classList.remove(
+            "active"
+        );
+
+        result.classList.remove(
+            "active"
+        );
+
+        progressContainer.classList.remove(
+            "active"
+        );
+
+        outputName.value = "";
+
+
+        if (outputURL) {
+
+            URL.revokeObjectURL(
+                outputURL
+            );
+
+            outputURL = null;
+
+        }
+
+
+        convertBtn.disabled = true;
+
+    }
+);
+
+</script>
+
+</body>
+</html>
