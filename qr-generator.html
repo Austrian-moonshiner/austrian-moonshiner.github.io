@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QR-Code Generator</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #111, #222);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 550px;
+        background: #1c1c1c;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 32px;
+    }
+
+    .subtitle {
+        color: #bbb;
+        margin-bottom: 25px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 120px;
+        resize: vertical;
+        border: none;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 16px;
+        outline: none;
+        background: #333;
+        color: white;
+    }
+
+    textarea:focus {
+        box-shadow: 0 0 0 2px #00c853;
+    }
+
+    .options {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .option {
+        flex: 1;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 7px;
+        color: #ccc;
+        font-size: 14px;
+    }
+
+    select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: #333;
+        color: white;
+        font-size: 15px;
+    }
+
+    button {
+        width: 100%;
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 15px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .generate {
+        background: #00c853;
+        color: white;
+    }
+
+    .generate:hover {
+        background: #00a844;
+        transform: translateY(-1px);
+    }
+
+    .download {
+        background: #2196f3;
+        color: white;
+    }
+
+    .download:hover {
+        background: #1976d2;
+    }
+
+    .clear {
+        background: #444;
+        color: white;
+    }
+
+    .clear:hover {
+        background: #555;
+    }
+
+    #qr-container {
+        margin: 25px auto 10px;
+        min-height: 260px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    #qr-container canvas,
+    #qr-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .hint {
+        color: #888;
+        font-size: 13px;
+        margin-top: 15px;
+    }
+
+    @media (max-width: 500px) {
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        .options {
+            flex-direction: column;
+        }
+
+        #qr-container {
+            min-height: 220px;
+        }
+    }
+</style>
+
+<!-- QR-Code-Bibliothek -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🔲 QR-Code Generator</h1>
+
+    <div class="subtitle">
+        Erstelle deinen eigenen QR-Code
+    </div>
+
+    <textarea id="text"
+        placeholder="Hier Text oder eine Internetadresse eingeben..."></textarea>
+
+    <div class="options">
+
+        <div class="option">
+            <label for="size">QR-Code Größe</label>
+
+            <select id="size">
+                <option value="200">200 × 200</option>
+                <option value="250" selected>250 × 250</option>
+                <option value="300">300 × 300</option>
+                <option value="400">400 × 400</option>
+            </select>
+        </div>
+
+        <div class="option">
+            <label for="level">Fehlerkorrektur</label>
+
+            <select id="level">
+                <option value="L">Niedrig</option>
+                <option value="M" selected>Mittel</option>
+                <option value="Q">Hoch</option>
+                <option value="H">Sehr hoch</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button class="generate" onclick="generateQR()">
+        QR-Code erstellen
+    </button>
+
+    <div id="qr-container"></div>
+
+    <button class="download" onclick="downloadQR()">
+        💾 QR-Code als PNG speichern
+    </button>
+
+    <button class="clear" onclick="clearQR()">
+        🗑️ Zurücksetzen
+    </button>
+
+    <div class="hint">
+        Der QR-Code wird direkt in deinem Browser erstellt.
+    </div>
+
+</div>
+
+<script>
+
+let qrCode = null;
+
+function generateQR() {
+
+    const text = document.getElementById("text").value.trim();
+    const size = parseInt(document.getElementById("size").value);
+    const level = document.getElementById("level").value;
+
+    if (text === "") {
+        alert("Bitte zuerst einen Text oder eine Internetadresse eingeben.");
+        return;
+    }
+
+    const container = document.getElementById("qr-container");
+
+    container.innerHTML = "";
+
+    qrCode = new QRCode(container, {
+        text: text,
+        width: size,
+        height: size,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel[level]
+    });
+}
+
+
+function downloadQR() {
+
+    const canvas = document.querySelector("#qr-container canvas");
+
+    if (!canvas) {
+        alert("Bitte zuerst einen QR-Code erstellen.");
+        return;
+    }
+
+    const link = document.createElement("a");
+
+    link.download = "mein-qr-code.png";
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
+}
+
+
+function clearQR() {
+
+    document.getElementById("text").value = "";
+    document.getElementById("qr-container").innerHTML = "";
+
+    qrCode = null;
+}
+
+</script>
+
+</body>
+</html>
