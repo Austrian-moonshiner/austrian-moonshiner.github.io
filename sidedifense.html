@@ -3,25 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Side Defense</title>
 
 <style>
+
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #101522;
+    background: #0c1220;
     color: white;
-    overflow-x: hidden;
+    font-family: Arial, sans-serif;
 }
 
-.game-wrapper {
+#app {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: auto;
     padding: 10px;
 }
@@ -29,707 +30,756 @@ body {
 h1 {
     text-align: center;
     margin: 8px 0 12px;
-    font-size: 30px;
+    font-size: 28px;
 }
 
-.topbar {
+/* =========================
+   STATUS
+========================= */
+
+#stats {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 10px;
 }
 
 .stat {
-    background: #20283a;
-    border: 1px solid #39445c;
-    border-radius: 10px;
-    padding: 9px 14px;
-    min-width: 110px;
+    background: #202a40;
+    border: 2px solid #52617b;
+    border-radius: 12px;
+    padding: 8px 16px;
+    min-width: 100px;
     text-align: center;
 }
 
-.stat span {
+.stat small {
     display: block;
-    font-size: 12px;
-    color: #aeb8cc;
+    color: #b8c1d2;
 }
 
 .stat strong {
-    font-size: 18px;
+    font-size: 19px;
 }
+
+/* =========================
+   SPIEL
+========================= */
 
 #game {
     position: relative;
     width: 100%;
-    height: 570px;
+    height: 520px;
     overflow: hidden;
-    border: 3px solid #46516b;
-    border-radius: 16px;
+
     background:
         linear-gradient(
             to bottom,
-            #17253c 0%,
-            #263957 57%,
-            #40533b 57%,
-            #30432e 100%
+            #182840 0%,
+            #263a58 57%,
+            #34492e 57%,
+            #34492e 100%
         );
-    box-shadow: 0 10px 35px rgba(0,0,0,.35);
+
+    border: 4px solid #66738b;
+    border-radius: 18px;
 }
 
-.sun,
-.moon {
+/* Sonne */
+
+#sun {
     position: absolute;
-    width: 65px;
-    height: 65px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    pointer-events: none;
-}
-
-.sun {
-    right: 100px;
+    background: #ffd75a;
+    right: 80px;
     top: 45px;
-    background: #ffd95a;
-    box-shadow: 0 0 40px #ffd95a;
+    box-shadow: 0 0 35px #ffd75a;
 }
 
-.moon {
-    left: 100px;
-    top: 45px;
-    background: #e7ecff;
-    box-shadow: 0 0 30px #b9c7ff;
-    display: none;
-}
+/* Boden */
 
-.cloud {
-    position: absolute;
-    background: rgba(255,255,255,.12);
-    width: 120px;
-    height: 35px;
-    border-radius: 50px;
-    pointer-events: none;
-}
-
-.cloud:before,
-.cloud:after {
-    content: "";
-    position: absolute;
-    background: inherit;
-    border-radius: 50%;
-}
-
-.cloud:before {
-    width: 55px;
-    height: 55px;
-    left: 20px;
-    bottom: 5px;
-}
-
-.cloud:after {
-    width: 65px;
-    height: 65px;
-    right: 15px;
-    bottom: 0;
-}
-
-.ground {
+#ground {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     height: 43%;
-    background:
-        repeating-linear-gradient(
-            90deg,
-            transparent 0,
-            transparent 45px,
-            rgba(0,0,0,.06) 46px
-        ),
-        #34482f;
-    border-top: 4px solid #64794b;
+    background: #34492e;
+    border-top: 4px solid #738653;
 }
 
-.road {
+/* Straße */
+
+#road {
     position: absolute;
     left: 5%;
     right: 5%;
-    bottom: 105px;
+    bottom: 75px;
     height: 95px;
-    border-radius: 45px;
-    background: #6b5b4b;
-    border: 5px solid #8a7864;
-    box-shadow: inset 0 10px 0 rgba(255,255,255,.06);
+
+    background: #66584b;
+
+    border: 6px solid #8b7964;
+    border-radius: 55px;
 }
 
-.road-line {
+/* Straßenmarkierungen */
+
+#road::after {
+    content: "";
     position: absolute;
-    left: 6%;
-    right: 6%;
-    bottom: 151px;
+    left: 15px;
+    right: 15px;
+    top: 43px;
     height: 5px;
+
     background: repeating-linear-gradient(
         90deg,
-        #d6c38d 0,
-        #d6c38d 40px,
-        transparent 40px,
-        transparent 75px
+        #d5c48e 0px,
+        #d5c48e 55px,
+        transparent 55px,
+        transparent 90px
     );
-    opacity: .65;
 }
 
-/* HÄUSER */
+/* =========================
+   HÄUSER
+========================= */
 
 .house {
     position: absolute;
-    bottom: 195px;
-    width: 125px;
+    bottom: 175px;
+    width: 120px;
     height: 150px;
     z-index: 10;
 }
+
+.enemy-house {
+    left: 15px;
+}
+
+.player-house {
+    right: 15px;
+}
+
+/* Hauskörper */
 
 .house-body {
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 105px;
-    background: #9a654b;
-    border: 5px solid #553c35;
-    border-radius: 5px;
+
+    background: #9b6750;
+    border: 5px solid #563e36;
 }
 
-.house-roof {
+/* Feindhaus */
+
+.enemy-house .house-body {
+    background: #69484e;
+}
+
+/* Dach */
+
+.roof {
     position: absolute;
-    left: -15px;
     top: 5px;
-    width: 155px;
+    left: -15px;
+
+    width: 150px;
     height: 70px;
-    background: #743b38;
-    clip-path: polygon(50% 0, 100% 100%, 0 100%);
-    border-bottom: 6px solid #4d2e2d;
+
+    background: #773d3d;
+
+    clip-path: polygon(
+        50% 0,
+        100% 100%,
+        0 100%
+    );
 }
 
-.house-door {
+/* Tür */
+
+.door {
     position: absolute;
     bottom: 0;
-    left: 43px;
-    width: 40px;
+    left: 38px;
+
+    width: 42px;
     height: 65px;
-    background: #4a342c;
-    border: 4px solid #30251f;
+
+    background: #4b352e;
+    border: 4px solid #30241f;
 }
+
+/* Fenster */
 
 .window {
     position: absolute;
-    bottom: 45px;
-    width: 28px;
-    height: 28px;
-    background: #9ee8ff;
-    border: 4px solid #453a36;
+    width: 30px;
+    height: 30px;
+    bottom: 48px;
+
+    background: #075968;
+    border: 4px solid #d2c4b4;
 }
 
-.window.left {
-    left: 10px;
+.window1 {
+    left: 8px;
 }
 
-.window.right {
-    right: 10px;
+.window2 {
+    right: 8px;
 }
 
-.enemy-house {
-    left: 12px;
-}
+/* =========================
+   HAUS LEBEN
+========================= */
 
-.player-house {
-    right: 12px;
-}
-
-.enemy-house .house-body {
-    background: #68484d;
-}
-
-.enemy-house .house-roof {
-    background: #442c35;
-}
-
-/* HEALTH BAR */
-
-.health {
+#houseBar {
     position: absolute;
+    right: 10px;
     top: -32px;
-    left: 50%;
-    transform: translateX(-50%);
+
     width: 130px;
-    height: 16px;
+    height: 17px;
+
     background: #222;
     border: 2px solid #111;
     border-radius: 10px;
+
     overflow: hidden;
 }
 
-.health-fill {
+#houseHealth {
+    width: 100%;
     height: 100%;
-    width: 100%;
     background: #36d36b;
-    transition: width .2s;
 }
 
-.health-text {
-    position: absolute;
-    top: -52px;
-    width: 100%;
-    text-align: center;
-    font-weight: bold;
-    font-size: 13px;
-}
-
-/* GAME OBJECTS */
+/* =========================
+   GEGNER
+========================= */
 
 .enemy {
     position: absolute;
+
     width: 42px;
-    height: 52px;
+    height: 55px;
+
     z-index: 20;
-    transition: filter .1s;
 }
 
-.enemy-body {
+.enemyHead {
     position: absolute;
-    bottom: 0;
-    left: 8px;
-    width: 26px;
-    height: 34px;
-    background: #c74848;
-    border: 3px solid #662c2c;
-    border-radius: 9px;
-}
 
-.enemy-head {
-    position: absolute;
+    width: 25px;
+    height: 25px;
+
+    left: 9px;
     top: 0;
-    left: 10px;
-    width: 22px;
-    height: 22px;
-    background: #d97862;
-    border: 3px solid #66352e;
+
+    background: #d77d68;
+    border: 3px solid #673a32;
     border-radius: 50%;
 }
 
-.enemy.fast .enemy-body {
-    background: #d69c35;
+.enemyBody {
+    position: absolute;
+
+    width: 30px;
+    height: 35px;
+
+    left: 6px;
+    bottom: 0;
+
+    background: #c84848;
+    border: 3px solid #682d2d;
+    border-radius: 9px;
 }
 
-.enemy.tank .enemy-body {
-    background: #69758a;
-    width: 34px;
-    left: 4px;
+.enemy.fast .enemyBody {
+    background: #d59b35;
+}
+
+.enemy.tank .enemyBody {
+    width: 38px;
+    left: 2px;
+    background: #69778b;
 }
 
 .enemy.boss {
-    transform: scale(1.35);
+    transform: scale(1.4);
 }
 
-.enemy.boss .enemy-body {
-    background: #793c91;
-    width: 38px;
-    left: 2px;
+.enemy.boss .enemyBody {
+    width: 40px;
+    left: 1px;
+    background: #763d91;
 }
 
-.enemy-health {
+/* Gegner Lebensbalken */
+
+.enemyBar {
     position: absolute;
-    top: -12px;
+
     left: 0;
+    top: -10px;
+
     width: 42px;
     height: 6px;
+
     background: #222;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.enemy-health-fill {
+.enemyHP {
+    width: 100%;
     height: 100%;
-    background: #45d36c;
+    background: #38d267;
 }
 
-/* DEFENDER */
+/* =========================
+   VERTEIDIGER
+========================= */
 
-.defender {
+.tower {
     position: absolute;
-    width: 60px;
+
+    width: 55px;
     height: 70px;
-    z-index: 25;
+
+    z-index: 30;
+
     cursor: pointer;
 }
 
-.defender-body {
+.towerHead {
     position: absolute;
-    left: 17px;
-    bottom: 0;
-    width: 27px;
-    height: 42px;
-    border-radius: 8px;
-    background: #4d88d8;
-    border: 3px solid #253f67;
+
+    width: 26px;
+    height: 26px;
+
+    left: 15px;
+    top: 0;
+
+    background: #e0a67d;
+    border: 3px solid #684737;
+    border-radius: 50%;
 }
 
-.defender-head {
+.towerBody {
     position: absolute;
-    left: 18px;
-    top: 3px;
-    width: 25px;
-    height: 25px;
-    background: #e5ae86;
-    border-radius: 50%;
-    border: 3px solid #6e4736;
+
+    left: 12px;
+    bottom: 0;
+
+    width: 31px;
+    height: 44px;
+
+    background: #477fc9;
+
+    border: 3px solid #263e65;
+    border-radius: 8px;
+}
+
+.tower.cannon .towerBody {
+    background: #777d88;
+}
+
+.tower.rapid .towerBody {
+    background: #3d9b6d;
 }
 
 .weapon {
     position: absolute;
+
     width: 32px;
     height: 8px;
-    background: #262a31;
-    right: -4px;
+
+    right: -3px;
     top: 32px;
-    border-radius: 4px;
+
+    background: #222;
+    border-radius: 5px;
 }
 
-.defender.cannon .defender-body {
-    background: #767b87;
+/* Auswahl */
+
+.tower.selected {
+    filter: brightness(1.4);
 }
 
-.defender.cannon .weapon {
-    height: 12px;
-    width: 38px;
-}
-
-.defender.rapid .defender-body {
-    background: #43a876;
-}
-
-.range-circle {
-    display: none;
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border: 2px dashed rgba(255,255,255,.3);
-    border-radius: 50%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-}
-
-.defender.selected .range-circle {
-    display: block;
-}
-
-/* BULLETS */
+/* =========================
+   SCHÜSSE
+========================= */
 
 .bullet {
     position: absolute;
+
     width: 10px;
     height: 10px;
-    background: #ffe37c;
+
     border-radius: 50%;
-    box-shadow: 0 0 12px #ffe37c;
-    z-index: 40;
+
+    background: #ffe26e;
+
+    box-shadow: 0 0 12px #ffe26e;
+
+    z-index: 50;
 }
 
-.cannon-bullet {
+.cannonBullet {
     width: 15px;
     height: 15px;
-    background: #ff7c4a;
-    box-shadow: 0 0 15px #ff7c4a;
+
+    background: #ff7548;
+    box-shadow: 0 0 14px #ff7548;
 }
 
-/* EFFECTS */
+/* =========================
+   EFFEKTE
+========================= */
 
-.damage-text {
+.damage {
     position: absolute;
-    z-index: 100;
-    color: #fff;
+
+    color: white;
     font-weight: bold;
-    animation: floatUp .7s forwards;
+
+    z-index: 100;
+
     pointer-events: none;
+
+    animation: float 0.7s forwards;
 }
 
-@keyframes floatUp {
+@keyframes float {
+
     from {
         transform: translateY(0);
         opacity: 1;
     }
+
     to {
-        transform: translateY(-45px);
+        transform: translateY(-40px);
         opacity: 0;
     }
+
 }
 
-.explosion {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 5px solid #ffb347;
-    z-index: 80;
-    pointer-events: none;
-    animation: explode .45s forwards;
-}
+/* =========================
+   MENÜ
+========================= */
 
-@keyframes explode {
-    from {
-        transform: scale(.2);
-        opacity: 1;
-    }
-    to {
-        transform: scale(1.6);
-        opacity: 0;
-    }
-}
-
-/* CONTROLS */
-
-.controls {
-    margin-top: 12px;
+#controls {
     display: flex;
     flex-wrap: wrap;
+
     justify-content: center;
-    gap: 9px;
+
+    gap: 8px;
+
+    margin-top: 12px;
 }
 
 button {
-    border: 0;
-    border-radius: 10px;
-    padding: 13px 16px;
-    background: #27334a;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #45536e;
-    transition: transform .1s, background .1s;
-}
+    border: 2px solid #56657e;
 
-button:hover {
-    background: #34435f;
+    background: #202b42;
+
+    color: white;
+
+    padding: 13px 16px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
 }
 
 button:active {
     transform: scale(.96);
 }
 
-button.selected {
-    background: #3677c7;
+button.active {
+    background: #3478c9;
 }
 
 button.special {
-    background: #7e3f9f;
+    background: #713d91;
 }
 
-button:disabled {
-    opacity: .45;
-    cursor: not-allowed;
+button.start {
+    background: #277d50;
 }
 
-.info {
+/* =========================
+   HINWEIS
+========================= */
+
+#message {
     margin-top: 10px;
+
+    background: #182237;
+
+    border: 2px solid #465570;
+
+    border-radius: 12px;
+
     padding: 12px;
-    background: #1a2130;
-    border-radius: 10px;
+
     text-align: center;
-    color: #b9c4d8;
-    font-size: 14px;
+
+    min-height: 45px;
 }
 
-.message {
+/* =========================
+   GAME OVER
+========================= */
+
+#gameOver {
     position: absolute;
-    top: 50%;
+
     left: 50%;
+    top: 50%;
+
     transform: translate(-50%, -50%);
-    z-index: 200;
-    background: rgba(10,14,24,.93);
-    padding: 30px;
+
+    background: rgba(10,15,25,.95);
+
+    border: 3px solid #697791;
+
     border-radius: 18px;
-    border: 2px solid #53627e;
+
+    padding: 25px;
+
+    width: 85%;
+
     text-align: center;
-    width: min(90%, 430px);
+
+    z-index: 200;
+
     display: none;
 }
 
-.message h2 {
-    margin-top: 0;
+#gameOver button {
+    background: #3478c9;
 }
 
-.message button {
-    margin-top: 15px;
-    background: #3677c7;
-}
+/* =========================
+   MOBILE
+========================= */
 
-@media(max-width:700px) {
-    #game {
-        height: 500px;
-    }
-
-    .house {
-        transform: scale(.8);
-        transform-origin: bottom center;
-    }
-
-    .road {
-        bottom: 95px;
-        height: 80px;
-    }
-
-    .road-line {
-        bottom: 133px;
-    }
-
-    .enemy {
-        transform: scale(.85);
-    }
-
-    .stat {
-        min-width: 90px;
-        padding: 7px 9px;
-    }
+@media(max-width:600px) {
 
     h1 {
         font-size: 24px;
     }
 
-    button {
-        padding: 11px 12px;
-        font-size: 13px;
+    #game {
+        height: 500px;
     }
+
+    .stat {
+        min-width: 80px;
+        padding: 7px 10px;
+    }
+
+    .stat strong {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 13px;
+        padding: 11px 12px;
+    }
+
+    .house {
+        transform: scale(.85);
+        transform-origin: bottom center;
+    }
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="game-wrapper">
+<div id="app">
 
 <h1>🏠 SIDE DEFENSE</h1>
 
-<div class="topbar">
+<div id="stats">
 
     <div class="stat">
-        <span>💰 Geld</span>
+        <small>💰 Geld</small>
         <strong id="money">300</strong>
     </div>
 
     <div class="stat">
-        <span>❤️ Dein Haus</span>
-        <strong id="houseHP">100</strong>
+        <small>❤️ Haus</small>
+        <strong id="hpText">100</strong>
     </div>
 
     <div class="stat">
-        <span>🌊 Welle</span>
-        <strong id="wave">0</strong>
+        <small>🌊 Welle</small>
+        <strong id="waveText">0</strong>
     </div>
 
     <div class="stat">
-        <span>👾 Gegner</span>
-        <strong id="enemyCount">0</strong>
+        <small>👾 Gegner</small>
+        <strong id="enemyText">0</strong>
     </div>
 
 </div>
 
 <div id="game">
 
-    <div class="sun"></div>
-    <div class="moon"></div>
+    <div id="sun"></div>
 
-    <div class="cloud" style="left:25%;top:80px;"></div>
-    <div class="cloud" style="left:55%;top:125px;transform:scale(.7);"></div>
+    <div id="ground"></div>
 
-    <div class="ground"></div>
-    <div class="road"></div>
-    <div class="road-line"></div>
+    <div id="road"></div>
 
     <!-- FEINDHAUS -->
 
     <div class="house enemy-house">
 
-        <div class="house-roof"></div>
+        <div class="roof"></div>
 
         <div class="house-body">
-            <div class="window left"></div>
-            <div class="window right"></div>
-            <div class="house-door"></div>
+
+            <div class="window window1"></div>
+            <div class="window window2"></div>
+
+            <div class="door"></div>
+
         </div>
 
     </div>
 
-    <!-- SPIELERHAUS -->
+    <!-- DEIN HAUS -->
 
     <div class="house player-house">
 
-        <div class="health">
-            <div class="health-fill" id="houseHealthBar"></div>
+        <div id="houseBar">
+            <div id="houseHealth"></div>
         </div>
 
-        <div class="health-text">DEIN HAUS</div>
-
-        <div class="house-roof"></div>
+        <div class="roof"></div>
 
         <div class="house-body">
-            <div class="window left"></div>
-            <div class="window right"></div>
-            <div class="house-door"></div>
+
+            <div class="window window1"></div>
+            <div class="window window2"></div>
+
+            <div class="door"></div>
+
         </div>
 
     </div>
 
-    <div id="message" class="message">
-        <h2 id="messageTitle">Welle geschafft!</h2>
-        <p id="messageText"></p>
-        <button onclick="closeMessage()">Weiter</button>
+    <!-- GAME OVER -->
+
+    <div id="gameOver">
+
+        <h2>🏚️ Dein Haus wurde zerstört!</h2>
+
+        <p id="gameOverText"></p>
+
+        <button onclick="restartGame()">
+            🔄 Neu starten
+        </button>
+
     </div>
 
 </div>
 
-<div class="controls">
+<div id="controls">
 
-    <button id="btnShooter" onclick="selectTower('shooter')">
-        🔫 Schütze<br>75 €
+    <button
+        id="shootButton"
+        onclick="chooseTower('shooter')">
+
+        🔫 Schütze<br>
+        75 €
+
     </button>
 
-    <button id="btnCannon" onclick="selectTower('cannon')">
-        💣 Kanone<br>150 €
+    <button
+        id="cannonButton"
+        onclick="chooseTower('cannon')">
+
+        💣 Kanone<br>
+        150 €
+
     </button>
 
-    <button id="btnRapid" onclick="selectTower('rapid')">
-        ⚡ Schnellschütze<br>120 €
+    <button
+        id="rapidButton"
+        onclick="chooseTower('rapid')">
+
+        ⚡ Schnellschütze<br>
+        120 €
+
     </button>
 
-    <button onclick="upgradeSelected()">
-        ⬆️ Upgrade<br>100 €
+    <button onclick="upgradeTower()">
+
+        ⬆️ Upgrade
+
     </button>
 
     <button onclick="buildBarricade()">
-        🧱 Barrikade<br>80 €
+
+        🧱 Barrikade<br>
+        80 €
+
     </button>
 
-    <button class="special" id="specialButton" onclick="specialAttack()">
+    <button
+        class="special"
+        id="airButton"
+        onclick="airStrike()">
+
         💥 Luftangriff
+
     </button>
 
-    <button onclick="startWave()">
+    <button
+        class="start"
+        onclick="startWave()">
+
         ▶️ Welle starten
+
     </button>
 
 </div>
 
-<div class="info" id="info">
-    Wähle eine Verteidigung und klicke anschließend auf den Boden,
-    um sie zu platzieren.
+<div id="message">
+
+    Wähle einen Verteidiger und tippe anschließend
+    auf eine freie Stelle auf dem Spielfeld.
+
 </div>
 
 </div>
 
 <script>
 
-/* =========================
-   SPIELVARIABLEN
-========================= */
+/* =====================================================
+   GRUNDVARIABLEN
+===================================================== */
 
 const game = document.getElementById("game");
 
@@ -738,298 +788,362 @@ let houseHP = 100;
 let wave = 0;
 
 let enemies = [];
-let defenders = [];
+let towers = [];
 let bullets = [];
 
+let selectedTowerType = null;
 let selectedTower = null;
-let selectedDefender = null;
 
 let waveRunning = false;
-let enemiesToSpawn = 0;
-let spawnTimer = null;
+let spawnLeft = 0;
 
-let specialReady = true;
+let lastTime = performance.now();
 
-const towerCosts = {
-    shooter: 75,
-    cannon: 150,
-    rapid: 120
-};
+let airReady = true;
 
-const towerStats = {
+
+/* =====================================================
+   TOWER DATEN
+===================================================== */
+
+const towerData = {
 
     shooter: {
+        cost: 75,
         damage: 12,
-        range: 220,
-        speed: 900
+        range: 240,
+        cooldown: 900
     },
 
     cannon: {
+        cost: 150,
         damage: 35,
-        range: 250,
-        speed: 1700
+        range: 270,
+        cooldown: 1600
     },
 
     rapid: {
+        cost: 120,
         damage: 7,
-        range: 190,
-        speed: 350
+        range: 210,
+        cooldown: 350
     }
 
 };
 
-/* =========================
+
+/* =====================================================
    UI
-========================= */
+===================================================== */
 
 function updateUI() {
 
     document.getElementById("money").textContent = money;
-    document.getElementById("houseHP").textContent = houseHP;
-    document.getElementById("wave").textContent = wave;
-    document.getElementById("enemyCount").textContent = enemies.length;
 
-    document.getElementById("houseHealthBar").style.width =
+    document.getElementById("hpText").textContent =
+        Math.max(0, houseHP);
+
+    document.getElementById("waveText").textContent =
+        wave;
+
+    document.getElementById("enemyText").textContent =
+        enemies.length;
+
+    document.getElementById("houseHealth").style.width =
         Math.max(0, houseHP) + "%";
 
 }
 
-function showInfo(text) {
-    document.getElementById("info").textContent = text;
+
+/* =====================================================
+   MELDUNG
+===================================================== */
+
+function message(text) {
+
+    document.getElementById("message").textContent = text;
+
 }
 
-/* =========================
+
+/* =====================================================
    TOWER AUSWÄHLEN
-========================= */
+===================================================== */
 
-function selectTower(type) {
+function chooseTower(type) {
 
-    selectedTower = type;
-    selectedDefender = null;
+    selectedTowerType = type;
+    selectedTower = null;
 
-    document.querySelectorAll(".controls button")
-        .forEach(btn => btn.classList.remove("selected"));
+    document
+        .querySelectorAll("#controls button")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
 
-    document.getElementById(
-        "btn" +
-        type.charAt(0).toUpperCase() +
-        type.slice(1)
-    ).classList.add("selected");
+    if(type === "shooter") {
+        document
+            .getElementById("shootButton")
+            .classList.add("active");
+    }
 
-    showInfo(
-        "Klicke auf eine freie Stelle am Boden, um den " +
-        typeName(type) + " zu platzieren."
+    if(type === "cannon") {
+        document
+            .getElementById("cannonButton")
+            .classList.add("active");
+    }
+
+    if(type === "rapid") {
+        document
+            .getElementById("rapidButton")
+            .classList.add("active");
+    }
+
+    message(
+        "📍 Jetzt auf eine freie Stelle auf dem Boden tippen."
     );
 
 }
 
-function typeName(type) {
 
-    if(type === "shooter") return "Schützen";
-    if(type === "cannon") return "Kanone";
-    if(type === "rapid") return "Schnellschützen";
+/* =====================================================
+   SPIELFELD KLICK / TOUCH
+===================================================== */
 
-    return type;
-}
+game.addEventListener("pointerdown", function(event) {
 
-/* =========================
-   TOWER PLATZIEREN
-========================= */
-
-game.addEventListener("click", function(e) {
-
-    if(!selectedTower) return;
+    if(!selectedTowerType) {
+        return;
+    }
 
     if(
-        e.target.closest(".house") ||
-        e.target.closest(".enemy") ||
-        e.target.closest(".defender") ||
-        e.target.closest(".message")
-    ) return;
+        event.target.closest(".house") ||
+        event.target.closest(".enemy") ||
+        event.target.closest(".tower") ||
+        event.target.closest("#gameOver")
+    ) {
+        return;
+    }
 
     const rect = game.getBoundingClientRect();
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    // Verteidiger nur im mittleren Bereich
+    /*
+       Nur der untere mittlere Bereich
+       darf bebaut werden.
+    */
+
     if(
-        x < 150 ||
-        x > rect.width - 150 ||
+        x < 140 ||
+        x > rect.width - 140 ||
         y < 250 ||
-        y > rect.height - 120
+        y > rect.height - 70
     ) {
 
-        showInfo("Hier kannst du keine Verteidigung aufstellen.");
-        return;
+        message(
+            "❌ Hier kannst du keinen Verteidiger aufstellen."
+        );
 
+        return;
     }
 
-    const cost = towerCosts[selectedTower];
-
-    if(money < cost) {
-
-        showInfo("Nicht genug Geld!");
-        return;
-
-    }
-
-    money -= cost;
-
-    createDefender(
-        selectedTower,
+    placeTower(
+        selectedTowerType,
         x,
         y
     );
 
-    selectedTower = null;
-
-    document.querySelectorAll(".controls button")
-        .forEach(btn => btn.classList.remove("selected"));
-
-    showInfo("Verteidiger aufgestellt!");
-
-    updateUI();
-
 });
 
-/* =========================
-   DEFENDER ERSTELLEN
-========================= */
 
-function createDefender(type, x, y) {
+/* =====================================================
+   TOWER PLATZIEREN
+===================================================== */
 
-    const el = document.createElement("div");
+function placeTower(type, x, y) {
 
-    el.className = "defender " + type;
+    const data = towerData[type];
 
-    el.innerHTML = `
-        <div class="range-circle"></div>
-        <div class="defender-head"></div>
-        <div class="defender-body"></div>
+    if(money < data.cost) {
+
+        message(
+            "💰 Nicht genug Geld!"
+        );
+
+        return;
+    }
+
+    money -= data.cost;
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "tower " + type;
+
+    element.innerHTML = `
+
+        <div class="towerHead"></div>
+
+        <div class="towerBody"></div>
+
         <div class="weapon"></div>
+
     `;
 
-    el.style.left = (x - 30) + "px";
-    el.style.top = (y - 70) + "px";
+    element.style.left =
+        (x - 27) + "px";
 
-    game.appendChild(el);
+    element.style.top =
+        (y - 70) + "px";
 
-    const defender = {
+    game.appendChild(element);
+
+    const tower = {
 
         id: Date.now() + Math.random(),
 
         type: type,
 
         x: x,
+
         y: y,
+
+        damage: data.damage,
+
+        range: data.range,
+
+        cooldown: data.cooldown,
 
         level: 1,
 
-        damage: towerStats[type].damage,
-
-        range: towerStats[type].range,
-
-        cooldown: towerStats[type].speed,
-
         lastShot: 0,
 
-        element: el
+        element: element
 
     };
 
-    defenders.push(defender);
+    towers.push(tower);
 
-    el.addEventListener("click", function(e) {
+    element.addEventListener(
+        "pointerdown",
+        function(event) {
 
-        e.stopPropagation();
+            event.stopPropagation();
 
-        selectDefender(defender);
+            selectExistingTower(tower);
 
-    });
-
-}
-
-/* =========================
-   DEFENDER AUSWÄHLEN
-========================= */
-
-function selectDefender(defender) {
-
-    defenders.forEach(d =>
-        d.element.classList.remove("selected")
+        }
     );
 
-    selectedDefender = defender;
+    selectedTowerType = null;
 
-    defender.element.classList.add("selected");
+    document
+        .querySelectorAll("#controls button")
+        .forEach(button => {
+            button.classList.remove("active");
+        });
 
-    selectedTower = null;
-
-    showInfo(
-        typeName(defender.type) +
-        " ausgewählt | Level " +
-        defender.level +
-        " | Schaden: " +
-        defender.damage
-    );
-
-}
-
-/* =========================
-   UPGRADES
-========================= */
-
-function upgradeSelected() {
-
-    if(!selectedDefender) {
-
-        showInfo("Wähle zuerst einen Verteidiger aus.");
-        return;
-
-    }
-
-    const cost = 100 * selectedDefender.level;
-
-    if(money < cost) {
-
-        showInfo(
-            "Upgrade kostet " +
-            cost +
-            " €."
-        );
-
-        return;
-
-    }
-
-    money -= cost;
-
-    selectedDefender.level++;
-
-    selectedDefender.damage =
-        Math.round(selectedDefender.damage * 1.35);
-
-    selectedDefender.range += 20;
-
-    selectedDefender.cooldown =
-        Math.max(
-            180,
-            selectedDefender.cooldown * .9
-        );
-
-    showInfo(
-        "Upgrade erfolgreich! Level " +
-        selectedDefender.level
+    message(
+        "✅ Verteidiger aufgestellt!"
     );
 
     updateUI();
 
 }
 
-/* =========================
+
+/* =====================================================
+   BESTEHENDEN TOWER AUSWÄHLEN
+===================================================== */
+
+function selectExistingTower(tower) {
+
+    towers.forEach(t => {
+
+        t.element.classList.remove("selected");
+
+    });
+
+    selectedTower = tower;
+
+    selectedTowerType = null;
+
+    tower.element.classList.add("selected");
+
+    message(
+        "🎯 " +
+        tower.type +
+        " ausgewählt. Upgrade kostet " +
+        (100 * tower.level) +
+        " €."
+    );
+
+}
+
+
+/* =====================================================
+   UPGRADE
+===================================================== */
+
+function upgradeTower() {
+
+    if(!selectedTower) {
+
+        message(
+            "❗ Wähle zuerst einen Verteidiger aus."
+        );
+
+        return;
+    }
+
+    const cost =
+        100 * selectedTower.level;
+
+    if(money < cost) {
+
+        message(
+            "💰 Das Upgrade kostet " +
+            cost +
+            " €."
+        );
+
+        return;
+    }
+
+    money -= cost;
+
+    selectedTower.level++;
+
+    selectedTower.damage =
+        Math.round(
+            selectedTower.damage * 1.4
+        );
+
+    selectedTower.range += 20;
+
+    selectedTower.cooldown =
+        Math.max(
+            200,
+            selectedTower.cooldown * .9
+        );
+
+    message(
+        "⬆️ Upgrade auf Level " +
+        selectedTower.level +
+        "!"
+    );
+
+    updateUI();
+
+}
+
+
+/* =====================================================
    BARRIKADE
-========================= */
+===================================================== */
 
 function buildBarricade() {
 
@@ -1037,98 +1151,79 @@ function buildBarricade() {
 
     if(money < cost) {
 
-        showInfo("Nicht genug Geld für eine Barrikade.");
-        return;
+        message(
+            "💰 Nicht genug Geld für die Barrikade."
+        );
 
+        return;
     }
 
     money -= cost;
 
-    const barricade = document.createElement("div");
+    const barricade =
+        document.createElement("div");
 
-    barricade.style.position = "absolute";
+    barricade.className =
+        "barricade";
+
+    barricade.style.position =
+        "absolute";
+
     barricade.style.left =
-        (game.clientWidth - 210) + "px";
-    barricade.style.bottom = "180px";
-    barricade.style.width = "80px";
-    barricade.style.height = "55px";
-    barricade.style.background = "#8b6a45";
-    barricade.style.border = "5px solid #503a28";
-    barricade.style.zIndex = "15";
-    barricade.style.borderRadius = "8px";
+        (game.clientWidth - 220) + "px";
 
-    barricade.innerHTML =
-        "<div style='text-align:center;margin-top:13px;font-size:25px;'>🧱</div>";
+    barricade.style.bottom =
+        "175px";
+
+    barricade.style.width =
+        "75px";
+
+    barricade.style.height =
+        "50px";
+
+    barricade.style.background =
+        "#8c6b46";
+
+    barricade.style.border =
+        "5px solid #513b27";
+
+    barricade.style.borderRadius =
+        "8px";
+
+    barricade.style.zIndex =
+        "15";
+
+    barricade.style.textAlign =
+        "center";
+
+    barricade.style.fontSize =
+        "28px";
+
+    barricade.style.paddingTop =
+        "6px";
+
+    barricade.textContent = "🧱";
+
+    barricade.hp = 100;
 
     game.appendChild(barricade);
 
-    barricade.hp = 80;
-
-    showInfo(
-        "Barrikade gebaut! Sie hält Gegner eine Weile auf."
+    message(
+        "🧱 Barrikade gebaut!"
     );
 
     updateUI();
 
 }
 
-/* =========================
-   WELLEN
-========================= */
+
+/* =====================================================
+   WELLEN STARTEN
+===================================================== */
 
 function startWave() {
 
     if(waveRunning) {
 
-        showInfo("Die aktuelle Welle läuft bereits.");
-        return;
-
-    }
-
-    wave++;
-
-    waveRunning = true;
-
-    enemiesToSpawn =
-        5 + wave * 2;
-
-    showInfo(
-        "Welle " +
-        wave +
-        " beginnt!"
-    );
-
-    spawnTimer = setInterval(() => {
-
-        if(enemiesToSpawn <= 0) {
-
-            clearInterval(spawnTimer);
-
-            spawnTimer = null;
-
-            return;
-
-        }
-
-        spawnEnemy();
-
-        enemiesToSpawn--;
-
-    }, 1000);
-
-    updateUI();
-
-}
-
-/* =========================
-   GEGNER ERSTELLEN
-========================= */
-
-function spawnEnemy() {
-
-    let type = "normal";
-
-    const random = Math.random();
-
-    if(wave >= 3 && random < .2)
-       
+        message(
+            "🌊
