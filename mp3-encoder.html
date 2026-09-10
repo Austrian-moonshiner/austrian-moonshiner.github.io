@@ -1,0 +1,667 @@
+/*
+ * ============================================================
+ * B-MP3-ENCODER
+ * Version 0.1
+ *
+ * Eigenständiges MP3-Encoder-Projekt
+ *
+ * Ziel:
+ *   MPEG-1 Layer III
+ *   44.100 Hz
+ *   Stereo
+ *   128 kbit/s CBR
+ *
+ * Diese Version legt zunächst das Bitstream-Grundgerüst an.
+ * Der eigentliche Audio-Encoder wird anschließend ergänzt.
+ * ============================================================
+ */
+
+"use strict";
+
+
+class BMP3Encoder {
+
+    constructor(options = {}) {
+
+        this.sampleRate = options.sampleRate || 44100;
+        this.bitrate = options.bitrate || 128;
+        this.channels = options.channels || 2;
+
+        if (this.sampleRate !== 44100) {
+            throw new Error(
+                "Version 0.1 unterstützt zunächst nur 44.100 Hz."
+            );
+        }
+
+        if (this.bitrate !== 128) {
+            throw new Error(
+                "Version 0.1 unterstützt zunächst nur 128 kbit/s."
+            );
+        }
+
+        if (this.channels !== 1 && this.channels !== 2) {
+            throw new Error(
+                "Es werden nur Mono und Stereo unterstützt."
+            );
+        }
+
+        /*
+         * MPEG-1 Layer III:
+         *
+         * 1152 Samples pro Frame
+         *
+         * Ein Frame besteht aus:
+         *
+         * Header
+         * Side Information
+         * Main Data
+         */
+
+        this.samplesPerFrame = 1152;
+
+        this.frameSamples = [];
+
+        this.frameCount = 0;
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * Öffentliche encode()-Funktion
+     * --------------------------------------------------------
+     */
+
+    encode(leftChannel, rightChannel = null) {
+
+        if (!(leftChannel instanceof Float32Array)) {
+            throw new TypeError(
+                "leftChannel muss ein Float32Array sein."
+            );
+        }
+
+        if (this.channels === 2) {
+
+            if (!(rightChannel instanceof Float32Array)) {
+                throw new TypeError(
+                    "Für Stereo wird ein rechter Kanal benötigt."
+                );
+            }
+
+            if (leftChannel.length !== rightChannel.length) {
+                throw new Error(
+                    "Linker und rechter Kanal müssen gleich lang sein."
+                );
+            }
+        }
+
+
+        /*
+         * Die Audiodaten werden zunächst in
+         * 1152-Sample-Blöcke aufgeteilt.
+         */
+
+        const totalSamples = leftChannel.length;
+
+        for (
+            let position = 0;
+            position < totalSamples;
+            position += this.samplesPerFrame
+        ) {
+
+            const end = Math.min(
+                position + this.samplesPerFrame,
+                totalSamples
+            );
+
+
+            const left = new Float32Array(
+                this.samplesPerFrame
+            );
+
+
+            left.set(
+                leftChannel.subarray(position, end)
+            );
+
+
+            let right = null;
+
+
+            if (this.channels === 2) {
+
+                right = new Float32Array(
+                    this.samplesPerFrame
+                );
+
+                right.set(
+                    rightChannel.subarray(position, end)
+                );
+            }
+
+
+            /*
+             * Hier kommt später die eigentliche
+             * Layer-III-Codierung hinein.
+             */
+
+            const frame = this.encodeFrame(
+                left,
+                right
+            );
+
+
+            this.frameSamples.push(frame);
+
+            this.frameCount++;
+        }
+
+
+        /*
+         * Alle Frames zu einem MP3-Byte-Array verbinden.
+         */
+
+        return this.joinFrames();
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * Einen MPEG-1-Layer-III-Frame erzeugen
+     * --------------------------------------------------------
+     */
+
+    encodeFrame(left, right) {
+
+        /*
+         * MP3 Framegröße:
+         *
+         *   floor(144 * bitrate / samplerate)
+         *
+         * Bei 128 kbit/s und 44.1 kHz:
+         *
+         *   floor(144 * 128000 / 44100)
+         *   = 417 Bytes
+         *
+         * Padding wird später berücksichtigt.
+         */
+
+        const baseSize = Math.floor(
+            144 * this.bitrate * 1000 /
+            this.sampleRate
+        );
+
+
+        /*
+         * Für den ersten Encoder-Schritt
+         * verwenden wir keinen Padding-Slot.
+         */
+
+        const frameSize = baseSize;
+
+
+        const frame = new Uint8Array(
+            frameSize
+        );
+
+
+        /*
+         * ----------------------------------------------------
+         * MP3 HEADER
+         * ----------------------------------------------------
+         *
+         * MPEG-1
+         * Layer III
+         * keine CRC
+         * 128 kbit/s
+         * 44.1 kHz
+         * Stereo
+         * Original
+         */
+
+
+        const header = this.createHeader();
+
+
+        frame.set(header, 0);
+
+
+        /*
+         * ----------------------------------------------------
+         * SIDE INFORMATION
+         * ----------------------------------------------------
+         *
+         * MPEG-1 Stereo:
+         * 32 Bytes
+         *
+         * Der spätere Encoder wird hier u.a.
+         * main_data_begin, Part2_3Length,
+         * global_gain usw. setzen.
+         */
+
+        const sideInfo = this.createSideInfo();
+
+
+        frame.set(
+            sideInfo,
+            4
+        );
+
+
+        /*
+         * Der Rest des Frames ist momentan
+         * reserviertes Main-Data-Gebiet.
+         *
+         * Hier wird später:
+         *
+         *   Filterbank
+         *   MDCT
+         *   Quantisierung
+         *   Huffman
+         *
+         * eingesetzt.
+         */
+
+
+        return frame;
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * MP3 Frame Header
+     * --------------------------------------------------------
+     */
+
+    createHeader() {
+
+        const header = new Uint8Array(4);
+
+
+        /*
+         * Sync:
+         *
+         * 11 Bit = 11111111111
+         */
+
+        let value = 0x7FF;
+
+
+        /*
+         * MPEG-1 ID
+         *
+         * 3
+         */
+
+        value =
+            (value << 2) |
+            0b11;
+
+
+        /*
+         * Layer III
+         *
+         * Layer-Feld:
+         *
+         * 01 = Layer III
+         */
+
+        value =
+            (value << 2) |
+            0b01;
+
+
+        /*
+         * Protection:
+         *
+         * 1 = kein CRC
+         */
+
+        value =
+            (value << 1) |
+            1;
+
+
+        /*
+         * Bitrate Index:
+         *
+         * MPEG-1 Layer III
+         *
+         * 128 kbit/s = Index 9
+         */
+
+        const bitrateIndex = 9;
+
+        value =
+            (value << 4) |
+            bitrateIndex;
+
+
+        /*
+         * Sample-Rate Index:
+         *
+         * MPEG-1
+         *
+         * 44.1 kHz = 0
+         */
+
+        const sampleRateIndex = 0;
+
+        value =
+            (value << 2) |
+            sampleRateIndex;
+
+
+        /*
+         * Padding = 0
+         */
+
+        value =
+            (value << 1) |
+            0;
+
+
+        /*
+         * Private = 0
+         */
+
+        value =
+            (value << 1) |
+            0;
+
+
+        /*
+         * Channel Mode:
+         *
+         * 00 = Stereo
+         */
+
+        const channelMode =
+            this.channels === 1
+                ? 0b11
+                : 0b00;
+
+        value =
+            (value << 2) |
+            channelMode;
+
+
+        /*
+         * Mode Extension = 00
+         */
+
+        value =
+            (value << 2) |
+            0;
+
+
+        /*
+         * Copyright = 0
+         */
+
+        value =
+            (value << 1) |
+            0;
+
+
+        /*
+         * Original = 1
+         */
+
+        value =
+            (value << 1) |
+            1;
+
+
+        /*
+         * Emphasis = 00
+         */
+
+        value =
+            (value << 2) |
+            0;
+
+
+        header[0] =
+            (value >>> 24) & 0xFF;
+
+        header[1] =
+            (value >>> 16) & 0xFF;
+
+        header[2] =
+            (value >>> 8) & 0xFF;
+
+        header[3] =
+            value & 0xFF;
+
+
+        return header;
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * Side Information
+     * --------------------------------------------------------
+     */
+
+    createSideInfo() {
+
+        /*
+         * MPEG-1 Stereo:
+         *
+         * 32 Bytes Side Information
+         */
+
+        const sideInfo =
+            new Uint8Array(32);
+
+
+        /*
+         * Zunächst alles auf 0.
+         *
+         * Die tatsächlichen Werte werden
+         * im nächsten Entwicklungsschritt
+         * berechnet.
+         */
+
+        sideInfo.fill(0);
+
+
+        return sideInfo;
+    }
+
+
+    /*
+     * --------------------------------------------------------
+     * Frames zusammenfügen
+     * --------------------------------------------------------
+     */
+
+    joinFrames() {
+
+        let totalLength = 0;
+
+
+        for (const frame of this.frameSamples) {
+            totalLength += frame.length;
+        }
+
+
+        const output =
+            new Uint8Array(totalLength);
+
+
+        let offset = 0;
+
+
+        for (const frame of this.frameSamples) {
+
+            output.set(
+                frame,
+                offset
+            );
+
+            offset += frame.length;
+        }
+
+
+        return output;
+    }
+}
+
+
+/*
+ * ============================================================
+ * Hilfsfunktion:
+ * Float32 PCM normalisieren
+ * ============================================================
+ */
+
+function normalizePCM(samples) {
+
+    const result =
+        new Float32Array(samples.length);
+
+
+    for (let i = 0; i < samples.length; i++) {
+
+        let value = samples[i];
+
+
+        if (value > 1) {
+            value = 1;
+        }
+
+        if (value < -1) {
+            value = -1;
+        }
+
+
+        result[i] = value;
+    }
+
+
+    return result;
+}
+
+
+/*
+ * ============================================================
+ * Test
+ * ============================================================
+ *
+ * Erzeugt einen Encoder.
+ */
+
+const encoder =
+    new BMP3Encoder({
+        sampleRate: 44100,
+        bitrate: 128,
+        channels: 2
+    });
+
+
+/*
+ * Testdaten:
+ *
+ * 1152 Samples Stereo
+ */
+
+const left =
+    new Float32Array(1152);
+
+const right =
+    new Float32Array(1152);
+
+
+/*
+ * Eine kleine Test-Sinuswelle.
+ *
+ * Das ist zunächst nur Testmaterial,
+ * damit wir die Datenpipeline prüfen können.
+ */
+
+for (let i = 0; i < 1152; i++) {
+
+    const t =
+        i / 44100;
+
+    const sample =
+        Math.sin(
+            2 * Math.PI *
+            440 *
+            t
+        ) * 0.3;
+
+
+    left[i] = sample;
+    right[i] = sample;
+}
+
+
+/*
+ * Encoder testen.
+ */
+
+const testMP3 =
+    encoder.encode(
+        left,
+        right
+    );
+
+
+console.log(
+    "B-MP3 Encoder Test:",
+    testMP3.length,
+    "Bytes"
+);
+
+
+/*
+ * Zum Testen kann man die erzeugten Bytes
+ * als Datei speichern.
+ */
+
+function downloadTestMP3(bytes) {
+
+    const blob =
+        new Blob(
+            [bytes],
+            {
+                type: "audio/mpeg"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const link =
+        document.createElement("a");
+
+
+    link.href = url;
+
+    link.download =
+        "bmp3-test.mp3";
+
+    link.textContent =
+        "B-MP3 Testdatei herunterladen";
+
+
+    document.body.appendChild(link);
+}
+
+
+/*
+ * Testlink erzeugen.
+ *
+ * ACHTUNG:
+ *
+ * Version 0.1 enthält noch keine echte
+ * Audio-Codierung. Die Datei dient momentan
+ * ausschließlich zum Testen des Bitstreams.
+ */
+
+// downloadTestMP3(testMP3);
