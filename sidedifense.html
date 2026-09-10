@@ -2,505 +2,129 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
-<title>Side Defense</title>
+<title>Military Side Defense</title>
 
 <style>
 
 * {
     box-sizing: border-box;
-    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #080d12;
+    color: #e8eadf;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    margin: 0;
-    background: #0c1220;
-    color: white;
-    font-family: Arial, sans-serif;
+    min-height: 100vh;
 }
 
-#app {
+#page {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: auto;
-    padding: 10px;
+    padding: 8px;
 }
 
 h1 {
     text-align: center;
-    margin: 8px 0 12px;
-    font-size: 28px;
+    margin: 6px 0 10px;
+    font-size: 27px;
+    letter-spacing: 2px;
+    color: #d6d9c5;
 }
 
-/* =========================
-   STATUS
-========================= */
-
-#stats {
+#hud {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
+    gap: 7px;
+    margin-bottom: 8px;
 }
 
 .stat {
-    background: #202a40;
-    border: 2px solid #52617b;
-    border-radius: 12px;
-    padding: 8px 16px;
-    min-width: 100px;
+    min-width: 92px;
+    padding: 7px 12px;
     text-align: center;
-}
 
-.stat small {
-    display: block;
-    color: #b8c1d2;
-}
-
-.stat strong {
-    font-size: 19px;
-}
-
-/* =========================
-   SPIEL
-========================= */
-
-#game {
-    position: relative;
-    width: 100%;
-    height: 520px;
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            to bottom,
-            #182840 0%,
-            #263a58 57%,
-            #34492e 57%,
-            #34492e 100%
-        );
-
-    border: 4px solid #66738b;
-    border-radius: 18px;
-}
-
-/* Sonne */
-
-#sun {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: #ffd75a;
-    right: 80px;
-    top: 45px;
-    box-shadow: 0 0 35px #ffd75a;
-}
-
-/* Boden */
-
-#ground {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 43%;
-    background: #34492e;
-    border-top: 4px solid #738653;
-}
-
-/* Straße */
-
-#road {
-    position: absolute;
-    left: 5%;
-    right: 5%;
-    bottom: 75px;
-    height: 95px;
-
-    background: #66584b;
-
-    border: 6px solid #8b7964;
-    border-radius: 55px;
-}
-
-/* Straßenmarkierungen */
-
-#road::after {
-    content: "";
-    position: absolute;
-    left: 15px;
-    right: 15px;
-    top: 43px;
-    height: 5px;
-
-    background: repeating-linear-gradient(
-        90deg,
-        #d5c48e 0px,
-        #d5c48e 55px,
-        transparent 55px,
-        transparent 90px
-    );
-}
-
-/* =========================
-   HÄUSER
-========================= */
-
-.house {
-    position: absolute;
-    bottom: 175px;
-    width: 120px;
-    height: 150px;
-    z-index: 10;
-}
-
-.enemy-house {
-    left: 15px;
-}
-
-.player-house {
-    right: 15px;
-}
-
-/* Hauskörper */
-
-.house-body {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 105px;
-
-    background: #9b6750;
-    border: 5px solid #563e36;
-}
-
-/* Feindhaus */
-
-.enemy-house .house-body {
-    background: #69484e;
-}
-
-/* Dach */
-
-.roof {
-    position: absolute;
-    top: 5px;
-    left: -15px;
-
-    width: 150px;
-    height: 70px;
-
-    background: #773d3d;
-
-    clip-path: polygon(
-        50% 0,
-        100% 100%,
-        0 100%
-    );
-}
-
-/* Tür */
-
-.door {
-    position: absolute;
-    bottom: 0;
-    left: 38px;
-
-    width: 42px;
-    height: 65px;
-
-    background: #4b352e;
-    border: 4px solid #30241f;
-}
-
-/* Fenster */
-
-.window {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    bottom: 48px;
-
-    background: #075968;
-    border: 4px solid #d2c4b4;
-}
-
-.window1 {
-    left: 8px;
-}
-
-.window2 {
-    right: 8px;
-}
-
-/* =========================
-   HAUS LEBEN
-========================= */
-
-#houseBar {
-    position: absolute;
-    right: 10px;
-    top: -32px;
-
-    width: 130px;
-    height: 17px;
-
-    background: #222;
-    border: 2px solid #111;
-    border-radius: 10px;
-
-    overflow: hidden;
-}
-
-#houseHealth {
-    width: 100%;
-    height: 100%;
-    background: #36d36b;
-}
-
-/* =========================
-   GEGNER
-========================= */
-
-.enemy {
-    position: absolute;
-
-    width: 42px;
-    height: 55px;
-
-    z-index: 20;
-}
-
-.enemyHead {
-    position: absolute;
-
-    width: 25px;
-    height: 25px;
-
-    left: 9px;
-    top: 0;
-
-    background: #d77d68;
-    border: 3px solid #673a32;
-    border-radius: 50%;
-}
-
-.enemyBody {
-    position: absolute;
-
-    width: 30px;
-    height: 35px;
-
-    left: 6px;
-    bottom: 0;
-
-    background: #c84848;
-    border: 3px solid #682d2d;
-    border-radius: 9px;
-}
-
-.enemy.fast .enemyBody {
-    background: #d59b35;
-}
-
-.enemy.tank .enemyBody {
-    width: 38px;
-    left: 2px;
-    background: #69778b;
-}
-
-.enemy.boss {
-    transform: scale(1.4);
-}
-
-.enemy.boss .enemyBody {
-    width: 40px;
-    left: 1px;
-    background: #763d91;
-}
-
-/* Gegner Lebensbalken */
-
-.enemyBar {
-    position: absolute;
-
-    left: 0;
-    top: -10px;
-
-    width: 42px;
-    height: 6px;
-
-    background: #222;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.enemyHP {
-    width: 100%;
-    height: 100%;
-    background: #38d267;
-}
-
-/* =========================
-   VERTEIDIGER
-========================= */
-
-.tower {
-    position: absolute;
-
-    width: 55px;
-    height: 70px;
-
-    z-index: 30;
-
-    cursor: pointer;
-}
-
-.towerHead {
-    position: absolute;
-
-    width: 26px;
-    height: 26px;
-
-    left: 15px;
-    top: 0;
-
-    background: #e0a67d;
-    border: 3px solid #684737;
-    border-radius: 50%;
-}
-
-.towerBody {
-    position: absolute;
-
-    left: 12px;
-    bottom: 0;
-
-    width: 31px;
-    height: 44px;
-
-    background: #477fc9;
-
-    border: 3px solid #263e65;
+    background: #151d20;
+    border: 2px solid #596153;
     border-radius: 8px;
 }
 
-.tower.cannon .towerBody {
-    background: #777d88;
+.stat span {
+    display: block;
+    font-size: 11px;
+    color: #aab09e;
 }
 
-.tower.rapid .towerBody {
-    background: #3d9b6d;
+.stat strong {
+    font-size: 18px;
+    color: #e3e6d5;
 }
 
-.weapon {
-    position: absolute;
-
-    width: 32px;
-    height: 8px;
-
-    right: -3px;
-    top: 32px;
-
-    background: #222;
-    border-radius: 5px;
+#gameBox {
+    position: relative;
+    width: 100%;
+    border: 3px solid #555e51;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #172017;
 }
 
-/* Auswahl */
-
-.tower.selected {
-    filter: brightness(1.4);
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #202b20;
+    touch-action: none;
 }
 
-/* =========================
-   SCHÜSSE
-========================= */
+#message {
+    min-height: 42px;
+    margin-top: 8px;
+    padding: 11px;
 
-.bullet {
-    position: absolute;
+    text-align: center;
 
-    width: 10px;
-    height: 10px;
+    background: #12191b;
+    border: 2px solid #414b43;
+    border-radius: 8px;
 
-    border-radius: 50%;
-
-    background: #ffe26e;
-
-    box-shadow: 0 0 12px #ffe26e;
-
-    z-index: 50;
+    color: #c9cfbd;
+    font-size: 14px;
 }
-
-.cannonBullet {
-    width: 15px;
-    height: 15px;
-
-    background: #ff7548;
-    box-shadow: 0 0 14px #ff7548;
-}
-
-/* =========================
-   EFFEKTE
-========================= */
-
-.damage {
-    position: absolute;
-
-    color: white;
-    font-weight: bold;
-
-    z-index: 100;
-
-    pointer-events: none;
-
-    animation: float 0.7s forwards;
-}
-
-@keyframes float {
-
-    from {
-        transform: translateY(0);
-        opacity: 1;
-    }
-
-    to {
-        transform: translateY(-40px);
-        opacity: 0;
-    }
-
-}
-
-/* =========================
-   MENÜ
-========================= */
 
 #controls {
     display: flex;
     flex-wrap: wrap;
-
     justify-content: center;
-
-    gap: 8px;
-
-    margin-top: 12px;
+    gap: 7px;
+    margin-top: 9px;
 }
 
 button {
-    border: 2px solid #56657e;
+    min-width: 105px;
 
-    background: #202b42;
+    padding: 11px 13px;
 
-    color: white;
+    border-radius: 8px;
+    border: 2px solid #566052;
 
-    padding: 13px 16px;
+    background: #202923;
 
-    border-radius: 12px;
+    color: #e4e7d9;
 
-    font-size: 15px;
-
+    font-size: 13px;
     font-weight: bold;
 
     cursor: pointer;
@@ -511,87 +135,74 @@ button:active {
 }
 
 button.active {
-    background: #3478c9;
-}
-
-button.special {
-    background: #713d91;
+    background: #4b603d;
+    border-color: #8b9b68;
 }
 
 button.start {
-    background: #277d50;
+    background: #3e5638;
 }
 
-/* =========================
-   HINWEIS
-========================= */
-
-#message {
-    margin-top: 10px;
-
-    background: #182237;
-
-    border: 2px solid #465570;
-
-    border-radius: 12px;
-
-    padding: 12px;
-
-    text-align: center;
-
-    min-height: 45px;
+button.special {
+    background: #4c4930;
 }
 
-/* =========================
-   GAME OVER
-========================= */
+button:disabled {
+    opacity: .45;
+}
 
-#gameOver {
+/* GAME OVER */
+
+#overlay {
     position: absolute;
+    inset: 0;
 
-    left: 50%;
-    top: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
 
-    transform: translate(-50%, -50%);
+    background: rgba(5,8,7,.84);
 
-    background: rgba(10,15,25,.95);
+    z-index: 50;
+}
 
-    border: 3px solid #697791;
-
-    border-radius: 18px;
+#overlayBox {
+    width: 85%;
+    max-width: 400px;
 
     padding: 25px;
 
-    width: 85%;
-
     text-align: center;
 
-    z-index: 200;
+    background: #151d19;
 
-    display: none;
+    border: 3px solid #68735f;
+    border-radius: 12px;
 }
 
-#gameOver button {
-    background: #3478c9;
+#overlayBox h2 {
+    margin-top: 0;
 }
 
-/* =========================
-   MOBILE
-========================= */
+#overlayBox button {
+    margin-top: 12px;
+}
+
+/* MOBILE */
 
 @media(max-width:600px) {
 
-    h1 {
-        font-size: 24px;
+    #page {
+        padding: 5px;
     }
 
-    #game {
-        height: 500px;
+    h1 {
+        font-size: 21px;
     }
 
     .stat {
-        min-width: 80px;
-        padding: 7px 10px;
+        min-width: 75px;
+        padding: 6px 8px;
     }
 
     .stat strong {
@@ -599,15 +210,14 @@ button.start {
     }
 
     button {
+        min-width: 92px;
+        font-size: 12px;
+        padding: 10px 8px;
+    }
+
+    #message {
         font-size: 13px;
-        padding: 11px 12px;
     }
-
-    .house {
-        transform: scale(.85);
-        transform-origin: bottom center;
-    }
-
 }
 
 </style>
@@ -615,161 +225,102 @@ button.start {
 
 <body>
 
-<div id="app">
+<div id="page">
 
-<h1>🏠 SIDE DEFENSE</h1>
+<h1>🎖️ MILITARY SIDE DEFENSE</h1>
 
-<div id="stats">
+<div id="hud">
 
     <div class="stat">
-        <small>💰 Geld</small>
+        <span>💰 GELD</span>
         <strong id="money">300</strong>
     </div>
 
     <div class="stat">
-        <small>❤️ Haus</small>
-        <strong id="hpText">100</strong>
+        <span>❤️ HAUS</span>
+        <strong id="hp">100</strong>
     </div>
 
     <div class="stat">
-        <small>🌊 Welle</small>
-        <strong id="waveText">0</strong>
+        <span>🌊 WELLE</span>
+        <strong id="wave">0</strong>
     </div>
 
     <div class="stat">
-        <small>👾 Gegner</small>
-        <strong id="enemyText">0</strong>
+        <span>👾 FEINDE</span>
+        <strong id="enemies">0</strong>
     </div>
 
 </div>
 
-<div id="game">
+<div id="gameBox">
 
-    <div id="sun"></div>
+    <canvas id="canvas"
+            width="1000"
+            height="560">
+    </canvas>
 
-    <div id="ground"></div>
+    <div id="overlay">
 
-    <div id="road"></div>
+        <div id="overlayBox">
 
-    <!-- FEINDHAUS -->
+            <h2>🏚️ VERTEIDIGUNG GESCHLAGEN</h2>
 
-    <div class="house enemy-house">
+            <p id="gameOverText"></p>
 
-        <div class="roof"></div>
-
-        <div class="house-body">
-
-            <div class="window window1"></div>
-            <div class="window window2"></div>
-
-            <div class="door"></div>
+            <button onclick="restartGame()">
+                🔄 NEUES SPIEL
+            </button>
 
         </div>
 
     </div>
-
-    <!-- DEIN HAUS -->
-
-    <div class="house player-house">
-
-        <div id="houseBar">
-            <div id="houseHealth"></div>
-        </div>
-
-        <div class="roof"></div>
-
-        <div class="house-body">
-
-            <div class="window window1"></div>
-            <div class="window window2"></div>
-
-            <div class="door"></div>
-
-        </div>
-
-    </div>
-
-    <!-- GAME OVER -->
-
-    <div id="gameOver">
-
-        <h2>🏚️ Dein Haus wurde zerstört!</h2>
-
-        <p id="gameOverText"></p>
-
-        <button onclick="restartGame()">
-            🔄 Neu starten
-        </button>
-
-    </div>
-
-</div>
-
-<div id="controls">
-
-    <button
-        id="shootButton"
-        onclick="chooseTower('shooter')">
-
-        🔫 Schütze<br>
-        75 €
-
-    </button>
-
-    <button
-        id="cannonButton"
-        onclick="chooseTower('cannon')">
-
-        💣 Kanone<br>
-        150 €
-
-    </button>
-
-    <button
-        id="rapidButton"
-        onclick="chooseTower('rapid')">
-
-        ⚡ Schnellschütze<br>
-        120 €
-
-    </button>
-
-    <button onclick="upgradeTower()">
-
-        ⬆️ Upgrade
-
-    </button>
-
-    <button onclick="buildBarricade()">
-
-        🧱 Barrikade<br>
-        80 €
-
-    </button>
-
-    <button
-        class="special"
-        id="airButton"
-        onclick="airStrike()">
-
-        💥 Luftangriff
-
-    </button>
-
-    <button
-        class="start"
-        onclick="startWave()">
-
-        ▶️ Welle starten
-
-    </button>
 
 </div>
 
 <div id="message">
+    Wähle eine Einheit und tippe anschließend auf das Spielfeld.
+</div>
 
-    Wähle einen Verteidiger und tippe anschließend
-    auf eine freie Stelle auf dem Spielfeld.
+<div id="controls">
+
+    <button id="soldierBtn"
+            onclick="selectBuild('soldier')">
+        🔫 SOLDAT<br>
+        75 €
+    </button>
+
+    <button id="heavyBtn"
+            onclick="selectBuild('heavy')">
+        💣 SCHWERER<br>
+        150 €
+    </button>
+
+    <button id="rapidBtn"
+            onclick="selectBuild('rapid')">
+        ⚡ MG-SOLDAT<br>
+        120 €
+    </button>
+
+    <button onclick="buildWall()">
+        🧱 SANDBAGS<br>
+        60 €
+    </button>
+
+    <button onclick="upgradeSelected()">
+        ⬆️ UPGRADE
+    </button>
+
+    <button id="specialBtn"
+            class="special"
+            onclick="specialAttack()">
+        💥 ARTILLERIE
+    </button>
+
+    <button class="start"
+            onclick="startWave()">
+        ▶️ WELLE STARTEN
+    </button>
 
 </div>
 
@@ -778,10 +329,19 @@ button.start {
 <script>
 
 /* =====================================================
-   GRUNDVARIABLEN
+   CANVAS
 ===================================================== */
 
-const game = document.getElementById("game");
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+/* =====================================================
+   SPIELDATEN
+===================================================== */
 
 let money = 300;
 let houseHP = 100;
@@ -790,440 +350,156 @@ let wave = 0;
 let enemies = [];
 let towers = [];
 let bullets = [];
+let walls = [];
+let effects = [];
 
-let selectedTowerType = null;
+let selectedBuild = null;
 let selectedTower = null;
 
 let waveRunning = false;
-let spawnLeft = 0;
+let enemiesRemaining = 0;
 
-let lastTime = performance.now();
+let spawnTimer = 0;
 
-let airReady = true;
+let lastTime = 0;
+
+let artilleryReady = true;
+
+let gameOver = false;
 
 
 /* =====================================================
    TOWER DATEN
 ===================================================== */
 
-const towerData = {
+const towerTypes = {
 
-    shooter: {
+    soldier: {
         cost: 75,
         damage: 12,
-        range: 240,
-        cooldown: 900
+        range: 250,
+        cooldown: 850
     },
 
-    cannon: {
+    heavy: {
         cost: 150,
-        damage: 35,
-        range: 270,
+        damage: 32,
+        range: 290,
         cooldown: 1600
     },
 
     rapid: {
         cost: 120,
-        damage: 7,
-        range: 210,
-        cooldown: 350
+        damage: 6,
+        range: 220,
+        cooldown: 300
     }
 
 };
 
 
 /* =====================================================
-   UI
+   HILFSFUNKTION
 ===================================================== */
 
-function updateUI() {
+function setMessage(text) {
 
-    document.getElementById("money").textContent = money;
-
-    document.getElementById("hpText").textContent =
-        Math.max(0, houseHP);
-
-    document.getElementById("waveText").textContent =
-        wave;
-
-    document.getElementById("enemyText").textContent =
-        enemies.length;
-
-    document.getElementById("houseHealth").style.width =
-        Math.max(0, houseHP) + "%";
+    document.getElementById(
+        "message"
+    ).textContent = text;
 
 }
 
 
 /* =====================================================
-   MELDUNG
+   HUD
 ===================================================== */
 
-function message(text) {
+function updateHUD() {
 
-    document.getElementById("message").textContent = text;
+    document.getElementById(
+        "money"
+    ).textContent = money;
+
+    document.getElementById(
+        "hp"
+    ).textContent = Math.max(
+        0,
+        Math.floor(houseHP)
+    );
+
+    document.getElementById(
+        "wave"
+    ).textContent = wave;
+
+    document.getElementById(
+        "enemies"
+    ).textContent = enemies.length;
 
 }
 
 
 /* =====================================================
-   TOWER AUSWÄHLEN
+   AUSWAHL
 ===================================================== */
 
-function chooseTower(type) {
+function selectBuild(type) {
 
-    selectedTowerType = type;
+    selectedBuild = type;
     selectedTower = null;
 
     document
         .querySelectorAll("#controls button")
-        .forEach(button => {
-            button.classList.remove("active");
-        });
+        .forEach(b =>
+            b.classList.remove("active")
+        );
 
-    if(type === "shooter") {
+    if(type === "soldier") {
+
         document
-            .getElementById("shootButton")
+            .getElementById("soldierBtn")
             .classList.add("active");
+
     }
 
-    if(type === "cannon") {
+    if(type === "heavy") {
+
         document
-            .getElementById("cannonButton")
+            .getElementById("heavyBtn")
             .classList.add("active");
+
     }
 
     if(type === "rapid") {
+
         document
-            .getElementById("rapidButton")
+            .getElementById("rapidBtn")
             .classList.add("active");
+
     }
 
-    message(
-        "📍 Jetzt auf eine freie Stelle auf dem Boden tippen."
+    setMessage(
+        "📍 Tippe auf eine freie Position zwischen den Häusern."
     );
 
 }
 
 
 /* =====================================================
-   SPIELFELD KLICK / TOUCH
+   CANVAS KOORDINATEN
 ===================================================== */
 
-game.addEventListener("pointerdown", function(event) {
+function getCanvasPosition(event) {
 
-    if(!selectedTowerType) {
-        return;
-    }
+    const rect =
+        canvas.getBoundingClientRect();
 
-    if(
-        event.target.closest(".house") ||
-        event.target.closest(".enemy") ||
-        event.target.closest(".tower") ||
-        event.target.closest("#gameOver")
-    ) {
-        return;
-    }
+    return {
 
-    const rect = game.getBoundingClientRect();
+        x:
+            (event.clientX - rect.left) *
+            canvas.width /
+            rect.width,
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    /*
-       Nur der untere mittlere Bereich
-       darf bebaut werden.
-    */
-
-    if(
-        x < 140 ||
-        x > rect.width - 140 ||
-        y < 250 ||
-        y > rect.height - 70
-    ) {
-
-        message(
-            "❌ Hier kannst du keinen Verteidiger aufstellen."
-        );
-
-        return;
-    }
-
-    placeTower(
-        selectedTowerType,
-        x,
-        y
-    );
-
-});
-
-
-/* =====================================================
-   TOWER PLATZIEREN
-===================================================== */
-
-function placeTower(type, x, y) {
-
-    const data = towerData[type];
-
-    if(money < data.cost) {
-
-        message(
-            "💰 Nicht genug Geld!"
-        );
-
-        return;
-    }
-
-    money -= data.cost;
-
-    const element =
-        document.createElement("div");
-
-    element.className =
-        "tower " + type;
-
-    element.innerHTML = `
-
-        <div class="towerHead"></div>
-
-        <div class="towerBody"></div>
-
-        <div class="weapon"></div>
-
-    `;
-
-    element.style.left =
-        (x - 27) + "px";
-
-    element.style.top =
-        (y - 70) + "px";
-
-    game.appendChild(element);
-
-    const tower = {
-
-        id: Date.now() + Math.random(),
-
-        type: type,
-
-        x: x,
-
-        y: y,
-
-        damage: data.damage,
-
-        range: data.range,
-
-        cooldown: data.cooldown,
-
-        level: 1,
-
-        lastShot: 0,
-
-        element: element
-
-    };
-
-    towers.push(tower);
-
-    element.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.stopPropagation();
-
-            selectExistingTower(tower);
-
-        }
-    );
-
-    selectedTowerType = null;
-
-    document
-        .querySelectorAll("#controls button")
-        .forEach(button => {
-            button.classList.remove("active");
-        });
-
-    message(
-        "✅ Verteidiger aufgestellt!"
-    );
-
-    updateUI();
-
-}
-
-
-/* =====================================================
-   BESTEHENDEN TOWER AUSWÄHLEN
-===================================================== */
-
-function selectExistingTower(tower) {
-
-    towers.forEach(t => {
-
-        t.element.classList.remove("selected");
-
-    });
-
-    selectedTower = tower;
-
-    selectedTowerType = null;
-
-    tower.element.classList.add("selected");
-
-    message(
-        "🎯 " +
-        tower.type +
-        " ausgewählt. Upgrade kostet " +
-        (100 * tower.level) +
-        " €."
-    );
-
-}
-
-
-/* =====================================================
-   UPGRADE
-===================================================== */
-
-function upgradeTower() {
-
-    if(!selectedTower) {
-
-        message(
-            "❗ Wähle zuerst einen Verteidiger aus."
-        );
-
-        return;
-    }
-
-    const cost =
-        100 * selectedTower.level;
-
-    if(money < cost) {
-
-        message(
-            "💰 Das Upgrade kostet " +
-            cost +
-            " €."
-        );
-
-        return;
-    }
-
-    money -= cost;
-
-    selectedTower.level++;
-
-    selectedTower.damage =
-        Math.round(
-            selectedTower.damage * 1.4
-        );
-
-    selectedTower.range += 20;
-
-    selectedTower.cooldown =
-        Math.max(
-            200,
-            selectedTower.cooldown * .9
-        );
-
-    message(
-        "⬆️ Upgrade auf Level " +
-        selectedTower.level +
-        "!"
-    );
-
-    updateUI();
-
-}
-
-
-/* =====================================================
-   BARRIKADE
-===================================================== */
-
-function buildBarricade() {
-
-    const cost = 80;
-
-    if(money < cost) {
-
-        message(
-            "💰 Nicht genug Geld für die Barrikade."
-        );
-
-        return;
-    }
-
-    money -= cost;
-
-    const barricade =
-        document.createElement("div");
-
-    barricade.className =
-        "barricade";
-
-    barricade.style.position =
-        "absolute";
-
-    barricade.style.left =
-        (game.clientWidth - 220) + "px";
-
-    barricade.style.bottom =
-        "175px";
-
-    barricade.style.width =
-        "75px";
-
-    barricade.style.height =
-        "50px";
-
-    barricade.style.background =
-        "#8c6b46";
-
-    barricade.style.border =
-        "5px solid #513b27";
-
-    barricade.style.borderRadius =
-        "8px";
-
-    barricade.style.zIndex =
-        "15";
-
-    barricade.style.textAlign =
-        "center";
-
-    barricade.style.fontSize =
-        "28px";
-
-    barricade.style.paddingTop =
-        "6px";
-
-    barricade.textContent = "🧱";
-
-    barricade.hp = 100;
-
-    game.appendChild(barricade);
-
-    message(
-        "🧱 Barrikade gebaut!"
-    );
-
-    updateUI();
-
-}
-
-
-/* =====================================================
-   WELLEN STARTEN
-===================================================== */
-
-function startWave() {
-
-    if(waveRunning) {
-
-        message(
-            "🌊
+        y:
+            (
