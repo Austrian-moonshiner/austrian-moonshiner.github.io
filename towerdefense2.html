@@ -7,152 +7,201 @@
 <title>Tower Defense</title>
 
 <style>
+
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #101820, #172a3a);
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
     color: white;
-    text-align: center;
+
+    background:
+        radial-gradient(circle at 20% 20%, #173b55 0%, transparent 35%),
+        radial-gradient(circle at 80% 80%, #321750 0%, transparent 35%),
+        #080d16;
+
     overflow-x: hidden;
 }
 
-h1 {
-    margin: 15px 0 5px;
-    font-size: 32px;
-    text-shadow: 0 0 10px #00e5ff;
+/* =========================
+   HEADER
+========================= */
+
+header {
+    text-align: center;
+    padding: 18px 10px 8px;
 }
 
-#gameInfo {
-    display: flex;
-    justify-content: center;
+header h1 {
+    margin: 0;
+    font-size: clamp(28px, 6vw, 46px);
+    letter-spacing: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #00eaff,
+        #ffffff,
+        #8d7aff
+    );
+
+    -webkit-background-clip: text;
+    color: transparent;
+
+    text-shadow: 0 0 25px rgba(0,220,255,.35);
+}
+
+header p {
+    margin: 5px 0 0;
+    color: #8fa8bd;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+#status {
+    width: min(1100px, 95vw);
+    margin: 12px auto;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-    flex-wrap: wrap;
-    margin: 10px;
 }
 
-.info {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 9px 15px;
-    border-radius: 12px;
-    min-width: 105px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+.stat {
+    padding: 12px;
+
+    background: rgba(20,31,48,.85);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.25),
+        inset 0 0 20px rgba(255,255,255,.02);
+
+    text-align: center;
 }
 
-#message {
-    min-height: 25px;
-    margin: 5px;
-    color: #ffe600;
+.stat-icon {
+    font-size: 21px;
+}
+
+.stat-value {
+    display: block;
+    margin-top: 3px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 /* =========================
-   SPIELFELD
+   GAME AREA
 ========================= */
+
+#gameWrapper {
+    width: min(1100px, 95vw);
+    margin: 15px auto;
+}
 
 #game {
     position: relative;
-    width: 900px;
-    max-width: 95vw;
-    height: 550px;
-    margin: 15px auto;
+
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    min-height: 430px;
+
     overflow: hidden;
 
-    border-radius: 20px;
-    border: 3px solid #00d9ff;
+    border-radius: 22px;
+    border: 2px solid #1bdcff;
 
     background:
-        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
-        #236b3a;
-
-    background-size: 40px 40px;
+        radial-gradient(
+            circle at 50% 50%,
+            #132f31,
+            #0a171e
+        );
 
     box-shadow:
-        0 0 25px rgba(0,220,255,0.3),
-        inset 0 0 50px rgba(0,0,0,0.3);
+        0 0 35px rgba(0,220,255,.15),
+        inset 0 0 60px rgba(0,0,0,.5);
+}
+
+/* Grid */
+
+#game::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(0,220,255,.055) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,220,255,.055) 1px,
+            transparent 1px
+        );
+
+    background-size: 35px 35px;
+
+    pointer-events: none;
 }
 
 /* =========================
-   DURCHGÄNGIGER WEG
+   SVG WEG
 ========================= */
 
-/*
-   Der Weg geht:
+#map {
+    position: absolute;
+    inset: 0;
 
-   START
-      ↓
-   ────────────────→
-                    ↓
-   ←────────────────
-   ↓
-   ───────────────→ ZIEL
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+/*
+   EIN einziger Pfad.
+
+   Start links unten
+   → rechts
+   → oben
+   → links
+   → unten
+   → rechts zum Ziel
 */
 
-.path {
-    position: absolute;
-    background: #a87d4d;
-    z-index: 1;
-
-    border-top: 5px solid #c99b66;
-    border-bottom: 5px solid #76512d;
-
-    box-shadow:
-        inset 0 0 15px rgba(0,0,0,0.25);
+#roadOuter {
+    fill: none;
+    stroke: #05080d;
+    stroke-width: 92;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-/* 1. waagerechter Weg */
-.path1 {
-    left: 0;
-    top: 80px;
-    width: 770px;
-    height: 80px;
+#road {
+    fill: none;
+    stroke: #53606a;
+    stroke-width: 76;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-/* 2. senkrechter Weg */
-.path2 {
-    left: 690px;
-    top: 80px;
-    width: 80px;
-    height: 260px;
-
-    border-left: 5px solid #c99b66;
-    border-right: 5px solid #76512d;
-    border-top: none;
-    border-bottom: none;
-}
-
-/* 3. waagerechter Rückweg */
-.path3 {
-    left: 130px;
-    top: 260px;
-    width: 600px;
-    height: 80px;
-}
-
-/* 4. senkrechter Weg */
-.path4 {
-    left: 90px;
-    top: 260px;
-    width: 80px;
-    height: 180px;
-
-    border-left: 5px solid #c99b66;
-    border-right: 5px solid #76512d;
-    border-top: none;
-    border-bottom: none;
-}
-
-/* 5. letzter waagerechter Weg */
-.path5 {
-    left: 90px;
-    top: 360px;
-    width: 600px;
-    height: 80px;
+#roadInner {
+    fill: none;
+    stroke: #65727b;
+    stroke-width: 4;
+    stroke-dasharray: 14 12;
+    stroke-linecap: round;
 }
 
 /* =========================
@@ -161,31 +210,144 @@ h1 {
 
 .marker {
     position: absolute;
-    z-index: 5;
 
-    padding: 9px 12px;
-    border-radius: 10px;
+    padding: 9px 14px;
+
+    border-radius: 12px;
 
     font-weight: bold;
     font-size: 14px;
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+    backdrop-filter: blur(8px);
+
+    z-index: 20;
 }
 
-#start {
+#startMarker {
     left: 8px;
-    top: 95px;
-    background: #00a844;
+    bottom: 15%;
+    background: rgba(0,190,100,.85);
+    border: 1px solid #35ff9a;
+    box-shadow: 0 0 18px rgba(0,255,140,.3);
 }
 
-#finish {
+#finishMarker {
     right: 8px;
-    top: 375px;
-    background: #d50000;
+    top: 15%;
+    background: rgba(220,30,60,.85);
+    border: 1px solid #ff6680;
+    box-shadow: 0 0 18px rgba(255,30,70,.3);
 }
 
 /* =========================
-   TÜRME
+   ENEMY
+========================= */
+
+.enemy {
+    position: absolute;
+
+    width: 32px;
+    height: 32px;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #ffb1b1,
+            #ff263d 45%,
+            #760014
+        );
+
+    border: 2px solid #ffb4bc;
+
+    box-shadow:
+        0 0 16px rgba(255,30,60,.8);
+
+    z-index: 15;
+}
+
+.enemy.fast {
+    width: 27px;
+    height: 27px;
+
+    background:
+        radial-gradient(
+            circle,
+            #fff59a,
+            #ff9d00 50%,
+            #9c3900
+        );
+
+    box-shadow:
+        0 0 16px rgba(255,170,0,.8);
+}
+
+.enemy.tank {
+    width: 43px;
+    height: 43px;
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #e8caff,
+            #8b3dff 50%,
+            #360078
+        );
+
+    border-color: #dcbcff;
+
+    box-shadow:
+        0 0 20px rgba(145,60,255,.8);
+}
+
+.enemyBoss {
+    width: 58px;
+    height: 58px;
+
+    background:
+        radial-gradient(
+            circle,
+            #ffffff,
+            #ff4081 35%,
+            #7b003c
+        );
+
+    box-shadow:
+        0 0 30px #ff4081;
+}
+
+/* Lebensbalken */
+
+.hp {
+    position: absolute;
+
+    width: 48px;
+    height: 5px;
+
+    top: -10px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: #111;
+
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+.hpBar {
+    height: 100%;
+    width: 100%;
+
+    background: #21ff75;
+}
+
+/* =========================
+   TOWER
 ========================= */
 
 .tower {
@@ -194,176 +356,166 @@ h1 {
     width: 58px;
     height: 58px;
 
+    transform: translate(-50%, -50%);
+
     border-radius: 50%;
-
-    background: radial-gradient(
-        circle,
-        #5cffff,
-        #0077ff
-    );
-
-    border: 4px solid white;
-
-    box-shadow:
-        0 0 15px #00e5ff;
-
-    cursor: pointer;
-
-    z-index: 10;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 26px;
+    font-size: 25px;
 
-    user-select: none;
+    cursor: pointer;
 
-    transition: transform 0.15s;
+    z-index: 25;
+
+    border: 3px solid white;
+
+    transition: .15s;
 }
 
 .tower:hover {
-    transform: scale(1.1);
+    transform:
+        translate(-50%, -50%)
+        scale(1.08);
 }
 
 .tower.selected {
     box-shadow:
-        0 0 0 4px #ffe600,
-        0 0 25px #ffe600;
+        0 0 0 3px #fff200,
+        0 0 25px #fff200;
+}
+
+/* Tower Arten */
+
+.tower.basic {
+    background:
+        radial-gradient(circle, #65f7ff, #006eff);
+    box-shadow:
+        0 0 18px #00cfff;
+}
+
+.tower.rapid {
+    background:
+        radial-gradient(circle, #a6ff9a, #00a83b);
+    box-shadow:
+        0 0 18px #00ff73;
+}
+
+.tower.sniper {
+    background:
+        radial-gradient(circle, #ff9b9b, #d00028);
+    box-shadow:
+        0 0 18px #ff1744;
+}
+
+.tower.cannon {
+    background:
+        radial-gradient(circle, #ffc46b, #ff6d00);
+    box-shadow:
+        0 0 18px #ff7600;
 }
 
 /* =========================
-   GEGNER
+   REICHWEITE
 ========================= */
 
-.enemy {
+.range {
     position: absolute;
 
-    width: 38px;
-    height: 38px;
+    transform: translate(-50%, -50%);
+
+    border: 2px solid rgba(255,235,0,.45);
+
+    background: rgba(255,235,0,.06);
 
     border-radius: 50%;
 
-    background:
-        radial-gradient(
-            circle at 30% 30%,
-            #ff8585,
-            #a50000
-        );
+    pointer-events: none;
 
-    border: 3px solid #ffdddd;
-
-    z-index: 8;
-
-    box-shadow:
-        0 0 10px rgba(255,0,0,0.7);
-}
-
-.enemy.fast {
-    background:
-        radial-gradient(
-            circle at 30% 30%,
-            #ffff7a,
-            #ff7300
-        );
-}
-
-.enemy.tank {
-    width: 48px;
-    height: 48px;
-
-    background:
-        radial-gradient(
-            circle at 30% 30%,
-            #d5aaff,
-            #5717a8
-        );
-}
-
-/* Lebensbalken */
-
-.health {
-    position: absolute;
-
-    width: 44px;
-    height: 6px;
-
-    top: -11px;
-    left: -3px;
-
-    background: #333;
-
-    border-radius: 5px;
-
-    overflow: hidden;
-}
-
-.healthBar {
-    height: 100%;
-    width: 100%;
-    background: #00ff55;
+    z-index: 5;
 }
 
 /* =========================
-   GESCHOSSE
+   GESCHOSS
 ========================= */
 
 .bullet {
     position: absolute;
 
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
 
-    background: #ffe600;
+    transform: translate(-50%, -50%);
 
     border-radius: 50%;
 
-    box-shadow:
-        0 0 8px #fff000;
+    background: #fff;
 
-    z-index: 15;
+    box-shadow:
+        0 0 8px #00eaff,
+        0 0 15px #00eaff;
+
+    z-index: 30;
 }
 
 /* =========================
    SHOP
 ========================= */
 
-#towerShop {
-    margin: 10px auto;
-    padding: 12px;
+#shop {
+    width: min(1100px, 95vw);
 
-    max-width: 900px;
+    margin: 12px auto;
 
-    background: rgba(0,0,0,0.25);
+    padding: 14px;
 
-    border-radius: 15px;
+    background: rgba(15,24,38,.9);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.3);
 }
 
 .shopTitle {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+
+    color: #9db4c8;
+    font-size: 14px;
     font-weight: bold;
 }
 
+.shopButtons {
+    display: flex;
+
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
 button {
-    border: none;
+    border: 0;
 
-    padding: 12px 18px;
+    padding: 13px 17px;
 
-    border-radius: 12px;
+    border-radius: 13px;
 
     color: white;
 
     font-weight: bold;
-    font-size: 15px;
+    font-size: 14px;
 
     cursor: pointer;
 
-    background: #1976d2;
+    transition: .15s;
 
     box-shadow:
-        0 4px 10px rgba(0,0,0,0.3);
-
-    transition: 0.15s;
+        0 5px 15px rgba(0,0,0,.25);
 }
 
 button:hover {
@@ -372,41 +524,74 @@ button:hover {
 }
 
 button:active {
-    transform: scale(0.96);
+    transform: scale(.96);
 }
 
-.shopButton {
-    background:
-        linear-gradient(
-            135deg,
-            #0066ff,
-            #00bcd4
-        );
-
-    margin: 3px;
+.shopBasic {
+    background: linear-gradient(135deg,#007cff,#00c8ff);
 }
 
-#nextWave {
-    background: #00a152;
+.shopRapid {
+    background: linear-gradient(135deg,#009c48,#00e66b);
 }
 
-#upgrade {
-    background: #9c27b0;
+.shopSniper {
+    background: linear-gradient(135deg,#b8002f,#ff3155);
 }
 
-#sell {
-    background: #e65100;
+.shopCannon {
+    background: linear-gradient(135deg,#d95100,#ff9d00);
 }
+
+/* =========================
+   CONTROLS
+========================= */
 
 #controls {
+    width: min(1100px,95vw);
+
+    margin: 10px auto 25px;
+
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
+}
 
-    margin: 10px auto;
+#nextWave {
+    background:
+        linear-gradient(135deg,#00a85a,#00d98b);
 
-    max-width: 900px;
+    min-width: 190px;
+}
+
+#upgrade {
+    background:
+        linear-gradient(135deg,#6935d8,#9a5cff);
+}
+
+#sell {
+    background:
+        linear-gradient(135deg,#c44d00,#ff7900);
+}
+
+#restart {
+    background:
+        linear-gradient(135deg,#394957,#596979);
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+#message {
+    min-height: 24px;
+
+    text-align: center;
+
+    color: #ffe96b;
+
+    font-weight: bold;
 }
 
 /* =========================
@@ -419,154 +604,257 @@ button:active {
     position: fixed;
     inset: 0;
 
-    background: rgba(0,0,0,0.8);
-
-    z-index: 100;
-
     align-items: center;
     justify-content: center;
+
+    background: rgba(0,0,0,.78);
+
+    backdrop-filter: blur(6px);
+
+    z-index: 100;
 }
 
 .gameOverBox {
-    background: #172a3a;
-
-    border: 2px solid #00e5ff;
-
-    border-radius: 20px;
+    width: min(380px,90vw);
 
     padding: 30px;
 
-    width: 320px;
+    text-align: center;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #152336,
+            #0c121c
+        );
+
+    border: 2px solid #ff3155;
 
     box-shadow:
-        0 0 30px #00e5ff;
+        0 0 40px rgba(255,30,70,.35);
+}
+
+.gameOverBox h2 {
+    font-size: 34px;
+    margin-top: 0;
 }
 
 /* =========================
-   HANDY
+   MOBILE
 ========================= */
 
 @media(max-width:700px) {
 
+    #status {
+        grid-template-columns: repeat(2,1fr);
+    }
+
     #game {
-        height: 500px;
+        min-height: 300px;
+        aspect-ratio: 4 / 3;
     }
 
     .tower {
+        width: 46px;
+        height: 46px;
+        font-size: 19px;
+    }
+
+    .enemy {
+        width: 27px;
+        height: 27px;
+    }
+
+    .enemy.tank {
+        width: 36px;
+        height: 36px;
+    }
+
+    .enemyBoss {
         width: 48px;
         height: 48px;
-        font-size: 20px;
+    }
+
+    button {
+        padding: 11px 13px;
     }
 }
+
 </style>
 </head>
 
 <body>
 
-<h1>🏰 TOWER DEFENSE</h1>
+<header>
 
-<div id="gameInfo">
+    <h1>⚡ TOWER DEFENSE</h1>
 
-    <div class="info">
-        💰 Geld:
-        <span id="money">300</span>
+    <p>Verteidige deine Basis gegen die Gegner!</p>
+
+</header>
+
+<!-- STATUS -->
+
+<div id="status">
+
+    <div class="stat">
+        <span class="stat-icon">💰</span>
+        Geld
+        <span class="stat-value" id="money">350</span>
     </div>
 
-    <div class="info">
-        ❤️ Leben:
-        <span id="lives">20</span>
+    <div class="stat">
+        <span class="stat-icon">❤️</span>
+        Leben
+        <span class="stat-value" id="lives">20</span>
     </div>
 
-    <div class="info">
-        🌊 Welle:
-        <span id="wave">0</span>
+    <div class="stat">
+        <span class="stat-icon">🌊</span>
+        Welle
+        <span class="stat-value" id="wave">0</span>
     </div>
 
-    <div class="info">
-        👾 Gegner:
-        <span id="enemies">0</span>
+    <div class="stat">
+        <span class="stat-icon">👾</span>
+        Gegner
+        <span class="stat-value" id="enemyCount">0</span>
     </div>
 
 </div>
 
 <div id="message">
-    Baue Türme und starte die erste Welle!
+    Baue deine Verteidigung und starte die erste Welle!
 </div>
 
-<!-- =========================
-     TURM SHOP
-========================= -->
+<!-- SPIEL -->
 
-<div id="towerShop">
-
-    <div class="shopTitle">
-        🏗️ Türme kaufen
-    </div>
-
-    <button class="shopButton"
-            onclick="buyTower('basic')">
-        🔵 Kanone - $100
-    </button>
-
-    <button class="shopButton"
-            onclick="buyTower('rapid')">
-        🟢 Schnellfeuer - $150
-    </button>
-
-    <button class="shopButton"
-            onclick="buyTower('sniper')">
-        🔴 Scharfschütze - $200
-    </button>
-
-</div>
-
-<!-- =========================
-     SPIEL
-========================= -->
+<div id="gameWrapper">
 
 <div id="game">
 
-    <!-- Durchgängiger Weg -->
+    <!-- EIN EINZIGER DURCHGÄNGIGER WEG -->
 
-    <div class="path path1"></div>
-    <div class="path path2"></div>
-    <div class="path path3"></div>
-    <div class="path path4"></div>
-    <div class="path path5"></div>
+    <svg id="map"
+         viewBox="0 0 1000 560"
+         preserveAspectRatio="none">
 
-    <div id="start" class="marker">
+        <path
+            id="roadOuter"
+            d="
+            M 20 455
+            L 170 455
+            L 170 105
+            L 820 105
+            L 820 455
+            L 450 455
+            "
+        />
+
+        <path
+            id="road"
+            d="
+            M 20 455
+            L 170 455
+            L 170 105
+            L 820 105
+            L 820 455
+            L 450 455
+            "
+        />
+
+        <path
+            id="roadInner"
+            d="
+            M 20 455
+            L 170 455
+            L 170 105
+            L 820 105
+            L 820 455
+            L 450 455
+            "
+        />
+
+    </svg>
+
+    <div id="startMarker" class="marker">
         ▶ START
     </div>
 
-    <div id="finish" class="marker">
-        💀 ZIEL
+    <div id="finishMarker" class="marker">
+        🏁 ZIEL
     </div>
 
 </div>
 
-<!-- =========================
-     STEUERUNG
-========================= -->
+</div>
+
+<!-- SHOP -->
+
+<div id="shop">
+
+    <div class="shopTitle">
+        🏗️ VERTEIDIGUNG BAUEN
+    </div>
+
+    <div class="shopButtons">
+
+        <button
+            class="shopBasic"
+            onclick="buyTower('basic')">
+            🔵 Plasma-Turm<br>
+            $100
+        </button>
+
+        <button
+            class="shopRapid"
+            onclick="buyTower('rapid')">
+            🟢 Schnellfeuer<br>
+            $150
+        </button>
+
+        <button
+            class="shopSniper"
+            onclick="buyTower('sniper')">
+            🔴 Sniper<br>
+            $200
+        </button>
+
+        <button
+            class="shopCannon"
+            onclick="buyTower('cannon')">
+            🟠 Kanone<br>
+            $250
+        </button>
+
+    </div>
+
+</div>
+
+<!-- CONTROLS -->
 
 <div id="controls">
 
     <button id="nextWave"
             onclick="startWave()">
-        ▶ Nächste Welle
+        ▶ NÄCHSTE WELLE
     </button>
 
     <button id="upgrade"
             onclick="upgradeTower()">
-        ⬆ Turm verbessern
+        ⬆ UPGRADE
     </button>
 
     <button id="sell"
             onclick="sellTower()">
-        💰 Turm verkaufen
+        💰 VERKAUFEN
     </button>
 
-    <button onclick="location.reload()">
-        🔄 Neustart
+    <button id="restart"
+            onclick="location.reload()">
+        🔄 NEUSTART
     </button>
 
 </div>
@@ -580,27 +868,29 @@ button:active {
         <h2>💀 GAME OVER</h2>
 
         <p>
-            Die Gegner haben deine
-            Verteidigung durchbrochen.
+            Deine Verteidigung wurde überwältigt.
         </p>
 
-        <button onclick="location.reload()">
-            🔄 Nochmal spielen
+        <button
+            id="restartGame"
+            onclick="location.reload()">
+            🔄 NOCHMAL SPIELEN
         </button>
 
     </div>
 
 </div>
 
+
 <script>
 
-/* =========================
-   SPIELVARIABLEN
-========================= */
+/* =====================================
+   SPIEL
+===================================== */
 
 const game = document.getElementById("game");
 
-let money = 300;
+let money = 350;
 let lives = 20;
 let wave = 0;
 
@@ -608,41 +898,46 @@ let enemies = [];
 let towers = [];
 
 let selectedTower = null;
+
 let waveRunning = false;
+let spawning = false;
+let spawnRemaining = 0;
 
-/*
-   WICHTIG:
 
-   Dieser Pfad entspricht jetzt
-   exakt dem sichtbaren Weg.
-*/
+/* =====================================
+   DER WEG
 
-const paths = [
+   Diese Koordinaten sind identisch
+   mit dem SVG-Weg.
 
-    {x: -40, y: 100},
+   Dadurch gibt es keine Lücken.
+===================================== */
 
-    {x: 690, y: 100},
+const path = [
 
-    {x: 690, y: 300},
+    {x:20,  y:455},
 
-    {x: 130, y: 300},
+    {x:170, y:455},
 
-    {x: 130, y: 400},
+    {x:170, y:105},
 
-    {x: 650, y: 400},
+    {x:820, y:105},
 
-    {x: 690, y: 400}
+    {x:820, y:455},
+
+    {x:450, y:455}
 
 ];
 
-/* =========================
+
+/* =====================================
    UI
-========================= */
+===================================== */
 
 function updateUI() {
 
     document.getElementById("money")
-        .textContent = money;
+        .textContent = Math.floor(money);
 
     document.getElementById("lives")
         .textContent = lives;
@@ -650,537 +945,388 @@ function updateUI() {
     document.getElementById("wave")
         .textContent = wave;
 
-    document.getElementById("enemies")
+    document.getElementById("enemyCount")
         .textContent = enemies.length;
 }
 
-function message(text) {
+
+function showMessage(text) {
 
     document.getElementById("message")
         .textContent = text;
 }
 
-/* =========================
-   TÜRME KAUFEN
-========================= */
 
-function buyTower(type) {
+/* =====================================
+   KOORDINATEN UMRECHNEN
 
-    const prices = {
-        basic: 100,
-        rapid: 150,
-        sniper: 200
-    };
+   SVG = 1000 x 560
 
-    if (money < prices[type]) {
+   Das Spielfeld kann unterschiedlich
+   groß sein.
 
-        message("❌ Nicht genug Geld!");
+   Deshalb werden die Koordinaten
+   automatisch angepasst.
+===================================== */
 
-        return;
-    }
+function mapX(x) {
 
-    money -= prices[type];
-
-    const towerElement =
-        document.createElement("div");
-
-    towerElement.className = "tower";
-
-    if (type === "basic") {
-        towerElement.innerHTML = "🔵";
-    }
-
-    if (type === "rapid") {
-        towerElement.innerHTML = "🟢";
-    }
-
-    if (type === "sniper") {
-        towerElement.innerHTML = "🔴";
-    }
-
-    /*
-       Türme werden nur in Bereichen
-       außerhalb des Weges platziert.
-    */
-
-    let x;
-    let y;
-
-    let valid = false;
-
-    while (!valid) {
-
-        x = Math.random() * 820 + 20;
-        y = Math.random() * 450 + 20;
-
-        valid = true;
-
-        /*
-           Nicht auf Weg 1
-        */
-
-        if (
-            x < 770 &&
-            y > 80 &&
-            y < 160
-        ) {
-            valid = false;
-        }
-
-        /*
-           Nicht auf Weg 2
-        */
-
-        if (
-            x > 690 &&
-            x < 770 &&
-            y > 80 &&
-            y < 340
-        ) {
-            valid = false;
-        }
-
-        /*
-           Nicht auf Weg 3
-        */
-
-        if (
-            x > 130 &&
-            x < 730 &&
-            y > 260 &&
-            y < 340
-        ) {
-            valid = false;
-        }
-
-        /*
-           Nicht auf Weg 4
-        */
-
-        if (
-            x > 90 &&
-            x < 170 &&
-            y > 260 &&
-            y < 440
-        ) {
-            valid = false;
-        }
-
-        /*
-           Nicht auf Weg 5
-        */
-
-        if (
-            x > 90 &&
-            x < 690 &&
-            y > 360 &&
-            y < 440
-        ) {
-            valid = false;
-        }
-    }
-
-    towerElement.style.left = x + "px";
-    towerElement.style.top = y + "px";
-
-    towerElement.dataset.type = type;
-    towerElement.dataset.level = 1;
-
-    towerElement.onclick = function(e) {
-
-        e.stopPropagation();
-
-        if (selectedTower) {
-
-            selectedTower
-                .classList
-                .remove("selected");
-        }
-
-        selectedTower = towerElement;
-
-        towerElement
-            .classList
-            .add("selected");
-
-        message(
-            "Turm ausgewählt • Level " +
-            towerElement.dataset.level
-        );
-    };
-
-    game.appendChild(towerElement);
-
-    towers.push({
-
-        element: towerElement,
-
-        x: x + 29,
-        y: y + 29,
-
-        type: type,
-
-        level: 1,
-
-        cooldown: 0
-
-    });
-
-    updateUI();
+    return x / 1000 * game.clientWidth;
 }
 
-/* =========================
-   SPIELFELD KLICK
-========================= */
 
-game.onclick = function() {
+function mapY(y) {
 
-    if (selectedTower) {
-
-        selectedTower
-            .classList
-            .remove("selected");
-
-        selectedTower = null;
-    }
-};
-
-/* =========================
-   UPGRADE
-========================= */
-
-function upgradeTower() {
-
-    if (!selectedTower) {
-
-        message(
-            "⚠️ Wähle zuerst einen Turm aus."
-        );
-
-        return;
-    }
-
-    const tower =
-        towers.find(
-            t => t.element === selectedTower
-        );
-
-    if (!tower) return;
-
-    const cost =
-        tower.level * 100;
-
-    if (money < cost) {
-
-        message(
-            "❌ Nicht genug Geld!"
-        );
-
-        return;
-    }
-
-    money -= cost;
-
-    tower.level++;
-
-    tower.element.style.transform =
-        "scale(" +
-        (1 + tower.level * 0.05) +
-        ")";
-
-    message(
-        "⬆ Turm auf Level " +
-        tower.level +
-        " verbessert!"
-    );
-
-    updateUI();
+    return y / 560 * game.clientHeight;
 }
 
-/* =========================
-   VERKAUFEN
-========================= */
 
-function sellTower() {
+/* =====================================
+   WEGPOSITION
+===================================== */
 
-    if (!selectedTower) {
+function getPathPosition(distance) {
 
-        message(
-            "⚠️ Wähle zuerst einen Turm aus."
-        );
+    let remaining = distance;
 
-        return;
+    for (
+        let i = 0;
+        i < path.length - 1;
+        i++
+    ) {
+
+        const a = path[i];
+        const b = path[i + 1];
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+
+        const length =
+            Math.sqrt(dx*dx + dy*dy);
+
+        if (remaining <= length) {
+
+            const ratio =
+                remaining / length;
+
+            return {
+
+                x:
+                    a.x +
+                    dx * ratio,
+
+                y:
+                    a.y +
+                    dy * ratio
+            };
+        }
+
+        remaining -= length;
     }
 
-    const index =
-        towers.findIndex(
-            t => t.element === selectedTower
-        );
-
-    if (index === -1) return;
-
-    const tower = towers[index];
-
-    money +=
-        50 +
-        tower.level * 30;
-
-    tower.element.remove();
-
-    towers.splice(index, 1);
-
-    selectedTower = null;
-
-    message(
-        "💰 Turm verkauft."
-    );
-
-    updateUI();
+    return path[path.length - 1];
 }
 
-/* =========================
-   WELLE STARTEN
-========================= */
 
-function startWave() {
-
-    if (waveRunning) {
-
-        message(
-            "⚠️ Die aktuelle Welle läuft noch."
-        );
-
-        return;
-    }
-
-    wave++;
-
-    waveRunning = true;
-
-    message(
-        "🌊 Welle " +
-        wave +
-        " beginnt!"
-    );
-
-    const amount =
-        5 +
-        wave * 2;
-
-    let created = 0;
-
-    const spawnTimer =
-        setInterval(() => {
-
-            createEnemy();
-
-            created++;
-
-            if (created >= amount) {
-
-                clearInterval(spawnTimer);
-            }
-
-        }, 650);
-
-    updateUI();
-}
-
-/* =========================
+/* =====================================
    GEGNER ERSTELLEN
-========================= */
+===================================== */
 
 function createEnemy() {
 
-    const enemyElement =
+    const element =
         document.createElement("div");
 
-    enemyElement.className =
-        "enemy";
+    element.className = "enemy";
 
     let type = "normal";
-
-    if (
-        wave >= 3 &&
-        Math.random() < 0.25
-    ) {
-
-        type = "fast";
-
-        enemyElement
-            .classList
-            .add("fast");
-    }
-
-    if (
-        wave >= 5 &&
-        Math.random() < 0.15
-    ) {
-
-        type = "tank";
-
-        enemyElement
-            .classList
-            .add("tank");
-    }
 
     let hp =
         100 +
         wave * 25;
 
     let speed =
-        1.0 +
-        wave * 0.03;
+        45 +
+        wave * 2;
 
-    if (type === "fast") {
 
-        hp *= 0.65;
-        speed *= 1.8;
+    /* Schneller Gegner */
+
+    if (
+        wave >= 3 &&
+        Math.random() < .25
+    ) {
+
+        type = "fast";
+
+        element.classList.add("fast");
+
+        hp *= .65;
+
+        speed *= 1.7;
     }
 
-    if (type === "tank") {
+
+    /* Tank */
+
+    if (
+        wave >= 5 &&
+        Math.random() < .15
+    ) {
+
+        type = "tank";
+
+        element.classList.add("tank");
 
         hp *= 3;
-        speed *= 0.55;
+
+        speed *= .55;
     }
 
-    const health =
+
+    /* Boss */
+
+    if (
+        wave >= 8 &&
+        spawnRemaining === 1
+    ) {
+
+        type = "boss";
+
+        element.className =
+            "enemy enemyBoss";
+
+        hp *= 8;
+
+        speed *= .45;
+    }
+
+
+    const hpContainer =
         document.createElement("div");
 
-    health.className = "health";
+    hpContainer.className = "hp";
 
-    const healthBar =
+
+    const hpBar =
         document.createElement("div");
 
-    healthBar.className =
-        "healthBar";
+    hpBar.className = "hpBar";
 
-    health.appendChild(healthBar);
+    hpContainer.appendChild(hpBar);
 
-    enemyElement.appendChild(health);
+    element.appendChild(hpContainer);
 
-    /*
-       Gegner startet links
-       am Anfang des Weges.
-    */
+    game.appendChild(element);
 
-    enemyElement.style.left =
-        "-40px";
 
-    enemyElement.style.top =
-        "101px";
+    const start =
+        getPathPosition(0);
 
-    game.appendChild(enemyElement);
 
     enemies.push({
 
-        element: enemyElement,
+        element: element,
 
-        x: -40,
-        y: 101,
+        distance: 0,
 
         hp: hp,
+
         maxHp: hp,
 
         speed: speed,
 
-        pathIndex: 0
+        type: type,
+
+        progress: 0
 
     });
+
 
     updateUI();
 }
 
-/* =========================
+
+/* =====================================
+   WELLE
+===================================== */
+
+function startWave() {
+
+    if (waveRunning) {
+
+        showMessage(
+            "⚠️ Die aktuelle Welle läuft noch!"
+        );
+
+        return;
+    }
+
+
+    wave++;
+
+    waveRunning = true;
+
+    spawning = true;
+
+    spawnRemaining =
+        5 + wave * 2;
+
+
+    showMessage(
+        "🌊 Welle " +
+        wave +
+        " beginnt!"
+    );
+
+
+    spawnEnemyTimer();
+}
+
+
+/* =====================================
+   GEGNER SPAWN
+===================================== */
+
+function spawnEnemyTimer() {
+
+    if (!spawning) return;
+
+    createEnemy();
+
+    spawnRemaining--;
+
+
+    if (spawnRemaining <= 0) {
+
+        spawning = false;
+
+        return;
+    }
+
+
+    setTimeout(
+        spawnEnemyTimer,
+        650
+    );
+}
+
+
+/* =====================================
    GEGNER BEWEGEN
-========================= */
+===================================== */
 
-function moveEnemies() {
+let lastTime =
+    performance.now();
 
-    enemies.forEach(
-        (enemy, index) => {
 
-        const target =
-            paths[
-                Math.min(
-                    enemy.pathIndex + 1,
-                    paths.length - 1
-                )
-            ];
+function gameLoop(time) {
 
-        const dx =
-            target.x -
-            enemy.x;
+    const delta =
+        Math.min(
+            (time - lastTime) / 1000,
+            .05
+        );
 
-        const dy =
-            target.y -
-            enemy.y;
+    lastTime = time;
 
-        const distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
 
-        if (
-            distance <
-            enemy.speed + 2
+    /* Gegner */
+
+    for (
+        let i = enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const enemy = enemies[i];
+
+        enemy.distance +=
+            enemy.speed * delta;
+
+
+        /*
+           Gesamte Weglänge berechnen
+        */
+
+        let totalLength = 0;
+
+        for (
+            let p = 0;
+            p < path.length - 1;
+            p++
         ) {
 
-            enemy.pathIndex++;
+            const dx =
+                path[p+1].x -
+                path[p].x;
 
-            /*
-               Ende erreicht
-            */
+            const dy =
+                path[p+1].y -
+                path[p].y;
 
-            if (
-                enemy.pathIndex >=
-                paths.length
-            ) {
-
-                enemy.element.remove();
-
-                enemies.splice(
-                    index,
-                    1
+            totalLength +=
+                Math.sqrt(
+                    dx*dx +
+                    dy*dy
                 );
+        }
 
-                lives--;
 
-                message(
-                    "💔 Ein Gegner hat das Ziel erreicht!"
-                );
+        /* Ziel erreicht */
 
-                if (lives <= 0) {
+        if (
+            enemy.distance >=
+            totalLength
+        ) {
 
-                    gameOver();
-                }
+            enemy.element.remove();
 
-                updateUI();
+            enemies.splice(i,1);
+
+            lives--;
+
+            showMessage(
+                "💔 Ein Gegner hat deine Basis erreicht!"
+            );
+
+            if (lives <= 0) {
+
+                gameOver();
 
                 return;
             }
 
-        } else {
+            updateUI();
 
-            enemy.x +=
-                dx / distance *
-                enemy.speed;
-
-            enemy.y +=
-                dy / distance *
-                enemy.speed;
+            continue;
         }
 
+
+        const position =
+            getPathPosition(
+                enemy.distance
+            );
+
+
+        const x =
+            mapX(position.x);
+
+        const y =
+            mapY(position.y);
+
+
         enemy.element.style.left =
-            enemy.x + "px";
+            x + "px";
 
         enemy.element.style.top =
-            enemy.y + "px";
+            y + "px";
+
 
         const bar =
             enemy.element
-            .querySelector(".healthBar");
+                .querySelector(".hpBar");
+
 
         bar.style.width =
             Math.max(
@@ -1189,142 +1335,490 @@ function moveEnemies() {
                 enemy.maxHp *
                 100
             ) + "%";
-    });
 
-    updateUI();
 
-    /*
-       Wenn keine Gegner mehr da sind,
-       ist die Welle beendet.
-    */
+        enemy.progress =
+            enemy.distance /
+            totalLength;
+    }
+
+
+    /* Türme */
+
+    updateTowers(delta);
+
+
+    /* Welle beendet */
 
     if (
         waveRunning &&
-        enemies.length === 0 &&
-        document.querySelectorAll(".enemy")
-            .length === 0
+        !spawning &&
+        enemies.length === 0
     ) {
 
-        setTimeout(() => {
+        waveRunning = false;
 
-            if (enemies.length === 0) {
+        const reward =
+            75 +
+            wave * 15;
 
-                waveRunning = false;
+        money += reward;
 
-                const reward =
-                    50 +
-                    wave * 10;
+        showMessage(
+            "🏆 Welle geschafft! +" +
+            reward +
+            " Geld"
+        );
 
-                money += reward;
+        updateUI();
+    }
 
-                message(
-                    "🏆 Welle geschafft! +" +
-                    reward +
-                    " Geld"
-                );
 
-                updateUI();
-            }
+    updateUI();
 
-        }, 500);
+    requestAnimationFrame(gameLoop);
+}
+
+
+requestAnimationFrame(gameLoop);
+
+
+/* =====================================
+   TURM KAUFEN
+===================================== */
+
+function buyTower(type) {
+
+    const prices = {
+
+        basic: 100,
+
+        rapid: 150,
+
+        sniper: 200,
+
+        cannon: 250
+
+    };
+
+
+    if (
+        money <
+        prices[type]
+    ) {
+
+        showMessage(
+            "❌ Nicht genug Geld!"
+        );
+
+        return;
+    }
+
+
+    money -=
+        prices[type];
+
+
+    /*
+       Turmpositionen werden zufällig
+       neben dem Weg platziert.
+
+       Danach prüfen wir, ob die Position
+       ausreichend Abstand zum Weg hat.
+    */
+
+    let x;
+    let y;
+
+    let valid = false;
+
+
+    while (!valid) {
+
+        x =
+            Math.random() *
+            (game.clientWidth - 80) +
+            40;
+
+        y =
+            Math.random() *
+            (game.clientHeight - 80) +
+            40;
+
+
+        valid = true;
+
+
+        /*
+           Abstand zum Weg prüfen
+        */
+
+        const svgX =
+            x /
+            game.clientWidth *
+            1000;
+
+        const svgY =
+            y /
+            game.clientHeight *
+            560;
+
+
+        /*
+           Wir verhindern Platzierung
+           zu nahe an den einzelnen
+           Wegabschnitten.
+        */
+
+        if (
+            svgX > 110 &&
+            svgX < 230 &&
+            svgY > 60 &&
+            svgY < 500
+        ) {
+            valid = false;
+        }
+
+
+        if (
+            svgY > 55 &&
+            svgY < 155
+        ) {
+            valid = false;
+        }
+
+
+        if (
+            svgX > 760 &&
+            svgX < 880 &&
+            svgY > 60 &&
+            svgY < 500
+        ) {
+            valid = false;
+        }
+
+
+        if (
+            svgY > 410
+        ) {
+            valid = false;
+        }
+    }
+
+
+    const element =
+        document.createElement("div");
+
+
+    element.className =
+        "tower " +
+        type;
+
+
+    const icons = {
+
+        basic: "🔵",
+
+        rapid: "🟢",
+
+        sniper: "🔴",
+
+        cannon: "🟠"
+
+    };
+
+
+    element.textContent =
+        icons[type];
+
+
+    element.style.left =
+        x + "px";
+
+    element.style.top =
+        y + "px";
+
+
+    game.appendChild(element);
+
+
+    const tower = {
+
+        element: element,
+
+        x: x,
+
+        y: y,
+
+        type: type,
+
+        level: 1,
+
+        cooldown: 0
+
+    };
+
+
+    towers.push(tower);
+
+
+    element.addEventListener(
+        "click",
+        function(e) {
+
+            e.stopPropagation();
+
+            selectTower(tower);
+
+        }
+    );
+
+
+    updateUI();
+}
+
+
+/* =====================================
+   TURM AUSWÄHLEN
+===================================== */
+
+function selectTower(tower) {
+
+    if (selectedTower) {
+
+        selectedTower.element
+            .classList
+            .remove("selected");
+
+        removeRange();
+    }
+
+
+    selectedTower = tower;
+
+
+    tower.element
+        .classList
+        .add("selected");
+
+
+    showRange(tower);
+
+
+    showMessage(
+        "Turm Level " +
+        tower.level +
+        " ausgewählt"
+    );
+}
+
+
+/* =====================================
+   REICHWEITE
+===================================== */
+
+function getStats(tower) {
+
+    let range = 125;
+    let damage = 22;
+    let cooldown = .65;
+
+
+    if (
+        tower.type === "rapid"
+    ) {
+
+        range = 115;
+        damage = 11;
+        cooldown = .25;
+    }
+
+
+    if (
+        tower.type === "sniper"
+    ) {
+
+        range = 280;
+        damage = 70;
+        cooldown = 1.5;
+    }
+
+
+    if (
+        tower.type === "cannon"
+    ) {
+
+        range = 150;
+        damage = 42;
+        cooldown = 1;
+    }
+
+
+    range +=
+        tower.level * 12;
+
+    damage +=
+        tower.level * 9;
+
+
+    return {
+
+        range,
+        damage,
+        cooldown
+
+    };
+}
+
+
+function showRange(tower) {
+
+    removeRange();
+
+
+    const stats =
+        getStats(tower);
+
+
+    const range =
+        document.createElement("div");
+
+
+    range.className =
+        "range";
+
+
+    range.style.width =
+        stats.range * 2 + "px";
+
+    range.style.height =
+        stats.range * 2 + "px";
+
+
+    range.style.left =
+        tower.x + "px";
+
+    range.style.top =
+        tower.y + "px";
+
+
+    range.id =
+        "currentRange";
+
+
+    game.appendChild(range);
+}
+
+
+function removeRange() {
+
+    const range =
+        document.getElementById(
+            "currentRange"
+        );
+
+    if (range) {
+        range.remove();
     }
 }
 
-/* =========================
-   TÜRME SCHIESSEN
-========================= */
 
-function towerAttack() {
+/* =====================================
+   TÜRME AKTUALISIEREN
+===================================== */
+
+function updateTowers(delta) {
 
     towers.forEach(
         tower => {
 
-        if (tower.cooldown > 0) {
+        tower.cooldown -= delta;
 
-            tower.cooldown--;
 
+        if (
+            tower.cooldown > 0
+        ) {
             return;
         }
 
-        let range = 130;
-        let damage = 20;
-        let cooldown = 35;
 
-        if (
-            tower.type === "rapid"
-        ) {
+        const stats =
+            getStats(tower);
 
-            range = 120;
-            damage = 12;
-            cooldown = 16;
-        }
-
-        if (
-            tower.type === "sniper"
-        ) {
-
-            range = 260;
-            damage = 55;
-            cooldown = 60;
-        }
-
-        range +=
-            tower.level * 15;
-
-        damage +=
-            tower.level * 8;
 
         let target = null;
 
-        let bestProgress = -1;
+        let furthest = -1;
+
 
         enemies.forEach(
             enemy => {
 
+            const position =
+                getPathPosition(
+                    enemy.distance
+                );
+
+
+            const enemyX =
+                mapX(position.x);
+
+            const enemyY =
+                mapY(position.y);
+
+
             const dx =
-                enemy.x -
+                enemyX -
                 tower.x;
 
             const dy =
-                enemy.y -
+                enemyY -
                 tower.y;
+
 
             const distance =
                 Math.sqrt(
-                    dx * dx +
-                    dy * dy
+                    dx*dx +
+                    dy*dy
                 );
 
+
             if (
-                distance <= range &&
-                enemy.pathIndex >=
-                bestProgress
+                distance <=
+                stats.range &&
+                enemy.progress >
+                furthest
             ) {
 
-                target = enemy;
+                furthest =
+                    enemy.progress;
 
-                bestProgress =
-                    enemy.pathIndex;
+                target =
+                    enemy;
             }
+
         });
+
 
         if (target) {
 
             shoot(
                 tower,
                 target,
-                damage
+                stats.damage
             );
 
             tower.cooldown =
-                cooldown;
+                stats.cooldown;
         }
+
     });
 }
 
-/* =========================
-   GESCHOSS
-========================= */
+
+/* =====================================
+   SCHIESSEN
+===================================== */
 
 function shoot(
     tower,
@@ -1335,117 +1829,310 @@ function shoot(
     const bullet =
         document.createElement("div");
 
+
     bullet.className =
         "bullet";
 
-    bullet.style.left =
-        tower.x + "px";
 
-    bullet.style.top =
-        tower.y + "px";
+    game.appendChild(
+        bullet
+    );
 
-    game.appendChild(bullet);
 
-    let x = tower.x;
-    let y = tower.y;
+    let x =
+        tower.x;
+
+    let y =
+        tower.y;
+
 
     const interval =
-        setInterval(() => {
-
-        const dx =
-            target.x - x;
-
-        const dy =
-            target.y - y;
-
-        const distance =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
-
-        if (
-            distance < 10 ||
-            !enemies.includes(target)
-        ) {
-
-            clearInterval(interval);
-
-            bullet.remove();
+        setInterval(
+            () => {
 
             if (
-                enemies.includes(target)
+                !enemies.includes(
+                    target
+                )
             ) {
 
-                target.hp -= damage;
+                clearInterval(
+                    interval
+                );
+
+                bullet.remove();
+
+                return;
+            }
+
+
+            const position =
+                getPathPosition(
+                    target.distance
+                );
+
+
+            const targetX =
+                mapX(position.x);
+
+            const targetY =
+                mapY(position.y);
+
+
+            const dx =
+                targetX - x;
+
+            const dy =
+                targetY - y;
+
+
+            const distance =
+                Math.sqrt(
+                    dx*dx +
+                    dy*dy
+                );
+
+
+            if (
+                distance < 9
+            ) {
+
+                clearInterval(
+                    interval
+                );
+
+                bullet.remove();
+
+
+                target.hp -=
+                    damage;
+
 
                 if (
                     target.hp <= 0
                 ) {
 
-                    target.element.remove();
+                    const index =
+                        enemies.indexOf(
+                            target
+                        );
 
-                    enemies.splice(
-                        enemies.indexOf(target),
-                        1
-                    );
 
-                    money += 15;
+                    if (index !== -1) {
 
-                    message(
-                        "💰 Gegner besiegt! +15"
-                    );
+                        target.element.remove();
+
+                        enemies.splice(
+                            index,
+                            1
+                        );
+
+                        money +=
+                            target.type === "boss"
+                                ? 100
+                                : 15;
+                    }
 
                     updateUI();
                 }
+
+                return;
             }
 
-            return;
-        }
 
-        x +=
-            dx / distance *
-            9;
+            const speed = 12;
 
-        y +=
-            dy / distance *
-            9;
 
-        bullet.style.left =
-            x + "px";
+            x +=
+                dx /
+                distance *
+                speed;
 
-        bullet.style.top =
-            y + "px";
+            y +=
+                dy /
+                distance *
+                speed;
 
-    }, 20);
+
+            bullet.style.left =
+                x + "px";
+
+            bullet.style.top =
+                y + "px";
+
+        },
+        20
+    );
 }
 
-/* =========================
+
+/* =====================================
+   UPGRADE
+===================================== */
+
+function upgradeTower() {
+
+    if (!selectedTower) {
+
+        showMessage(
+            "⚠️ Wähle zuerst einen Turm!"
+        );
+
+        return;
+    }
+
+
+    const cost =
+        selectedTower.level *
+        120;
+
+
+    if (
+        money < cost
+    ) {
+
+        showMessage(
+            "❌ Nicht genug Geld!"
+        );
+
+        return;
+    }
+
+
+    money -= cost;
+
+    selectedTower.level++;
+
+
+    selectedTower.element.style.transform =
+        "translate(-50%, -50%) scale(" +
+        (1 +
+        selectedTower.level *
+        .05) +
+        ")";
+
+
+    showRange(
+        selectedTower
+    );
+
+
+    showMessage(
+        "⬆ Turm auf Level " +
+        selectedTower.level +
+        " verbessert!"
+    );
+
+
+    updateUI();
+}
+
+
+/* =====================================
+   VERKAUFEN
+===================================== */
+
+function sellTower() {
+
+    if (!selectedTower) {
+
+        showMessage(
+            "⚠️ Wähle zuerst einen Turm!"
+        );
+
+        return;
+    }
+
+
+    const index =
+        towers.indexOf(
+            selectedTower
+        );
+
+
+    if (index === -1) {
+        return;
+    }
+
+
+    money +=
+        50 +
+        selectedTower.level *
+        45;
+
+
+    selectedTower.element.remove();
+
+
+    towers.splice(
+        index,
+        1
+    );
+
+
+    selectedTower =
+        null;
+
+
+    removeRange();
+
+
+    showMessage(
+        "💰 Turm verkauft!"
+    );
+
+
+    updateUI();
+}
+
+
+/* =====================================
+   SPIELFELD KLICK
+===================================== */
+
+game.addEventListener(
+    "click",
+    function() {
+
+        if (selectedTower) {
+
+            selectedTower.element
+                .classList
+                .remove("selected");
+
+            selectedTower =
+                null;
+
+            removeRange();
+        }
+
+    }
+);
+
+
+/* =====================================
    GAME OVER
-========================= */
+===================================== */
 
 function gameOver() {
 
+    waveRunning =
+        false;
+
+    spawning =
+        false;
+
+
     document.getElementById(
         "gameOver"
-    ).style.display = "flex";
-
-    waveRunning = false;
+    ).style.display =
+        "flex";
 }
 
-/* =========================
-   SPIEL LOOP
-========================= */
 
-setInterval(
-    moveEnemies,
-    30
-);
-
-setInterval(
-    towerAttack,
-    30
-);
+/* =====================================
+   START
+===================================== */
 
 updateUI();
 
