@@ -2,15 +2,11 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Battle Ages</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    user-select:none;
-}
+*{box-sizing:border-box;user-select:none}
 
 body{
     margin:0;
@@ -22,7 +18,7 @@ body{
 
 header{
     background:linear-gradient(90deg,#17232d,#263746,#17232d);
-    border-bottom:3px solid #4c6170;
+    border-bottom:3px solid #596a74;
     padding:10px;
     text-align:center;
 }
@@ -31,8 +27,7 @@ header h1{
     margin:0;
     font-size:28px;
     letter-spacing:3px;
-    color:#e4edf2;
-    text-shadow:2px 2px 3px #000;
+    text-shadow:2px 2px 4px #000;
 }
 
 #hud{
@@ -70,7 +65,7 @@ header h1{
     height:100%;
     width:100%;
     background:#42a85f;
-    transition:width .2s;
+    transition:width:.2s;
 }
 
 #battlefield{
@@ -78,17 +73,9 @@ header h1{
     width:100%;
     height:540px;
     overflow:hidden;
-    background:
-        linear-gradient(
-            to bottom,
-            #3e4a50 0%,
-            #313c42 38%,
-            #273238 39%,
-            #20282d 100%
-        );
+    background:linear-gradient(to bottom,#3e4a50 0%,#313c42 38%,#273238 39%,#20282d 100%);
 }
 
-/* Himmel */
 #sky{
     position:absolute;
     left:0;
@@ -96,44 +83,40 @@ header h1{
     top:0;
     height:210px;
     background:
-        radial-gradient(circle at 20% 30%,rgba(255,255,255,.10),transparent 20%),
+        radial-gradient(circle at 20% 30%,rgba(255,255,255,.1),transparent 20%),
         radial-gradient(circle at 75% 25%,rgba(255,255,255,.08),transparent 25%),
         linear-gradient(#53636d,#39484f);
 }
 
-/* Boden */
 #ground{
     position:absolute;
     left:0;
     right:0;
     bottom:0;
     height:230px;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            #293238 0,
-            #293238 12px,
-            #252d32 13px,
-            #252d32 25px
-        );
+    background:repeating-linear-gradient(
+        0deg,
+        #293238 0,
+        #293238 12px,
+        #252d32 13px,
+        #252d32 25px
+    );
     border-top:4px solid #59666d;
 }
 
-/* Straße */
 #road{
     position:absolute;
     left:0;
     right:0;
     bottom:92px;
     height:82px;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            #4b4e4e 0,
-            #4b4e4e 18px,
-            #414444 19px,
-            #414444 37px
-        );
+    background:repeating-linear-gradient(
+        0deg,
+        #4b4e4e 0,
+        #4b4e4e 18px,
+        #414444 19px,
+        #414444 37px
+    );
     border-top:3px solid #777;
     border-bottom:3px solid #777;
 }
@@ -154,7 +137,6 @@ header h1{
     opacity:.55;
 }
 
-/* Gebäude */
 .building{
     position:absolute;
     bottom:180px;
@@ -191,15 +173,9 @@ header h1{
         38px 48px #20282c;
 }
 
-.building.left{
-    left:20%;
-}
+.building.left{left:20%}
+.building.right{right:20%}
 
-.building.right{
-    right:20%;
-}
-
-/* Basen */
 .base{
     position:absolute;
     bottom:92px;
@@ -208,13 +184,8 @@ header h1{
     z-index:5;
 }
 
-#playerBase{
-    left:12px;
-}
-
-#enemyBase{
-    right:12px;
-}
+#playerBase{left:12px}
+#enemyBase{right:12px}
 
 .baseWall{
     position:absolute;
@@ -265,7 +236,7 @@ header h1{
     top:0;
     width:34px;
     height:21px;
-    background:#6b7478;
+    background:#69767b;
     clip-path:polygon(0 0,100% 0,80% 50%,100% 100%,0 100%);
 }
 
@@ -273,7 +244,6 @@ header h1{
     background:#9b4545;
 }
 
-/* Basekanone */
 .baseGun{
     position:absolute;
     bottom:108px;
@@ -297,7 +267,6 @@ header h1{
     border-radius:50%;
 }
 
-/* Einheiten */
 .unit{
     position:absolute;
     width:58px;
@@ -340,13 +309,8 @@ header h1{
     border:2px solid #111;
 }
 
-.unit .leg.one{
-    left:15px;
-}
-
-.unit .leg.two{
-    left:33px;
-}
+.unit .leg.one{left:15px}
+.unit .leg.two{left:33px}
 
 .unit .shield{
     position:absolute;
@@ -403,7 +367,6 @@ header h1{
     width:22px;
     height:2px;
     background:#ddd;
-    transform:rotate(-8deg);
 }
 
 .unit .arrowHeld{
@@ -461,7 +424,6 @@ header h1{
     border:3px solid #191e21;
 }
 
-/* Fortschrittsbalken */
 .unit .unitbar{
     position:absolute;
     left:2px;
@@ -478,16 +440,9 @@ header h1{
     background:#52b86b;
 }
 
-/* Spieler / Gegner Unterscheidung */
-.unit.player .body{
-    background:#536f7e;
-}
+.unit.player .body{background:#536f7e}
+.unit.enemy .body{background:#7d4747}
 
-.unit.enemy .body{
-    background:#7d4747;
-}
-
-/* Pfeile */
 .projectile{
     position:absolute;
     width:34px;
@@ -517,7 +472,6 @@ header h1{
     transform-origin:center;
 }
 
-/* Treffer */
 .hit{
     position:absolute;
     width:28px;
@@ -530,17 +484,10 @@ header h1{
 }
 
 @keyframes hit{
-    from{
-        transform:scale(.3);
-        opacity:1;
-    }
-    to{
-        transform:scale(1.8);
-        opacity:0;
-    }
+    from{transform:scale(.3);opacity:1}
+    to{transform:scale(1.8);opacity:0}
 }
 
-/* Explosion */
 .explosion{
     position:absolute;
     width:65px;
@@ -553,17 +500,10 @@ header h1{
 }
 
 @keyframes boom{
-    from{
-        transform:scale(.3);
-        opacity:1;
-    }
-    to{
-        transform:scale(1.8);
-        opacity:0;
-    }
+    from{transform:scale(.3);opacity:1}
+    to{transform:scale(1.8);opacity:0}
 }
 
-/* UI */
 #controls{
     background:#11171b;
     border-top:2px solid #4a5962;
@@ -614,13 +554,9 @@ button:disabled{
     box-shadow:0 10px 35px #000;
 }
 
-#message h2{
-    margin-top:0;
-}
+#message h2{margin-top:0}
 
-#message button{
-    margin-top:15px;
-}
+#message button{margin-top:15px}
 
 #waveWarning{
     position:absolute;
@@ -636,16 +572,9 @@ button:disabled{
     display:none;
 }
 
-#ageInfo{
-    font-size:12px;
-    color:#bbc5c9;
-    margin-top:3px;
-}
-
 @media(max-width:700px){
-    #battlefield{
-        height:470px;
-    }
+
+    #battlefield{height:470px}
 
     .building{
         transform:scale(.78);
@@ -674,9 +603,7 @@ button:disabled{
         padding:6px;
     }
 
-    .hpbar{
-        width:100px;
-    }
+    .hpbar{width:100px}
 }
 </style>
 </head>
@@ -691,7 +618,7 @@ button:disabled{
 
     <div class="info">
         💰 GOLD
-        <div id="gold">500</div>
+        <div id="gold">700</div>
     </div>
 
     <div class="info">
@@ -722,7 +649,7 @@ button:disabled{
 
     <div class="info">
         ⏱ NÄCHSTE WELLE
-        <div id="waveTimer">20</div>
+        <div id="waveTimer">24</div>
     </div>
 
 </div>
@@ -765,7 +692,7 @@ button:disabled{
     <button id="specialBtn">
         💥 ARTILLERIE
         <br>
-        <small>Bereit</small>
+        <small>BEREIT</small>
     </button>
 
     <button id="ageBtn">
@@ -791,310 +718,322 @@ button:disabled{
 <script>
 
 /* =========================
-   SPIELDATEN
+   GRUNDWERTE
 ========================= */
 
-const battlefield = document.getElementById("battlefield");
+let gold=700;
 
-let gold = 500;
+let playerHP=5000;
+let enemyHP=5000;
 
-let playerHP = 5000;
-let enemyHP = 5000;
+const maxBaseHP=5000;
 
-const maxBaseHP = 5000;
+let age=0;
+let wave=1;
 
-let age = 0;
-let wave = 1;
+let waveTimer=24;
 
-let waveTimer = 20;
+let gameOver=false;
 
-let gameOver = false;
+let lastTime=performance.now();
 
-let lastTime = performance.now();
+let specialCooldown=0;
 
-let specialCooldown = 0;
+let playerBaseTimer=1;
+let enemyBaseTimer=1;
 
-let playerBaseCooldown = 1.5;
-let enemyBaseCooldown = 1.7;
+let units=[];
+let projectiles=[];
 
-let playerBaseTimer = 1;
-let enemyBaseTimer = 1;
-
-let units = [];
-let projectiles = [];
-let effects = [];
 
 /* =========================
    ZEITALTER
 ========================= */
 
-const ages = [
-    {
-        name:"Steinzeit",
-        upgradeCost:1500,
-        requiredWave:5,
-        baseDamage:35,
-        baseRange:330,
-        units:[
-            {
-                name:"Schwertkrieger",
-                icon:"⚔",
-                cost:80,
-                hp:150,
-                damage:18,
-                speed:27,
-                range:48,
-                attack:1.05,
-                baseDamage:.8,
-                type:"warrior"
-            },
-            {
-                name:"Bogenschütze",
-                icon:"🏹",
-                cost:120,
-                hp:100,
-                damage:30,
-                speed:20,
-                range:230,
-                attack:1.6,
-                baseDamage:.5,
-                type:"archer"
-            },
-            {
-                name:"Schwerer Krieger",
-                icon:"🔨",
-                cost:180,
-                hp:290,
-                damage:35,
-                speed:13,
-                range:50,
-                attack:1.7,
-                baseDamage:1.5,
-                type:"heavy"
-            }
-        ]
-    },
+const ages=[
 
-    {
-        name:"Mittelalter",
-        upgradeCost:3500,
-        requiredWave:12,
-        baseDamage:48,
-        baseRange:350,
-        units:[
-            {
-                name:"Ritter",
-                icon:"⚔",
-                cost:220,
-                hp:350,
-                damage:48,
-                speed:23,
-                range:52,
-                attack:1.05,
-                baseDamage:2,
-                type:"warrior"
-            },
-            {
-                name:"Langbogenschütze",
-                icon:"🏹",
-                cost:270,
-                hp:140,
-                damage:55,
-                speed:20,
-                range:300,
-                attack:1.45,
-                baseDamage:1.1,
-                type:"archer"
-            },
-            {
-                name:"Streithammer",
-                icon:"🔨",
-                cost:450,
-                hp:520,
-                damage:100,
-                speed:8,
-                range:55,
-                attack:2.4,
-                baseDamage:4,
-                type:"heavy"
-            }
-        ]
-    },
+{
+name:"Steinzeit",
+upgradeCost:1500,
+requiredWave:5,
+baseDamage:42,
+baseRange:340,
 
-    {
-        name:"Industriezeitalter",
-        upgradeCost:7000,
-        requiredWave:20,
-        baseDamage:65,
-        baseRange:380,
-        units:[
-            {
-                name:"Infanterist",
-                icon:"🔫",
-                cost:400,
-                hp:230,
-                damage:72,
-                speed:24,
-                range:50,
-                attack:1.05,
-                baseDamage:3,
-                type:"warrior"
-            },
-            {
-                name:"Militärschütze",
-                icon:"🎯",
-                cost:480,
-                hp:190,
-                damage:85,
-                speed:21,
-                range:320,
-                attack:1.35,
-                baseDamage:2,
-                type:"archer"
-            },
-            {
-                name:"Kanoniersoldat",
-                icon:"💣",
-                cost:750,
-                hp:680,
-                damage:150,
-                speed:8,
-                range:350,
-                attack:3,
-                baseDamage:7,
-                type:"heavy"
-            }
-        ]
-    },
+units:[
 
-    {
-        name:"Moderne",
-        upgradeCost:12000,
-        requiredWave:30,
-        baseDamage:85,
-        baseRange:410,
-        units:[
-            {
-                name:"Sturmtrupp",
-                icon:"🔫",
-                cost:700,
-                hp:420,
-                damage:120,
-                speed:29,
-                range:300,
-                attack:.72,
-                baseDamage:4,
-                type:"archer"
-            },
-            {
-                name:"Präzisionsschütze",
-                icon:"🎯",
-                cost:850,
-                hp:230,
-                damage:220,
-                speed:18,
-                range:430,
-                attack:2.4,
-                baseDamage:5,
-                type:"archer"
-            },
-            {
-                name:"Panzer",
-                icon:"🚙",
-                cost:1300,
-                hp:1150,
-                damage:190,
-                speed:12,
-                range:270,
-                attack:2.1,
-                baseDamage:10,
-                type:"heavy"
-            }
-        ]
-    },
+{
+name:"Schwertkrieger",
+icon:"⚔",
+cost:70,
+hp:150,
+damage:18,
+speed:27,
+range:48,
+attack:1.05,
+baseDamage:.8,
+type:"warrior"
+},
 
-    {
-        name:"Zukunft",
-        upgradeCost:Infinity,
-        requiredWave:45,
-        baseDamage:120,
-        baseRange:450,
-        units:[
-            {
-                name:"Plasma-Soldat",
-                icon:"⚡",
-                cost:1100,
-                hp:580,
-                damage:185,
-                speed:34,
-                range:350,
-                attack:.65,
-                baseDamage:7,
-                type:"archer"
-            },
-            {
-                name:"Energie-Schütze",
-                icon:"🔵",
-                cost:1400,
-                hp:430,
-                damage:270,
-                speed:30,
-                range:450,
-                attack:1.1,
-                baseDamage:9,
-                type:"archer"
-            },
-            {
-                name:"Kampfroboter",
-                icon:"🤖",
-                cost:2200,
-                hp:1850,
-                damage:350,
-                speed:15,
-                range:65,
-                attack:1.2,
-                baseDamage:18,
-                type:"heavy"
-            }
-        ]
-    }
+{
+name:"Bogenschütze",
+icon:"🏹",
+cost:100,
+hp:100,
+damage:30,
+speed:20,
+range:230,
+attack:1.6,
+baseDamage:.5,
+type:"archer"
+},
+
+{
+name:"Schwerer Krieger",
+icon:"🔨",
+cost:160,
+hp:290,
+damage:35,
+speed:13,
+range:50,
+attack:1.7,
+baseDamage:1.5,
+type:"heavy"
+}
+
+]
+},
+
+{
+name:"Mittelalter",
+upgradeCost:3500,
+requiredWave:12,
+baseDamage:58,
+baseRange:360,
+
+units:[
+
+{
+name:"Ritter",
+icon:"⚔",
+cost:200,
+hp:350,
+damage:48,
+speed:23,
+range:52,
+attack:1.05,
+baseDamage:2,
+type:"warrior"
+},
+
+{
+name:"Langbogenschütze",
+icon:"🏹",
+cost:240,
+hp:140,
+damage:55,
+speed:20,
+range:300,
+attack:1.45,
+baseDamage:1.1,
+type:"archer"
+},
+
+{
+name:"Streithammer",
+icon:"🔨",
+cost:420,
+hp:520,
+damage:100,
+speed:8,
+range:55,
+attack:2.4,
+baseDamage:4,
+type:"heavy"
+}
+
+]
+},
+
+{
+name:"Industriezeitalter",
+upgradeCost:7000,
+requiredWave:20,
+baseDamage:75,
+baseRange:390,
+
+units:[
+
+{
+name:"Infanterist",
+icon:"🔫",
+cost:370,
+hp:230,
+damage:72,
+speed:24,
+range:50,
+attack:1.05,
+baseDamage:3,
+type:"warrior"
+},
+
+{
+name:"Militärschütze",
+icon:"🎯",
+cost:450,
+hp:190,
+damage:85,
+speed:21,
+range:320,
+attack:1.35,
+baseDamage:2,
+type:"archer"
+},
+
+{
+name:"Kanoniersoldat",
+icon:"💣",
+cost:700,
+hp:680,
+damage:150,
+speed:8,
+range:350,
+attack:3,
+baseDamage:7,
+type:"heavy"
+}
+
+]
+},
+
+{
+name:"Moderne",
+upgradeCost:12000,
+requiredWave:30,
+baseDamage:95,
+baseRange:420,
+
+units:[
+
+{
+name:"Sturmtrupp",
+icon:"🔫",
+cost:650,
+hp:420,
+damage:120,
+speed:29,
+range:300,
+attack:.72,
+baseDamage:4,
+type:"archer"
+},
+
+{
+name:"Präzisionsschütze",
+icon:"🎯",
+cost:800,
+hp:230,
+damage:220,
+speed:18,
+range:430,
+attack:2.4,
+baseDamage:5,
+type:"archer"
+},
+
+{
+name:"Panzer",
+icon:"🚙",
+cost:1200,
+hp:1150,
+damage:190,
+speed:12,
+range:270,
+attack:2.1,
+baseDamage:10,
+type:"heavy"
+}
+
+]
+},
+
+{
+name:"Zukunft",
+upgradeCost:Infinity,
+requiredWave:45,
+baseDamage:130,
+baseRange:460,
+
+units:[
+
+{
+name:"Plasma-Soldat",
+icon:"⚡",
+cost:1000,
+hp:580,
+damage:185,
+speed:34,
+range:350,
+attack:.65,
+baseDamage:7,
+type:"archer"
+},
+
+{
+name:"Energie-Schütze",
+icon:"🔵",
+cost:1300,
+hp:430,
+damage:270,
+speed:30,
+range:450,
+attack:1.1,
+baseDamage:9,
+type:"archer"
+},
+
+{
+name:"Kampfroboter",
+icon:"🤖",
+cost:2050,
+hp:1850,
+damage:350,
+speed:15,
+range:65,
+attack:1.2,
+baseDamage:18,
+type:"heavy"
+}
+
+]
+}
+
 ];
 
+
 /* =========================
-   HILFSFUNKTIONEN
+   HUD
 ========================= */
 
-function clamp(value,min,max){
-    return Math.max(min,Math.min(max,value));
-}
-
-function distance(a,b){
-    return Math.abs(a.x-b.x);
-}
-
-function getUnitData(index){
-    return ages[age].units[index];
-}
-
-function showMessage(title,text){
-    document.getElementById("messageTitle").textContent=title;
-    document.getElementById("messageText").textContent=text;
-    document.getElementById("message").style.display="block";
+function clamp(v,min,max){
+    return Math.max(min,Math.min(max,v));
 }
 
 function updateHUD(){
 
-    document.getElementById("gold").textContent=Math.floor(gold);
+    document.getElementById("gold").textContent=
+        Math.floor(gold);
 
-    document.getElementById("wave").textContent=wave;
+    document.getElementById("wave").textContent=
+        wave;
 
-    document.getElementById("age").textContent=ages[age].name;
+    document.getElementById("age").textContent=
+        ages[age].name;
 
     document.getElementById("playerHPText").textContent=
-        `${Math.max(0,Math.ceil(playerHP))} / ${maxBaseHP}`;
+        `${Math.ceil(Math.max(0,playerHP))} / ${maxBaseHP}`;
 
     document.getElementById("enemyHPText").textContent=
-        `${Math.max(0,Math.ceil(enemyHP))} / ${maxBaseHP}`;
+        `${Math.ceil(Math.max(0,enemyHP))} / ${maxBaseHP}`;
 
     document.getElementById("playerHPBar").style.width=
         clamp(playerHP/maxBaseHP*100,0,100)+"%";
@@ -1108,37 +1047,44 @@ function updateHUD(){
     updateButtons();
 }
 
+
 /* =========================
    BUTTONS
 ========================= */
 
 function updateButtons(){
 
-    const current=ages[age].units;
-
     for(let i=0;i<3;i++){
 
-        const button=document.getElementById("unit"+(i+1));
-        const unit=current[i];
+        const button=
+            document.getElementById("unit"+(i+1));
+
+        const unit=
+            ages[age].units[i];
 
         button.innerHTML=
             `${unit.icon} ${unit.name}<br>
              <small>${unit.cost} Gold</small>`;
 
         button.disabled=
-            gameOver || gold<unit.cost;
+            gameOver ||
+            gold<unit.cost;
     }
 
-    const ageButton=document.getElementById("ageBtn");
+    const ageButton=
+        document.getElementById("ageBtn");
 
     if(age>=ages.length-1){
 
-        ageButton.innerHTML="🏆 MAXIMALES ZEITALTER";
+        ageButton.innerHTML=
+            "🏆 MAXIMALES ZEITALTER";
+
         ageButton.disabled=true;
 
     }else{
 
-        const next=ages[age+1];
+        const next=
+            ages[age+1];
 
         ageButton.innerHTML=
             `⬆ ${next.name}<br>
@@ -1150,7 +1096,8 @@ function updateButtons(){
             wave<next.requiredWave;
     }
 
-    const special=document.getElementById("specialBtn");
+    const special=
+        document.getElementById("specialBtn");
 
     if(specialCooldown<=0){
 
@@ -1170,59 +1117,79 @@ function updateButtons(){
     }
 }
 
+
 /* =========================
    EINHEIT ERSTELLEN
 ========================= */
 
 function createUnit(player,index){
 
-    const data=ages[age].units[index];
+    const data=
+        ages[age].units[index];
 
-    if(player && gold<data.cost) return;
+    if(player && gold<data.cost)
+        return;
 
-    if(player){
+    if(player)
         gold-=data.cost;
-    }
 
     const unit={
+
         id:Date.now()+Math.random(),
-        player:player,
-        x:player?120:window.innerWidth-120,
+
+        player,
+
+        x:player
+            ?120
+            :window.innerWidth-120,
+
         hp:data.hp,
         maxHp:data.hp,
+
         damage:data.damage,
         speed:data.speed,
         range:data.range,
+
         attackCooldown:data.attack,
         attackTimer:0,
+
         baseDamage:data.baseDamage,
+
         type:data.type,
+
         target:null,
-        data:data,
+
         element:null
     };
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
     el.className=
         `unit ${player?"player":"enemy"} ${data.type}`;
 
     el.innerHTML=`
+
         <div class="unitbar">
             <div class="unitfill"></div>
         </div>
+
         <div class="head"></div>
         <div class="body"></div>
+
         <div class="leg one"></div>
         <div class="leg two"></div>
+
         ${data.type==="warrior"?`
             <div class="shield"></div>
             <div class="sword"></div>
         `:""}
+
         ${data.type==="archer"?`
             <div class="bow"></div>
             <div class="arrowHeld"></div>
         `:""}
+
         ${data.type==="heavy"?`
             <div class="hammer"></div>
         `:""}
@@ -1231,46 +1198,66 @@ function createUnit(player,index){
     battlefield.appendChild(el);
 
     unit.element=el;
+
     units.push(unit);
 
     updateUnitVisual(unit);
 }
 
+
 /* =========================
-   EINHEITEN KAUFEN
+   KAUF
 ========================= */
 
 function buyUnit(index){
-    if(gameOver) return;
+
+    if(gameOver)
+        return;
+
     createUnit(true,index);
+
     updateHUD();
 }
 
-document.getElementById("unit1").onclick=()=>buyUnit(0);
-document.getElementById("unit2").onclick=()=>buyUnit(1);
-document.getElementById("unit3").onclick=()=>buyUnit(2);
+document.getElementById("unit1").onclick=
+    ()=>buyUnit(0);
+
+document.getElementById("unit2").onclick=
+    ()=>buyUnit(1);
+
+document.getElementById("unit3").onclick=
+    ()=>buyUnit(2);
+
 
 /* =========================
-   VISUALS
+   VISUAL
 ========================= */
 
 function updateUnitVisual(unit){
 
-    if(!unit.element) return;
+    if(!unit.element)
+        return;
 
-    unit.element.style.left=unit.x+"px";
+    unit.element.style.left=
+        unit.x+"px";
 
     const fill=
         unit.element.querySelector(".unitfill");
 
     if(fill){
+
         fill.style.width=
-            clamp(unit.hp/unit.maxHp*100,0,100)+"%";
+            clamp(
+                unit.hp/unit.maxHp*100,
+                0,
+                100
+            )+"%";
     }
 }
 
+
 /* =========================
-   ZIELFINDUNG
+   ZIEL
 ========================= */
 
 function findTarget(unit){
@@ -1280,12 +1267,19 @@ function findTarget(unit){
 
     for(const other of units){
 
-        if(other.player===unit.player) continue;
-        if(other.hp<=0) continue;
+        if(other.player===unit.player)
+            continue;
 
-        const d=distance(unit,other);
+        if(other.hp<=0)
+            continue;
 
-        if(d<=unit.range && d<best){
+        const d=
+            Math.abs(unit.x-other.x);
+
+        if(
+            d<=unit.range &&
+            d<best
+        ){
 
             best=d;
             closest=other;
@@ -1295,15 +1289,18 @@ function findTarget(unit){
     return closest;
 }
 
+
 /* =========================
    KAMPF
 ========================= */
 
 function attackUnit(unit,target){
 
-    if(unit.attackTimer>0) return;
+    if(unit.attackTimer>0)
+        return;
 
-    unit.attackTimer=unit.attackCooldown;
+    unit.attackTimer=
+        unit.attackCooldown;
 
     if(unit.type==="archer"){
 
@@ -1317,10 +1314,13 @@ function attackUnit(unit,target){
 
         target.hp-=unit.damage;
 
-        createHit(target.x,145);
-
+        createHit(
+            target.x,
+            145
+        );
     }
 }
+
 
 /* =========================
    PFEILE
@@ -1329,16 +1329,21 @@ function attackUnit(unit,target){
 function createArrow(attacker,target,damage){
 
     const projectile={
+
         x:attacker.x,
         y:145,
-        target:target,
+
+        target,
+
         speed:440,
-        damage:damage,
+        damage,
+
         type:"arrow",
         element:null
     };
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
     el.className="projectile";
 
@@ -1349,21 +1354,28 @@ function createArrow(attacker,target,damage){
     projectiles.push(projectile);
 }
 
-function createCannonProjectile(x,y,target,damage){
+function createCannonProjectile(
+    x,y,target,damage
+){
 
     const projectile={
-        x:x,
-        y:y,
-        target:target,
-        speed:300,
-        damage:damage,
+
+        x,y,
+
+        target,
+
+        speed:330,
+        damage,
+
         type:"cannon",
         element:null
     };
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
-    el.className="projectile cannonProjectile";
+    el.className=
+        "projectile cannonProjectile";
 
     battlefield.appendChild(el);
 
@@ -1372,56 +1384,76 @@ function createCannonProjectile(x,y,target,damage){
     projectiles.push(projectile);
 }
 
+
 /* =========================
    PROJEKTILE
 ========================= */
 
 function updateProjectiles(dt){
 
-    for(let i=projectiles.length-1;i>=0;i--){
+    for(
+        let i=projectiles.length-1;
+        i>=0;
+        i--
+    ){
 
-        const p=projectiles[i];
+        const p=
+            projectiles[i];
 
-        if(!p.target || p.target.hp<=0){
+        if(
+            !p.target ||
+            p.target.hp<=0
+        ){
 
             p.element.remove();
+
             projectiles.splice(i,1);
+
             continue;
         }
 
-        const tx=p.target.x;
-        const ty=145;
+        const dx=
+            p.target.x-p.x;
 
-        const dx=tx-p.x;
-        const dy=ty-p.y;
+        const dy=
+            145-p.y;
 
-        const dist=Math.sqrt(dx*dx+dy*dy);
+        const dist=
+            Math.sqrt(dx*dx+dy*dy);
 
         if(dist<16){
 
             p.target.hp-=p.damage;
 
-            createHit(tx,ty);
+            createHit(
+                p.target.x,
+                145
+            );
 
             p.element.remove();
+
             projectiles.splice(i,1);
 
             continue;
         }
 
-        const vx=dx/dist*p.speed*dt;
-        const vy=dy/dist*p.speed*dt;
+        p.x+=
+            dx/dist*p.speed*dt;
 
-        p.x+=vx;
-        p.y+=vy;
+        p.y+=
+            dy/dist*p.speed*dt;
 
-        p.element.style.left=p.x+"px";
-        p.element.style.top=p.y+"px";
+        p.element.style.left=
+            p.x+"px";
+
+        p.element.style.top=
+            p.y+"px";
 
         p.element.style.transform=
             `rotate(${Math.atan2(dy,dx)*180/Math.PI}deg)`;
     }
 }
+
 
 /* =========================
    TREFFER
@@ -1429,19 +1461,25 @@ function updateProjectiles(dt){
 
 function createHit(x,y){
 
-    const hit=document.createElement("div");
+    const hit=
+        document.createElement("div");
 
     hit.className="hit";
 
-    hit.style.left=(x-14)+"px";
-    hit.style.top=(y-14)+"px";
+    hit.style.left=
+        (x-14)+"px";
+
+    hit.style.top=
+        (y-14)+"px";
 
     battlefield.appendChild(hit);
 
-    setTimeout(()=>{
-        hit.remove();
-    },350);
+    setTimeout(
+        ()=>hit.remove(),
+        350
+    );
 }
+
 
 /* =========================
    BASISVERTEIDIGUNG
@@ -1452,118 +1490,111 @@ function baseDefense(dt){
     playerBaseTimer-=dt;
     enemyBaseTimer-=dt;
 
-    /* Spielerbasis */
-
     if(playerBaseTimer<=0){
 
-        const target=getNearestEnemyToBase(true);
+        let target=null;
+        let best=Infinity;
+
+        for(const u of units){
+
+            if(!u.player && u.hp>0){
+
+                const d=
+                    Math.abs(u.x-70);
+
+                if(
+                    d<ages[age].baseRange &&
+                    d<best
+                ){
+
+                    best=d;
+                    target=u;
+                }
+            }
+        }
 
         if(target){
 
-            const range=ages[age].baseRange;
+            createCannonProjectile(
+                70,
+                360,
+                target,
+                ages[age].baseDamage
+            );
 
-            if(Math.abs(target.x-70)<=range){
+            playerBaseTimer=1.45;
 
-                createCannonProjectile(
-                    70,
-                    360,
-                    target,
-                    ages[age].baseDamage
-                );
-
-                playerBaseTimer=playerBaseCooldown;
-
-                rotateGun(
-                    document.getElementById("playerGun"),
-                    target.x-70
-                );
-            }
+            rotateGun(
+                document.getElementById("playerGun"),
+                target.x-70
+            );
         }
     }
-
-    /* Feindbasis */
 
     if(enemyBaseTimer<=0){
 
-        const target=getNearestEnemyToBase(false);
+        let target=null;
+        let best=Infinity;
+
+        for(const u of units){
+
+            if(u.player && u.hp>0){
+
+                const d=
+                    Math.abs(
+                        u.x-
+                        (window.innerWidth-70)
+                    );
+
+                if(
+                    d<360 &&
+                    d<best
+                ){
+
+                    best=d;
+                    target=u;
+                }
+            }
+        }
 
         if(target){
 
-            const range=ages[age].baseRange;
+            const enemyDamage=
+                38+
+                age*7+
+                Math.floor(wave/10)*5;
 
-            if(Math.abs(target.x-(window.innerWidth-70))<=range){
+            createCannonProjectile(
+                window.innerWidth-70,
+                360,
+                target,
+                enemyDamage
+            );
 
-                const enemyDamage=
-                    42 + age*10 + Math.floor(wave/8)*8;
+            enemyBaseTimer=1.75;
 
-                createCannonProjectile(
-                    window.innerWidth-70,
-                    360,
-                    target,
-                    enemyDamage
-                );
-
-                enemyBaseTimer=enemyBaseCooldown;
-
-                rotateGun(
-                    document.getElementById("enemyGun"),
-                    target.x-(window.innerWidth-70)
-                );
-            }
+            rotateGun(
+                document.getElementById("enemyGun"),
+                target.x-
+                (window.innerWidth-70)
+            );
         }
     }
-}
-
-function getNearestEnemyToBase(playerBase){
-
-    let target=null;
-    let best=Infinity;
-
-    for(const unit of units){
-
-        if(unit.hp<=0) continue;
-
-        if(unit.player===playerBase){
-
-            /* Bei Spielerbasis wollen wir Feinde */
-            continue;
-
-        }else{
-
-            if(playerBase){
-
-                const d=Math.abs(unit.x-70);
-
-                if(d<best){
-                    best=d;
-                    target=unit;
-                }
-
-            }else{
-
-                const d=Math.abs(
-                    unit.x-(window.innerWidth-70)
-                );
-
-                if(d<best){
-                    best=d;
-                    target=unit;
-                }
-            }
-        }
-    }
-
-    return target;
 }
 
 function rotateGun(gun,difference){
 
     const angle=
-        clamp(difference/8,-45,45);
+        clamp(
+            difference/8,
+            -45,
+            45
+        );
 
     gun.style.transform=
         `rotate(${angle}deg)`;
 }
+
 
 /* =========================
    EINHEITEN UPDATE
@@ -1573,39 +1604,54 @@ function updateUnits(dt){
 
     for(const unit of units){
 
-        if(unit.hp<=0) continue;
+        if(unit.hp<=0)
+            continue;
 
         unit.attackTimer-=dt;
 
-        const target=findTarget(unit);
+        const target=
+            findTarget(unit);
 
         unit.target=target;
 
         if(target){
 
-            const d=distance(unit,target);
+            const d=
+                Math.abs(
+                    unit.x-target.x
+                );
 
             if(d<=unit.range){
 
-                attackUnit(unit,target);
+                attackUnit(
+                    unit,
+                    target
+                );
 
             }else{
 
-                moveUnit(unit,dt);
+                moveUnit(
+                    unit,
+                    dt
+                );
             }
 
         }else{
 
             const baseX=
                 unit.player
-                ? window.innerWidth-75
-                : 75;
+                ?window.innerWidth-75
+                :75;
 
             const direction=
-                unit.player?1:-1;
+                unit.player
+                ?1
+                :-1;
 
             if(
-                Math.abs(unit.x-baseX)>55
+                Math.abs(
+                    unit.x-baseX
+                )>55
             ){
 
                 unit.x+=
@@ -1615,139 +1661,165 @@ function updateUnits(dt){
 
             }else{
 
-                /* Angriff auf gegnerische Basis */
+                if(unit.attackTimer<=0){
 
-                const buildingDamage=
-                    unit.baseDamage;
+                    if(unit.player){
 
-                if(unit.player){
+                        enemyHP-=
+                            unit.baseDamage;
 
-                    enemyHP-=
-                        buildingDamage*
-                        dt;
+                    }else{
 
-                }else{
+                        playerHP-=
+                            unit.baseDamage;
+                    }
 
-                    playerHP-=
-                        buildingDamage*
-                        dt;
+                    unit.attackTimer=.65;
                 }
-
-                unit.attackTimer=Math.max(
-                    unit.attackTimer,
-                    .5
-                );
             }
         }
 
-        unit.x=clamp(
-            unit.x,
-            45,
-            window.innerWidth-45
-        );
+        unit.x=
+            clamp(
+                unit.x,
+                45,
+                window.innerWidth-45
+            );
 
         updateUnitVisual(unit);
     }
 }
 
+
 /* =========================
-   GEFALLENE EINHEITEN
+   BEWEGUNG
+========================= */
+
+function moveUnit(unit,dt){
+
+    const direction=
+        unit.player
+        ?1
+        :-1;
+
+    unit.x+=
+        direction*
+        unit.speed*
+        dt;
+}
+
+
+/* =========================
+   GEFALLENE
 ========================= */
 
 function removeDeadUnits(){
 
-    for(let i=units.length-1;i>=0;i--){
+    for(
+        let i=units.length-1;
+        i>=0;
+        i--
+    ){
 
-        const unit=units[i];
+        const unit=
+            units[i];
 
         if(unit.hp<=0){
 
-            createHit(unit.x,145);
+            createHit(
+                unit.x,
+                145
+            );
 
             if(!unit.player){
 
-                const reward=
-                    unit.type==="heavy"
-                    ?70
-                    :unit.type==="archer"
-                    ?35
-                    :25;
+                let reward=28;
+
+                if(unit.type==="archer")
+                    reward=42;
+
+                if(unit.type==="heavy")
+                    reward=75;
 
                 gold+=reward;
             }
 
-            unit.element.remove();
+            if(unit.element)
+                unit.element.remove();
 
             units.splice(i,1);
         }
     }
 }
 
+
 /* =========================
-   WELLE
+   FEINDWELLE
 ========================= */
 
 function startWave(){
 
-    if(gameOver) return;
+    if(gameOver)
+        return;
 
     showWaveWarning(
         `⚠ FEINDWELLE ${wave}`
     );
 
-    const amount=
-        4+
-        Math.floor(wave*.65);
+    /*
+       Frühere Wellen sind bewusst
+       etwas kleiner.
+    */
+
+    let amount;
+
+    if(wave<=3){
+
+        amount=3+wave;
+
+    }else if(wave<=8){
+
+        amount=5+Math.floor(wave*.5);
+
+    }else{
+
+        amount=
+            8+
+            Math.floor(wave*.7);
+    }
+
+    const delay=
+        wave<4
+        ?4.8
+        :wave<9
+        ?3.8
+        :wave<16
+        ?3.0
+        :2.5;
 
     for(let i=0;i<amount;i++){
 
-        setTimeout(()=>{
-
-            if(!gameOver){
-                spawnEnemy();
-            }
-
-        },i*getEnemySpawnDelay()*1000);
+        setTimeout(
+            ()=>{
+                if(!gameOver)
+                    spawnEnemy();
+            },
+            i*delay*1000
+        );
     }
-
-    /* Boss alle 10 Wellen */
 
     if(wave%10===0){
 
-        setTimeout(()=>{
-
-            if(!gameOver){
-                spawnBoss();
-            }
-
-        },amount*getEnemySpawnDelay()*1000+500);
+        setTimeout(
+            ()=>{
+                if(!gameOver)
+                    spawnBoss();
+            },
+            amount*delay*1000+700
+        );
     }
 }
 
-function getEnemySpawnDelay(){
-
-    if(wave<4) return 4.5;
-
-    if(wave<9) return 3.5;
-
-    if(wave<16) return 2.8;
-
-    if(wave<25) return 2.4;
-
-    return 2.0;
-}
-
-function showWaveWarning(text){
-
-    const box=document.getElementById("waveWarning");
-
-    box.textContent=text;
-    box.style.display="block";
-
-    setTimeout(()=>{
-        box.style.display="none";
-    },1800);
-}
 
 /* =========================
    FEINDE
@@ -1757,106 +1829,133 @@ function spawnEnemy(){
 
     let type="warrior";
 
-    const roll=Math.random();
+    const roll=
+        Math.random();
 
-    if(wave>=3 && roll>.68){
+    if(
+        wave>=3 &&
+        roll>.70
+    )
         type="archer";
-    }
 
-    if(wave>=6 && roll>.84){
+    if(
+        wave>=7 &&
+        roll>.86
+    )
         type="heavy";
-    }
 
-    if(wave>=10 && roll>.94){
+    if(
+        wave>=12 &&
+        roll>.95
+    )
         type="siege";
-    }
 
     const scale=
         1+
-        (wave-1)*.095;
+        (wave-1)*.085;
 
     const data={
+
         warrior:{
-            hp:125,
-            damage:15,
-            speed:23,
+            hp:120,
+            damage:14,
+            speed:22,
             range:45,
             attack:1.1,
-            baseDamage:.75
+            baseDamage:.7
         },
 
         archer:{
-            hp:90,
-            damage:24,
+            hp:88,
+            damage:22,
             speed:18,
             range:210,
             attack:1.7,
-            baseDamage:.45
+            baseDamage:.4
         },
 
         heavy:{
-            hp:330,
-            damage:38,
+            hp:320,
+            damage:36,
             speed:10,
             range:50,
             attack:1.8,
-            baseDamage:1.8
+            baseDamage:1.7
         },
 
         siege:{
-            hp:650,
-            damage:65,
+            hp:620,
+            damage:60,
             speed:7,
             range:330,
             attack:2.8,
-            baseDamage:4.5
+            baseDamage:4
         }
+
     }[type];
 
     const unit={
+
         id:Date.now()+Math.random(),
+
         player:false,
+
         x:window.innerWidth-120,
+
         hp:data.hp*scale,
         maxHp:data.hp*scale,
-        damage:data.damage*
-            (1+(wave-1)*.045),
+
+        damage:
+            data.damage*
+            (1+(wave-1)*.04),
+
         speed:data.speed,
         range:data.range,
+
         attackCooldown:data.attack,
         attackTimer:0,
-        baseDamage:data.baseDamage*
-            (1+(wave-1)*.025),
+
+        baseDamage:
+            data.baseDamage*
+            (1+(wave-1)*.022),
+
         type:
             type==="siege"
             ?"heavy"
             :type,
+
         target:null,
-        data:data,
         element:null
     };
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
     el.className=
         `unit enemy ${unit.type}`;
 
     el.innerHTML=`
+
         <div class="unitbar">
             <div class="unitfill"></div>
         </div>
+
         <div class="head"></div>
         <div class="body"></div>
+
         <div class="leg one"></div>
         <div class="leg two"></div>
+
         ${unit.type==="warrior"?`
             <div class="shield"></div>
             <div class="sword"></div>
         `:""}
+
         ${unit.type==="archer"?`
             <div class="bow"></div>
             <div class="arrowHeld"></div>
         `:""}
+
         ${unit.type==="heavy"?`
             <div class="hammer"></div>
         `:""}
@@ -1871,6 +1970,7 @@ function spawnEnemy(){
     updateUnitVisual(unit);
 }
 
+
 /* =========================
    BOSS
 ========================= */
@@ -1878,42 +1978,54 @@ function spawnEnemy(){
 function spawnBoss(){
 
     const hp=
-        1800+
-        wave*120;
+        1700+
+        wave*115;
 
     const boss={
+
         id:Date.now()+Math.random(),
+
         player:false,
+
         x:window.innerWidth-120,
-        hp:hp,
+
+        hp,
         maxHp:hp,
-        damage:95+wave*3,
+
+        damage:90+wave*3,
+
         speed:6,
         range:60,
+
         attackCooldown:2.1,
         attackTimer:0,
-        baseDamage:9+wave*.2,
+
+        baseDamage:8+wave*.2,
+
         type:"heavy",
+
         target:null,
-        data:{
-            name:"BOSS",
-            icon:"👑"
-        },
         element:null
     };
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
-    el.className="unit enemy heavy";
+    el.className=
+        "unit enemy heavy";
 
     el.innerHTML=`
+
         <div class="unitbar">
             <div class="unitfill"></div>
         </div>
+
         <div class="head"></div>
         <div class="body"></div>
+
         <div class="leg one"></div>
         <div class="leg two"></div>
+
         <div class="hammer"></div>
     `;
 
@@ -1923,10 +2035,13 @@ function spawnBoss(){
 
     units.push(boss);
 
-    showWaveWarning("👑 BOSS-ANGRIFF!");
+    showWaveWarning(
+        "👑 BOSS-ANGRIFF!"
+    );
 
     updateUnitVisual(boss);
 }
+
 
 /* =========================
    ARTILLERIE
@@ -1934,12 +2049,18 @@ function spawnBoss(){
 
 function artillery(){
 
-    if(gameOver || specialCooldown>0) return;
+    if(
+        gameOver ||
+        specialCooldown>0
+    )
+        return;
 
     specialCooldown=15;
 
     const enemies=
-        units.filter(u=>!u.player && u.hp>0);
+        units.filter(
+            u=>!u.player && u.hp>0
+        );
 
     for(const enemy of enemies){
 
@@ -1959,31 +2080,40 @@ document.getElementById("specialBtn")
 
 function createExplosion(x,y){
 
-    const el=document.createElement("div");
+    const el=
+        document.createElement("div");
 
     el.className="explosion";
 
-    el.style.left=(x-32)+"px";
-    el.style.top=(y-32)+"px";
+    el.style.left=
+        (x-32)+"px";
+
+    el.style.top=
+        (y-32)+"px";
 
     battlefield.appendChild(el);
 
-    setTimeout(()=>{
-        el.remove();
-    },500);
+    setTimeout(
+        ()=>el.remove(),
+        500
+    );
 }
 
+
 /* =========================
-   ZEITALTER AUFSTIEG
+   ZEITALTER
 ========================= */
 
 function upgradeAge(){
 
-    if(gameOver) return;
+    if(gameOver)
+        return;
 
-    if(age>=ages.length-1) return;
+    if(age>=ages.length-1)
+        return;
 
-    const next=ages[age+1];
+    const next=
+        ages[age+1];
 
     if(wave<next.requiredWave){
 
@@ -1999,7 +2129,7 @@ function upgradeAge(){
 
         showMessage(
             "NICHT GENUG GOLD",
-            `Für dieses Zeitalter brauchst du ${next.upgradeCost} Gold.`
+            `Du brauchst ${next.upgradeCost} Gold.`
         );
 
         return;
@@ -2009,9 +2139,7 @@ function upgradeAge(){
 
     age++;
 
-    /* Basis wird moderat stärker */
-
-    playerBaseTimer=0.5;
+    playerBaseTimer=.3;
 
     showWaveWarning(
         `⬆ ${ages[age].name} ERREICHT!`
@@ -2022,6 +2150,7 @@ function upgradeAge(){
 
 document.getElementById("ageBtn")
     .onclick=upgradeAge;
+
 
 /* =========================
    SPEICHERN
@@ -2044,12 +2173,13 @@ function saveGame(){
 
     showMessage(
         "GESPEICHERT",
-        "Der Spielstand wurde gespeichert."
+        "Dein Spielstand wurde gespeichert."
     );
 }
 
 document.getElementById("saveBtn")
     .onclick=saveGame;
+
 
 /* =========================
    LADEN
@@ -2072,7 +2202,8 @@ function loadGame(){
         return;
     }
 
-    const data=JSON.parse(saved);
+    const data=
+        JSON.parse(saved);
 
     gold=data.gold;
     playerHP=data.playerHP;
@@ -2091,14 +2222,42 @@ function loadGame(){
 document.getElementById("loadBtn")
     .onclick=loadGame;
 
+
 /* =========================
-   NEUSTART
+   GOLD-SYSTEM
 ========================= */
 
-function restartGame(){
+function generateGold(dt){
 
-    location.reload();
+    /*
+       Deutlich höheres Einkommen als vorher.
+       Dadurch kann der Spieler mehrere
+       Einheiten gleichzeitig aufbauen.
+    */
+
+    let income=8;
+
+    if(age===1)
+        income=11;
+
+    if(age===2)
+        income=15;
+
+    if(age===3)
+        income=20;
+
+    if(age===4)
+        income=27;
+
+    gold+=income*dt;
+
+    gold=
+        Math.min(
+            gold,
+            99999
+        );
 }
+
 
 /* =========================
    SPIELENDE
@@ -2108,22 +2267,21 @@ function checkGameOver(){
 
     if(enemyHP<=0){
 
-        gameOver=true;
-
         enemyHP=0;
+
+        gameOver=true;
 
         showMessage(
             "🏆 SIEG!",
-            `Du hast die feindliche Basis nach ${wave} Wellen zerstört.`
+            `Die feindliche Basis wurde in Welle ${wave} zerstört.`
         );
-
     }
 
     if(playerHP<=0){
 
-        gameOver=true;
-
         playerHP=0;
+
+        gameOver=true;
 
         showMessage(
             "💀 NIEDERLAGE",
@@ -2132,24 +2290,16 @@ function checkGameOver(){
     }
 }
 
+
 /* =========================
-   GOLD
+   NEUSTART
 ========================= */
 
-function generateGold(dt){
+function restartGame(){
 
-    /*
-       Das Einkommen steigt langsam mit
-       dem Zeitalter, damit Einheiten
-       nicht völlig kostenlos wirken.
-    */
-
-    gold+=
-        (5+age*2)*
-        dt;
-
-    gold=Math.min(gold,99999);
+    location.reload();
 }
+
 
 /* =========================
    HAUPTSCHLEIFE
@@ -2183,10 +2333,15 @@ function gameLoop(now){
 
             wave++;
 
+            /*
+               Die Wellen kommen später
+               etwas schneller.
+            */
+
             waveTimer=
                 Math.max(
-                    17,
-                    28-wave*.3
+                    18,
+                    30-wave*.28
                 );
         }
 
@@ -2206,6 +2361,7 @@ function gameLoop(now){
     requestAnimationFrame(gameLoop);
 }
 
+
 /* =========================
    TASTATUR
 ========================= */
@@ -2214,27 +2370,23 @@ document.addEventListener(
     "keydown",
     e=>{
 
-        if(e.key==="1"){
+        if(e.key==="1")
             buyUnit(0);
-        }
 
-        if(e.key==="2"){
+        if(e.key==="2")
             buyUnit(1);
-        }
 
-        if(e.key==="3"){
+        if(e.key==="3")
             buyUnit(2);
-        }
 
-        if(e.key.toLowerCase()==="q"){
+        if(e.key.toLowerCase()==="q")
             artillery();
-        }
 
-        if(e.key.toLowerCase()==="e"){
+        if(e.key.toLowerCase()==="e")
             upgradeAge();
-        }
     }
 );
+
 
 /* =========================
    START
