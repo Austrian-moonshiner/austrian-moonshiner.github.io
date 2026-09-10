@@ -7,331 +7,348 @@
 <title>WAV → MP3 Konverter</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #111827, #1f2937);
-        color: #f9fafb;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: #f9fafb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.converter {
+    width: 100%;
+    max-width: 760px;
+    background: rgba(17, 24, 39, 0.96);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.header .icon {
+    font-size: 55px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.subtitle {
+    margin-top: 10px;
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.drop-zone {
+    border: 2px dashed #4b5563;
+    border-radius: 18px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: rgba(255,255,255,0.025);
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+    border-color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+}
+
+.drop-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.drop-zone strong {
+    display: block;
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+.drop-zone span {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+#fileInput {
+    display: none;
+}
+
+.file-info {
+    display: none;
+    margin-top: 20px;
+    padding: 18px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 14px;
+}
+
+.file-info.active {
+    display: block;
+}
+
+.file-name {
+    font-size: 17px;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.file-details {
+    margin-top: 8px;
+    color: #9ca3af;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.settings {
+    margin-top: 22px;
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+}
+
+.settings h2 {
+    margin: 0 0 18px;
+    font-size: 19px;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.setting-row:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    font-size: 15px;
+}
+
+select,
+input[type="text"] {
+    width: 230px;
+    max-width: 55%;
+    padding: 11px 12px;
+    border-radius: 9px;
+    border: 1px solid #4b5563;
+    background: #111827;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+select:focus,
+input[type="text"]:focus {
+    border-color: #60a5fa;
+}
+
+.buttons {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 11px;
+    padding: 13px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.convert-btn {
+    flex: 1;
+    min-width: 200px;
+    background: #2563eb;
+    color: white;
+}
+
+.convert-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.convert-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.clear-btn {
+    background: #374151;
+    color: white;
+}
+
+.clear-btn:hover {
+    background: #4b5563;
+}
+
+.progress-container {
+    display: none;
+    margin-top: 25px;
+}
+
+.progress-container.active {
+    display: block;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #374151;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #60a5fa;
+    transition: width 0.15s;
+}
+
+.status {
+    margin-top: 10px;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.25);
+}
+
+.result.active {
+    display: block;
+}
+
+.result-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.result-info {
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.download-btn {
+    display: inline-block;
+    text-decoration: none;
+    background: #16a34a;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.download-btn:hover {
+    background: #15803d;
+}
+
+.privacy {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin-top: 15px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.loading.active {
+    display: block;
+}
+
+.error-box {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(239,68,68,0.10);
+    border: 1px solid rgba(239,68,68,0.35);
+    color: #fca5a5;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.error-box.active {
+    display: block;
+}
+
+@media (max-width: 600px) {
 
     .converter {
-        width: 100%;
-        max-width: 760px;
-        background: rgba(17, 24, 39, 0.96);
-        border: 1px solid rgba(255,255,255,0.10);
-        border-radius: 22px;
-        padding: 30px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 28px;
-    }
-
-    .header .icon {
-        font-size: 55px;
-        margin-bottom: 8px;
+        padding: 20px;
     }
 
     h1 {
-        margin: 0;
-        font-size: 32px;
-    }
-
-    .subtitle {
-        margin-top: 10px;
-        color: #9ca3af;
-        font-size: 15px;
-    }
-
-    .drop-zone {
-        border: 2px dashed #4b5563;
-        border-radius: 18px;
-        padding: 40px 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: 0.2s;
-        background: rgba(255,255,255,0.025);
-    }
-
-    .drop-zone:hover,
-    .drop-zone.dragover {
-        border-color: #60a5fa;
-        background: rgba(96,165,250,0.08);
-    }
-
-    .drop-icon {
-        font-size: 42px;
-        margin-bottom: 10px;
-    }
-
-    .drop-zone strong {
-        display: block;
-        font-size: 19px;
-        margin-bottom: 8px;
-    }
-
-    .drop-zone span {
-        color: #9ca3af;
-        font-size: 14px;
-    }
-
-    #fileInput {
-        display: none;
-    }
-
-    .file-info {
-        display: none;
-        margin-top: 20px;
-        padding: 18px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 14px;
-    }
-
-    .file-info.active {
-        display: block;
-    }
-
-    .file-name {
-        font-size: 17px;
-        font-weight: bold;
-        word-break: break-word;
-    }
-
-    .file-details {
-        margin-top: 8px;
-        color: #9ca3af;
-        font-size: 14px;
-        line-height: 1.6;
-    }
-
-    .settings {
-        margin-top: 22px;
-        padding: 20px;
-        background: rgba(255,255,255,0.04);
-        border-radius: 16px;
-    }
-
-    .settings h2 {
-        margin: 0 0 18px;
-        font-size: 19px;
+        font-size: 26px;
     }
 
     .setting-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .setting-row:last-child {
-        margin-bottom: 0;
-    }
-
-    label {
-        font-size: 15px;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     select,
     input[type="text"] {
-        width: 230px;
-        max-width: 55%;
-        padding: 11px 12px;
-        border-radius: 9px;
-        border: 1px solid #4b5563;
-        background: #111827;
-        color: white;
-        font-size: 14px;
-        outline: none;
-    }
-
-    select:focus,
-    input[type="text"]:focus {
-        border-color: #60a5fa;
+        width: 100%;
+        max-width: 100%;
     }
 
     .buttons {
-        margin-top: 24px;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    button {
-        border: none;
-        border-radius: 11px;
-        padding: 13px 20px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
+        flex-direction: column;
     }
 
     .convert-btn {
-        flex: 1;
-        min-width: 200px;
-        background: #2563eb;
-        color: white;
-    }
-
-    .convert-btn:hover:not(:disabled) {
-        background: #1d4ed8;
-        transform: translateY(-1px);
-    }
-
-    .convert-btn:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-    }
-
-    .clear-btn {
-        background: #374151;
-        color: white;
-    }
-
-    .clear-btn:hover {
-        background: #4b5563;
-    }
-
-    .progress-container {
-        display: none;
-        margin-top: 25px;
-    }
-
-    .progress-container.active {
-        display: block;
-    }
-
-    .progress-header {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-
-    .progress-bar {
         width: 100%;
-        height: 12px;
-        background: #374151;
-        border-radius: 10px;
-        overflow: hidden;
     }
-
-    .progress-fill {
-        height: 100%;
-        width: 0%;
-        background: #60a5fa;
-        transition: width 0.15s;
-    }
-
-    .status {
-        margin-top: 10px;
-        color: #9ca3af;
-        font-size: 13px;
-    }
-
-    .result {
-        display: none;
-        margin-top: 25px;
-        padding: 20px;
-        border-radius: 16px;
-        background: rgba(34,197,94,0.08);
-        border: 1px solid rgba(34,197,94,0.25);
-    }
-
-    .result.active {
-        display: block;
-    }
-
-    .result-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-
-    .result-info {
-        color: #9ca3af;
-        font-size: 14px;
-        margin-bottom: 15px;
-        line-height: 1.6;
-    }
-
-    .download-btn {
-        display: inline-block;
-        text-decoration: none;
-        background: #16a34a;
-        color: white;
-        padding: 12px 18px;
-        border-radius: 10px;
-        font-weight: bold;
-        font-size: 15px;
-    }
-
-    .download-btn:hover {
-        background: #15803d;
-    }
-
-    .privacy {
-        margin-top: 25px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255,255,255,0.08);
-        text-align: center;
-        color: #9ca3af;
-        font-size: 12px;
-        line-height: 1.6;
-    }
-
-    .loading {
-        display: none;
-        text-align: center;
-        margin-top: 15px;
-        color: #9ca3af;
-        font-size: 14px;
-    }
-
-    .loading.active {
-        display: block;
-    }
-
-    @media (max-width: 600px) {
-        .converter {
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 26px;
-        }
-
-        .setting-row {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        select,
-        input[type="text"] {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .buttons {
-            flex-direction: column;
-        }
-
-        .convert-btn {
-            width: 100%;
-        }
-    }
+}
 </style>
 </head>
 
@@ -340,14 +357,20 @@
 <div class="converter">
 
     <div class="header">
+
         <div class="icon">🎵</div>
+
         <h1>WAV → MP3 Konverter</h1>
+
         <div class="subtitle">
             Audiodateien direkt im Browser in MP3 umwandeln
         </div>
+
     </div>
 
+
     <div class="drop-zone" id="dropZone">
+
         <div class="drop-icon">📁</div>
 
         <strong>WAV-Datei auswählen</strong>
@@ -359,9 +382,11 @@
         <input
             type="file"
             id="fileInput"
-            accept=".wav,audio/wav,audio/x-wav"
+            accept=".wav,audio/wav,audio/x-wav,audio/wave"
         >
+
     </div>
+
 
     <div class="file-info" id="fileInfo">
 
@@ -384,9 +409,13 @@
 
             <select id="bitrate">
 
-                <option value="128">128 kbps – Standard</option>
+                <option value="128">
+                    128 kbps – Standard
+                </option>
 
-                <option value="160">160 kbps – Gut</option>
+                <option value="160">
+                    160 kbps – Gut
+                </option>
 
                 <option value="192" selected>
                     192 kbps – Sehr gut
@@ -443,14 +472,11 @@
 
 
     <div class="loading" id="loading">
-        ⏳ MP3-Encoder wird geladen...
+        ⏳ FFmpeg wird geladen...
     </div>
 
 
-    <div
-        class="progress-container"
-        id="progressContainer"
-    >
+    <div class="progress-container" id="progressContainer">
 
         <div class="progress-header">
 
@@ -473,14 +499,14 @@
 
         </div>
 
-        <div
-            class="status"
-            id="status"
-        >
+        <div class="status" id="status">
             Vorbereitung...
         </div>
 
     </div>
+
+
+    <div class="error-box" id="errorBox"></div>
 
 
     <div class="result" id="result">
@@ -509,9 +535,9 @@
 
         🔒 <strong>Lokale Verarbeitung:</strong><br>
 
-        Deine WAV-Datei wird für die Konvertierung nicht
-        auf einen Server hochgeladen. Die Verarbeitung
-        erfolgt direkt in deinem Browser.
+        Deine WAV-Datei wird nicht auf einen Server
+        hochgeladen. Die Verarbeitung erfolgt direkt
+        in deinem Browser.
 
     </div>
 
@@ -521,11 +547,12 @@
 <script type="module">
 
 /*
-    FFmpeg WebAssembly
-    --------------------------------------------------
-    Der Encoder wird erst geladen, wenn tatsächlich
-    eine Konvertierung gestartet wird.
+==========================================================
+ WAV → MP3 KONVERTER
+ FFmpeg.wasm 0.12.10
+==========================================================
 */
+
 
 import {
     FFmpeg
@@ -534,8 +561,10 @@ import {
 import {
     fetchFile,
     toBlobURL
-} from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js";
+} from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/esm/index.js";
 
+
+/* DOM */
 
 const dropZone =
     document.getElementById("dropZone");
@@ -591,6 +620,11 @@ const resultInfo =
 const downloadBtn =
     document.getElementById("downloadBtn");
 
+const errorBox =
+    document.getElementById("errorBox");
+
+
+/* Variablen */
 
 let selectedFile = null;
 
@@ -602,27 +636,64 @@ let outputURL = null;
 
 
 /*
-    Datei auswählen
+==========================================================
+ FEHLERANZEIGE
+==========================================================
 */
 
-dropZone.addEventListener("click", () => {
-    fileInput.click();
-});
+function showError(message) {
+
+    errorBox.textContent =
+        "❌ " + message;
+
+    errorBox.classList.add("active");
+
+}
 
 
-fileInput.addEventListener("change", () => {
+function hideError() {
 
-    if (fileInput.files.length > 0) {
+    errorBox.textContent = "";
 
-        handleFile(fileInput.files[0]);
+    errorBox.classList.remove("active");
 
-    }
-
-});
+}
 
 
 /*
-    Drag & Drop
+==========================================================
+ DATEI AUSWÄHLEN
+==========================================================
+*/
+
+dropZone.addEventListener(
+    "click",
+    () => {
+        fileInput.click();
+    }
+);
+
+
+fileInput.addEventListener(
+    "change",
+    () => {
+
+        if (fileInput.files.length > 0) {
+
+            handleFile(
+                fileInput.files[0]
+            );
+
+        }
+
+    }
+);
+
+
+/*
+==========================================================
+ DRAG & DROP
+==========================================================
 */
 
 dropZone.addEventListener(
@@ -631,7 +702,9 @@ dropZone.addEventListener(
 
         event.preventDefault();
 
-        dropZone.classList.add("dragover");
+        dropZone.classList.add(
+            "dragover"
+        );
 
     }
 );
@@ -641,7 +714,9 @@ dropZone.addEventListener(
     "dragleave",
     () => {
 
-        dropZone.classList.remove("dragover");
+        dropZone.classList.remove(
+            "dragover"
+        );
 
     }
 );
@@ -653,7 +728,9 @@ dropZone.addEventListener(
 
         event.preventDefault();
 
-        dropZone.classList.remove("dragover");
+        dropZone.classList.remove(
+            "dragover"
+        );
 
         const files =
             event.dataTransfer.files;
@@ -669,16 +746,26 @@ dropZone.addEventListener(
 
 
 /*
-    Datei verarbeiten
+==========================================================
+ DATEI VERARBEITEN
+==========================================================
 */
 
 function handleFile(file) {
 
+    hideError();
+
+    result.classList.remove(
+        "active"
+    );
+
     if (
-        !file.name.toLowerCase().endsWith(".wav")
+        !file.name
+            .toLowerCase()
+            .endsWith(".wav")
     ) {
 
-        alert(
+        showError(
             "Bitte eine WAV-Datei auswählen."
         );
 
@@ -691,7 +778,9 @@ function handleFile(file) {
 
 
     const sizeMB =
-        file.size / 1024 / 1024;
+        file.size /
+        1024 /
+        1024;
 
 
     fileName.textContent =
@@ -702,17 +791,14 @@ function handleFile(file) {
         "Größe: " +
         sizeMB.toFixed(2) +
         " MB<br>" +
-
         "Typ: " +
         (file.type || "WAV-Audio");
 
 
-    fileInfo.classList.add("active");
+    fileInfo.classList.add(
+        "active"
+    );
 
-
-    /*
-        Dateiname automatisch übernehmen
-    */
 
     const baseName =
         file.name.replace(
@@ -725,25 +811,16 @@ function handleFile(file) {
         baseName;
 
 
-    convertBtn.disabled = false;
-
-
-    result.classList.remove("active");
-
-
-    if (outputURL) {
-
-        URL.revokeObjectURL(outputURL);
-
-        outputURL = null;
-
-    }
+    convertBtn.disabled =
+        false;
 
 }
 
 
 /*
-    FFmpeg laden
+==========================================================
+ FFMPEG LADEN
+==========================================================
 */
 
 async function loadFFmpeg() {
@@ -755,10 +832,13 @@ async function loadFFmpeg() {
     }
 
 
-    loading.classList.add("active");
+    loading.classList.add(
+        "active"
+    );
+
 
     status.textContent =
-        "MP3-Encoder wird geladen...";
+        "FFmpeg wird geladen...";
 
 
     ffmpeg =
@@ -766,7 +846,24 @@ async function loadFFmpeg() {
 
 
     /*
-        Fortschritt von FFmpeg
+        FFmpeg Meldungen
+    */
+
+    ffmpeg.on(
+        "log",
+        ({ message }) => {
+
+            console.log(
+                "[FFmpeg]",
+                message
+            );
+
+        }
+    );
+
+
+    /*
+        Fortschritt
     */
 
     ffmpeg.on(
@@ -792,48 +889,76 @@ async function loadFFmpeg() {
             progressPercent.textContent =
                 percent + "%";
 
-
-            status.textContent =
-                "Audio wird verarbeitet...";
-
         }
     );
 
 
     /*
-        FFmpeg Core laden
+        WICHTIG:
+        Gleiche Core-Version wie FFmpeg.
     */
 
     const baseURL =
-        "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm";
 
 
-    await ffmpeg.load({
+    try {
 
-        coreURL:
-            await toBlobURL(
-                `${baseURL}/ffmpeg-core.js`,
-                "text/javascript"
-            ),
+        await ffmpeg.load({
 
-        wasmURL:
-            await toBlobURL(
-                `${baseURL}/ffmpeg-core.wasm`,
-                "application/wasm"
-            )
+            coreURL:
+                await toBlobURL(
+                    `${baseURL}/ffmpeg-core.js`,
+                    "text/javascript"
+                ),
 
-    });
+            wasmURL:
+                await toBlobURL(
+                    `${baseURL}/ffmpeg-core.wasm`,
+                    "application/wasm"
+                )
+
+        });
 
 
-    ffmpegLoaded = true;
+        ffmpegLoaded =
+            true;
 
-    loading.classList.remove("active");
+
+        loading.classList.remove(
+            "active"
+        );
+
+
+        status.textContent =
+            "FFmpeg ist bereit.";
+
+
+    } catch (error) {
+
+        loading.classList.remove(
+            "active"
+        );
+
+        console.error(
+            "FFmpeg Load Error:",
+            error
+        );
+
+        throw new Error(
+            "FFmpeg konnte nicht geladen werden. " +
+            "Bitte die Seite neu laden und erneut versuchen."
+        );
+
+    }
 
 }
 
 
 /*
-    Konvertierung starten
+==========================================================
+ KONVERTIERUNG
+==========================================================
 */
 
 convertBtn.addEventListener(
@@ -842,7 +967,7 @@ convertBtn.addEventListener(
 
         if (!selectedFile) {
 
-            alert(
+            showError(
                 "Bitte zuerst eine WAV-Datei auswählen."
             );
 
@@ -851,23 +976,34 @@ convertBtn.addEventListener(
         }
 
 
+        hideError();
+
+
         try {
 
-            convertBtn.disabled = true;
+            convertBtn.disabled =
+                true;
 
-            result.classList.remove("active");
+            result.classList.remove(
+                "active"
+            );
 
-            progressContainer.classList.add("active");
+            progressContainer.classList.add(
+                "active"
+            );
 
-            progressFill.style.width = "0%";
 
-            progressPercent.textContent = "0%";
+            progressFill.style.width =
+                "0%";
+
+            progressPercent.textContent =
+                "0%";
 
             progressText.textContent =
                 "Konvertierung...";
 
             status.textContent =
-                "Encoder wird vorbereitet...";
+                "FFmpeg wird vorbereitet...";
 
 
             /*
@@ -877,16 +1013,15 @@ convertBtn.addEventListener(
             await loadFFmpeg();
 
 
-            status.textContent =
-                "WAV-Datei wird vorbereitet...";
-
-
             /*
-                Temporäre Dateinamen
+                Dateinamen
             */
 
             const inputFile =
                 "input.wav";
+
+            const outputFile =
+                "output.mp3";
 
 
             let finalName =
@@ -905,43 +1040,46 @@ convertBtn.addEventListener(
 
 
             /*
-                Problematische Zeichen aus
-                dem Dateinamen entfernen
+                Ungültige Zeichen entfernen
             */
 
             finalName =
                 finalName.replace(
-                    /[<>:"/\\|?*]/g,
+                    /[<>:"/\\|?*\x00-\x1F]/g,
                     "_"
                 );
-
-
-            const outputFile =
-                "output.mp3";
 
 
             /*
                 WAV in FFmpeg schreiben
             */
 
+            status.textContent =
+                "WAV-Datei wird vorbereitet...";
+
+
             await ffmpeg.writeFile(
                 inputFile,
-                await fetchFile(selectedFile)
+                await fetchFile(
+                    selectedFile
+                )
             );
-
-
-            status.textContent =
-                "Konvertierung läuft...";
 
 
             /*
                 MP3 erzeugen
             */
 
+            status.textContent =
+                "WAV wird in MP3 umgewandelt...";
+
+
             await ffmpeg.exec([
 
                 "-i",
                 inputFile,
+
+                "-vn",
 
                 "-codec:a",
                 "libmp3lame",
@@ -956,13 +1094,13 @@ convertBtn.addEventListener(
             ]);
 
 
-            status.textContent =
-                "MP3 wird vorbereitet...";
-
-
             /*
-                Ergebnis lesen
+                MP3 lesen
             */
+
+            status.textContent =
+                "MP3-Datei wird vorbereitet...";
+
 
             const data =
                 await ffmpeg.readFile(
@@ -971,20 +1109,21 @@ convertBtn.addEventListener(
 
 
             /*
-                Blob erzeugen
+                Blob erstellen
             */
 
             const blob =
                 new Blob(
                     [data.buffer],
                     {
-                        type: "audio/mpeg"
+                        type:
+                            "audio/mpeg"
                     }
                 );
 
 
             /*
-                Alten Download freigeben
+                Alten Blob freigeben
             */
 
             if (outputURL) {
@@ -997,26 +1136,30 @@ convertBtn.addEventListener(
 
 
             outputURL =
-                URL.createObjectURL(blob);
+                URL.createObjectURL(
+                    blob
+                );
 
 
             /*
-                Download-Link
+                Download
             */
 
             downloadBtn.href =
                 outputURL;
 
-
             downloadBtn.download =
                 finalName + ".mp3";
 
+
+            /*
+                Größen
+            */
 
             const originalSize =
                 selectedFile.size /
                 1024 /
                 1024;
-
 
             const mp3Size =
                 blob.size /
@@ -1026,9 +1169,10 @@ convertBtn.addEventListener(
 
             resultInfo.innerHTML =
                 "<strong>" +
-                finalName +
-                ".mp3" +
-                "</strong><br>" +
+                escapeHTML(
+                    finalName
+                ) +
+                ".mp3</strong><br>" +
 
                 "Bitrate: " +
                 bitrate.value +
@@ -1046,14 +1190,11 @@ convertBtn.addEventListener(
             progressFill.style.width =
                 "100%";
 
-
             progressPercent.textContent =
                 "100%";
 
-
             progressText.textContent =
                 "Fertig!";
-
 
             status.textContent =
                 "Die MP3-Datei ist bereit.";
@@ -1065,7 +1206,7 @@ convertBtn.addEventListener(
 
 
             /*
-                Temporäre FFmpeg-Dateien löschen
+                Temporäre Dateien löschen
             */
 
             try {
@@ -1081,7 +1222,7 @@ convertBtn.addEventListener(
             } catch (cleanupError) {
 
                 console.log(
-                    "Temporäre Dateien konnten nicht gelöscht werden:",
+                    "Cleanup:",
                     cleanupError
                 );
 
@@ -1090,17 +1231,20 @@ convertBtn.addEventListener(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Konvertierungsfehler:",
+                error
+            );
 
 
             status.textContent =
                 "Fehler bei der Konvertierung.";
 
 
-            alert(
-                "Die Konvertierung konnte nicht durchgeführt werden.\n\n" +
-                "Details: " +
-                error.message
+            showError(
+                error && error.message
+                    ? error.message
+                    : "Unbekannter Fehler."
             );
 
 
@@ -1116,16 +1260,38 @@ convertBtn.addEventListener(
 
 
 /*
-    Zurücksetzen
+==========================================================
+ HTML SICHER MACHEN
+==========================================================
+*/
+
+function escapeHTML(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/*
+==========================================================
+ ZURÜCKSETZEN
+==========================================================
 */
 
 clearBtn.addEventListener(
     "click",
     () => {
 
-        selectedFile = null;
+        selectedFile =
+            null;
 
-        fileInput.value = "";
+        fileInput.value =
+            "";
 
         fileInfo.classList.remove(
             "active"
@@ -1139,7 +1305,25 @@ clearBtn.addEventListener(
             "active"
         );
 
-        outputName.value = "";
+        loading.classList.remove(
+            "active"
+        );
+
+        hideError();
+
+
+        outputName.value =
+            "";
+
+
+        progressFill.style.width =
+            "0%";
+
+        progressPercent.textContent =
+            "0%";
+
+        status.textContent =
+            "Bereit.";
 
 
         if (outputURL) {
@@ -1148,12 +1332,14 @@ clearBtn.addEventListener(
                 outputURL
             );
 
-            outputURL = null;
+            outputURL =
+                null;
 
         }
 
 
-        convertBtn.disabled = true;
+        convertBtn.disabled =
+            true;
 
     }
 );
