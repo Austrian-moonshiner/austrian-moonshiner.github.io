@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age of War - Mini Klon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #game-container {
+            display: inline-block;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        #ui {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #444;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        canvas {
+            background-color: #87CEEB; /* Himmelblau */
+            border: 2px solid #fff;
+            display: block;
+        }
+
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #777;
+            cursor: not-allowed;
+        }
+
+        .btn-age {
+            background-color: #ff9800;
+        }
+        .btn-age:hover {
+            background-color: #e68a00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Age of War - Mini Klon</h1>
+
+    <div id="game-container">
+        <div id="ui">
+            <div>Gold: <span id="gold-display" style="color: gold; font-weight: bold;">100</span></div>
+            <div>Zeitalter: <span id="age-display" style="color: #4da6ff; font-weight: bold;">Steinzeit</span></div>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="300"></canvas>
+
+        <div class="controls">
+            <button id="btn-unit1" onclick="spawnUnit(1)">Einheit 1 (50G)</button>
+            <button id="btn-unit2" onclick="spawnUnit(2)">Einheit 2 (100G)</button>
+            <button id="btn-age" class="btn-age" onclick="evolveAge()">Neues Zeitalter (500G)</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Spielvariablen
+        let gold = 100;
+        let currentAge = 1; // 1 = Steinzeit, 2 = Eisenzeit
+        let gameOver = false;
+
+        const baseHealthMax = 500;
+        const playerBase = { x: 50, hp: baseHealthMax };
+        const enemyBase = { x: 750, hp: baseHealthMax };
+
+        let playerUnits = [];
+        let enemyUnits = [];
+
+        // Einheiten-Typen Konfiguration
+        const unitTypes = {
+            1: {
+                1: { name: "Keulenschläger", cost: 50, hp: 50, damage: 10, speed: 1.5, range: 15, color: "#8B4513" },
+                2: { name: "Schwertkämpfer", cost: 100, hp: 120, damage: 25, speed: 1.2, range: 15, color: "#C0C0C0" }
+            },
+            2: {
+                1: { name: "Speerwerfer", cost: 100, hp: 40, damage: 15, speed: 1.0, range: 80, color: "#D2691E" },
+                2: { name: "Armbrustschütze", cost: 200, hp: 80, damage: 35, speed: 0.9, range: 120, color: "#4682B4" }
+            }
+        };
+
+        // Tastennamen im UI aktualisieren
+        function updateUIButtons() {
+            if (currentAge === 1) {
+                document.getElementById("btn-unit1").innerText = "Keulenschläger (50G)";
+                document.getElementById("btn-unit2").innerText = "Speerwerfer (100G)";
+            } else {
+                document.getElementById("btn-unit1").innerText = "Schwertkämpfer (100G)";
+                document.getElementById("btn-unit2").innerText = "Armbrust (200G)";
+                document.getElementById("btn-age").disabled = true;
+                document.getElementById("btn-age").innerText = "Max. Zeitalter";
+            }
+        }
+
+        // Einheit spawnen (Spieler)
+        function spawnUnit(type) {
+            const config = unitTypes[type][currentAge];
+            if (gold >= config.cost) {
+                gold -= config.cost;
+                playerUnits.push({
+                    x: playerBase.x + 20,
+                    hp: config.hp,
+                    maxHp: config.hp,
+                    damage: config.damage,
+                    speed: config.speed,
+                    range: config.range,
+                    color: config.color,
+                    lastAttack: 0
+                });
+            }
+        }
+
+        // Zeitalter aufrüsten
+        function evolveAge() {
+            if (currentAge === 1 && gold >= 500) {
+                gold -= 500;
+                currentAge = 2;
+                document.getElementById("age-display").innerText = "Eisenzeit";
+                updateUIButtons();
+            }
+        }
+
+        // Gegnerspawn (KI)
+        let enemySpawnTimer = 0;
+        function handleEnemyAI() {
+            enemySpawnTimer++;
+            if (enemySpawnTimer > 180) { // alle 3 Sekunden
+                enemySpawnTimer = 0;
+                const eType = Math.random() > 0.4 ? 1 : 2;
+                const config = unitTypes[eType][currentAge]; // Gegner nutzt aktuelles Zeitalter
+                
+                enemyUnits.push({
+                    x: enemyBase.x - 20,
+                    hp: config.hp * 0.9, // Leicht schwächer
+                    maxHp: config.hp * 0.9,
+                    damage: config.damage,
+                    speed: -config.speed, // Läuft nach links
+                    range: config.range,
+                    color: "#B22222", // Rot für Gegner
+                    lastAttack: 0
+                });
+            }
+        }
+
+        // Passives Gold-Einkommen
+        setInterval(() => {
+            if (!gameOver) gold += 5;
+        }, 1000);
+
+        // Haupt-Game-Loop
+        function update() {
+            if (gameOver) return;
+
+            // UI Aktualisieren
+            document.getElementById("gold-display").innerText = gold;
+
+            // KI-Logik
+            handleEnemyAI();
+
+            // Spieler-Einheiten bewegen & kämpfen
+            playerUnits.forEach((unit, uIdx) => {
+                let target = null;
+
+                // Prüfen ob Gegner in Reichweite
+                enemyUnits.forEach(enemy => {
+                    if (enemy.x > unit.x && enemy.x - unit.x <= unit.range) {
+                        target = enemy;
+                    }
+                });
+
+                // Prüfen ob gegnerische Basis in Reichweite
+                if (!target && enemyBase.x - unit.x <= unit.range) {
+                    target = enemyBase;
+                }
+
+                if (target) {
+                    // Angreifen
+                    if (Date.now() - unit.lastAttack > 1000) {
+                        target.hp -= unit.damage;
+                        unit.lastAttack = Date.now();
+                    }
+                } else {
+                    // Laufen
+                    unit.x += unit.speed;
+                }
+            });
+
+            // Gegner-Einheiten bewegen & kämpfen
+            enemyUnits.forEach((enemy, eIdx) => {
+                let target = null;
+
+                playerUnits.forEach(unit => {
+                    if (unit.x < enemy.x && enemy.x - unit.x <= enemy.range) {
+                        target = unit;
+                    }
+                });
+
+                if (!target && enemy.x - playerBase.x <= enemy.range) {
+                    target = playerBase;
+                }
+
+                if (target) {
+                    if (Date.now() - enemy.lastAttack > 1000) {
+                        target.hp -= enemy.damage;
+                        enemy.lastAttack = Date.now();
+                    }
+                } else {
+                    enemy.x += enemy.speed; // Geschw. ist negativ
+                }
+            });
+
+            // Tote Einheiten entfernen & Belohnung geben
+            enemyUnits = enemyUnits.filter(e => {
+                if (e.hp <= 0) {
+                    gold += 30; // Gold für Kill
+                    return false;
+                }
+                return true;
+            });
+            playerUnits = playerUnits.filter(u => u.hp > 0);
+
+            // Sieg / Niederlage prüfen
+            if (playerBase.hp <= 0) {
+                gameOver = true;
+                alert("Game Over! Die gegnerische Armee hat deine Basis zerstört.");
+            } else if (enemyBase.hp <= 0) {
+                gameOver = true;
+                alert("Sieg! Du hast die feindliche Basis vernichtet!");
+            }
+        }
+
+        // Zeichnen auf Canvas
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Boden
+            ctx.fillStyle = "#8B5A2B";
+            ctx.fillRect(0, 250, canvas.width, 50);
+
+            // Spieler Basis
+            ctx.fillStyle = currentAge === 1 ? "#A9A9A9" : "#4682B4";
+            ctx.fillRect(playerBase.x - 40, 150, 40, 100);
+            // HP-Balken Basis Spieler
+            ctx.fillStyle = "red";
+            ctx.fillRect(10, 130, 80, 10);
+            ctx.fillStyle = "green";
+            ctx.fillRect(10, 130, (playerBase.hp / baseHealthMax) * 80, 10);
+
+            // Gegner Basis
+            ctx.fillStyle = "#8B0000";
+            ctx.fillRect(enemyBase.x, 150, 40, 100);
+            // HP-Balken Basis Gegner
+            ctx.fillStyle = "red";
+            ctx.fillRect(710, 130, 80, 10);
+            ctx.fillStyle = "green";
+            ctx.fillRect(710, 130, (Math.max(0, enemyBase.hp) / baseHealthMax) * 80, 10);
+
+            // Spieler-Einheiten zeichnen
+            playerUnits.forEach(unit => {
+                ctx.fillStyle = unit.color;
+                ctx.fillRect(unit.x - 10, 220, 20, 30);
+                // HP Balken
+                ctx.fillStyle = "red";
+                ctx.fillRect(unit.x - 10, 210, 20, 4);
+                ctx.fillStyle = "green";
+                ctx.fillRect(unit.x - 10, 210, (unit.hp / unit.maxHp) * 20, 4);
+            });
+
+            // Gegner-Einheiten zeichnen
+            enemyUnits.forEach(enemy => {
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(enemy.x - 10, 220, 20, 30);
+                // HP Balken
+                ctx.fillStyle = "red";
+                ctx.fillRect(enemy.x - 10, 210, 20, 4);
+                ctx.fillStyle = "green";
+                ctx.fillRect(enemy.x - 10, 210, (enemy.hp / enemy.maxHp) * 20, 4);
+            });
+        }
+
+        // Gameloop starten (60 FPS)
+        function gameLoop() {
+            update();
+            draw();
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        updateUIButtons();
+        gameLoop();
+    </script>
+</body>
+</html>
