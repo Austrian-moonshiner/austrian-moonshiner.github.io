@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Battle Ages</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,170,.08), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(0,140,255,.10), transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(0,255,80,.07), transparent 40%),
+        #05080c;
+    color: #ecf7f3;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
+}
+
+.game {
+    width: 100%;
+    max-width: 1500px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* HEADER */
+
+.header {
+    background: linear-gradient(135deg, #08151a, #0b2022);
+    border: 1px solid #00ffae;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow:
+        0 0 15px rgba(0,255,174,.15),
+        inset 0 0 25px rgba(0,255,174,.03);
+    margin-bottom: 12px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #00ffae;
+    text-shadow: 0 0 12px rgba(0,255,174,.6);
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #77938f;
+    margin-top: 3px;
+}
+
+.stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    min-width: 95px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: #071015;
+    border: 1px solid #183a3c;
+    text-align: center;
+}
+
+.stat-title {
+    font-size: 10px;
+    color: #6d8884;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.gold {
+    color: #ffd83d;
+}
+
+.health {
+    color: #ff5f6d;
+}
+
+.wave {
+    color: #00eaff;
+}
+
+/* DIFFICULTY */
+
+.difficulty {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.difficulty span {
+    color: #7b9691;
+    font-size: 13px;
+}
+
+.diff-btn {
+    background: #081217;
+    color: #b8cbc7;
+    border: 1px solid #24464a;
+    border-radius: 7px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.diff-btn:hover {
+    border-color: #00ffae;
+    color: #fff;
+}
+
+.diff-btn.active {
+    background: #063c32;
+    border-color: #00ffae;
+    color: #00ffae;
+    box-shadow: 0 0 12px rgba(0,255,174,.2);
+}
+
+/* BATTLEFIELD */
+
+.battlefield {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 1px solid #235157;
+    background:
+        linear-gradient(rgba(0,255,170,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,170,.025) 1px, transparent 1px),
+        linear-gradient(180deg, #091419, #050b0e);
+    background-size: 35px 35px, 35px 35px, auto;
+    box-shadow: inset 0 0 70px rgba(0,0,0,.65);
+}
+
+/* DEKORATION */
+
+.battlefield::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,255,174,.2),
+        transparent
+    );
+}
+
+.mountain {
+    position: absolute;
+    bottom: 0;
+    opacity: .2;
+    border-style: solid;
+    border-width: 0 100px 130px 100px;
+    border-color: transparent transparent #183437 transparent;
+}
+
+.m1 {
+    left: 4%;
+}
+
+.m2 {
+    left: 30%;
+    transform: scale(1.4);
+}
+
+.m3 {
+    right: 8%;
+    transform: scale(.8);
+}
+
+/* BASES */
+
+.base {
+    position: absolute;
+    width: 115px;
+    height: 150px;
+    bottom: 30px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 4;
+}
+
+.player-base {
+    left: 18px;
+    background: linear-gradient(145deg, #07342d, #071817);
+    border: 2px solid #00ffae;
+    box-shadow: 0 0 25px rgba(0,255,174,.15);
+}
+
+.enemy-base {
+    right: 18px;
+    background: linear-gradient(145deg, #3a1017, #16080b);
+    border: 2px solid #ff4356;
+    box-shadow: 0 0 25px rgba(255,60,80,.15);
+}
+
+.base-icon {
+    font-size: 42px;
+}
+
+.base-name {
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.base-hp {
+    width: 80px;
+    height: 7px;
+    margin-top: 7px;
+    background: #111;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.base-hp-fill {
+    height: 100%;
+    background: #00ffae;
+    width: 100%;
+    transition: width .2s;
+}
+
+.enemy-base .base-hp-fill {
+    background: #ff4356;
+}
+
+/* ROAD */
+
+.road {
+    position: absolute;
+    left: 130px;
+    right: 130px;
+    bottom: 90px;
+    height: 95px;
+    border-top: 2px dashed rgba(255,255,255,.08);
+    border-bottom: 2px dashed rgba(255,255,255,.08);
+    background: rgba(30,40,42,.2);
+}
+
+/* UNITS */
+
+.unit {
+    position: absolute;
+    width: 42px;
+    height: 55px;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+}
+
+.unit-body {
+    width: 38px;
+    height: 38px;
+    margin: auto;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    border: 1px solid rgba(255,255,255,.3);
+    box-shadow: 0 0 12px rgba(0,0,0,.5);
+}
+
+.player-unit .unit-body {
+    background: linear-gradient(145deg, #075e4d, #062c27);
+}
+
+.enemy-unit .unit-body {
+    background: linear-gradient(145deg, #751d2a, #321017);
+}
+
+.hp {
+    width: 38px;
+    height: 5px;
+    background: #111;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 3px;
+}
+
+.hp-fill {
+    width: 100%;
+    height: 100%;
+    background: #00ffae;
+}
+
+.enemy-unit .hp-fill {
+    background: #ff4356;
+}
+
+.damage-text {
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    animation: damageFloat .6s forwards;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes damageFloat {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-35px);
+    }
+}
+
+/* PROJECTILES */
+
+.projectile {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffd83d;
+    box-shadow: 0 0 10px #ffd83d;
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* CONTROLS */
+
+.controls {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.panel {
+    background: linear-gradient(145deg, #09151a, #071014);
+    border: 1px solid #193c40;
+    border-radius: 15px;
+    padding: 12px;
+}
+
+.panel-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c9691;
+    margin-bottom: 10px;
+}
+
+/* UNITS MENU */
+
+.units {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.unit-btn {
+    position: relative;
+    min-height: 110px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #21484c;
+    background: #071116;
+    color: #fff;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.unit-btn:hover {
+    transform: translateY(-2px);
+    border-color: #00ffae;
+    box-shadow: 0 0 12px rgba(0,255,174,.15);
+}
+
+.unit-btn.selected {
+    border-color: #00ffae;
+    background: #07352e;
+    box-shadow: 0 0 15px rgba(0,255,174,.2);
+}
+
+.unit-btn.disabled {
+    opacity: .4;
+}
+
+.unit-icon {
+    font-size: 28px;
+}
+
+.unit-name {
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 3px;
+}
+
+.unit-cost {
+    font-size: 12px;
+    color: #ffd83d;
+    margin-top: 4px;
+}
+
+.unit-info {
+    font-size: 9px;
+    color: #7b9792;
+    margin-top: 3px;
+}
+
+/* ACTIONS */
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 15px;
+    border: 1px solid #00ffae;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #073b32, #06251f);
+    color: #00ffae;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: .2s;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(0,255,174,.25);
+}
+
+.action-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.start {
+    background: linear-gradient(145deg, #0054a6, #06345f);
+    border-color: #00c8ff;
+    color: #00c8ff;
+}
+
+.reset {
+    background: linear-gradient(145deg, #40131a, #250a0f);
+    border-color: #ff4356;
+    color: #ff6575;
+}
+
+/* UPGRADE */
+
+.upgrade-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: #061014;
+    border: 1px solid #18383c;
+    border-radius: 9px;
+}
+
+.upgrade-title {
+    font-weight: bold;
+    color: #00eaff;
+}
+
+.upgrade-info {
+    font-size: 11px;
+    color: #7f9794;
+    margin: 5px 0 8px;
+}
+
+.upgrade-btn {
+    width: 100%;
+    padding: 9px;
+    background: #082c36;
+    color: #00eaff;
+    border: 1px solid #00eaff;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+/* MESSAGE */
+
+.message {
+    margin-top: 12px;
+    padding: 12px;
+    text-align: center;
+    border-radius: 10px;
+    background: #071116;
+    border: 1px solid #193d42;
+    color: #91aaa6;
+    font-size: 13px;
+}
+
+/* GAME OVER */
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.78);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 200;
+    text-align: center;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.overlay h1 {
+    font-size: 44px;
+    margin: 0;
+    color: #ff4356;
+    text-shadow: 0 0 20px rgba(255,67,86,.5);
+}
+
+.overlay p {
+    color: #b4c6c3;
+}
+
+/* MOBILE */
+
+@media(max-width:900px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .units {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .battlefield {
+        height: 450px;
+    }
+
+    .base {
+        width: 90px;
+        height: 125px;
+    }
+
+    .road {
+        left: 95px;
+        right: 95px;
+    }
+}
+
+@media(max-width:550px) {
+    .game {
+        padding: 7px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .battlefield {
+        height: 420px;
+    }
+
+    .stats {
+        width: 100%;
+    }
+
+    .stat {
+        flex: 1;
+        min-width: 70px;
+    }
+
+    .road {
+        left: 75px;
+        right: 75px;
+    }
+
+    .base {
+        width: 70px;
+        height: 110px;
+    }
+
+    .base-icon {
+        font-size: 30px;
+    }
+
+    .base-hp {
+        width: 55px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<header class="header">
+
+    <div class="header-top">
+
+        <div>
+            <div class="logo">⚔ BATTLE AGES</div>
+            <div class="subtitle">TACTICAL DEFENSE COMMAND</div>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-title">Gold</div>
+                <div class="stat-value gold" id="gold">500</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Basis</div>
+                <div class="stat-value health" id="baseHealth">100</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Welle</div>
+                <div class="stat-value wave" id="wave">0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Punkte</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="difficulty">
+
+        <span>Schwierigkeit:</span>
+
+        <button class="diff-btn active" data-diff="easy">
+            LEICHT
+        </button>
+
+        <button class="diff-btn" data-diff="normal">
+            NORMAL
+        </button>
+
+        <button class="diff-btn" data-diff="hard">
+            SCHWER
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- BATTLEFIELD -->
+
+<div class="battlefield" id="battlefield">
+
+    <div class="mountain m1"></div>
+    <div class="mountain m2"></div>
+    <div class="mountain m3"></div>
+
+    <div class="road"></div>
+
+    <div class="base player-base">
+
+        <div class="base-icon">🏰</div>
+
+        <div class="base-name">
+            DEINE BASIS
+        </div>
+
+        <div class="base-hp">
+            <div
+                class="base-hp-fill"
+                id="playerBaseBar">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="base enemy-base">
+
+        <div class="base-icon">💀</div>
+
+        <div class="base-name">
+            FEIND
+        </div>
+
+        <div class="base-hp">
+            <div
+                class="base-hp-fill"
+                id="enemyBaseBar">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="overlay" id="overlay">
+
+        <h1 id="overlayTitle">
+            GAME OVER
+        </h1>
+
+        <p id="overlayText">
+            Deine Basis wurde zerstört.
+        </p>
+
+        <button
+            class="action-btn"
+            onclick="resetGame()"
+            style="max-width:250px">
+            NEUES SPIEL
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="controls">
+
+    <!-- EINHEITEN -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+            Einheiten auswählen
+        </div>
+
+        <div class="units">
+
+            <button
+                class="unit-btn selected"
+                data-unit="soldier"
+                onclick="selectUnit('soldier')">
+
+                <div class="unit-icon">🪖</div>
+
+                <div class="unit-name">
+                    SOLDAT
+                </div>
+
+                <div class="unit-cost">
+                    💰 80
+                </div>
+
+                <div class="unit-info">
+                    Ausgeglichen
+                </div>
+
+            </button>
+
+
+            <button
+                class="unit-btn"
+                data-unit="archer"
+                onclick="selectUnit('archer')">
+
+                <div class="unit-icon">🏹</div>
+
+                <div class="unit-name">
+                    BOGENSCHÜTZE
+                </div>
+
+                <div class="unit-cost">
+                    💰 120
+                </div>
+
+                <div class="unit-info">
+                    Hohe Reichweite
+                </div>
+
+            </button>
+
+
+            <button
+                class="unit-btn"
+                data-unit="tank"
+                onclick="selectUnit('tank')">
+
+                <div class="unit-icon">🛡️</div>
+
+                <div class="unit-name">
+                    TANK
+                </div>
+
+                <div class="unit-cost">
+                    💰 220
+                </div>
+
+                <div class="unit-info">
+                    Sehr viel Leben
+                </div>
+
+            </button>
+
+
+            <button
+                class="unit-btn"
+                data-unit="gunner"
+                onclick="selectUnit('gunner')">
+
+                <div class="unit-icon">🔫</div>
+
+                <div class="unit-name">
+                    SCHÜTZE
+                </div>
+
+                <div class="unit-cost">
+                    💰 160
+                </div>
+
+                <div class="unit-info">
+                    Sehr schneller Angriff
+                </div>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- AKTIONEN -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+            Kommandozentrale
+        </div>
+
+        <div class="actions">
+
+            <button
+                class="action-btn start"
+                id="startWaveBtn"
+                onclick="startWave()">
+
+                ▶ WELLEN STARTEN
+
+            </button>
+
+            <button
+                class="action-btn reset"
+                onclick="resetGame()">
+
+                ↻ NEUSTART
+
+            </button>
+
+        </div>
+
+
+        <div class="upgrade-box">
+
+            <div class="upgrade-title">
+                ⬆ TRUPP-UPGRADE
+            </div>
+
+            <div
+                class="upgrade-info"
+                id="upgradeInfo">
+
+                Angriff +10% für alle eigenen Einheiten.
+                Kosten: 300 Gold.
+
+            </div>
+
+            <button
+                class="upgrade-btn"
+                onclick="upgradeTroops()">
+
+                UPGRADE KAUFEN – 💰 300
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="message" id="message">
+    Wähle eine Einheit und starte die erste Welle.
+    Deine Truppen erscheinen automatisch auf dem Schlachtfeld.
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   BATTLE AGES
+   ========================================= */
+
+
+/* SPIELZUSTAND */
+
+let gold = 500;
+let baseHealth = 100;
+let enemyBaseHealth = 100;
+let wave = 0;
+let score = 0;
+
+let selectedUnit = "soldier";
+let gameRunning = false;
+let gameOver = false;
+
+let troopLevel = 0;
+
+let playerUnits = [];
+let enemyUnits = [];
+
+let lastTime = 0;
+let animationFrame;
+
+
+/* SCHWIERIGKEIT */
+
+let difficulty = "easy";
+
+const difficultySettings = {
+
+    easy: {
+        enemyHealth: 0.85,
+        enemyDamage: 0.8,
+        enemySpeed: 0.85,
+        goldMultiplier: 1.25,
+        waveSize: 0.85
+    },
+
+    normal: {
+        enemyHealth: 1,
+        enemyDamage: 1,
+        enemySpeed: 1,
+        goldMultiplier: 1,
+        waveSize: 1
+    },
+
+    hard: {
+        enemyHealth: 1.25,
+        enemyDamage: 1.25,
+        enemySpeed: 1.15,
+        goldMultiplier: 0.9,
+        waveSize: 1.25
+    }
+
+};
+
+
+/* EINHEITEN */
+
+const unitTypes = {
+
+    soldier: {
+
+        name: "Soldat",
+        icon: "🪖",
+
+        cost: 80,
+
+        health: 120,
+        damage: 18,
+
+        range: 65,
+
+        speed: 38,
+
+        attackSpeed: 1.0
+
+    },
+
+
+    archer: {
+
+        name: "Bogenschütze",
+        icon: "🏹",
+
+        cost: 120,
+
+        health: 80,
+        damage: 27,
+
+        range: 190,
+
+        speed: 25,
+
+        attackSpeed: 1.5
+
+    },
+
+
+    tank: {
+
+        name: "Tank",
+        icon: "🛡️",
+
+        cost: 220,
+
+        health: 330,
+        damage: 30,
+
+        range: 60,
+
+        speed: 16,
+
+        attackSpeed: 1.6
+
+    },
+
+
+    gunner: {
+
+        name: "Schütze",
+        icon: "🔫",
+
+        cost: 160,
+
+        health: 95,
+        damage: 12,
+
+        range: 160,
+
+        speed: 30,
+
+        attackSpeed: 0.35
+
+    }
+
+};
+
+
+/* GEGNERTYPEN */
+
+const enemyTypes = {
+
+    grunt: {
+
+        name: "Feind-Soldat",
+        icon: "👹",
+
+        health: 95,
+        damage: 12,
+
+        range: 55,
+
+        speed: 25,
+
+        attackSpeed: 1.1,
+
+        reward: 35
+
+    },
+
+
+    runner: {
+
+        name: "Schneller Gegner",
+        icon: "👺",
+
+        health: 60,
+        damage: 8,
+
+        range: 45,
+
+        speed: 50,
+
+        attackSpeed: 0.8,
+
+        reward: 30
+
+    },
+
+
+    heavy: {
+
+        name: "Schwerer Gegner",
+        icon: "👾",
+
+        health: 260,
+        damage: 28,
+
+        range: 55,
+
+        speed: 15,
+
+        attackSpeed: 1.6,
+
+        reward: 80
+
+    },
+
+
+    shooter: {
+
+        name: "Feind-Schütze",
+        icon: "💀",
+
+        health: 85,
+        damage: 18,
+
+        range: 150,
+
+        speed: 20,
+
+        attackSpeed: 1.4,
+
+        reward: 60
+
+    }
+
+};
+
+
+/* DOM */
+
+const battlefield =
+    document.getElementById("battlefield");
+
+const goldEl =
+    document.getElementById("gold");
+
+const baseHealthEl =
+    document.getElementById("baseHealth");
+
+const waveEl =
+    document.getElementById("wave");
+
+const scoreEl =
+    document.getElementById("score");
+
+const messageEl =
+    document.getElementById("message");
+
+const startWaveBtn =
+    document.getElementById("startWaveBtn");
+
+const overlay =
+    document.getElementById("overlay");
+
+const overlayTitle =
+    document.getElementById("overlayTitle");
+
+const overlayText =
+    document.getElementById("overlayText");
+
+
+/* UI */
+
+function updateUI() {
+
+    goldEl.textContent =
+        Math.floor(gold);
+
+    baseHealthEl.textContent =
+        Math.max(0, Math.floor(baseHealth));
+
+    waveEl.textContent =
+        wave;
+
+    scoreEl.textContent =
+        score;
+
+    document.getElementById("playerBaseBar").style.width =
+        Math.max(0, baseHealth) + "%";
+
+    document.getElementById("enemyBaseBar").style.width =
+        Math.max(0, enemyBaseHealth) + "%";
+
+}
+
+
+/* NACHRICHT */
+
+function message(text) {
+
+    messageEl.textContent = text;
+
+}
+
+
+/* EINHEIT AUSWÄHLEN */
+
+function selectUnit(type) {
+
+    if (!unitTypes[type]) return;
+
+    selectedUnit = type;
+
+    document.querySelectorAll(".unit-btn")
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                "selected",
+                btn.dataset.unit === type
+            );
+
+        });
+
+    const unit = unitTypes[type];
+
+    message(
+        `${unit.icon} ${unit.name} ausgewählt. Kosten: ${unit.cost} Gold.`
+    );
+
+}
+
+
+/* SCHWIERIGKEIT */
+
+document.querySelectorAll(".diff-btn")
+    .forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            if (gameRunning) {
+
+                message(
+                    "Die Schwierigkeit kann erst beim nächsten Spiel geändert werden."
+                );
+
+                return;
+            }
+
+            document.querySelectorAll(".diff-btn")
+                .forEach(b => b.classList.remove("active"));
+
+            btn.classList.add("active");
+
+            difficulty =
+                btn.dataset.diff;
+
+            message(
+                "Schwierigkeit geändert: " +
+                btn.textContent
+            );
+
+        });
+
+    });
+
+
+/* EINHEIT ERSTELLEN */
+
+function spawnPlayerUnit(type) {
+
+    const data = unitTypes[type];
+
+    if (gold < data.cost) {
+
+        message(
+            `Nicht genug Gold für ${data.name}!`
+        );
+
+        return false;
+
+    }
+
+
+    gold -= data.cost;
+
+
+    const unit = {
+
+        id: Date.now() +
+            Math.random(),
+
+        type: type,
+
+        x: 145,
+
+        y: 250 +
+            (Math.random() * 100 - 50),
+
+        health:
+            data.health *
+            (1 + troopLevel * .10),
+
+        maxHealth:
+            data.health *
+            (1 + troopLevel * .10),
+
+        damage:
+            data.damage *
+            (1 + troopLevel * .10),
+
+        attackTimer: 0,
+
+        element: null
+
+    };
+
+
+    createUnitElement(
+        unit,
+        true
+    );
+
+
+    playerUnits.push(unit);
+
+    updateUI();
+
+    return true;
+
+}
+
+
+/* FEIND ERSTELLEN */
+
+function spawnEnemy(type) {
+
+    const data = enemyTypes[type];
+
+    const settings =
+        difficultySettings[difficulty];
+
+
+    const hp =
+        data.health *
+        settings.enemyHealth *
+        (1 + wave * .08);
+
+
+    const enemy = {
+
+        id:
+            Date.now() +
+            Math.random(),
+
+        type: type,
+
+        x:
+            battlefield.clientWidth - 150,
+
+        y:
+            250 +
+            (Math.random() * 100 - 50),
+
+        health: hp,
+
+        maxHealth: hp,
+
+        damage:
+            data.damage *
+            settings.enemyDamage,
+
+        speed:
+            data.speed *
+            settings.enemySpeed,
+
+        attackTimer: 0,
+
+        element: null
+
+    };
+
+
+    createUnitElement(
+        enemy,
+        false
+    );
+
+
+    enemyUnits.push(enemy);
+
+}
+
+
+/* HTML EINHEIT */
+
+function createUnitElement(
+    unit,
+    player
+) {
+
+    const data =
+        player
+            ? unitTypes[unit.type]
+            : enemyTypes[unit.type];
+
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "unit " +
+        (player
+            ? "player-unit"
+            : "enemy-unit");
+
+
+    element.innerHTML = `
+
+        <div class="unit-body">
+            ${data.icon}
+        </div>
+
+        <div class="hp">
+            <div class="hp-fill"></div>
+        </div>
+
+    `;
+
+
+    battlefield.appendChild(element);
+
+    unit.element = element;
+
+    updateUnitElement(unit);
+
+}
+
+
+/* EINHEIT POSITION */
+
+function updateUnitElement(unit) {
+
+    if (!unit.element) return;
+
+    unit.element.style.left =
+        unit.x + "px";
+
+    unit.element.style.top =
+        unit.y + "px";
+
+
+    const hp =
+        Math.max(
+            0,
+            unit.health /
+            unit.maxHealth *
+            100
+        );
+
+    const bar =
+        unit.element.querySelector(
+            ".hp-fill"
+        );
+
+    if (bar) {
+
+        bar.style.width =
+            hp + "%";
+
+    }
+
+}
+
+
+/* SCHADENSTEXT */
+
+function damageText(
+    unit,
+    damage
+) {
+
+    if (!unit.element) return;
+
+    const text =
+        document.createElement("div");
+
+    text.className =
+        "damage-text";
+
+    text.textContent =
+        "-" + Math.round(damage);
+
+
+    text.style.left =
+        unit.x + "px";
+
+    text.style.top =
+        (unit.y - 30) + "px";
+
+
+    battlefield.appendChild(text);
+
+    setTimeout(
+        () => text.remove(),
+        600
+    );
+
+}
+
+
+/* PROJEKTIL */
+
+function projectile(
+    attacker,
+    target
+) {
+
+    const p =
+        document.createElement("div");
+
+    p.className =
+        "projectile";
+
+    p.style.left =
+        attacker.x + "px";
+
+    p.style.top =
+        attacker.y + "px";
+
+    battlefield.appendChild(p);
+
+
+    const startX =
+        attacker.x;
+
+    const startY =
+        attacker.y;
+
+    const endX =
+        target.x;
+
+    const endY =
+        target.y;
+
+    const start =
+        performance.now();
+
+    const duration =
+        220;
+
+
+    function move(now) {
+
+        const progress =
+            Math.min(
+                1,
+                (now - start) /
+                duration
+            );
+
+
+        const x =
+            startX +
+            (endX - startX) *
+            progress;
+
+        const y =
+            startY +
+            (endY - startY) *
+            progress;
+
+
+        p.style.left =
+            x + "px";
+
+        p.style.top =
+            y + "px";
+
+
+        if (progress < 1) {
+
+            requestAnimationFrame(move);
+
+        } else {
+
+            p.remove();
+
+        }
+
+    }
+
+
+    requestAnimationFrame(move);
+
+}
+
+
+/* ABSTAND */
+
+function distance(a, b) {
+
+    const dx =
+        a.x - b.x;
+
+    const dy =
+        a.y - b.y;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+
+}
+
+
+/* NÄCHSTES ZIEL */
+
+function closestEnemy(unit) {
+
+    let target = null;
+    let best = Infinity;
+
+    enemyUnits.forEach(enemy => {
+
+        const d =
+            distance(unit, enemy);
+
+        if (d < best) {
+
+            best = d;
+            target = enemy;
+
+        }
+
+    });
+
+    return target;
+
+}
+
+
+function closestPlayer(unit) {
+
+    let target = null;
+    let best = Infinity;
+
+    playerUnits.forEach(player => {
+
+        const d =
+            distance(unit, player);
+
+        if (d < best) {
+
+            best = d;
+            target = player;
+
+        }
+
+    });
+
+    return target;
+
+}
+
+
+/* ATTACK */
+
+function playerAttack(
+    unit,
+    target
+) {
+
+    const data =
+        unitTypes[unit.type];
+
+
+    if (unit.attackTimer > 0)
+        return;
+
+
+    if (
+        distance(unit, target)
+        <= data.range
+    ) {
+
+        unit.attackTimer =
+            data.attackSpeed;
+
+        if (data.range > 80)
+            projectile(
+                unit,
+                target
+            );
+
+
+        target.health -=
+            unit.damage;
+
+        damageText(
+            target,
+            unit.damage
+        );
+
+    }
+
+}
+
+
+/* FEIND ATTACK */
+
+function enemyAttack(
+    unit,
+    target
+) {
+
+    const data =
+        enemyTypes[unit.type];
+
+
+    if (unit.attackTimer > 0)
+        return;
+
+
+    if (
+        distance(unit, target)
+        <= data.range
+    ) {
+
+        unit.attackTimer =
+            data.attackSpeed;
+
+
+        if (data.range > 80)
+            projectile(
+                unit,
+                target
+            );
+
+
+        target.health -=
+            unit.damage;
+
+        damageText(
+            target,
+            unit.damage
+        );
+
+    }
+
+}
+
+
+/* SPIEL-UPDATE */
+
+function update(dt) {
+
+    if (gameOver)
+        return;
+
+
+    /* SPIELER */
+
+    playerUnits.forEach(unit => {
+
+        if (unit.attackTimer > 0)
+            unit.attackTimer -= dt;
+
+
+        const target =
+            closestEnemy(unit);
+
+
+        if (!target) {
+
+            unit.x +=
+                unitTypes[
+                    unit.type
+                ].speed *
+                dt;
+
+            return;
+
+        }
+
+
+        const data =
+            unitTypes[unit.type];
+
+
+        const d =
+            distance(unit, target);
+
+
+        if (d <= data.range) {
+
+            playerAttack(
+                unit,
+                target
+            );
+
+        } else {
+
+            unit.x +=
+                data.speed *
+                dt;
+
+        }
+
+
+        /* FEIND-BASIS */
+
+        if (
+            unit.x >
+            battlefield.clientWidth - 160
+        ) {
+
+            enemyBaseHealth -=
+                unit.damage *
+                dt *
+                .12;
+
+        }
+
+
+        updateUnitElement(unit);
+
+    });
+
+
+    /* FEINDE */
+
+    enemyUnits.forEach(unit => {
+
+        if (unit.attackTimer > 0)
+            unit.attackTimer -= dt;
+
+
+        const target =
+            closestPlayer(unit);
+
+
+        if (!target) {
+
+            unit.x -=
+                unit.speed *
+                dt;
+
+            return;
+
+        }
+
+
+        const data =
+            enemyTypes[unit.type];
+
+
+        const d =
+            distance(unit, target);
+
+
+        if (d <= data.range) {
+
+            enemyAttack(
+                unit,
+                target
+            );
+
+        } else {
+
+            unit.x -=
+                unit.speed *
+                dt;
+
+        }
+
+
+        if (
+            unit.x <
+            145
+        ) {
+
+            baseHealth -=
+                unit.damage *
+                dt *
+                .10;
+
+        }
+
+
+        updateUnitElement(unit);
+
+    });
+
+
+    removeDeadUnits();
+
+    updateUI();
+
+
+    if (baseHealth <= 0) {
+
+        endGame(
+            false
+        );
+
+    }
+
+
+    if (enemyBaseHealth <= 0) {
+
+        endGame(
+            true
+        );
+
+    }
+
+}
+
+
+/* TOTE EINHEITEN */
+
+function removeDeadUnits() {
+
+
+    for (
+        let i =
+        playerUnits.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const unit =
+            playerUnits[i];
+
+
+        if (unit.health <= 0) {
+
+            if (unit.element)
+                unit.element.remove();
+
+            playerUnits.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+
+    for (
+        let i =
+        enemyUnits.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const unit =
+            enemyUnits[i];
+
+
+        if (unit.health <= 0) {
+
+            const reward =
+                enemyTypes[
+                    unit.type
+                ].reward *
+                difficultySettings[
+                    difficulty
+                ].goldMultiplier;
+
+
+            gold +=
+                reward;
+
+            score +=
+                Math.round(
+                    reward
+                );
+
+
+            if (unit.element)
+                unit.element.remove();
+
+
+            enemyUnits.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+/* WELLE STARTEN */
+
+function startWave() {
+
+    if (gameOver)
+        return;
+
+
+    if (gameRunning) {
+
+        message(
+            "Die aktuelle Welle läuft bereits."
+        );
+
+        return;
+
+    }
+
+
+    gameRunning = true;
+
+    wave++;
+
+
+    const settings =
+        difficultySettings[
+            difficulty
+        ];
+
+
+    const amount =
+        Math.max(
+            3,
+            Math.floor(
+                (4 + wave * 2) *
+                settings.waveSize
+            )
+        );
+
+
+    message(
+        `Welle ${wave} beginnt! Feindliche Truppen nähern sich.`
+    );
+
+
+    startWaveBtn.disabled =
+        true;
+
+
+    let spawned = 0;
+
+
+    const interval =
+        setInterval(() => {
+
+
+            if (gameOver) {
+
+                clearInterval(
+                    interval
+                );
+
+                return;
+
+            }
+
+
+            let type;
+
+
+            const roll =
+                Math.random();
+
+
+            if (
+                wave >= 4 &&
+                roll < .15
+            ) {
+
+                type = "heavy";
+
+            } else if (
+                wave >= 3 &&
+                roll < .35
+            ) {
+
+                type = "shooter";
+
+            } else if (
+                wave >= 2 &&
+                roll < .55
+            ) {
+
+                type = "runner";
+
+            } else {
+
+                type = "grunt";
+
+            }
+
+
+            spawnEnemy(type);
+
+            spawned++;
+
+
+            if (
+                spawned >= amount
+            ) {
+
+                clearInterval(
+                    interval
+                );
+
+                setTimeout(
+                    () => {
+
+                        gameRunning =
+                            false;
+
+                        startWaveBtn.disabled =
+                            false;
+
+                        message(
+                            `Welle ${wave} abgeschlossen. Bereite deine nächste Verteidigung vor.`
+                        );
+
+                    },
+                    2500
+                );
+
+            }
+
+        }, 650);
+
+}
+
+
+/* UPGRADE */
+
+function upgradeTroops() {
+
+    const cost =
+        300 +
+        troopLevel * 150;
+
+
+    if (gold < cost) {
+
+        message(
+            "Nicht genug Gold für das Upgrade."
+        );
+
+        return;
+
+    }
+
+
+    gold -= cost;
+
+    troopLevel++;
+
+
+    document.getElementById(
+        "upgradeInfo"
+    ).textContent =
+        `Angriff und Leben +10%. Aktuelles Level: ${troopLevel}. Nächstes Upgrade: ${300 + troopLevel * 150} Gold.`;
+
+
+    message(
+        `Truppen-Upgrade Level ${troopLevel} aktiviert!`
+    );
+
+
+    updateUI();
+
+}
+
+
+/* GAME LOOP */
+
+function gameLoop(timestamp) {
+
+    if (!lastTime)
+        lastTime = timestamp;
+
+
+    let dt =
+        (timestamp - lastTime) /
+        1000;
+
+
+    lastTime =
+        timestamp;
+
+
+    if (dt > .1)
+        dt = .1;
+
+
+    update(dt);
+
+
+    animationFrame =
+        requestAnimationFrame(
+            gameLoop
+        );
+
+}
+
+
+animationFrame =
+    requestAnimationFrame(
+        gameLoop
+    );
+
+
+/* GAME OVER */
+
+function endGame(
+    victory
+) {
+
+    if (gameOver)
+        return;
+
+
+    gameOver = true;
+
+    gameRunning = false;
+
+
+    overlay.classList.add(
+        "show"
+    );
+
+
+    if (victory) {
+
+        overlayTitle.textContent =
+            "SIEG!";
+
+        overlayTitle.style.color =
+            "#00ffae";
+
+        overlayText.textContent =
+            `Du hast die feindliche Basis zerstört und ${wave} Wellen überstanden. Punkte: ${score}`;
+
+    } else {
+
+        overlayTitle.textContent =
+            "GAME OVER";
+
+        overlayTitle.style.color =
+            "#ff4356";
+
+        overlayText.textContent =
+            `Deine Basis wurde zerstört. Du hast ${wave} Wellen geschafft. Punkte: ${score}`;
+
+    }
+
+}
+
+
+/* RESET */
+
+function resetGame() {
+
+    cancelAnimationFrame(
+        animationFrame
+    );
+
+
+    playerUnits.forEach(
+        u => {
+            if (u.element)
+                u.element.remove();
+        }
+    );
+
+
+    enemyUnits.forEach(
+        u => {
+            if (u.element)
+                u.element.remove();
+        }
+    );
+
+
+    playerUnits = [];
+    enemyUnits = [];
+
+
+    gold = 500;
+    baseHealth = 100;
+    enemyBaseHealth = 100;
+    wave = 0;
+    score = 0;
+
+    troopLevel = 0;
+
+    gameRunning = false;
+    gameOver = false;
+
+    lastTime = 0;
+
+
+    overlay.classList.remove(
+        "show"
+    );
+
+
+    startWaveBtn.disabled =
+        false;
+
+
+    document.getElementById(
+        "upgradeInfo"
+    ).textContent =
+        "Angriff +10% für alle eigenen Einheiten. Kosten: 300 Gold.";
+
+
+    updateUI();
+
+
+    message(
+        "Neues Spiel gestartet. Wähle eine Einheit und starte die erste Welle."
+    );
+
+
+    animationFrame =
+        requestAnimationFrame(
+            gameLoop
+        );
+
+}
+
+
+/* ERSTE UI */
+
+updateUI();
+
+</script>
+
+</body>
+</html>
