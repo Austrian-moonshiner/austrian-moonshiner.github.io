@@ -34,7 +34,7 @@ body{
 
 /* =========================================================
    START SCREEN
-   ========================================================= */
+========================================================= */
 
 #startScreen{
     position:fixed;
@@ -154,7 +154,7 @@ body{
 
 /* =========================================================
    HUD
-   ========================================================= */
+========================================================= */
 
 #hud{
     background:linear-gradient(#171f27,#0b1117);
@@ -190,7 +190,7 @@ body{
 
 /* =========================================================
    BATTLEFIELD
-   ========================================================= */
+========================================================= */
 
 #battlefield{
     position:relative;
@@ -201,8 +201,8 @@ body{
 }
 
 /* =========================================================
-   EPOCH ENVIRONMENT
-   ========================================================= */
+   ENVIRONMENT
+========================================================= */
 
 #environment{
     position:absolute;
@@ -231,8 +231,8 @@ body{
 }
 
 /* =========================================================
-   STONE AGE
-   ========================================================= */
+   STEINZEIT
+========================================================= */
 
 .env-stone .sky{
     background:
@@ -295,6 +295,12 @@ body{
     border-radius:50%;
     background:#ff9b31;
     box-shadow:0 0 25px #ff692e;
+    animation:firePulse .7s infinite alternate;
+}
+
+@keyframes firePulse{
+    from{transform:scale(.9);opacity:.8}
+    to{transform:scale(1.12);opacity:1}
 }
 
 .campfire:before,
@@ -314,8 +320,8 @@ body{
 }
 
 /* =========================================================
-   MEDIEVAL
-   ========================================================= */
+   MITTELALTER
+========================================================= */
 
 .env-medieval .sky{
     background:
@@ -398,13 +404,8 @@ body{
     top:35px;
 }
 
-.castleWindow.w1{
-    left:20px;
-}
-
-.castleWindow.w2{
-    right:20px;
-}
+.castleWindow.w1{left:20px}
+.castleWindow.w2{right:20px}
 
 .fachwerk{
     width:105px;
@@ -424,8 +425,8 @@ body{
 }
 
 /* =========================================================
-   INDUSTRIAL
-   ========================================================= */
+   INDUSTRIE
+========================================================= */
 
 .env-industrial .sky{
     background:
@@ -502,11 +503,18 @@ body{
     border-radius:50%;
     background:rgba(80,82,80,.35);
     filter:blur(3px);
+    animation:smokeMove 4s infinite ease-in-out;
+}
+
+@keyframes smokeMove{
+    0%{transform:translate(0,0) scale(.8);opacity:.25}
+    50%{transform:translate(15px,-25px) scale(1.15);opacity:.4}
+    100%{transform:translate(-5px,-50px) scale(1.4);opacity:0}
 }
 
 /* =========================================================
    MODERN
-   ========================================================= */
+========================================================= */
 
 .env-modern .sky{
     background:
@@ -591,8 +599,8 @@ body{
 }
 
 /* =========================================================
-   FUTURE
-   ========================================================= */
+   ZUKUNFT
+========================================================= */
 
 .env-future .sky{
     background:
@@ -623,8 +631,7 @@ body{
             #182431
         );
     border:3px solid #4a8ca8;
-    box-shadow:
-        0 0 18px rgba(65,190,255,.2);
+    box-shadow:0 0 18px rgba(65,190,255,.2);
 }
 
 .futureBuilding:before{
@@ -651,6 +658,12 @@ body{
     box-shadow:
         0 0 15px #53d8ff,
         0 0 40px rgba(83,216,255,.6);
+    animation:corePulse 1.2s infinite alternate;
+}
+
+@keyframes corePulse{
+    from{transform:scale(.9);opacity:.7}
+    to{transform:scale(1.1);opacity:1}
 }
 
 .futureTower{
@@ -664,7 +677,7 @@ body{
 
 /* =========================================================
    ROAD
-   ========================================================= */
+========================================================= */
 
 .road{
     position:absolute;
@@ -695,7 +708,7 @@ body{
 
 /* =========================================================
    BASES
-   ========================================================= */
+========================================================= */
 
 .base{
     position:absolute;
@@ -791,210 +804,481 @@ body{
 }
 
 /* =========================================================
-   UNITS
-   ========================================================= */
+   EINHEITEN GRUNDKÖRPER
+========================================================= */
 
 .unit{
     position:absolute;
-    width:46px;
-    height:70px;
+    width:64px;
+    height:82px;
     z-index:25;
     transform:translate(-50%,-100%);
+    transform-origin:center bottom;
+    pointer-events:none;
+    transition:filter .12s;
 }
 
 .unit .head{
     position:absolute;
-    left:13px;
+    left:21px;
     top:2px;
-    width:21px;
-    height:21px;
+    width:22px;
+    height:22px;
     background:#c58e68;
     border-radius:50%;
     border:2px solid #20262b;
+    z-index:4;
 }
 
 .unit .body{
     position:absolute;
-    left:10px;
-    top:22px;
-    width:27px;
-    height:31px;
+    left:17px;
+    top:24px;
+    width:31px;
+    height:34px;
     background:#56656d;
     border:2px solid #20262b;
-    border-radius:4px;
+    border-radius:5px;
+    z-index:3;
 }
 
 .unit .leg{
     position:absolute;
-    top:51px;
-    width:8px;
-    height:18px;
+    top:54px;
+    width:9px;
+    height:23px;
     background:#22292d;
     border-radius:3px;
+    transform-origin:top center;
+    z-index:1;
 }
 
-.unit .leg.l{left:12px}
-.unit .leg.r{right:12px}
+.unit .leg.l{
+    left:19px;
+}
+
+.unit .leg.r{
+    left:37px;
+}
 
 .unit .shield{
     position:absolute;
-    left:-1px;
-    top:26px;
-    width:17px;
-    height:25px;
+    left:0;
+    top:28px;
+    width:20px;
+    height:29px;
     background:#4d6875;
     border:2px solid #172027;
-    border-radius:4px;
+    border-radius:5px;
+    z-index:5;
 }
 
 .unit .sword{
     position:absolute;
-    right:-8px;
-    top:20px;
+    right:0;
+    top:23px;
     width:7px;
-    height:32px;
+    height:35px;
     background:#ccd4d8;
     transform:rotate(30deg);
     border:1px solid #24292d;
+    transform-origin:bottom center;
+    z-index:5;
+}
+
+.unit .spear{
+    position:absolute;
+    right:-17px;
+    top:17px;
+    width:7px;
+    height:50px;
+    background:#69452d;
+    transform:rotate(25deg);
+    transform-origin:bottom center;
+    z-index:5;
+}
+
+.unit .spear:after{
+    content:"";
+    position:absolute;
+    left:-4px;
+    top:-7px;
+    width:13px;
+    height:17px;
+    background:#bfc5c8;
+    clip-path:polygon(50% 0,100% 100%,50% 75%,0 100%);
 }
 
 .unit .bow{
     position:absolute;
-    right:-5px;
-    top:22px;
-    width:23px;
-    height:31px;
+    right:0;
+    top:24px;
+    width:28px;
+    height:34px;
     border:3px solid #8d6239;
     border-left:0;
     border-radius:50%;
+    z-index:5;
 }
 
 .unit .arrowHeld{
     position:absolute;
-    right:-12px;
-    top:35px;
-    width:28px;
+    right:-13px;
+    top:37px;
+    width:32px;
     height:2px;
     background:#d9d0b0;
     transform:rotate(-12deg);
+    z-index:6;
 }
 
 .unit .hammer{
     position:absolute;
-    right:-12px;
-    top:20px;
+    right:-7px;
+    top:18px;
     width:8px;
-    height:38px;
+    height:43px;
     background:#765338;
     transform:rotate(25deg);
+    transform-origin:bottom center;
+    z-index:5;
 }
 
 .unit .hammer:after{
     content:"";
     position:absolute;
-    left:-8px;
-    top:-4px;
-    width:24px;
-    height:13px;
+    left:-9px;
+    top:-5px;
+    width:25px;
+    height:14px;
     background:#60676c;
     border:2px solid #24292d;
     border-radius:3px;
 }
 
 /* =========================================================
-   EPOCH UNIT APPEARANCE
-   ========================================================= */
-
-/* Steinzeit */
+   STEINZEIT EINHEITEN
+========================================================= */
 
 .age-0 .body{
-    background:#75583d;
+    background:#765338;
+    border-color:#36291f;
 }
 
 .age-0 .head:after{
     content:"";
     position:absolute;
-    left:1px;
-    top:-4px;
-    width:17px;
-    height:8px;
+    left:0;
+    top:-5px;
+    width:18px;
+    height:9px;
     background:#503b2c;
     border-radius:50%;
 }
 
-/* Mittelalter */
+.age-0 .shield{
+    background:#795331;
+    border-color:#35261d;
+}
+
+.age-0 .spear{
+    display:block;
+}
+
+.age-0 .warrior .sword{
+    display:none;
+}
+
+.age-0 .archer .bow{
+    border-color:#704a29;
+}
+
+.age-0 .heavy .hammer{
+    background:#69472e;
+}
+
+.age-0 .heavy .hammer:after{
+    background:#71695c;
+}
+
+/* =========================================================
+   MITTELALTER EINHEITEN
+========================================================= */
 
 .age-1 .body{
-    background:#59616a;
+    background:
+        linear-gradient(90deg,#626b73,#a2a8ab,#555e65);
+    border-color:#252b30;
+    box-shadow:inset 0 0 5px rgba(255,255,255,.2);
+}
+
+.age-1 .head{
+    background:#c58e68;
 }
 
 .age-1 .head:after{
     content:"";
     position:absolute;
-    left:-2px;
-    top:-5px;
-    width:23px;
-    height:8px;
+    left:-3px;
+    top:-6px;
+    width:25px;
+    height:10px;
     background:#555c62;
     border:2px solid #20262b;
+    border-radius:50% 50% 3px 3px;
 }
 
-/* Industrie */
+.age-1 .shield{
+    background:
+        linear-gradient(90deg,#713d31,#a55a40,#713d31);
+    border-color:#29211f;
+}
+
+.age-1 .sword{
+    background:#dfe5e8;
+    box-shadow:0 0 3px rgba(255,255,255,.4);
+}
+
+.age-1 .heavy .hammer:after{
+    background:#777b7d;
+}
+
+/* =========================================================
+   INDUSTRIE EINHEITEN
+========================================================= */
 
 .age-2 .body{
     background:#39464c;
+    border-color:#20282c;
 }
 
 .age-2 .head:after{
     content:"";
     position:absolute;
-    left:-1px;
-    top:-4px;
-    width:21px;
-    height:7px;
+    left:-2px;
+    top:-5px;
+    width:25px;
+    height:9px;
     background:#252d31;
     border:2px solid #20262b;
+    border-radius:4px 4px 1px 1px;
 }
 
-/* Modern */
+.age-2 .shield{
+    background:#3b4b51;
+}
+
+.age-2 .sword{
+    display:none;
+}
+
+.age-2 .spear{
+    display:none;
+}
+
+.age-2 .warrior:after{
+    content:"";
+    position:absolute;
+    left:42px;
+    top:34px;
+    width:30px;
+    height:6px;
+    background:#181e21;
+    border:2px solid #080b0d;
+    transform:rotate(-12deg);
+    z-index:7;
+}
+
+.age-2 .archer .bow{
+    display:none;
+}
+
+.age-2 .archer:after{
+    content:"";
+    position:absolute;
+    right:-13px;
+    top:31px;
+    width:35px;
+    height:6px;
+    background:#181e21;
+    border:2px solid #090c0e;
+    transform:rotate(-12deg);
+    z-index:7;
+}
+
+.age-2 .heavy{
+    width:76px;
+}
+
+.age-2 .heavy .body{
+    left:13px;
+    width:50px;
+    height:35px;
+    border-radius:7px;
+    background:
+        linear-gradient(#59646a,#30383d);
+}
+
+.age-2 .heavy .head{
+    left:28px;
+    top:-1px;
+}
+
+.age-2 .heavy .hammer{
+    display:none;
+}
+
+.age-2 .heavy:after{
+    content:"";
+    position:absolute;
+    right:-20px;
+    top:28px;
+    width:43px;
+    height:8px;
+    background:#151b1e;
+    border:2px solid #090c0e;
+    transform:rotate(-8deg);
+}
+
+/* =========================================================
+   MODERNE EINHEITEN
+========================================================= */
 
 .age-3 .body{
     background:#405445;
+    border-color:#202921;
 }
 
 .age-3 .head:after{
     content:"";
     position:absolute;
-    left:-1px;
+    left:-2px;
     top:-5px;
-    width:22px;
-    height:8px;
+    width:25px;
+    height:9px;
     background:#56614f;
-    border:2px solid #20262b;
+    border:2px solid #202921;
+    border-radius:5px 5px 1px 1px;
 }
 
-/* Zukunft */
+.age-3 .shield{
+    display:none;
+}
+
+.age-3 .sword{
+    display:none;
+}
+
+.age-3 .warrior:after{
+    content:"";
+    position:absolute;
+    left:41px;
+    top:33px;
+    width:35px;
+    height:7px;
+    background:#171d1a;
+    border:2px solid #0b0f0c;
+    transform:rotate(-10deg);
+    z-index:7;
+}
+
+.age-3 .archer .bow{
+    display:none;
+}
+
+.age-3 .archer:after{
+    content:"";
+    position:absolute;
+    right:-17px;
+    top:29px;
+    width:42px;
+    height:7px;
+    background:#171d1a;
+    border:2px solid #0b0f0c;
+    transform:rotate(-8deg);
+    z-index:7;
+}
+
+.age-3 .heavy{
+    width:86px;
+    height:72px;
+}
+
+.age-3 .heavy .body{
+    left:12px;
+    top:22px;
+    width:60px;
+    height:36px;
+    border-radius:10px 10px 5px 5px;
+    background:
+        linear-gradient(#566653,#2d392e);
+}
+
+.age-3 .heavy .head{
+    left:31px;
+    top:7px;
+    width:25px;
+    height:15px;
+    border-radius:5px;
+    background:#475248;
+}
+
+.age-3 .heavy .hammer{
+    display:none;
+}
+
+.age-3 .heavy:before{
+    content:"";
+    position:absolute;
+    left:8px;
+    bottom:0;
+    width:70px;
+    height:12px;
+    background:#202a21;
+    border-radius:8px;
+}
+
+.age-3 .heavy:after{
+    content:"";
+    position:absolute;
+    right:-22px;
+    top:20px;
+    width:46px;
+    height:8px;
+    background:#171d19;
+    border:2px solid #080b09;
+    transform:rotate(-5deg);
+}
+
+/* =========================================================
+   ZUKUNFT EINHEITEN
+========================================================= */
 
 .age-4 .body{
-    background:#314e68;
+    background:
+        linear-gradient(90deg,#253d52,#397090,#21384a);
     border-color:#55b7d7;
-    box-shadow:0 0 7px rgba(60,210,255,.4);
+    box-shadow:
+        0 0 7px rgba(60,210,255,.4),
+        inset 0 0 7px rgba(100,230,255,.25);
+}
+
+.age-4 .head{
+    background:#334c5c;
+    border-color:#55b7d7;
 }
 
 .age-4 .head:after{
     content:"";
     position:absolute;
-    left:-2px;
-    top:-5px;
-    width:23px;
-    height:8px;
+    left:-3px;
+    top:-6px;
+    width:25px;
+    height:10px;
     background:#31546a;
     border:2px solid #62d4f5;
-}
-
-.age-4 .sword{
-    background:#69e8ff;
-    box-shadow:0 0 7px #49dfff;
+    border-radius:5px;
+    box-shadow:0 0 5px rgba(80,220,255,.5);
 }
 
 .age-4 .shield{
@@ -1002,23 +1286,215 @@ body{
     border-color:#53c8eb;
 }
 
-/* Archer */
-
-.archer .body{
-    background:#3d6551;
+.age-4 .sword{
+    display:none;
 }
 
-.heavy .body{
-    background:#51545a;
+.age-4 .warrior:after{
+    content:"";
+    position:absolute;
+    left:40px;
+    top:32px;
+    width:39px;
+    height:7px;
+    background:#67dffb;
+    border:2px solid #23485c;
+    transform:rotate(-8deg);
+    box-shadow:0 0 8px #40dfff;
+    z-index:7;
 }
 
-.heavy .head{
-    background:#9a9b91;
+.age-4 .archer .bow{
+    display:none;
+}
+
+.age-4 .archer:after{
+    content:"";
+    position:absolute;
+    right:-18px;
+    top:29px;
+    width:44px;
+    height:7px;
+    background:#5ce7ff;
+    border:2px solid #2d7590;
+    transform:rotate(-8deg);
+    box-shadow:0 0 9px #43ddff;
+    z-index:7;
+}
+
+.age-4 .heavy{
+    width:92px;
+    height:88px;
+}
+
+.age-4 .heavy .body{
+    left:13px;
+    top:18px;
+    width:66px;
+    height:49px;
+    border-radius:12px;
+    background:
+        linear-gradient(#365872,#172a3a);
+    border:3px solid #55c8e8;
+    box-shadow:
+        0 0 10px rgba(55,210,255,.4),
+        inset 0 0 12px rgba(60,220,255,.15);
+}
+
+.age-4 .heavy .head{
+    left:34px;
+    top:3px;
+    width:28px;
+    height:17px;
+    border-radius:7px;
+    background:#29465a;
+}
+
+.age-4 .heavy .hammer{
+    display:none;
+}
+
+.age-4 .heavy:before{
+    content:"";
+    position:absolute;
+    left:7px;
+    bottom:0;
+    width:80px;
+    height:13px;
+    background:#122432;
+    border:2px solid #3e8aa5;
+    border-radius:8px;
+    box-shadow:0 0 8px rgba(60,220,255,.3);
+}
+
+.age-4 .heavy:after{
+    content:"";
+    position:absolute;
+    right:-27px;
+    top:20px;
+    width:52px;
+    height:9px;
+    background:#59e8ff;
+    border:2px solid #26718a;
+    transform:rotate(-4deg);
+    box-shadow:0 0 10px #48ddff;
+}
+
+/* =========================================================
+   LAUFANIMATION
+========================================================= */
+
+.unit.walking{
+    animation:unitBob .34s infinite ease-in-out;
+}
+
+.unit.walking .leg.l{
+    animation:legLeft .34s infinite alternate ease-in-out;
+}
+
+.unit.walking .leg.r{
+    animation:legRight .34s infinite alternate ease-in-out;
+}
+
+@keyframes unitBob{
+    0%,100%{
+        margin-top:0;
+    }
+    50%{
+        margin-top:-3px;
+    }
+}
+
+@keyframes legLeft{
+    from{transform:rotate(18deg)}
+    to{transform:rotate(-18deg)}
+}
+
+@keyframes legRight{
+    from{transform:rotate(-18deg)}
+    to{transform:rotate(18deg)}
+}
+
+/* =========================================================
+   ANGRIFFSANIMATION
+========================================================= */
+
+.unit.attacking{
+    animation:attackBody .28s ease-in-out;
+}
+
+.unit.attacking .sword{
+    animation:swordAttack .28s ease-in-out;
+}
+
+.unit.attacking .spear{
+    animation:spearAttack .28s ease-in-out;
+}
+
+.unit.attacking .hammer{
+    animation:hammerAttack .35s ease-in-out;
+}
+
+.unit.attacking:after{
+    animation:weaponPulse .25s ease-out;
+}
+
+@keyframes attackBody{
+    0%{margin-left:0}
+    35%{margin-left:6px}
+    100%{margin-left:0}
+}
+
+@keyframes swordAttack{
+    0%{transform:rotate(30deg)}
+    45%{transform:rotate(-55deg)}
+    100%{transform:rotate(30deg)}
+}
+
+@keyframes spearAttack{
+    0%{transform:rotate(25deg)}
+    45%{transform:rotate(3deg) translateX(9px)}
+    100%{transform:rotate(25deg)}
+}
+
+@keyframes hammerAttack{
+    0%{transform:rotate(25deg)}
+    45%{transform:rotate(-40deg)}
+    100%{transform:rotate(25deg)}
+}
+
+@keyframes weaponPulse{
+    0%{filter:brightness(1)}
+    45%{filter:brightness(2)}
+    100%{filter:brightness(1)}
+}
+
+/* =========================================================
+   GETROFFEN
+========================================================= */
+
+.unit.hitFlash{
+    animation:hitFlash .18s ease-in-out;
+}
+
+@keyframes hitFlash{
+    0%{
+        filter:brightness(1);
+        transform:translate(-50%,-100%);
+    }
+    50%{
+        filter:brightness(2.2);
+        transform:translate(-53%,-100%);
+    }
+    100%{
+        filter:brightness(1);
+        transform:translate(-50%,-100%);
+    }
 }
 
 /* =========================================================
    PROJECTILES
-   ========================================================= */
+========================================================= */
 
 .projectile{
     position:absolute;
@@ -1052,7 +1528,7 @@ body{
 
 /* =========================================================
    CONTROLS
-   ========================================================= */
+========================================================= */
 
 #controls{
     background:#11171c;
@@ -1095,7 +1571,7 @@ button:disabled{
 
 /* =========================================================
    EFFECTS
-   ========================================================= */
+========================================================= */
 
 .explosion{
     position:absolute;
@@ -1145,7 +1621,7 @@ button:disabled{
 
 /* =========================================================
    MOBILE
-   ========================================================= */
+========================================================= */
 
 @media(max-width:700px){
 
@@ -1200,16 +1676,21 @@ button:disabled{
         transform:scale(.7);
         transform-origin:bottom;
     }
+
+    .unit{
+        transform:translate(-50%,-100%) scale(.82);
+    }
+
 }
+
+/* =========================================================
+   JAVASCRIPT
+========================================================= */
 
 </style>
 </head>
 
 <body>
-
-<!-- =====================================================
-     START SCREEN
-===================================================== -->
 
 <div id="startScreen">
 
@@ -1256,10 +1737,6 @@ button:disabled{
 
 </div>
 
-<!-- =====================================================
-     GAME
-===================================================== -->
-
 <div id="game">
 
 <div id="hud">
@@ -1301,10 +1778,6 @@ button:disabled{
 
 </div>
 
-<!-- =====================================================
-     BATTLEFIELD
-===================================================== -->
-
 <div id="battlefield">
 
     <div id="environment"></div>
@@ -1313,33 +1786,21 @@ button:disabled{
         <div class="roadLine"></div>
     </div>
 
-    <!-- Spielerbasis -->
-
     <div class="base playerBase" id="playerBase">
-
         <div class="baseFlag"></div>
         <div class="baseRoof"></div>
         <div class="baseWall"></div>
         <div class="baseGun"></div>
-
     </div>
 
-    <!-- Feindbasis -->
-
     <div class="base enemyBase" id="enemyBase">
-
         <div class="baseFlag"></div>
         <div class="baseRoof"></div>
         <div class="baseWall"></div>
         <div class="baseGun"></div>
-
     </div>
 
 </div>
-
-<!-- =====================================================
-     CONTROLS
-===================================================== -->
 
 <div id="controls">
 
@@ -1398,10 +1859,6 @@ button:disabled{
 
 const ages = [
 
-/* =====================================================
-   0 - STEINZEIT
-===================================================== */
-
 {
     name:"Steinzeit",
     income:18,
@@ -1447,10 +1904,6 @@ const ages = [
         }
     }
 },
-
-/* =====================================================
-   1 - MITTELALTER
-===================================================== */
 
 {
     name:"Mittelalter",
@@ -1498,10 +1951,6 @@ const ages = [
     }
 },
 
-/* =====================================================
-   2 - INDUSTRIE
-===================================================== */
-
 {
     name:"Industriezeitalter",
     income:40,
@@ -1548,10 +1997,6 @@ const ages = [
     }
 },
 
-/* =====================================================
-   3 - MODERN
-===================================================== */
-
 {
     name:"Modernes Zeitalter",
     income:55,
@@ -1597,10 +2042,6 @@ const ages = [
         }
     }
 },
-
-/* =====================================================
-   4 - ZUKUNFT
-===================================================== */
 
 {
     name:"Zukunft",
@@ -1650,19 +2091,15 @@ const ages = [
 
 ];
 
-/* =========================================================
-   DIFFICULTY
-========================================================= */
-
-const difficulties = {
+const difficulties={
 
     easy:{
         name:"Leicht",
         startingGold:1800,
         incomeMultiplier:1.35,
-        enemyHP:0.75,
-        enemyDamage:0.72,
-        enemyCount:0.75,
+        enemyHP:.75,
+        enemyDamage:.72,
+        enemyCount:.75,
         waveScaling:.035
     },
 
@@ -1688,142 +2125,80 @@ const difficulties = {
 
 };
 
-/* =========================================================
-   GAME VARIABLES
-========================================================= */
+let difficulty="easy";
+let gameStarted=false;
+let gold=1500;
+let playerHP=5000;
+let enemyHP=5000;
+let age=0;
+let wave=1;
+let waveTimer=30;
+let waveRunning=false;
+let gameOver=false;
 
-let difficulty = "easy";
+let units=[];
+let projectiles=[];
 
-let gameStarted = false;
+let lastTime=performance.now();
+let goldTimer=0;
+let enemySpawnTimer=0;
+let enemyBaseTimer=0;
+let playerBaseTimer=0;
 
-let gold = 1500;
+let currentWaveEnemies=0;
+let spawnedWaveEnemies=0;
 
-let playerHP = 5000;
+const battlefield=document.getElementById("battlefield");
+const environment=document.getElementById("environment");
 
-let enemyHP = 5000;
-
-let age = 0;
-
-let wave = 1;
-
-let waveTimer = 30;
-
-let waveRunning = false;
-
-let gameOver = false;
-
-let units = [];
-
-let projectiles = [];
-
-let lastTime = performance.now();
-
-let goldTimer = 0;
-
-let enemySpawnTimer = 0;
-
-let enemyBaseTimer = 0;
-
-let playerBaseTimer = 0;
-
-let currentWaveEnemies = 0;
-
-let spawnedWaveEnemies = 0;
+const goldEl=document.getElementById("gold");
+const incomeEl=document.getElementById("income");
+const playerHPEl=document.getElementById("playerHP");
+const enemyHPEl=document.getElementById("enemyHP");
+const waveEl=document.getElementById("wave");
+const ageEl=document.getElementById("age");
+const timerEl=document.getElementById("timer");
+const messageEl=document.getElementById("message");
 
 /* =========================================================
-   ELEMENTS
-========================================================= */
-
-const battlefield =
-    document.getElementById("battlefield");
-
-const environment =
-    document.getElementById("environment");
-
-const goldEl =
-    document.getElementById("gold");
-
-const incomeEl =
-    document.getElementById("income");
-
-const playerHPEl =
-    document.getElementById("playerHP");
-
-const enemyHPEl =
-    document.getElementById("enemyHP");
-
-const waveEl =
-    document.getElementById("wave");
-
-const ageEl =
-    document.getElementById("age");
-
-const timerEl =
-    document.getElementById("timer");
-
-const messageEl =
-    document.getElementById("message");
-
-/* =========================================================
-   DIFFICULTY SELECTION
+   DIFFICULTY
 ========================================================= */
 
 function selectDifficulty(type,button){
 
-    difficulty = type;
+    difficulty=type;
 
     document
         .querySelectorAll(".difficulty")
-        .forEach(b=>{
-            b.classList.remove("selected");
-        });
+        .forEach(b=>b.classList.remove("selected"));
 
     button.classList.add("selected");
-
 }
 
 /* =========================================================
-   START GAME
+   START
 ========================================================= */
 
 function startGame(){
 
-    const d =
-        difficulties[difficulty];
+    const d=difficulties[difficulty];
 
-    gold =
-        d.startingGold;
+    gold=d.startingGold;
 
-    gameStarted = true;
+    gameStarted=true;
 
     document
         .getElementById("startScreen")
         .style.display="none";
 
-    messageEl.textContent =
-        "⚔️ Battle Ages beginnt auf " +
-        d.name +
+    messageEl.textContent=
+        "⚔️ Battle Ages beginnt auf "+
+        d.name+
         "!";
 
     updateEnvironment();
-
     updateButtons();
-
     updateHUD();
-
-}
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function clamp(value,min,max){
-
-    return Math.max(
-        min,
-        Math.min(max,value)
-    );
-
 }
 
 /* =========================================================
@@ -1832,85 +2207,69 @@ function clamp(value,min,max){
 
 function updateHUD(){
 
-    goldEl.textContent =
-        Math.floor(gold);
+    goldEl.textContent=Math.floor(gold);
 
-    const effectiveIncome =
-        ages[age].income *
+    const effectiveIncome=
+        ages[age].income*
         difficulties[difficulty].incomeMultiplier;
 
-    incomeEl.textContent =
-        "+" +
-        Math.floor(effectiveIncome) +
+    incomeEl.textContent=
+        "+"+
+        Math.floor(effectiveIncome)+
         "/s";
 
-    playerHPEl.textContent =
-        Math.max(
-            0,
-            Math.floor(playerHP)
-        );
+    playerHPEl.textContent=
+        Math.max(0,Math.floor(playerHP));
 
-    enemyHPEl.textContent =
-        Math.max(
-            0,
-            Math.floor(enemyHP)
-        );
+    enemyHPEl.textContent=
+        Math.max(0,Math.floor(enemyHP));
 
-    waveEl.textContent =
-        wave;
+    waveEl.textContent=wave;
+    ageEl.textContent=ages[age].name;
 
-    ageEl.textContent =
-        ages[age].name;
-
-    timerEl.textContent =
-        Math.max(
-            0,
-            Math.ceil(waveTimer)
-        );
-
+    timerEl.textContent=
+        Math.max(0,Math.ceil(waveTimer));
 }
 
 /* =========================================================
-   UPDATE BUTTONS
+   BUTTONS
 ========================================================= */
 
 function updateButtons(){
 
-    const data =
-        ages[age].units;
+    const data=ages[age].units;
 
-    document.getElementById("warriorBtn").textContent =
-        "⚔️ " +
-        data.warrior.name +
-        " (" +
-        data.warrior.cost +
+    document.getElementById("warriorBtn").textContent=
+        "⚔️ "+
+        data.warrior.name+
+        " ("+
+        data.warrior.cost+
         ")";
 
-    document.getElementById("archerBtn").textContent =
-        "🏹 " +
-        data.archer.name +
-        " (" +
-        data.archer.cost +
+    document.getElementById("archerBtn").textContent=
+        "🏹 "+
+        data.archer.name+
+        " ("+
+        data.archer.cost+
         ")";
 
-    document.getElementById("heavyBtn").textContent =
-        "🔨 " +
-        data.heavy.name +
-        " (" +
-        data.heavy.cost +
+    document.getElementById("heavyBtn").textContent=
+        "🔨 "+
+        data.heavy.name+
+        " ("+
+        data.heavy.cost+
         ")";
-
 }
 
 /* =========================================================
-   ENVIRONMENT SYSTEM
+   ENVIRONMENT
 ========================================================= */
 
 function updateEnvironment(){
 
     environment.innerHTML="";
 
-    const names = [
+    const names=[
         "stone",
         "medieval",
         "industrial",
@@ -1918,37 +2277,19 @@ function updateEnvironment(){
         "future"
     ];
 
-    environment.className =
-        "env-" + names[age];
+    environment.className="env-"+names[age];
 
-    if(age===0)
-        createStoneEnvironment();
-
-    if(age===1)
-        createMedievalEnvironment();
-
-    if(age===2)
-        createIndustrialEnvironment();
-
-    if(age===3)
-        createModernEnvironment();
-
-    if(age===4)
-        createFutureEnvironment();
-
+    if(age===0) createStoneEnvironment();
+    if(age===1) createMedievalEnvironment();
+    if(age===2) createIndustrialEnvironment();
+    if(age===3) createModernEnvironment();
+    if(age===4) createFutureEnvironment();
 }
-
-/* =========================================================
-   STONE ENVIRONMENT
-========================================================= */
 
 function createStoneEnvironment(){
 
-    const ground =
-        document.createElement("div");
-
+    const ground=document.createElement("div");
     ground.className="ground";
-
     environment.appendChild(ground);
 
     const rocks=[
@@ -1960,18 +2301,15 @@ function createStoneEnvironment(){
 
     rocks.forEach(r=>{
 
-        const rock =
-            document.createElement("div");
+        const rock=document.createElement("div");
 
         rock.className="terrainObject stoneRock";
-
         rock.style.left=r[0]+"%";
         rock.style.bottom=r[1]+"px";
         rock.style.width=r[2]+"px";
         rock.style.height=r[3]+"px";
 
         environment.appendChild(rock);
-
     });
 
     const huts=[
@@ -1981,48 +2319,33 @@ function createStoneEnvironment(){
 
     huts.forEach(h=>{
 
-        const hut =
-            document.createElement("div");
+        const hut=document.createElement("div");
 
         hut.className="terrainObject stoneHut";
-
         hut.style.left=h[0]+"%";
         hut.style.bottom=h[1]+"px";
 
         environment.appendChild(hut);
-
     });
 
-    const fire =
-        document.createElement("div");
+    const fire=document.createElement("div");
 
     fire.className="terrainObject campfire";
-
     fire.style.left="48%";
     fire.style.bottom="120px";
 
     environment.appendChild(fire);
-
 }
-
-/* =========================================================
-   MEDIEVAL ENVIRONMENT
-========================================================= */
 
 function createMedievalEnvironment(){
 
-    const ground =
-        document.createElement("div");
-
+    const ground=document.createElement("div");
     ground.className="ground";
-
     environment.appendChild(ground);
 
-    const castle =
-        document.createElement("div");
+    const castle=document.createElement("div");
 
     castle.className="terrainObject castle";
-
     castle.style.left="36%";
 
     castle.innerHTML=`
@@ -2042,38 +2365,25 @@ function createMedievalEnvironment(){
 
     houses.forEach(h=>{
 
-        const house =
-            document.createElement("div");
+        const house=document.createElement("div");
 
         house.className="terrainObject fachwerk";
-
         house.style.left=h[0];
         house.style.bottom=h[1]+"px";
 
         environment.appendChild(house);
-
     });
-
 }
-
-/* =========================================================
-   INDUSTRIAL ENVIRONMENT
-========================================================= */
 
 function createIndustrialEnvironment(){
 
-    const ground =
-        document.createElement("div");
-
+    const ground=document.createElement("div");
     ground.className="ground";
-
     environment.appendChild(ground);
 
-    const factory =
-        document.createElement("div");
+    const factory=document.createElement("div");
 
     factory.className="terrainObject factory";
-
     factory.style.left="38%";
 
     factory.innerHTML=`
@@ -2086,45 +2396,29 @@ function createIndustrialEnvironment(){
 
     environment.appendChild(factory);
 
-    [18,78].forEach((left,index)=>{
+    [18,78].forEach(left=>{
 
-        const chimney =
-            document.createElement("div");
+        const chimney=document.createElement("div");
 
         chimney.className="terrainObject chimney";
-
         chimney.style.left=left+"%";
 
         environment.appendChild(chimney);
 
-        const smoke =
-            document.createElement("div");
+        const smoke=document.createElement("div");
 
         smoke.className="terrainObject smoke";
-
-        smoke.style.left=
-            (left-1)+"%";
-
-        smoke.style.bottom=
-            "410px";
+        smoke.style.left=(left-1)+"%";
+        smoke.style.bottom="410px";
 
         environment.appendChild(smoke);
-
     });
-
 }
-
-/* =========================================================
-   MODERN ENVIRONMENT
-========================================================= */
 
 function createModernEnvironment(){
 
-    const ground =
-        document.createElement("div");
-
+    const ground=document.createElement("div");
     ground.className="ground";
-
     environment.appendChild(ground);
 
     const buildings=[
@@ -2134,12 +2428,9 @@ function createModernEnvironment(){
 
     buildings.forEach(b=>{
 
-        const building =
-            document.createElement("div");
+        const building=document.createElement("div");
 
-        building.className=
-            "terrainObject modernBuilding";
-
+        building.className="terrainObject modernBuilding";
         building.style.left=b[0];
         building.style.bottom=b[1]+"px";
 
@@ -2147,33 +2438,21 @@ function createModernEnvironment(){
             `<div class="modernRoof"></div>`;
 
         environment.appendChild(building);
-
     });
 
-    const vehicle =
-        document.createElement("div");
+    const vehicle=document.createElement("div");
 
-    vehicle.className=
-        "terrainObject militaryVehicle";
-
+    vehicle.className="terrainObject militaryVehicle";
     vehicle.style.left="42%";
     vehicle.style.bottom="125px";
 
     environment.appendChild(vehicle);
-
 }
-
-/* =========================================================
-   FUTURE ENVIRONMENT
-========================================================= */
 
 function createFutureEnvironment(){
 
-    const ground =
-        document.createElement("div");
-
+    const ground=document.createElement("div");
     ground.className="ground";
-
     environment.appendChild(ground);
 
     const buildings=[
@@ -2183,147 +2462,195 @@ function createFutureEnvironment(){
 
     buildings.forEach(b=>{
 
-        const building =
-            document.createElement("div");
+        const building=document.createElement("div");
 
-        building.className=
-            "terrainObject futureBuilding";
-
+        building.className="terrainObject futureBuilding";
         building.style.left=b[0];
         building.style.bottom=b[1]+"px";
 
         environment.appendChild(building);
-
     });
 
-    const tower =
-        document.createElement("div");
+    const tower=document.createElement("div");
 
-    tower.className=
-        "terrainObject futureTower";
-
+    tower.className="terrainObject futureTower";
     tower.style.left="48%";
 
     environment.appendChild(tower);
 
-    const core =
-        document.createElement("div");
+    const core=document.createElement("div");
 
-    core.className=
-        "terrainObject energyCore";
-
+    core.className="terrainObject energyCore";
     core.style.left="49%";
     core.style.bottom="235px";
 
     environment.appendChild(core);
-
 }
 
 /* =========================================================
-   CREATE UNIT
+   EINHEITEN ERSTELLEN
 ========================================================= */
 
 function createUnit(type,player=true){
 
-    const data =
-        ages[age].units[type];
+    const data=ages[age].units[type];
 
     const unit={
 
         id:Math.random(),
-
         type:type,
-
         player:player,
 
         hp:data.hp,
-
         maxHP:data.hp,
 
         x:player
-            ? 115
-            : battlefield.clientWidth-115,
+            ?115
+            :battlefield.clientWidth-115,
 
         y:350,
 
         target:null,
-
         lastAttack:0,
+        dead:false,
 
-        dead:false
+        state:"idle",
+        attackUntil:0,
+        hitUntil:0
 
     };
 
     units.push(unit);
 
     renderUnit(unit);
-
 }
 
 /* =========================================================
-   RENDER UNIT
+   EINHEIT MARKUP
+========================================================= */
+
+function getUnitMarkup(type){
+
+    if(type==="warrior"){
+
+        if(age===0){
+
+            return `
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="leg l"></div>
+                <div class="leg r"></div>
+                <div class="shield"></div>
+                <div class="spear"></div>
+            `;
+
+        }
+
+        if(age===1){
+
+            return `
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="leg l"></div>
+                <div class="leg r"></div>
+                <div class="shield"></div>
+                <div class="sword"></div>
+            `;
+
+        }
+
+        return `
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="leg l"></div>
+            <div class="leg r"></div>
+        `;
+    }
+
+    if(type==="archer"){
+
+        return `
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="leg l"></div>
+            <div class="leg r"></div>
+
+            <div class="bow"></div>
+            <div class="arrowHeld"></div>
+        `;
+    }
+
+    return `
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="leg l"></div>
+        <div class="leg r"></div>
+        <div class="hammer"></div>
+    `;
+}
+
+/* =========================================================
+   RENDER
 ========================================================= */
 
 function renderUnit(unit){
 
-    if(unit.el)
+    if(unit.el){
+
+        unit.el.innerHTML=
+            getUnitMarkup(unit.type);
+
+        updateUnitClasses(unit);
+
         return;
+    }
 
-    const el =
-        document.createElement("div");
+    const el=document.createElement("div");
 
-    el.className =
-        "unit " +
-        unit.type +
-        " age-" +
+    el.className=
+        "unit "+
+        unit.type+
+        " age-"+
         age;
 
-    el.innerHTML=`
-
-        <div class="head"></div>
-
-        <div class="body"></div>
-
-        <div class="leg l"></div>
-
-        <div class="leg r"></div>
-
-        ${
-            unit.type==="warrior"
-            ?
-            '<div class="shield"></div><div class="sword"></div>'
-            :
-            ''
-        }
-
-        ${
-            unit.type==="archer"
-            ?
-            '<div class="bow"></div><div class="arrowHeld"></div>'
-            :
-            ''
-        }
-
-        ${
-            unit.type==="heavy"
-            ?
-            '<div class="hammer"></div>'
-            :
-            ''
-        }
-
-    `;
+    el.innerHTML=
+        getUnitMarkup(unit.type);
 
     battlefield.appendChild(el);
 
     unit.el=el;
 
+    updateUnitClasses(unit);
     updateUnitVisual(unit);
-
 }
 
 /* =========================================================
-   UNIT VISUAL
+   EINHEITEN-KLASSEN
+========================================================= */
+
+function updateUnitClasses(unit){
+
+    if(!unit.el)
+        return;
+
+    unit.el.className=
+        "unit "+
+        unit.type+
+        " age-"+
+        age;
+
+    if(unit.state==="walking")
+        unit.el.classList.add("walking");
+
+    if(unit.state==="attacking")
+        unit.el.classList.add("attacking");
+
+    if(performance.now()<unit.hitUntil)
+        unit.el.classList.add("hitFlash");
+}
+
+/* =========================================================
+   VISUAL
 ========================================================= */
 
 function updateUnitVisual(unit){
@@ -2331,23 +2658,59 @@ function updateUnitVisual(unit){
     if(!unit.el)
         return;
 
-    unit.el.style.left =
+    unit.el.style.left=
         unit.x+"px";
 
-    unit.el.style.top =
+    unit.el.style.top=
         unit.y+"px";
 
-    unit.el.style.transform =
+    const flip=
         unit.player
-        ?
-        "translate(-50%,-100%) scaleX(1)"
-        :
-        "translate(-50%,-100%) scaleX(-1)";
+        ?1
+        :-1;
 
+    const scale=
+        unit.type==="heavy"
+        ?1.02
+        :1;
+
+    unit.el.style.transform=
+        "translate(-50%,-100%) scaleX("+
+        flip+
+        ") scale("+
+        scale+
+        ")";
 }
 
 /* =========================================================
-   BUY UNIT
+   ANIMATION STATE
+========================================================= */
+
+function setUnitState(unit,state,duration=0){
+
+    unit.state=state;
+
+    if(duration>0){
+
+        setTimeout(()=>{
+
+            if(
+                !unit.dead &&
+                unit.state===state
+            ){
+
+                unit.state="idle";
+                updateUnitClasses(unit);
+            }
+
+        },duration);
+    }
+
+    updateUnitClasses(unit);
+}
+
+/* =========================================================
+   KAUFEN
 ========================================================= */
 
 function buyUnit(type){
@@ -2355,37 +2718,34 @@ function buyUnit(type){
     if(!gameStarted || gameOver)
         return;
 
-    const data =
-        ages[age].units[type];
+    const data=ages[age].units[type];
 
-    if(gold < data.cost){
+    if(gold<data.cost){
 
-        messageEl.textContent =
+        messageEl.textContent=
             "Nicht genug Gold für diese Einheit!";
 
         return;
     }
 
-    gold -= data.cost;
+    gold-=data.cost;
 
     createUnit(type,true);
 
-    messageEl.textContent =
-        data.name +
+    messageEl.textContent=
+        data.name+
         " wurde eingesetzt.";
 
     updateHUD();
-
 }
 
 /* =========================================================
-   FIND TARGET
+   TARGET
 ========================================================= */
 
 function findTarget(unit){
 
     let best=null;
-
     let bestDistance=Infinity;
 
     for(const other of units){
@@ -2396,45 +2756,45 @@ function findTarget(unit){
         if(other.player===unit.player)
             continue;
 
-        const distance =
-            Math.abs(
-                other.x-unit.x
-            );
+        const distance=
+            Math.abs(other.x-unit.x);
 
         if(distance<bestDistance){
 
             bestDistance=distance;
-
             best=other;
-
         }
-
     }
 
     return best;
-
 }
 
 /* =========================================================
-   ATTACK
+   ANGRIFF
 ========================================================= */
 
 function attackUnit(attacker,target){
 
-    const now =
-        performance.now();
+    const now=performance.now();
 
-    const data =
+    const data=
         ages[age].units[attacker.type];
 
     if(
-        now-attacker.lastAttack
-        <
+        now-attacker.lastAttack<
         data.cooldown
     )
         return;
 
     attacker.lastAttack=now;
+
+    setUnitState(
+        attacker,
+        "attacking",
+        attacker.type==="heavy"
+        ?380
+        :300
+    );
 
     if(attacker.type==="archer"){
 
@@ -2447,19 +2807,28 @@ function attackUnit(attacker,target){
 
         target.hp-=data.damage;
 
+        flashUnit(target);
+
         createHit(
             target.x,
             target.y
         );
 
         if(target.hp<=0)
-            killUnit(
-                target,
-                attacker
-            );
-
+            killUnit(target,attacker);
     }
+}
 
+/* =========================================================
+   TREFFER
+========================================================= */
+
+function flashUnit(unit){
+
+    unit.hitUntil=
+        performance.now()+180;
+
+    updateUnitClasses(unit);
 }
 
 /* =========================================================
@@ -2473,8 +2842,20 @@ function killUnit(target,killer){
 
     target.dead=true;
 
-    if(target.el)
-        target.el.remove();
+    if(target.el){
+
+        target.el.style.transition=
+            "transform .22s, opacity .22s";
+
+        target.el.style.opacity="0";
+
+        setTimeout(()=>{
+
+            if(target.el)
+                target.el.remove();
+
+        },220);
+    }
 
     if(killer.player){
 
@@ -2491,17 +2872,15 @@ function killUnit(target,killer){
 
         gold+=reward;
 
-        messageEl.textContent =
-            "Feind besiegt! +" +
-            reward +
+        messageEl.textContent=
+            "Feind besiegt! +"+
+            reward+
             " Gold";
-
     }
-
 }
 
 /* =========================================================
-   ARROW
+   PFEIL
 ========================================================= */
 
 function createArrow(attacker,target){
@@ -2509,7 +2888,6 @@ function createArrow(attacker,target){
     const arrow={
 
         x:attacker.x,
-
         y:attacker.y-38,
 
         target:target,
@@ -2523,18 +2901,15 @@ function createArrow(attacker,target){
 
         el:
             document.createElement("div")
-
     };
 
-    arrow.el.className=
-        "projectile";
+    arrow.el.className="projectile";
 
     battlefield.appendChild(
         arrow.el
     );
 
     projectiles.push(arrow);
-
 }
 
 /* =========================================================
@@ -2551,18 +2926,13 @@ function createCannonProjectile(
     const p={
 
         x:x,
-
         y:y,
-
         target:target,
-
         damage:damage,
-
         speed:9,
 
         el:
             document.createElement("div")
-
     };
 
     p.el.className=
@@ -2573,7 +2943,6 @@ function createCannonProjectile(
     );
 
     projectiles.push(p);
-
 }
 
 /* =========================================================
@@ -2588,8 +2957,7 @@ function updateProjectiles(){
         i--
     ){
 
-        const p=
-            projectiles[i];
+        const p=projectiles[i];
 
         if(
             !p.target ||
@@ -2601,20 +2969,16 @@ function updateProjectiles(){
             projectiles.splice(i,1);
 
             continue;
-
         }
 
-        const dx =
+        const dx=
             p.target.x-p.x;
 
-        const dy =
+        const dy=
             (p.target.y-35)-p.y;
 
-        const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
+        const distance=
+            Math.sqrt(dx*dx+dy*dy);
 
         if(
             distance<
@@ -2622,12 +2986,12 @@ function updateProjectiles(){
         ){
 
             if(
-                p.target.hp !==
-                undefined
+                p.target.hp!==undefined
             ){
 
-                p.target.hp -=
-                    p.damage;
+                p.target.hp-=p.damage;
+
+                flashUnit(p.target);
 
                 createHit(
                     p.target.x,
@@ -2645,9 +3009,7 @@ function updateProjectiles(){
                                 !p.target.player
                         }
                     );
-
                 }
-
             }
 
             p.el.remove();
@@ -2655,13 +3017,12 @@ function updateProjectiles(){
             projectiles.splice(i,1);
 
             continue;
-
         }
 
-        p.x +=
+        p.x+=
             dx/distance*p.speed;
 
-        p.y +=
+        p.y+=
             dy/distance*p.speed;
 
         p.el.style.left=
@@ -2680,20 +3041,17 @@ function updateProjectiles(){
                 "rotate("+
                 Math.atan2(dy,dx)+
                 "rad)";
-
         }
-
     }
-
 }
 
 /* =========================================================
-   HIT
+   HIT EFFECT
 ========================================================= */
 
 function createHit(x,y){
 
-    const hit =
+    const hit=
         document.createElement("div");
 
     hit.className="hit";
@@ -2707,12 +3065,9 @@ function createHit(x,y){
     battlefield.appendChild(hit);
 
     setTimeout(
-        ()=>{
-            hit.remove();
-        },
+        ()=>hit.remove(),
         250
     );
-
 }
 
 /* =========================================================
@@ -2721,10 +3076,7 @@ function createHit(x,y){
 
 function baseDefense(){
 
-    const now=
-        performance.now();
-
-    /* Enemy base */
+    const now=performance.now();
 
     if(
         now-enemyBaseTimer>
@@ -2734,42 +3086,31 @@ function baseDefense(){
         enemyBaseTimer=now;
 
         let target=null;
-
         let closest=Infinity;
 
-        for(
-            const u of units
-        ){
+        for(const u of units){
 
-            if(
-                u.dead ||
-                !u.player
-            )
+            if(u.dead || !u.player)
                 continue;
 
             const d=
                 Math.abs(
                     u.x-
                     (
-                        battlefield.clientWidth-
-                        80
+                        battlefield.clientWidth-80
                     )
                 );
 
             if(d<closest){
 
                 closest=d;
-
                 target=u;
-
             }
-
         }
 
         if(target){
 
-            const d=
-                difficulties[difficulty];
+            const d=difficulties[difficulty];
 
             const damage=
                 (
@@ -2785,12 +3126,8 @@ function baseDefense(){
                 target,
                 damage
             );
-
         }
-
     }
-
-    /* Player base */
 
     if(
         now-playerBaseTimer>
@@ -2800,17 +3137,11 @@ function baseDefense(){
         playerBaseTimer=now;
 
         let target=null;
-
         let closest=Infinity;
 
-        for(
-            const u of units
-        ){
+        for(const u of units){
 
-            if(
-                u.dead ||
-                u.player
-            )
+            if(u.dead || u.player)
                 continue;
 
             const d=u.x;
@@ -2818,11 +3149,8 @@ function baseDefense(){
             if(d<closest){
 
                 closest=d;
-
                 target=u;
-
             }
-
         }
 
         if(target){
@@ -2833,11 +3161,8 @@ function baseDefense(){
                 target,
                 ages[age].baseDamage
             );
-
         }
-
     }
-
 }
 
 /* =========================================================
@@ -2846,17 +3171,14 @@ function baseDefense(){
 
 function updateUnits(){
 
-    const now=
-        performance.now();
+    const now=performance.now();
 
     const playerBaseX=95;
 
     const enemyBaseX=
         battlefield.clientWidth-95;
 
-    for(
-        const unit of units
-    ){
+    for(const unit of units){
 
         if(unit.dead)
             continue;
@@ -2877,9 +3199,10 @@ function updateUnits(){
                     unit.x
                 );
 
-            if(
-                distance<=data.range
-            ){
+            if(distance<=data.range){
+
+                if(unit.state!=="attacking")
+                    setUnitState(unit,"idle");
 
                 attackUnit(
                     unit,
@@ -2888,8 +3211,10 @@ function updateUnits(){
 
             }else{
 
-                moveUnit(unit);
+                if(unit.state!=="walking")
+                    setUnitState(unit,"walking");
 
+                moveUnit(unit);
             }
 
         }else{
@@ -2913,6 +3238,12 @@ function updateUnits(){
 
                     unit.lastAttack=now;
 
+                    setUnitState(
+                        unit,
+                        "attacking",
+                        300
+                    );
+
                     if(unit.player){
 
                         enemyHP-=
@@ -2921,40 +3252,33 @@ function updateUnits(){
                     }else{
 
                         const d=
-                            difficulties[
-                                difficulty
-                            ];
+                            difficulties[difficulty];
 
                         playerHP-=
                             data.baseDamage*
                             .7*
                             d.enemyDamage;
-
                     }
 
                     createHit(
                         unit.player
-                        ?
-                        enemyBaseX
-                        :
-                        playerBaseX,
+                        ?enemyBaseX
+                        :playerBaseX,
                         330
                     );
-
                 }
 
             }else{
 
+                if(unit.state!=="walking")
+                    setUnitState(unit,"walking");
+
                 moveUnit(unit);
-
             }
-
         }
 
         updateUnitVisual(unit);
-
     }
-
 }
 
 /* =========================================================
@@ -2987,13 +3311,11 @@ function moveUnit(unit){
                 unit.x,
                 120
             );
-
     }
-
 }
 
 /* =========================================================
-   REMOVE DEAD
+   DEAD ENTFERNEN
 ========================================================= */
 
 function removeDeadUnits(){
@@ -3002,11 +3324,10 @@ function removeDeadUnits(){
         units.filter(
             u=>!u.dead
         );
-
 }
 
 /* =========================================================
-   START WAVE
+   WELLE
 ========================================================= */
 
 function startWave(){
@@ -3020,15 +3341,12 @@ function startWave(){
             "Diese Welle läuft bereits!";
 
         return;
-
     }
 
     waveRunning=true;
-
     spawnedWaveEnemies=0;
 
-    const d=
-        difficulties[difficulty];
+    const d=difficulties[difficulty];
 
     let baseCount;
 
@@ -3047,7 +3365,6 @@ function startWave(){
         baseCount=
             6+
             Math.floor(wave*.65);
-
     }
 
     currentWaveEnemies=
@@ -3065,55 +3382,44 @@ function startWave(){
         "Welle "+
         wave+
         " beginnt!";
-
 }
 
 /* =========================================================
-   SPAWN ENEMY
+   FEINDE
 ========================================================= */
 
 function spawnEnemy(){
 
     let type;
 
-    const r=
-        Math.random();
+    const r=Math.random();
 
     if(wave<4){
 
         type=
             r<.65
-            ?
-            "warrior"
-            :
-            "archer";
+            ?"warrior"
+            :"archer";
 
     }else if(wave<10){
 
         type=
             r<.55
-            ?
-            "warrior"
+            ?"warrior"
             :
             r<.85
-            ?
-            "archer"
-            :
-            "heavy";
+            ?"archer"
+            :"heavy";
 
     }else{
 
         type=
             r<.45
-            ?
-            "warrior"
+            ?"warrior"
             :
             r<.75
-            ?
-            "archer"
-            :
-            "heavy";
-
+            ?"archer"
+            :"heavy";
     }
 
     const base=
@@ -3157,8 +3463,11 @@ function spawnEnemy(){
 
         lastAttack:0,
 
-        dead:false
+        dead:false,
 
+        state:"idle",
+        attackUntil:0,
+        hitUntil:0
     };
 
     units.push(unit);
@@ -3166,7 +3475,6 @@ function spawnEnemy(){
     renderUnit(unit);
 
     spawnedWaveEnemies++;
-
 }
 
 /* =========================================================
@@ -3208,8 +3516,11 @@ function spawnBoss(){
 
         lastAttack:0,
 
-        dead:false
+        dead:false,
 
+        state:"walking",
+        attackUntil:0,
+        hitUntil:0
     };
 
     units.push(boss);
@@ -3218,11 +3529,10 @@ function spawnBoss(){
 
     messageEl.textContent=
         "⚠️ BOSS-EINHEIT GREIFT AN!";
-
 }
 
 /* =========================================================
-   ARTILLERY
+   ARTILLERIE
 ========================================================= */
 
 function artillery(){
@@ -3240,7 +3550,6 @@ function artillery(){
             " Gold.";
 
         return;
-
     }
 
     gold-=cost;
@@ -3252,9 +3561,7 @@ function artillery(){
                 !u.dead
         );
 
-    for(
-        const enemy of targets
-    ){
+    for(const enemy of targets){
 
         enemy.hp-=
             180+
@@ -3265,22 +3572,21 @@ function artillery(){
             enemy.y
         );
 
+        flashUnit(enemy);
+
         if(enemy.hp<=0){
 
             killUnit(
                 enemy,
                 {player:true}
             );
-
         }
-
     }
 
     messageEl.textContent=
         "💥 Artillerieschlag ausgeführt!";
 
     updateHUD();
-
 }
 
 /* =========================================================
@@ -3292,8 +3598,7 @@ function createExplosion(x,y){
     const explosion=
         document.createElement("div");
 
-    explosion.className=
-        "explosion";
+    explosion.className="explosion";
 
     explosion.style.left=
         (x-15)+"px";
@@ -3301,21 +3606,16 @@ function createExplosion(x,y){
     explosion.style.top=
         (y-45)+"px";
 
-    battlefield.appendChild(
-        explosion
-    );
+    battlefield.appendChild(explosion);
 
     setTimeout(
-        ()=>{
-            explosion.remove();
-        },
+        ()=>explosion.remove(),
         350
     );
-
 }
 
 /* =========================================================
-   AGE UPGRADE
+   ZEITALTER WECHSELN
 ========================================================= */
 
 function upgradeAge(){
@@ -3329,33 +3629,26 @@ function upgradeAge(){
             "Du bist bereits im höchsten Zeitalter!";
 
         return;
-
     }
 
-    const nextAge=
-        age+1;
+    const nextAge=age+1;
 
     let cost;
 
     if(nextAge===1)
         cost=1100;
-
     else if(nextAge===2)
         cost=2700;
-
     else if(nextAge===3)
         cost=5200;
-
     else
         cost=8500;
 
     const requirements={
-
         1:5,
         2:12,
         3:20,
         4:35
-
     };
 
     const requiredWave=
@@ -3364,12 +3657,11 @@ function upgradeAge(){
     if(wave<requiredWave){
 
         messageEl.textContent=
-            "Zeitalter noch gesperrt! " +
-            "Benötigt: Welle " +
+            "Zeitalter noch gesperrt! "+
+            "Benötigt: Welle "+
             requiredWave;
 
         return;
-
     }
 
     if(gold<cost){
@@ -3381,22 +3673,20 @@ function upgradeAge(){
             ages[nextAge].name;
 
         return;
-
     }
 
     gold-=cost;
 
     age=nextAge;
 
-    /* Umgebung wechseln */
-
     updateEnvironment();
 
-    /* Neue Einheiten bekommen neues Aussehen */
+    /*
+       Alle vorhandenen Einheiten werden
+       komplett neu aufgebaut.
+    */
 
-    for(
-        const unit of units
-    ){
+    for(const unit of units){
 
         if(
             unit.el &&
@@ -3409,8 +3699,11 @@ function upgradeAge(){
                 " age-"+
                 age;
 
-        }
+            unit.el.innerHTML=
+                getUnitMarkup(unit.type);
 
+            updateUnitClasses(unit);
+        }
     }
 
     messageEl.textContent=
@@ -3418,9 +3711,7 @@ function upgradeAge(){
         ages[age].name;
 
     updateButtons();
-
     updateHUD();
-
 }
 
 /* =========================================================
@@ -3448,9 +3739,7 @@ function generateGold(delta){
 
         goldTimer-=
             seconds*1000;
-
     }
-
 }
 
 /* =========================================================
@@ -3462,17 +3751,11 @@ function saveGame(){
     const save={
 
         gold:gold,
-
         playerHP:playerHP,
-
         enemyHP:enemyHP,
-
         age:age,
-
         wave:wave,
-
         difficulty:difficulty
-
     };
 
     localStorage.setItem(
@@ -3482,7 +3765,6 @@ function saveGame(){
 
     messageEl.textContent=
         "💾 Spiel gespeichert.";
-
 }
 
 /* =========================================================
@@ -3502,7 +3784,6 @@ function loadGame(){
             "Kein gespeichertes Spiel gefunden.";
 
         return;
-
     }
 
     const save=
@@ -3535,20 +3816,15 @@ function loadGame(){
     gameStarted=true;
 
     document
-        .getElementById(
-            "startScreen"
-        )
+        .getElementById("startScreen")
         .style.display="none";
 
     updateEnvironment();
-
     updateButtons();
-
     updateHUD();
 
     messageEl.textContent=
         "📂 Spiel geladen.";
-
 }
 
 /* =========================================================
@@ -3560,25 +3836,20 @@ function checkGameOver(){
     if(enemyHP<=0){
 
         enemyHP=0;
-
         gameOver=true;
 
         messageEl.textContent=
             "🏆 SIEG! Die feindliche Basis wurde zerstört!";
-
     }
 
     if(playerHP<=0){
 
         playerHP=0;
-
         gameOver=true;
 
         messageEl.textContent=
             "💀 NIEDERLAGE! Deine Basis wurde zerstört.";
-
     }
-
 }
 
 /* =========================================================
@@ -3588,7 +3859,6 @@ function checkGameOver(){
 function restartGame(){
 
     location.reload();
-
 }
 
 /* =========================================================
@@ -3606,14 +3876,12 @@ function gameLoop(time){
 
         generateGold(delta);
 
-        waveTimer-=
-            delta/1000;
+        waveTimer-=delta/1000;
 
         if(waveTimer<=0){
 
             if(!waveRunning)
                 startWave();
-
         }
 
         if(waveRunning){
@@ -3631,10 +3899,8 @@ function gameLoop(time){
                 enemySpawnTimer=
                     Math.max(
                         700,
-                        1250-
-                        wave*12
+                        1250-wave*12
                     );
-
             }
 
             if(
@@ -3656,39 +3922,26 @@ function gameLoop(time){
                     );
 
                 messageEl.textContent=
-                    "Welle abgeschlossen! " +
-                    "Nächste Welle in " +
-                    Math.ceil(
-                        waveTimer
-                    )+
+                    "Welle abgeschlossen! "+
+                    "Nächste Welle in "+
+                    Math.ceil(waveTimer)+
                     " Sekunden.";
-
             }
-
         }
 
         updateUnits();
-
         updateProjectiles();
-
         baseDefense();
-
         removeDeadUnits();
-
         checkGameOver();
-
         updateHUD();
-
     }
 
-    requestAnimationFrame(
-        gameLoop
-    );
-
+    requestAnimationFrame(gameLoop);
 }
 
 /* =========================================================
-   KEYBOARD
+   TASTATUR
 ========================================================= */
 
 document.addEventListener(
@@ -3712,7 +3965,6 @@ document.addEventListener(
 
         if(e.key==="5")
             artillery();
-
     }
 );
 
@@ -3721,12 +3973,9 @@ document.addEventListener(
 ========================================================= */
 
 updateButtons();
-
 updateHUD();
 
-requestAnimationFrame(
-    gameLoop
-);
+requestAnimationFrame(gameLoop);
 
 </script>
 
