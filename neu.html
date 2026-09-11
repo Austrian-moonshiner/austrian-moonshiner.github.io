@@ -1,0 +1,3512 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Battle Ages</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:#20170f;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+}
+
+#game{
+    width:100%;
+    max-width:1450px;
+    min-height:100vh;
+    background:#241a12;
+    box-shadow:0 0 40px rgba(0,0,0,.7);
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+    height:72px;
+    background:
+        linear-gradient(#65452b,#3b2819);
+    border-bottom:4px solid #1c130c;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 14px;
+    position:relative;
+    z-index:10;
+}
+
+.logo{
+    font-size:27px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#f4d58a;
+    text-shadow:
+        2px 2px #25160b,
+        -1px -1px #9b6c32;
+}
+
+.logo small{
+    display:block;
+    font-size:10px;
+    letter-spacing:3px;
+    color:#d4b273;
+}
+
+.stats{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.stat{
+    min-width:105px;
+    background:#2b1d12;
+    border:2px solid #806039;
+    border-radius:7px;
+    padding:7px 12px;
+    text-align:center;
+    box-shadow:inset 0 1px rgba(255,255,255,.1);
+}
+
+.stat-label{
+    font-size:10px;
+    color:#c8ad7c;
+    text-transform:uppercase;
+}
+
+.stat-value{
+    font-size:20px;
+    font-weight:bold;
+    color:#fff0b0;
+}
+
+#gold{
+    color:#ffd84d;
+}
+
+/* =========================
+   BATTLEFIELD
+========================= */
+
+#arena{
+    width:100%;
+    position:relative;
+    background:#6ea8c7;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    background:#76aec8;
+}
+
+/* =========================
+   BOTTOM CONTROL
+========================= */
+
+#controls{
+    background:
+        linear-gradient(#59402a,#2d1e13);
+    border-top:5px solid #17100a;
+    padding:10px;
+    min-height:170px;
+}
+
+.control-inner{
+    max-width:1250px;
+    margin:auto;
+}
+
+.unit-row{
+    display:flex;
+    justify-content:center;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+.unit-btn{
+    width:132px;
+    min-height:105px;
+    background:
+        linear-gradient(#80603b,#4b321e);
+    border:3px solid #a98552;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    position:relative;
+    box-shadow:
+        0 4px 0 #1a1008,
+        inset 0 1px rgba(255,255,255,.18);
+    transition:.08s;
+    overflow:hidden;
+}
+
+.unit-btn:hover{
+    filter:brightness(1.12);
+}
+
+.unit-btn:active{
+    transform:translateY(3px);
+    box-shadow:
+        0 1px 0 #1a1008,
+        inset 0 1px rgba(255,255,255,.15);
+}
+
+.unit-btn.locked{
+    opacity:.38;
+    filter:grayscale(.8);
+}
+
+.unit-icon{
+    height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:39px;
+    text-shadow:2px 2px 2px #000;
+}
+
+.unit-name{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.unit-cost{
+    margin-top:4px;
+    color:#ffd84d;
+    font-weight:bold;
+    font-size:12px;
+}
+
+.bottom-row{
+    margin-top:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    min-width:145px;
+    padding:12px 18px;
+    border-radius:7px;
+    border:3px solid #987242;
+    background:linear-gradient(#755332,#3d2817);
+    color:#fff2c2;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 3px 0 #180e07;
+}
+
+.action-btn:hover{
+    filter:brightness(1.12);
+}
+
+.action-btn:active{
+    transform:translateY(2px);
+}
+
+#ageButton{
+    background:
+        linear-gradient(#9d763b,#5c3b1e);
+    border-color:#d0a65d;
+    color:#ffe8a1;
+}
+
+#pauseButton{
+    min-width:90px;
+}
+
+#message{
+    margin-top:8px;
+    min-height:20px;
+    text-align:center;
+    color:#d8c49b;
+    font-size:13px;
+}
+
+/* =========================
+   RESULT SCREEN
+========================= */
+
+#result{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(15,9,4,.78);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+}
+
+.result-box{
+    width:min(460px,90vw);
+    background:
+        linear-gradient(#68492d,#2f1d10);
+    border:5px solid #b28a51;
+    border-radius:12px;
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.8),
+        inset 0 1px rgba(255,255,255,.2);
+    padding:30px;
+    text-align:center;
+}
+
+.result-title{
+    font-size:42px;
+    font-weight:900;
+    color:#f7d988;
+    text-shadow:3px 3px #241309;
+}
+
+.result-text{
+    margin:18px 0;
+    color:#ead9b5;
+    font-size:16px;
+}
+
+@media(max-width:800px){
+
+    .topbar{
+        height:62px;
+        padding:5px 8px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .logo small{
+        font-size:8px;
+    }
+
+    .stats{
+        gap:5px;
+    }
+
+    .stat{
+        min-width:65px;
+        padding:4px;
+    }
+
+    .stat-value{
+        font-size:15px;
+    }
+
+    .unit-btn{
+        width:105px;
+        min-height:92px;
+    }
+
+    .unit-icon{
+        height:45px;
+        font-size:31px;
+    }
+
+    .unit-name{
+        font-size:11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<header class="topbar">
+
+    <div class="logo">
+        BATTLE AGES
+        <small>RISE • FIGHT • CONQUER</small>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-label">Gold</div>
+            <div class="stat-value" id="gold">500</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Einkommen</div>
+            <div class="stat-value" id="income">10</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Zeitalter</div>
+            <div class="stat-value" id="age">I</div>
+        </div>
+
+    </div>
+
+</header>
+
+<main id="arena">
+    <canvas id="canvas" width="1400" height="680"></canvas>
+</main>
+
+<section id="controls">
+
+    <div class="control-inner">
+
+        <div class="unit-row" id="unitRow"></div>
+
+        <div class="bottom-row">
+
+            <button class="action-btn" id="ageButton">
+                ⬆ ZEITALTER AUFSTIEG
+            </button>
+
+            <button class="action-btn" id="pauseButton">
+                ⏸ PAUSE
+            </button>
+
+            <button class="action-btn" id="restartButton">
+                🔄 NEUSTART
+            </button>
+
+        </div>
+
+        <div id="message">
+            Wähle eine Einheit und führe deine Armee zum Sieg!
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+<div id="result">
+
+    <div class="result-box">
+
+        <div class="result-title" id="resultTitle">
+            SIEG!
+        </div>
+
+        <div class="result-text" id="resultText">
+            Deine Armee hat die gegnerische Festung zerstört.
+        </div>
+
+        <button class="action-btn" onclick="restartGame()">
+            🔄 NOCH EINMAL
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   BATTLE AGES
+   Eigenständiges Canvas-Spiel
+========================================================= */
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const W = canvas.width;
+const H = canvas.height;
+
+let gameRunning = true;
+let gameOver = false;
+
+let gold = 500;
+let enemyGold = 500;
+
+let currentAge = 0;
+
+let incomeTimer = 0;
+let enemyTimer = 0;
+
+let lastTime = performance.now();
+
+let units = [];
+let projectiles = [];
+let effects = [];
+
+let playerBase = {
+    x: 55,
+    y: 390,
+    hp: 1000,
+    maxHp: 1000
+};
+
+let enemyBase = {
+    x: 1265,
+    y: 390,
+    hp: 1000,
+    maxHp: 1000
+};
+
+/* =========================================================
+   ZEITALTER
+========================================================= */
+
+const AGES = [
+
+{
+    name:"STEINZEIT",
+    short:"I",
+    cost:0,
+    income:10,
+
+    colors:{
+        main:"#806043",
+        dark:"#493222",
+        light:"#b58b5b"
+    },
+
+    units:[
+        {
+            name:"Keulenkrieger",
+            icon:"🪵",
+            cost:80,
+            hp:115,
+            damage:18,
+            range:42,
+            speed:0.55,
+            attackSpeed:1.05,
+            type:"melee",
+            weapon:"club"
+        },
+        {
+            name:"Jäger",
+            icon:"🏹",
+            cost:110,
+            hp:80,
+            damage:15,
+            range:210,
+            speed:0.48,
+            attackSpeed:1.45,
+            type:"ranged",
+            weapon:"bow"
+        },
+        {
+            name:"Speerkämpfer",
+            icon:"🗡️",
+            cost:145,
+            hp:135,
+            damage:23,
+            range:55,
+            speed:0.43,
+            attackSpeed:1.25,
+            type:"melee",
+            weapon:"spear"
+        }
+    ]
+},
+
+{
+    name:"ANTIKE",
+    short:"II",
+    cost:600,
+    income:15,
+
+    colors:{
+        main:"#b59a64",
+        dark:"#5e5037",
+        light:"#d8c38b"
+    },
+
+    units:[
+        {
+            name:"Legionär",
+            icon:"🛡️",
+            cost:180,
+            hp:190,
+            damage:29,
+            range:45,
+            speed:0.48,
+            attackSpeed:1.05,
+            type:"melee",
+            weapon:"sword",
+            shield:true
+        },
+        {
+            name:"Bogenschütze",
+            icon:"🏹",
+            cost:210,
+            hp:100,
+            damage:27,
+            range:235,
+            speed:0.42,
+            attackSpeed:1.35,
+            type:"ranged",
+            weapon:"bow"
+        },
+        {
+            name:"Reiter",
+            icon:"🐎",
+            cost:300,
+            hp:245,
+            damage:40,
+            range:50,
+            speed:0.82,
+            attackSpeed:1.2,
+            type:"melee",
+            weapon:"spear",
+            cavalry:true
+        }
+    ]
+},
+
+{
+    name:"MITTELALTER",
+    short:"III",
+    cost:1400,
+    income:21,
+
+    colors:{
+        main:"#73808a",
+        dark:"#303941",
+        light:"#b7c0c5"
+    },
+
+    units:[
+        {
+            name:"Ritter",
+            icon:"⚔️",
+            cost:350,
+            hp:310,
+            damage:48,
+            range:48,
+            speed:0.40,
+            attackSpeed:1.1,
+            type:"melee",
+            weapon:"sword",
+            armor:true
+        },
+        {
+            name:"Armbrustschütze",
+            icon:"🏹",
+            cost:390,
+            hp:130,
+            damage:46,
+            range:270,
+            speed:0.34,
+            attackSpeed:1.65,
+            type:"ranged",
+            weapon:"crossbow"
+        },
+        {
+            name:"Paladin",
+            icon:"🛡️",
+            cost:600,
+            hp:440,
+            damage:67,
+            range:50,
+            speed:0.31,
+            attackSpeed:1.35,
+            type:"melee",
+            weapon:"sword",
+            shield:true,
+            armor:true
+        }
+    ]
+},
+
+{
+    name:"INDUSTRIEZEITALTER",
+    short:"IV",
+    cost:3000,
+    income:29,
+
+    colors:{
+        main:"#4f575d",
+        dark:"#252a2e",
+        light:"#919a9f"
+    },
+
+    units:[
+        {
+            name:"Infanterist",
+            icon:"🔫",
+            cost:550,
+            hp:270,
+            damage:58,
+            range:190,
+            speed:0.44,
+            attackSpeed:1.15,
+            type:"ranged",
+            weapon:"rifle"
+        },
+        {
+            name:"Gewehrschütze",
+            icon:"🎯",
+            cost:650,
+            hp:210,
+            damage:75,
+            range:280,
+            speed:0.34,
+            attackSpeed:1.45,
+            type:"ranged",
+            weapon:"rifle"
+        },
+        {
+            name:"Maschinengewehr",
+            icon:"💥",
+            cost:850,
+            hp:390,
+            damage:32,
+            range:245,
+            speed:0.22,
+            attackSpeed:0.28,
+            type:"ranged",
+            weapon:"mg"
+        }
+    ]
+},
+
+{
+    name:"MODERNE ÄRA",
+    short:"V",
+    cost:6000,
+    income:40,
+
+    colors:{
+        main:"#53695a",
+        dark:"#27352b",
+        light:"#91a38e"
+    },
+
+    units:[
+        {
+            name:"Sturmsoldat",
+            icon:"🔫",
+            cost:850,
+            hp:360,
+            damage:86,
+            range:215,
+            speed:0.46,
+            attackSpeed:0.8,
+            type:"ranged",
+            weapon:"rifle"
+        },
+        {
+            name:"Scharfschütze",
+            icon:"🎯",
+            cost:1000,
+            hp:230,
+            damage:145,
+            range:330,
+            speed:0.27,
+            attackSpeed:2.2,
+            type:"ranged",
+            weapon:"sniper"
+        },
+        {
+            name:"Raketenwerfer",
+            icon:"🚀",
+            cost:1350,
+            hp:420,
+            damage:190,
+            range:300,
+            speed:0.19,
+            attackSpeed:3.1,
+            type:"ranged",
+            weapon:"rocket"
+        }
+    ]
+}
+
+];
+
+/* =========================================================
+   HILFSFUNKTIONEN
+========================================================= */
+
+function clamp(v,min,max){
+    return Math.max(min,Math.min(max,v));
+}
+
+function dist(a,b){
+    return Math.abs(a-b);
+}
+
+function random(min,max){
+    return Math.random()*(max-min)+min;
+}
+
+function formatNumber(n){
+    return Math.floor(n).toLocaleString("de-DE");
+}
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    document.getElementById("gold").textContent =
+        formatNumber(gold);
+
+    document.getElementById("income").textContent =
+        AGES[currentAge].income;
+
+    document.getElementById("age").textContent =
+        AGES[currentAge].short;
+
+    buildUnitButtons();
+
+    const ageButton =
+        document.getElementById("ageButton");
+
+    if(currentAge < AGES.length-1){
+
+        const cost =
+            AGES[currentAge+1].cost;
+
+        ageButton.textContent =
+            "⬆ AUFSTIEG • " + formatNumber(cost) + " G";
+
+        ageButton.disabled =
+            gold < cost;
+
+    }else{
+
+        ageButton.textContent =
+            "MAXIMALES ZEITALTER";
+
+        ageButton.disabled = true;
+    }
+}
+
+function buildUnitButtons(){
+
+    const row =
+        document.getElementById("unitRow");
+
+    row.innerHTML="";
+
+    AGES[currentAge].units.forEach((u,index)=>{
+
+        const button =
+            document.createElement("button");
+
+        button.className="unit-btn";
+
+        if(gold < u.cost){
+            button.classList.add("locked");
+        }
+
+        button.innerHTML=`
+            <div class="unit-icon">${u.icon}</div>
+            <div class="unit-name">${u.name}</div>
+            <div class="unit-cost">💰 ${u.cost}</div>
+        `;
+
+        button.onclick=()=>{
+            spawnPlayer(index);
+        };
+
+        row.appendChild(button);
+    });
+}
+
+/* =========================================================
+   EINHEITEN ERSTELLEN
+========================================================= */
+
+function createUnit(side, data, age, index){
+
+    const isPlayer =
+        side==="player";
+
+    return {
+
+        id:
+            Math.random().toString(36).slice(2),
+
+        side,
+
+        age,
+
+        typeIndex:index,
+
+        name:data.name,
+
+        icon:data.icon,
+
+        hp:data.hp,
+
+        maxHp:data.hp,
+
+        damage:data.damage,
+
+        range:data.range,
+
+        speed:data.speed,
+
+        attackSpeed:data.attackSpeed,
+
+        attackTimer:random(0,.5),
+
+        x:isPlayer
+            ? 145
+            : 1255,
+
+        y:430,
+
+        baseY:430,
+
+        dir:isPlayer?1:-1,
+
+        type:data.type,
+
+        weapon:data.weapon,
+
+        shield:data.shield||false,
+
+        armor:data.armor||false,
+
+        cavalry:data.cavalry||false,
+
+        walkTime:random(0,10),
+
+        attackAnim:0,
+
+        hitAnim:0,
+
+        deathAnim:0,
+
+        dead:false,
+
+        target:null,
+
+        seed:random(0,100)
+
+    };
+}
+
+/* =========================================================
+   SPIELER
+========================================================= */
+
+function spawnPlayer(index){
+
+    if(gameOver || !gameRunning)
+        return;
+
+    const data =
+        AGES[currentAge].units[index];
+
+    if(gold < data.cost){
+
+        showMessage(
+            "Nicht genug Gold!"
+        );
+
+        return;
+    }
+
+    gold -= data.cost;
+
+    units.push(
+        createUnit(
+            "player",
+            data,
+            currentAge,
+            index
+        )
+    );
+
+    showMessage(
+        data.name + " wurde ausgebildet."
+    );
+
+    updateUI();
+}
+
+/* =========================================================
+   FEIND KI
+========================================================= */
+
+function enemySpawn(){
+
+    if(gameOver)
+        return;
+
+    const possible=[];
+
+    for(
+        let i=0;
+        i<AGES[currentAge].units.length;
+        i++
+    ){
+
+        const u =
+            AGES[currentAge].units[i];
+
+        if(enemyGold >= u.cost)
+            possible.push(i);
+    }
+
+    if(!possible.length)
+        return;
+
+    let index =
+        possible[
+            Math.floor(
+                Math.random()*possible.length
+            )
+        ];
+
+    /*
+       Etwas intelligente Auswahl:
+       Gegner bevorzugt gelegentlich
+       stärkere Einheiten.
+    */
+
+    if(Math.random()<.35){
+
+        let best=possible[0];
+
+        for(const i of possible){
+
+            if(
+                AGES[currentAge].units[i].damage >
+                AGES[currentAge].units[best].damage
+            ){
+                best=i;
+            }
+        }
+
+        index=best;
+    }
+
+    const data =
+        AGES[currentAge].units[index];
+
+    enemyGold -= data.cost;
+
+    const unit =
+        createUnit(
+            "enemy",
+            data,
+            currentAge,
+            index
+        );
+
+    units.push(unit);
+}
+
+/* =========================================================
+   ZEITALTER DES GEGNERS
+========================================================= */
+
+function enemyAgeUp(){
+
+    if(currentAge >= AGES.length-1)
+        return;
+
+    const next =
+        AGES[currentAge+1];
+
+    if(enemyGold >= next.cost){
+
+        enemyGold -= next.cost;
+
+        enemyCurrentAge++;
+
+        showMessage(
+            "Der Gegner ist in das " +
+            AGES[enemyCurrentAge].name +
+            " aufgestiegen!"
+        );
+    }
+}
+
+let enemyCurrentAge=0;
+
+/* =========================================================
+   ZEITALTER AUFSTIEG SPIELER
+========================================================= */
+
+document
+.getElementById("ageButton")
+.addEventListener("click",()=>{
+
+    if(currentAge>=AGES.length-1)
+        return;
+
+    const next =
+        AGES[currentAge+1];
+
+    if(gold < next.cost){
+
+        showMessage(
+            "Du brauchst " +
+            next.cost +
+            " Gold für den Aufstieg."
+        );
+
+        return;
+    }
+
+    gold -= next.cost;
+
+    currentAge++;
+
+    showMessage(
+        "NEUES ZEITALTER: " +
+        AGES[currentAge].name
+    );
+
+    updateUI();
+});
+
+/* =========================================================
+   NÄCHSTE EINHEITEN / TARGETS
+========================================================= */
+
+function findTarget(unit){
+
+    let best=null;
+    let bestDist=Infinity;
+
+    for(const other of units){
+
+        if(
+            other.dead ||
+            other.side===unit.side
+        )
+            continue;
+
+        const d =
+            Math.abs(
+                other.x-unit.x
+            );
+
+        if(d<bestDist){
+
+            bestDist=d;
+            best=other;
+        }
+    }
+
+    return best;
+}
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update(dt){
+
+    if(gameOver)
+        return;
+
+    /* Einkommen */
+
+    incomeTimer += dt;
+
+    if(incomeTimer >= 1){
+
+        incomeTimer -= 1;
+
+        gold += AGES[currentAge].income;
+
+        enemyGold +=
+            AGES[enemyCurrentAge].income;
+    }
+
+    /* Gegnerproduktion */
+
+    enemyTimer += dt;
+
+    const enemyInterval =
+        Math.max(
+            1.8,
+            4.2-currentAge*.25
+        );
+
+    if(enemyTimer >= enemyInterval){
+
+        enemyTimer=0;
+
+        enemySpawn();
+
+        if(
+            enemyCurrentAge <
+            currentAge &&
+            Math.random()<.04
+        ){
+            enemyAgeUp();
+        }
+    }
+
+    /* Einheiten */
+
+    for(const unit of units){
+
+        if(unit.dead){
+
+            unit.deathAnim += dt;
+
+            continue;
+        }
+
+        unit.walkTime +=
+            dt*(unit.speed*7);
+
+        unit.attackTimer += dt;
+
+        unit.attackAnim =
+            Math.max(
+                0,
+                unit.attackAnim-dt*5
+            );
+
+        unit.hitAnim =
+            Math.max(
+                0,
+                unit.hitAnim-dt*5
+            );
+
+        const target =
+            findTarget(unit);
+
+        unit.target=target;
+
+        let targetX;
+
+        if(target){
+
+            targetX=target.x;
+
+            const distance =
+                Math.abs(
+                    target.x-unit.x
+                );
+
+            /*
+               Nahkampf
+            */
+
+            if(
+                distance <= unit.range
+            ){
+
+                if(
+                    unit.attackTimer >=
+                    unit.attackSpeed
+                ){
+
+                    unit.attackTimer=0;
+
+                    performAttack(
+                        unit,
+                        target
+                    );
+                }
+
+            }else{
+
+                moveUnit(unit,target);
+            }
+
+        }else{
+
+            /*
+               Keine gegnerische Einheit:
+               auf gegnerische Basis zulaufen.
+            */
+
+            const base =
+                unit.side==="player"
+                    ? enemyBase
+                    : playerBase;
+
+            const distance =
+                Math.abs(
+                    base.x-unit.x
+                );
+
+            if(distance <= unit.range){
+
+                if(
+                    unit.attackTimer >=
+                    unit.attackSpeed
+                ){
+
+                    unit.attackTimer=0;
+
+                    attackBase(unit,base);
+                }
+
+            }else{
+
+                moveTowardBase(
+                    unit,
+                    base
+                );
+            }
+        }
+
+        /*
+           Position begrenzen
+        */
+
+        unit.x =
+            clamp(
+                unit.x,
+                100,
+                1300
+            );
+    }
+
+    removeDead();
+
+    updateFrontline();
+
+    checkVictory();
+}
+
+/* =========================================================
+   BEWEGUNG
+========================================================= */
+
+function moveUnit(unit,target){
+
+    const dir =
+        unit.side==="player"
+            ? 1
+            : -1;
+
+    /*
+       Kleine Distanz zum Ziel,
+       damit Einheiten nicht ineinander laufen.
+    */
+
+    const stopDistance =
+        Math.max(
+            unit.range*.72,
+            35
+        );
+
+    if(
+        Math.abs(
+            target.x-unit.x
+        ) > stopDistance
+    ){
+
+        unit.x +=
+            dir*
+            unit.speed*
+            60/60;
+    }
+
+    unit.y =
+        unit.baseY +
+        Math.sin(unit.walkTime*2.2)*2;
+}
+
+function moveTowardBase(unit,base){
+
+    const dir =
+        unit.side==="player"
+            ? 1
+            : -1;
+
+    unit.x +=
+        dir*
+        unit.speed;
+
+    unit.y =
+        unit.baseY +
+        Math.sin(unit.walkTime*2.2)*2;
+}
+
+/* =========================================================
+   ANGRIFF
+========================================================= */
+
+function performAttack(attacker,target){
+
+    attacker.attackAnim=1;
+
+    if(
+        attacker.type==="ranged"
+    ){
+
+        createProjectile(
+            attacker,
+            target
+        );
+
+    }else{
+
+        dealDamage(
+            attacker,
+            target,
+            attacker.damage
+        );
+
+        createHitEffect(
+            target.x,
+            target.y-35,
+            "⚔"
+        );
+    }
+}
+
+function attackBase(unit,base){
+
+    unit.attackAnim=1;
+
+    if(
+        unit.type==="ranged"
+    ){
+
+        createBaseProjectile(
+            unit,
+            base
+        );
+
+    }else{
+
+        base.hp -=
+            unit.damage;
+
+        createHitEffect(
+            base.x,
+            base.y-100,
+            "💥"
+        );
+    }
+}
+
+/* =========================================================
+   SCHADEN
+========================================================= */
+
+function dealDamage(attacker,target,damage){
+
+    let finalDamage=damage;
+
+    if(target.armor){
+        finalDamage *= .88;
+    }
+
+    target.hp -= finalDamage;
+
+    target.hitAnim=1;
+
+    createHitEffect(
+        target.x,
+        target.y-38,
+        "✦"
+    );
+
+    if(target.hp <= 0){
+
+        target.hp=0;
+
+        target.dead=true;
+
+        createHitEffect(
+            target.x,
+            target.y-25,
+            "★"
+        );
+    }
+}
+
+/* =========================================================
+   GESCHOSSE
+========================================================= */
+
+function createProjectile(attacker,target){
+
+    projectiles.push({
+
+        x:attacker.x,
+        y:attacker.y-45,
+
+        target,
+
+        speed:
+            attacker.weapon==="sniper"
+                ? 10
+                : 7,
+
+        damage:attacker.damage,
+
+        side:attacker.side,
+
+        weapon:attacker.weapon,
+
+        active:true
+
+    });
+}
+
+function createBaseProjectile(unit,base){
+
+    projectiles.push({
+
+        x:unit.x,
+        y:unit.y-45,
+
+        base,
+
+        speed:
+            unit.weapon==="rocket"
+                ? 6
+                : 8,
+
+        damage:unit.damage,
+
+        side:unit.side,
+
+        weapon:unit.weapon,
+
+        active:true
+
+    });
+}
+
+function updateProjectiles(dt){
+
+    for(const p of projectiles){
+
+        if(!p.active)
+            continue;
+
+        if(p.target){
+
+            if(p.target.dead){
+
+                p.active=false;
+                continue;
+            }
+
+            const dx =
+                p.target.x-p.x;
+
+            const dy =
+                (p.target.y-35)-p.y;
+
+            const length =
+                Math.sqrt(dx*dx+dy*dy);
+
+            if(length < p.speed*2){
+
+                dealDamage(
+                    {
+                        damage:p.damage
+                    },
+                    p.target,
+                    p.damage
+                );
+
+                createHitEffect(
+                    p.target.x,
+                    p.target.y-35,
+                    p.weapon==="rocket"
+                        ? "💥"
+                        : "✦"
+                );
+
+                p.active=false;
+
+            }else{
+
+                p.x +=
+                    dx/length*
+                    p.speed;
+
+                p.y +=
+                    dy/length*
+                    p.speed;
+            }
+
+        }else if(p.base){
+
+            const dx =
+                p.base.x-p.x;
+
+            const dy =
+                (p.base.y-90)-p.y;
+
+            const length =
+                Math.sqrt(dx*dx+dy*dy);
+
+            if(length < p.speed*2){
+
+                p.base.hp -=
+                    p.damage;
+
+                createHitEffect(
+                    p.base.x,
+                    p.base.y-80,
+                    "💥"
+                );
+
+                p.active=false;
+
+            }else{
+
+                p.x +=
+                    dx/length*
+                    p.speed;
+
+                p.y +=
+                    dy/length*
+                    p.speed;
+            }
+        }
+    }
+
+    projectiles =
+        projectiles.filter(
+            p=>p.active
+        );
+}
+
+/* =========================================================
+   EFFEKTE
+========================================================= */
+
+function createHitEffect(x,y,text){
+
+    effects.push({
+
+        x,
+        y,
+
+        text,
+
+        life:0.55,
+        maxLife:.55,
+
+        vy:-30
+    });
+}
+
+function updateEffects(dt){
+
+    for(const e of effects){
+
+        e.life -= dt;
+
+        e.y +=
+            e.vy*dt;
+    }
+
+    effects =
+        effects.filter(
+            e=>e.life>0
+        );
+}
+
+/* =========================================================
+   DEAD UNITS
+========================================================= */
+
+function removeDead(){
+
+    units =
+        units.filter(
+            u =>
+                !u.dead ||
+                u.deathAnim<1.2
+        );
+}
+
+/* =========================================================
+   FRONTLINIE
+========================================================= */
+
+function updateFrontline(){
+
+    /*
+       Die Frontlinie entsteht aus den
+       Positionen der stärksten Einheiten.
+       Das gibt dem Kampf mehr Gefühl
+       eines echten Vorstoßes.
+    */
+
+    const players =
+        units.filter(
+            u=>u.side==="player"&&!u.dead
+        );
+
+    const enemies =
+        units.filter(
+            u=>u.side==="enemy"&&!u.dead
+        );
+
+    if(
+        players.length &&
+        enemies.length
+    ){
+
+        const p =
+            players.reduce(
+                (a,b)=>a+b.x,
+                0
+            )/players.length;
+
+        const e =
+            enemies.reduce(
+                (a,b)=>a+b.x,
+                0
+            )/enemies.length;
+
+        /*
+           leichte Gruppenbewegung,
+           aber niemals hartes Teleportieren.
+        */
+
+        if(p > e+80){
+
+            for(const u of enemies){
+
+                if(
+                    u.x > e+100
+                ){
+                    u.x -= .08;
+                }
+            }
+
+        }else if(e > p+80){
+
+            for(const u of players){
+
+                if(
+                    u.x < p-100
+                ){
+                    u.x += .08;
+                }
+            }
+        }
+    }
+}
+
+/* =========================================================
+   ZEICHNEN
+========================================================= */
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+    drawBackground();
+
+    drawBattleDecor();
+
+    drawBase(
+        playerBase,
+        true,
+        currentAge
+    );
+
+    drawBase(
+        enemyBase,
+        false,
+        enemyCurrentAge
+    );
+
+    drawFrontline();
+
+    /*
+       Einheiten nach Y sortieren
+    */
+
+    const sorted =
+        [...units].sort(
+            (a,b)=>a.y-b.y
+        );
+
+    for(const unit of sorted){
+
+        drawUnit(unit);
+    }
+
+    drawProjectiles();
+
+    drawEffects();
+
+    drawBaseBars();
+}
+
+/* =========================================================
+   HINTERGRUND
+========================================================= */
+
+function drawBackground(){
+
+    /*
+       Himmel
+    */
+
+    const sky =
+        ctx.createLinearGradient(
+            0,0,0,400
+        );
+
+    sky.addColorStop(
+        0,
+        "#72aeca"
+    );
+
+    sky.addColorStop(
+        .7,
+        "#b8d3d1"
+    );
+
+    sky.addColorStop(
+        1,
+        "#e2d6ae"
+    );
+
+    ctx.fillStyle=sky;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+    /*
+       Sonne
+    */
+
+    ctx.fillStyle=
+        "rgba(255,240,175,.75)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        700,
+        105,
+        45,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    drawCloud(
+        230,
+        90,
+        1
+    );
+
+    drawCloud(
+        830,
+        70,
+        .8
+    );
+
+    drawCloud(
+        1080,
+        145,
+        .7
+    );
+
+    /*
+       Berge
+    */
+
+    ctx.fillStyle="#708d7c";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,320);
+
+    for(let x=0;x<=W;x+=80){
+
+        const y =
+            285-
+            Math.sin(x*.013)*40-
+            Math.sin(x*.029)*20;
+
+        ctx.lineTo(x,y);
+    }
+
+    ctx.lineTo(W,450);
+    ctx.lineTo(0,450);
+    ctx.closePath();
+
+    ctx.fill();
+
+    /*
+       zweite Bergreihe
+    */
+
+    ctx.fillStyle="#5f7769";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,355);
+
+    for(let x=0;x<=W;x+=60){
+
+        const y =
+            335-
+            Math.sin(x*.018)*27;
+
+        ctx.lineTo(x,y);
+    }
+
+    ctx.lineTo(W,470);
+    ctx.lineTo(0,470);
+    ctx.closePath();
+
+    ctx.fill();
+
+    /*
+       Boden
+    */
+
+    ctx.fillStyle="#6b7b45";
+
+    ctx.fillRect(
+        0,
+        405,
+        W,
+        H-405
+    );
+
+    /*
+       Grasstreifen
+    */
+
+    ctx.fillStyle="#7e914e";
+
+    ctx.fillRect(
+        0,
+        405,
+        W,
+        25
+    );
+
+    /*
+       Erdschicht
+    */
+
+    ctx.fillStyle="#6c5031";
+
+    ctx.fillRect(
+        0,
+        565,
+        W,
+        115
+    );
+
+    /*
+       Erde-Linien
+    */
+
+    ctx.strokeStyle=
+        "rgba(43,28,15,.28)";
+
+    ctx.lineWidth=3;
+
+    for(let i=0;i<16;i++){
+
+        const x =
+            random(0,W);
+
+        const y =
+            random(580,660);
+
+        ctx.beginPath();
+
+        ctx.moveTo(x,y);
+
+        ctx.lineTo(
+            x+random(20,80),
+            y+random(-4,4)
+        );
+
+        ctx.stroke();
+    }
+}
+
+function drawCloud(x,y,s){
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.75)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        23*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+27*s,
+        y-8*s,
+        31*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+59*s,
+        y,
+        23*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillRect(
+        x-5*s,
+        y,
+        70*s,
+        18*s
+    );
+}
+
+/* =========================================================
+   DEKORATION
+========================================================= */
+
+function drawBattleDecor(){
+
+    /*
+       Felsen
+    */
+
+    const rocks=[
+        [300,420,18],
+        [470,455,12],
+        [790,425,15],
+        [1040,450,20],
+        [1160,420,11]
+    ];
+
+    for(const r of rocks){
+
+        ctx.fillStyle="#625744";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            r[0]-r[2],
+            r[1]
+        );
+
+        ctx.lineTo(
+            r[0]-r[2]*.4,
+            r[1]-r[2]
+        );
+
+        ctx.lineTo(
+            r[0]+r[2],
+            r[1]-r[2]*.5
+        );
+
+        ctx.lineTo(
+            r[0]+r[2]*.8,
+            r[1]+r[2]*.5
+        );
+
+        ctx.lineTo(
+            r[0]-r[2]*.8,
+            r[1]+r[2]*.5
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+    }
+
+    /*
+       kleine Grasbüschel
+    */
+
+    ctx.strokeStyle="#526936";
+    ctx.lineWidth=2;
+
+    for(let i=0;i<60;i++){
+
+        const x =
+            130+
+            Math.random()*1140;
+
+        const y =
+            420+
+            Math.random()*35;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x,y);
+
+        ctx.lineTo(
+            x-3,
+            y-10
+        );
+
+        ctx.moveTo(x,y);
+
+        ctx.lineTo(
+            x+4,
+            y-12
+        );
+
+        ctx.stroke();
+    }
+}
+
+/* =========================================================
+   FESTUNGEN
+========================================================= */
+
+function drawBase(base,isPlayer,age){
+
+    const colors =
+        AGES[age].colors;
+
+    const x=base.x;
+    const ground=455;
+
+    /*
+       Schatten
+    */
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.25)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        ground+5,
+        105,
+        18,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Hauptmauer
+    */
+
+    ctx.fillStyle=
+        colors.dark;
+
+    ctx.fillRect(
+        x-72,
+        275,
+        145,
+        180
+    );
+
+    /*
+       Mauersteine
+    */
+
+    ctx.strokeStyle=
+        "rgba(255,255,255,.13)";
+
+    ctx.lineWidth=2;
+
+    for(let y=295;y<450;y+=28){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x-70,
+            y
+        );
+
+        ctx.lineTo(
+            x+70,
+            y
+        );
+
+        ctx.stroke();
+    }
+
+    /*
+       Türme
+    */
+
+    drawTower(
+        x-68,
+        245,
+        colors,
+        isPlayer
+    );
+
+    drawTower(
+        x+68,
+        245,
+        colors,
+        !isPlayer
+    );
+
+    /*
+       Tor
+    */
+
+    ctx.fillStyle="#24180e";
+
+    ctx.fillRect(
+        x-24,
+        360,
+        48,
+        95
+    );
+
+    ctx.strokeStyle="#9a7544";
+    ctx.lineWidth=5;
+
+    ctx.strokeRect(
+        x-24,
+        360,
+        48,
+        95
+    );
+
+    /*
+       Flagge
+    */
+
+    drawFlag(
+        x,
+        205,
+        isPlayer
+    );
+}
+
+function drawTower(x,y,colors,flagSide){
+
+    ctx.fillStyle=
+        colors.main;
+
+    ctx.fillRect(
+        x-29,
+        y,
+        58,
+        210
+    );
+
+    /*
+       Zinnen
+    */
+
+    for(let i=-2;i<=2;i++){
+
+        ctx.fillRect(
+            x+i*13-6,
+            y-15,
+            12,
+            18
+        );
+    }
+
+    /*
+       Fenster
+    */
+
+    ctx.fillStyle="#1d1610";
+
+    ctx.fillRect(
+        x-7,
+        y+45,
+        14,
+        27
+    );
+
+    /*
+       Steinlinien
+    */
+
+    ctx.strokeStyle=
+        "rgba(255,255,255,.15)";
+
+    ctx.lineWidth=2;
+
+    for(let yy=y+20;yy<y+190;yy+=25){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x-28,
+            yy
+        );
+
+        ctx.lineTo(
+            x+28,
+            yy
+        );
+
+        ctx.stroke();
+    }
+}
+
+function drawFlag(x,y,player){
+
+    ctx.strokeStyle="#2d2115";
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,y);
+    ctx.lineTo(x,y+70);
+
+    ctx.stroke();
+
+    ctx.fillStyle=
+        player
+            ? "#315b8e"
+            : "#8a3c32";
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,y);
+
+    ctx.lineTo(
+        x+(player?45:-45),
+        y+12
+    );
+
+    ctx.lineTo(
+        x,
+        y+28
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+}
+
+/* =========================================================
+   BASE HP
+========================================================= */
+
+function drawBaseBars(){
+
+    drawHPBar(
+        playerBase.x,
+        225,
+        170,
+        playerBase.hp/
+        playerBase.maxHp,
+        "#3e8f48"
+    );
+
+    drawHPBar(
+        enemyBase.x,
+        225,
+        170,
+        enemyBase.hp/
+        enemyBase.maxHp,
+        "#b33b35"
+    );
+
+    ctx.font=
+        "bold 15px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.fillStyle="#fff";
+
+    ctx.fillText(
+        "DEINE FESTUNG",
+        playerBase.x,
+        212
+    );
+
+    ctx.fillText(
+        "GEGNER",
+        enemyBase.x,
+        212
+    );
+}
+
+/* =========================================================
+   UNIT DRAWING
+========================================================= */
+
+function drawUnit(unit){
+
+    const age =
+        AGES[unit.age];
+
+    const colors =
+        age.colors;
+
+    let alpha=1;
+
+    if(unit.dead){
+
+        alpha =
+            Math.max(
+                0,
+                1-unit.deathAnim
+            );
+    }
+
+    ctx.save();
+
+    ctx.globalAlpha=alpha;
+
+    const bob =
+        unit.dead
+            ? unit.deathAnim*12
+            : Math.sin(unit.walkTime*2)*2;
+
+    ctx.translate(
+        unit.x,
+        unit.y+bob
+    );
+
+    if(unit.side==="enemy"){
+        ctx.scale(-1,1);
+    }
+
+    /*
+       Schatten
+    */
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.3)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        7,
+        unit.cavalry?26:18,
+        7,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Trefferblinken
+    */
+
+    if(unit.hitAnim>0){
+
+        ctx.globalAlpha=
+            .5+
+            Math.sin(unit.hitAnim*30)*.5;
+    }
+
+    if(unit.cavalry){
+
+        drawHorse();
+
+        drawHumanBody(
+            unit,
+            colors,
+            0,
+            -30
+        );
+
+    }else{
+
+        drawHumanBody(
+            unit,
+            colors,
+            0,
+            0
+        );
+    }
+
+    /*
+       HP-Leiste
+    */
+
+    if(!unit.dead){
+
+        drawHPBar(
+            0,
+            -73,
+            46,
+            unit.hp/unit.maxHp,
+            unit.side==="player"
+                ? "#48a74e"
+                : "#c94b45"
+        );
+    }
+
+    ctx.restore();
+}
+
+function drawHumanBody(
+    unit,
+    colors,
+    ox,
+    oy
+){
+
+    /*
+       Beine
+    */
+
+    const legSwing =
+        unit.dead
+            ? 0
+            : Math.sin(
+                unit.walkTime*2.5
+            )*6;
+
+    ctx.strokeStyle="#29251f";
+    ctx.lineWidth=6;
+    ctx.lineCap="round";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        ox-5,
+        oy+32
+    );
+
+    ctx.lineTo(
+        ox-7+legSwing,
+        oy+57
+    );
+
+    ctx.moveTo(
+        ox+5,
+        oy+32
+    );
+
+    ctx.lineTo(
+        ox+7-legSwing,
+        oy+57
+    );
+
+    ctx.stroke();
+
+    /*
+       Körper
+    */
+
+    ctx.fillStyle=
+        colors.main;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        ox-13,
+        oy+5,
+        26,
+        36,
+        7
+    );
+
+    ctx.fill();
+
+    /*
+       Rüstung
+    */
+
+    if(unit.armor){
+
+        ctx.strokeStyle=
+            colors.light;
+
+        ctx.lineWidth=4;
+
+        ctx.strokeRect(
+            ox-11,
+            oy+9,
+            22,
+            27
+        );
+    }
+
+    /*
+       Kopf
+    */
+
+    ctx.fillStyle="#c58c62";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        ox,
+        oy-8,
+        13,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Helm
+    */
+
+    if(
+        unit.age>=1
+    ){
+
+        ctx.fillStyle=
+            colors.dark;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            ox,
+            oy-10,
+            14,
+            Math.PI,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.fillRect(
+            ox-14,
+            oy-11,
+            28,
+            5
+        );
+    }
+
+    /*
+       Steinzeit Haare
+    */
+
+    if(unit.age===0){
+
+        ctx.strokeStyle="#342116";
+        ctx.lineWidth=4;
+
+        for(let i=-1;i<=1;i++){
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                ox+i*6,
+                oy-18
+            );
+
+            ctx.lineTo(
+                ox+i*8,
+                oy-25
+            );
+
+            ctx.stroke();
+        }
+    }
+
+    /*
+       Schild
+    */
+
+    if(unit.shield){
+
+        ctx.fillStyle="#9a6b37";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            ox-20,
+            oy+20,
+            13,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.strokeStyle="#d6b16c";
+        ctx.lineWidth=3;
+
+        ctx.stroke();
+    }
+
+    /*
+       Waffe
+    */
+
+    drawWeapon(
+        unit,
+        colors,
+        ox,
+        oy
+    );
+
+    /*
+       Angriffsbewegung
+    */
+
+    if(unit.attackAnim>0){
+
+        ctx.strokeStyle=
+            "#fff1a1";
+
+        ctx.lineWidth=3;
+
+        ctx.globalAlpha=
+            unit.attackAnim;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            ox+18,
+            oy+18,
+            24,
+            -1.2,
+            .7
+        );
+
+        ctx.stroke();
+
+        ctx.globalAlpha=1;
+    }
+}
+
+function drawWeapon(
+    unit,
+    colors,
+    x,
+    y
+){
+
+    ctx.lineCap="round";
+
+    if(unit.weapon==="club"){
+
+        ctx.strokeStyle="#51331e";
+        ctx.lineWidth=7;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+9,
+            y+18
+        );
+
+        ctx.lineTo(
+            x+27,
+            y+43
+        );
+
+        ctx.stroke();
+
+    }else if(unit.weapon==="spear"){
+
+        ctx.strokeStyle="#684426";
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+8,
+            y+35
+        );
+
+        ctx.lineTo(
+            x+33,
+            y-5
+        );
+
+        ctx.stroke();
+
+        ctx.fillStyle="#c8c8bd";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+33,
+            y-5
+        );
+
+        ctx.lineTo(
+            x+27,
+            y+7
+        );
+
+        ctx.lineTo(
+            x+39,
+            y+3
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+
+    }else if(
+        unit.weapon==="sword"
+    ){
+
+        ctx.strokeStyle="#d8d7cf";
+        ctx.lineWidth=5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+9,
+            y+25
+        );
+
+        ctx.lineTo(
+            x+35,
+            y-8
+        );
+
+        ctx.stroke();
+
+        ctx.strokeStyle="#9b6a36";
+        ctx.lineWidth=4;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+2,
+            y+22
+        );
+
+        ctx.lineTo(
+            x+17,
+            y+32
+        );
+
+        ctx.stroke();
+
+    }else if(
+        unit.weapon==="bow"
+    ){
+
+        ctx.strokeStyle="#5b371e";
+        ctx.lineWidth=3;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x+20,
+            y+16,
+            18,
+            -1.2,
+            1.2
+        );
+
+        ctx.stroke();
+
+        ctx.strokeStyle="#ddd2b4";
+        ctx.lineWidth=1;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+14,
+            y
+        );
+
+        ctx.lineTo(
+            x+14,
+            y+32
+        );
+
+        ctx.stroke();
+
+    }else if(
+        unit.weapon==="crossbow"
+    ){
+
+        ctx.strokeStyle="#51351e";
+        ctx.lineWidth=5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+5,
+            y+15
+        );
+
+        ctx.lineTo(
+            x+32,
+            y+15
+        );
+
+        ctx.stroke();
+
+        ctx.strokeStyle="#ddd";
+        ctx.lineWidth=2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+17,
+            y+5
+        );
+
+        ctx.lineTo(
+            x+17,
+            y+25
+        );
+
+        ctx.stroke();
+
+    }else if(
+        unit.weapon==="rifle" ||
+        unit.weapon==="sniper"
+    ){
+
+        ctx.strokeStyle="#292923";
+        ctx.lineWidth=
+            unit.weapon==="sniper"
+                ? 6
+                : 5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+7,
+            y+18
+        );
+
+        ctx.lineTo(
+            x+42,
+            y+8
+        );
+
+        ctx.stroke();
+
+        if(unit.weapon==="sniper"){
+
+            ctx.strokeStyle="#111";
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x+25,
+                y+5
+            );
+
+            ctx.lineTo(
+                x+39,
+                y+5
+            );
+
+            ctx.stroke();
+        }
+
+    }else if(unit.weapon==="mg"){
+
+        ctx.strokeStyle="#222";
+        ctx.lineWidth=9;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+4,
+            y+17
+        );
+
+        ctx.lineTo(
+            x+43,
+            y+12
+        );
+
+        ctx.stroke();
+
+        ctx.strokeStyle="#777";
+        ctx.lineWidth=3;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+20,
+            y+25
+        );
+
+        ctx.lineTo(
+            x+28,
+            y+42
+        );
+
+        ctx.stroke();
+
+    }else if(unit.weapon==="rocket"){
+
+        ctx.strokeStyle="#333";
+        ctx.lineWidth=9;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+2,
+            y+15
+        );
+
+        ctx.lineTo(
+            x+38,
+            y+2
+        );
+
+        ctx.stroke();
+
+        ctx.fillStyle="#b9b9ae";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+38,
+            y+2
+        );
+
+        ctx.lineTo(
+            x+49,
+            y
+        );
+
+        ctx.lineTo(
+            x+39,
+            y+8
+        );
+
+        ctx.closePath();
+
+        ctx.fill();
+    }
+}
+
+function drawHorse(){
+
+    /*
+       Einfaches eigenes Pferd-Sprite
+    */
+
+    ctx.fillStyle="#684a31";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        12,
+        30,
+        17,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillRect(
+        18,
+        -8,
+        13,
+        28
+    );
+
+    ctx.beginPath();
+
+    ctx.arc(
+        29,
+        -11,
+        10,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="#382417";
+    ctx.lineWidth=5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-18,20);
+    ctx.lineTo(-20,42);
+
+    ctx.moveTo(-5,22);
+    ctx.lineTo(-7,43);
+
+    ctx.moveTo(15,22);
+    ctx.lineTo(13,42);
+
+    ctx.stroke();
+}
+
+/* =========================================================
+   PROJECTILES DRAW
+========================================================= */
+
+function drawProjectiles(){
+
+    for(const p of projectiles){
+
+        ctx.save();
+
+        if(p.weapon==="rocket"){
+
+            ctx.fillStyle="#bfc2b7";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                6,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+            ctx.fillStyle="#ef8a32";
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                p.x-7,
+                p.y
+            );
+
+            ctx.lineTo(
+                p.x-20,
+                p.y-5
+            );
+
+            ctx.lineTo(
+                p.x-20,
+                p.y+5
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }else{
+
+            ctx.fillStyle=
+                p.weapon==="sniper"
+                    ? "#fff0a2"
+                    : "#f3d26d";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.weapon==="sniper"
+                    ? 4
+                    : 3,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+        }
+
+        ctx.restore();
+    }
+}
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+function drawEffects(){
+
+    for(const e of effects){
+
+        ctx.save();
+
+        ctx.globalAlpha =
+            e.life/e.maxLife;
+
+        ctx.textAlign="center";
+
+        ctx.font=
+            "bold 25px Arial";
+
+        ctx.fillStyle="#ffe8a0";
+
+        ctx.fillText(
+            e.text,
+            e.x,
+            e.y
+        );
+
+        ctx.restore();
+    }
+}
+
+/* =========================================================
+   FRONTLINE DRAW
+========================================================= */
+
+function drawFrontline(){
+
+    const players =
+        units.filter(
+            u=>u.side==="player"&&!u.dead
+        );
+
+    const enemies =
+        units.filter(
+            u=>u.side==="enemy"&&!u.dead
+        );
+
+    if(
+        !players.length ||
+        !enemies.length
+    )
+        return;
+
+    const p =
+        players.reduce(
+            (a,b)=>a+b.x,
+            0
+        )/players.length;
+
+    const e =
+        enemies.reduce(
+            (a,b)=>a+b.x,
+            0
+        )/enemies.length;
+
+    const line =
+        (p+e)/2;
+
+    ctx.save();
+
+    ctx.globalAlpha=.18;
+
+    ctx.strokeStyle="#f7df9b";
+    ctx.lineWidth=2;
+
+    ctx.setLineDash([10,10]);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        line,
+        425
+    );
+
+    ctx.lineTo(
+        line,
+        560
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+/* =========================================================
+   HP BAR
+========================================================= */
+
+function drawHPBar(
+    x,
+    y,
+    width,
+    percent,
+    color
+){
+
+    percent =
+        clamp(
+            percent,
+            0,
+            1
+        );
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.75)";
+
+    ctx.fillRect(
+        x-width/2,
+        y,
+        width,
+        7
+    );
+
+    ctx.fillStyle=color;
+
+    ctx.fillRect(
+        x-width/2+1,
+        y+1,
+        (width-2)*percent,
+        5
+    );
+}
+
+/* =========================================================
+   SPIELENDE
+========================================================= */
+
+function checkVictory(){
+
+    if(playerBase.hp<=0){
+
+        endGame(
+            false
+        );
+
+        return;
+    }
+
+    if(enemyBase.hp<=0){
+
+        endGame(
+            true
+        );
+    }
+}
+
+function endGame(playerWon){
+
+    if(gameOver)
+        return;
+
+    gameOver=true;
+    gameRunning=false;
+
+    const result =
+        document.getElementById("result");
+
+    result.style.display="flex";
+
+    document.getElementById(
+        "resultTitle"
+    ).textContent =
+        playerWon
+            ? "SIEG!"
+            : "NIEDERLAGE";
+
+    document.getElementById(
+        "resultText"
+    ).textContent =
+        playerWon
+            ? "Deine Armee hat die gegnerische Festung erobert!"
+            : "Deine Festung wurde überwältigt. Sammle Gold und versuche es erneut!";
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+let messageTimer=0;
+
+function showMessage(text){
+
+    document.getElementById(
+        "message"
+    ).textContent=text;
+
+    messageTimer=3;
+}
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+document
+.getElementById("pauseButton")
+.addEventListener(
+    "click",
+    togglePause
+);
+
+function togglePause(){
+
+    if(gameOver)
+        return;
+
+    gameRunning=!gameRunning;
+
+    document.getElementById(
+        "pauseButton"
+    ).textContent =
+        gameRunning
+            ? "⏸ PAUSE"
+            : "▶ WEITER";
+
+    showMessage(
+        gameRunning
+            ? "Die Schlacht geht weiter!"
+            : "Spiel pausiert."
+    );
+}
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+document
+.getElementById("restartButton")
+.addEventListener(
+    "click",
+    restartGame
+);
+
+function restartGame(){
+
+    gold=500;
+
+    enemyGold=500;
+
+    currentAge=0;
+
+    enemyCurrentAge=0;
+
+    incomeTimer=0;
+
+    enemyTimer=0;
+
+    playerBase.hp=
+        playerBase.maxHp;
+
+    enemyBase.hp=
+        enemyBase.maxHp;
+
+    units=[];
+
+    projectiles=[];
+
+    effects=[];
+
+    gameOver=false;
+
+    gameRunning=true;
+
+    document.getElementById(
+        "result"
+    ).style.display="none";
+
+    document.getElementById(
+        "pauseButton"
+    ).textContent="⏸ PAUSE";
+
+    showMessage(
+        "Neue Schlacht begonnen!"
+    );
+
+    updateUI();
+}
+
+/* =========================================================
+   TASTATUR
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        if(e.key==="1")
+            spawnPlayer(0);
+
+        if(e.key==="2")
+            spawnPlayer(1);
+
+        if(e.key==="3")
+            spawnPlayer(2);
+
+        if(e.code==="Space"){
+
+            e.preventDefault();
+
+            togglePause();
+        }
+
+        if(
+            e.key.toLowerCase()==="u"
+        ){
+
+            document
+            .getElementById(
+                "ageButton"
+            )
+            .click();
+        }
+    }
+);
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(now){
+
+    const dt =
+        Math.min(
+            .05,
+            (now-lastTime)/1000
+        );
+
+    lastTime=now;
+
+    if(gameRunning){
+
+        update(dt);
+
+        updateProjectiles(dt);
+
+        updateEffects(dt);
+    }
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+updateUI();
+
+requestAnimationFrame(
+    gameLoop
+);
+
+</script>
+
+</body>
+</html>
