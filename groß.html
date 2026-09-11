@@ -1,43 +1,445 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slot Automat</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Solitaire</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+        body {
+            background-color: #1b5e20;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  body {
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Roboto', sans-serif;
-    color: #fff;
-    padding: 20px;
-  }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            color: white;
+            margin-bottom: 10px;
+        }
 
-  .machine {
-    background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.3),
-                inset 0 0 20px rgba(0,0,0,0.5);
-    border: 3px solid #00ffff;
-    max-width: 480px;
-    width: 100%;
-    text-align: center;
-  }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
 
-  h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    color: #00ffff;
-    text-shadow: 0 0 15px #00ffff;
+        button:active {
+            background-color: #388e3c;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .top-row {
+            gap: 10px;
+        }
+
+        .bottom-row {
+            gap: 10px;
+            min-height: 400px;
+        }
+
+        .slot-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .slot {
+            width: 13vw;
+            height: 18.2vw;
+            max-width: 90px;
+            max-height: 126px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            font-size: clamp(12px, 3.5vw, 20px);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .card.red {
+            color: #d32f2f;
+        }
+
+        .card.black {
+            color: #111;
+        }
+
+        .card.back {
+            background: linear-gradient(135deg, #1976d2 25%, #1565c0 25%, #1565c0 50%, #1976d2 50%, #1976d2 75%, #1565c0 75%);
+            background-size: 10px 10px;
+            border: 2px solid #fff;
+        }
+
+        .card.selected {
+            outline: 3px solid #ffeb3b;
+            box-shadow: 0 0 10px #ffeb3b;
+        }
+
+        .card-corner-bottom {
+            transform: rotate(180deg);
+        }
+
+        .tableau-slot {
+            height: 100%;
+        }
+
+        /* Responsive Anpassungen */
+        @media (min-width: 700px) {
+            .slot {
+                width: 90px;
+                height: 126px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Solitaire</h1>
+        <button id="restart-btn">Neues Spiel</button>
+    </header>
+
+    <div id="game-board">
+        <div class="row top-row">
+            <div class="slot-group">
+                <div id="stock" class="slot"></div>
+                <div id="waste" class="slot"></div>
+            </div>
+            <div class="slot-group">
+                <div id="foundation-0" class="slot foundation" data-suit="♥"></div>
+                <div id="foundation-1" class="slot foundation" data-suit="♦"></div>
+                <div id="foundation-2" class="slot foundation" data-suit="♣"></div>
+                <div id="foundation-3" class="slot foundation" data-suit="♠"></div>
+            </div>
+        </div>
+
+        <div class="row bottom-row">
+            <div id="tableau-0" class="slot tableau-slot" data-index="0"></div>
+            <div id="tableau-1" class="slot tableau-slot" data-index="1"></div>
+            <div id="tableau-2" class="slot tableau-slot" data-index="2"></div>
+            <div id="tableau-3" class="slot tableau-slot" data-index="3"></div>
+            <div id="tableau-4" class="slot tableau-slot" data-index="4"></div>
+            <div id="tableau-5" class="slot tableau-slot" data-index="5"></div>
+            <div id="tableau-6" class="slot tableau-slot" data-index="6"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUITS = ['♥', '♦', '♣', '♠'];
+        const VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        
+        let deck = [];
+        let waste = [];
+        let foundations = [[], [], [], []];
+        let tableau = [[], [], [], [], [], [], []];
+        
+        let selectedCardInfo = null;
+
+        function createDeck() {
+            deck = [];
+            for (let suit of SUITS) {
+                for (let i = 0; i < VALUES.length; i++) {
+                    deck.push({
+                        suit: suit,
+                        value: VALUES[i],
+                        rank: i + 1,
+                        color: (suit === '♥' || suit === '♦') ? 'red' : 'black',
+                        faceUp: false
+                    });
+                }
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initGame() {
+            createDeck();
+            shuffle(deck);
+            
+            waste = [];
+            foundations = [[], [], [], []];
+            tableau = [[], [], [], [], [], [], []];
+            selectedCardInfo = null;
+
+            // Tableau aufbauen
+            for (let i = 0; i < 7; i++) {
+                for (let j = 0; j <= i; j++) {
+                    let card = deck.pop();
+                    if (j === i) card.faceUp = true;
+                    tableau[i].push(card);
+                }
+            }
+
+            render();
+        }
+
+        function render() {
+            // Nachziehstapel
+            const stockEl = document.getElementById('stock');
+            stockEl.innerHTML = '';
+            if (deck.length > 0) {
+                const cardEl = createCardElement({ faceUp: false });
+                stockEl.appendChild(cardEl);
+            }
+
+            // Ablagestapel (Waste)
+            const wasteEl = document.getElementById('waste');
+            wasteEl.innerHTML = '';
+            if (waste.length > 0) {
+                const topWaste = waste[waste.length - 1];
+                const cardEl = createCardElement(topWaste);
+                if (isSelected(topWaste)) cardEl.classList.add('selected');
+                wasteEl.appendChild(cardEl);
+            }
+
+            // Zielfelder (Foundations)
+            for (let i = 0; i < 4; i++) {
+                const foundEl = document.getElementById(`foundation-${i}`);
+                foundEl.innerHTML = '';
+                const pile = foundations[i];
+                if (pile.length > 0) {
+                    const topCard = pile[pile.length - 1];
+                    const cardEl = createCardElement(topCard);
+                    foundEl.appendChild(cardEl);
+                }
+            }
+
+            // Spielfeld (Tableau)
+            for (let i = 0; i < 7; i++) {
+                const tabEl = document.getElementById(`tableau-${i}`);
+                tabEl.innerHTML = '';
+                const pile = tableau[i];
+                
+                pile.forEach((card, cardIndex) => {
+                    const cardEl = createCardElement(card);
+                    cardEl.style.top = `${cardIndex * 20}px`; // Karten überlappen lassen
+                    
+                    if (isSelected(card, 'tableau', i, cardIndex)) {
+                        cardEl.classList.add('selected');
+                    }
+
+                    tabEl.appendChild(cardEl);
+                });
+            }
+        }
+
+        function createCardElement(card) {
+            const div = document.createElement('div');
+            div.classList.add('card');
+            
+            if (!card.faceUp) {
+                div.classList.add('back');
+            } else {
+                div.classList.add(card.color);
+                div.innerHTML = `
+                    <div class="card-corner">${card.value}<br>${card.suit}</div>
+                    <div class="card-corner-bottom">${card.value}<br>${card.suit}</div>
+                `;
+            }
+            return div;
+        }
+
+        function isSelected(card, source, col, index) {
+            if (!selectedCardInfo) return false;
+            if (selectedCardInfo.card === card) return true;
+            return false;
+        }
+
+        // Klick-Logik für Spielsteuerung
+        document.getElementById('game-board').addEventListener('click', (e) => {
+            const target = e.target.closest('.card, .slot');
+            if (!target) return;
+
+            // 1. Nachziehstapel angeklickt
+            if (target.id === 'stock' || target.parentElement.id === 'stock') {
+                if (deck.length > 0) {
+                    let card = deck.pop();
+                    card.faceUp = true;
+                    waste.push(card);
+                } else if (waste.length > 0) {
+                    deck = waste.reverse().map(c => ({ ...c, faceUp: false }));
+                    waste = [];
+                }
+                selectedCardInfo = null;
+                render();
+                return;
+            }
+
+            // 2. Karte oder Slot auswählen/bewegen
+            const tableauSlot = target.closest('.tableau-slot');
+            const foundationSlot = target.closest('.foundation');
+            const wasteSlot = target.closest('#waste');
+
+            // Wenn noch keine Karte ausgewählt ist:
+            if (!selectedCardInfo) {
+                // Aus Waste auswählen
+                if (wasteSlot && waste.length > 0) {
+                    selectedCardInfo = { source: 'waste', card: waste[waste.length - 1] };
+                } 
+                // Aus Tableau auswählen
+                else if (tableauSlot) {
+                    const colIndex = parseInt(tableauSlot.dataset.index);
+                    const pile = tableau[colIndex];
+                    const cardElements = Array.from(tableauSlot.children);
+                    const cardIndex = cardElements.indexOf(target.closest('.card'));
+
+                    if (cardIndex !== -1 && pile[cardIndex].faceUp) {
+                        selectedCardInfo = { 
+                            source: 'tableau', 
+                            col: colIndex, 
+                            cardIndex: cardIndex, 
+                            card: pile[cardIndex] 
+                        };
+                    }
+                }
+            } 
+            // Wenn bereits eine Karte ausgewählt ist (Ziel wählen):
+            else {
+                let success = false;
+
+                // Ziel: Tableau
+                if (tableauSlot) {
+                    const targetCol = parseInt(tableauSlot.dataset.index);
+                    const targetPile = tableau[targetCol];
+                    const topTargetCard = targetPile[targetPile.length - 1];
+
+                    if (canMoveToTableau(selectedCardInfo.card, topTargetCard)) {
+                        executeMove('tableau', targetCol);
+                        success = true;
+                    }
+                } 
+                // Ziel: Foundation
+                else if (foundationSlot) {
+                    const foundIndex = parseInt(foundationSlot.id.split('-')[1]);
+                    const targetPile = foundations[foundIndex];
+                    const topTargetCard = targetPile[targetPile.length - 1];
+
+                    // Nur einzelne Karten können auf die Zielfelder
+                    if (isSingleCardSelected() && canMoveToFoundation(selectedCardInfo.card, topTargetCard)) {
+                        executeMove('foundation', foundIndex);
+                        success = true;
+                    }
+                }
+
+                selectedCardInfo = null;
+                render();
+                checkWin();
+            }
+
+            render();
+        });
+
+        function isSingleCardSelected() {
+            if (selectedCardInfo.source === 'waste') return true;
+            if (selectedCardInfo.source === 'tableau') {
+                const pile = tableau[selectedCardInfo.col];
+                return selectedCardInfo.cardIndex === pile.length - 1;
+            }
+            return false;
+        }
+
+        function canMoveToTableau(cardToMove, topTargetCard) {
+            if (!topTargetCard) {
+                return cardToMove.rank === 13; // Nur König auf leeren Platz
+            }
+            return cardToMove.color !== topTargetCard.color && cardToMove.rank === topTargetCard.rank - 1;
+        }
+
+        function canMoveToFoundation(cardToMove, topTargetCard) {
+            if (!topTargetCard) {
+                return cardToMove.rank === 1; // Nur Ass auf leeren Platz
+            }
+            return cardToMove.suit === topTargetCard.suit && cardToMove.rank === topTargetCard.rank + 1;
+        }
+
+        function executeMove(targetType, targetIndex) {
+            let movingCards = [];
+
+            if (selectedCardInfo.source === 'waste') {
+                movingCards.push(waste.pop());
+            } else if (selectedCardInfo.source === 'tableau') {
+                const sourcePile = tableau[selectedCardInfo.col];
+                movingCards = sourcePile.splice(selectedCardInfo.cardIndex);
+                
+                // Nächste Karte aufdecken, falls vorhanden
+                if (sourcePile.length > 0) {
+                    sourcePile[sourcePile.length - 1].faceUp = true;
+                }
+            }
+
+            if (targetType === 'tableau') {
+                tableau[targetIndex].push(...movingCards);
+            } else if (targetType === 'foundation') {
+                foundations[targetIndex].push(...movingCards);
+            }
+        }
+
+        function checkWin() {
+            const totalInFoundations = foundations.reduce((acc, pile) => acc + pile.length, 0);
+            if (totalInFoundations === 52) {
+                setTimeout(() => alert('Glückwunsch! Du hast gewonnen! 🎉'), 100);
+            }
+        }
+
+        document.getElementById('restart-btn').addEventListener('click', initGame);
+
+        // Spiel starten
+        initGame();
+    </script>
+</body>
+</html>
