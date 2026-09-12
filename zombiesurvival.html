@@ -1,879 +1,525 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
 <title>Zombie Survival</title>
 
 <style>
-
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
     user-select:none;
     -webkit-user-select:none;
-    -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
+    margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#030607;
+    background:#050708;
     font-family:Arial,Helvetica,sans-serif;
     color:white;
-    touch-action:none;
-}
-
-#gameWrapper{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
 }
 
 canvas{
-    position:absolute;
+    display:block;
+    position:fixed;
     inset:0;
     width:100%;
     height:100%;
-    display:block;
+    background:#101611;
 }
 
-/* =========================================================
+/* =========================
    HUD
-========================================================= */
+========================= */
 
 #hud{
-    position:absolute;
+    position:fixed;
     top:12px;
     left:12px;
     right:12px;
+    z-index:10;
 
     display:flex;
-    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:7px;
 
-    z-index:20;
     pointer-events:none;
 }
 
-.hudLeft,
-.hudRight{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-}
-
 .hudBox{
-    min-width:125px;
+    background:rgba(5,10,12,.82);
+    border:1px solid rgba(0,255,180,.35);
+    box-shadow:0 0 12px rgba(0,255,180,.12);
 
-    padding:8px 11px;
+    padding:7px 11px;
+    border-radius:9px;
 
-    border-radius:10px;
-
-    background:rgba(2,12,12,.82);
-
-    border:1px solid rgba(0,255,195,.4);
-
-    box-shadow:
-        0 0 15px rgba(0,255,195,.08),
-        inset 0 0 12px rgba(0,255,195,.04);
-
-    font-size:12px;
+    font-size:13px;
     font-weight:bold;
-}
-
-.hudValue{
-    color:#00ffc3;
-    font-size:16px;
-    margin-left:4px;
-}
-
-.healthOuter{
-    width:175px;
-    height:12px;
-
-    margin-top:5px;
-
-    border-radius:20px;
-    overflow:hidden;
-
-    background:#180606;
-
-    border:1px solid rgba(255,80,80,.4);
+    white-space:nowrap;
 }
 
 #healthBar{
-    height:100%;
-    width:100%;
-
-    background:linear-gradient(
-        90deg,
-        #ff3030,
-        #ff8800,
-        #00ff9d
-    );
-
-    transition:width:.15s;
+    width:130px;
+    height:8px;
+    background:#222;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:5px;
 }
 
-/* =========================================================
-   PAUSE
-========================================================= */
+#healthFill{
+    width:100%;
+    height:100%;
+    background:#35e86b;
+    transition:width .15s;
+}
 
-#pauseButton{
-    position:absolute;
+#pauseBtn{
+    position:fixed;
+    right:12px;
+    top:75px;
 
-    top:12px;
-    left:50%;
+    z-index:20;
 
-    transform:translateX(-50%);
+    border:none;
+    border-radius:9px;
 
-    width:46px;
-    height:40px;
+    background:rgba(8,15,18,.9);
+    color:white;
 
-    z-index:30;
+    border:1px solid rgba(255,255,255,.25);
 
-    border-radius:10px;
-
-    border:1px solid rgba(0,255,195,.45);
-
-    background:rgba(2,12,12,.9);
-
-    color:#00ffc3;
-
-    font-size:18px;
+    padding:9px 13px;
+    font-size:14px;
     font-weight:bold;
 }
 
-/* =========================================================
+/* =========================
    OVERLAYS
-========================================================= */
+========================= */
 
 .overlay{
-    position:absolute;
+    position:fixed;
     inset:0;
-
     z-index:50;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    background:
-        radial-gradient(
-            circle,
-            rgba(0,255,195,.08),
-            rgba(0,0,0,.92) 70%
-        );
+    padding:20px;
 
-    backdrop-filter:blur(6px);
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(7px);
 }
 
 .panel{
-    width:min(94%,560px);
-
-    padding:28px;
-
-    border-radius:20px;
+    width:min(600px,100%);
 
     background:
         linear-gradient(
             145deg,
-            rgba(7,20,22,.98),
-            rgba(2,8,10,.98)
+            rgba(16,25,28,.98),
+            rgba(7,12,14,.98)
         );
 
-    border:1px solid rgba(0,255,195,.4);
+    border:1px solid rgba(0,255,180,.35);
+
+    border-radius:18px;
+
+    padding:25px;
 
     box-shadow:
-        0 0 35px rgba(0,255,195,.13);
+        0 0 35px rgba(0,255,180,.15),
+        inset 0 0 25px rgba(0,0,0,.4);
 
     text-align:center;
 }
 
-.title{
-    font-size:clamp(30px,7vw,54px);
-
-    font-weight:900;
-
-    color:#00ffc3;
-
-    text-shadow:
-        0 0 10px rgba(0,255,195,.6),
-        0 0 30px rgba(0,255,195,.25);
-
-    margin-bottom:10px;
+.panel h1{
+    margin:0 0 8px;
+    font-size:32px;
+    color:#5fffc7;
 }
 
-.subtitle{
-    color:#9eb4b3;
+.panel h2{
+    margin:0 0 18px;
+    color:#fff;
+}
 
-    font-size:14px;
-
+.panel p{
+    color:#b9c4c7;
     line-height:1.5;
-
-    margin-bottom:24px;
 }
 
-/* =========================================================
-   DIFFICULTY
-========================================================= */
-
-.difficultyTitle{
-    font-size:14px;
-
-    font-weight:bold;
-
-    color:#d8eeee;
-
-    margin-bottom:11px;
-}
-
-.difficultyButtons{
+.difficultyGrid{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:8px;
-
-    margin-bottom:20px;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:20px;
 }
 
-.diffButton{
-    padding:12px 5px;
-
-    border-radius:10px;
-
-    border:1px solid rgba(0,255,195,.25);
-
-    background:#081214;
-
-    color:#b8cccc;
-
-    font-weight:bold;
+button{
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
 }
 
-.diffButton.active{
-    background:#07382f;
-
-    color:#00ffc3;
-
-    border-color:#00ffc3;
-
-    box-shadow:
-        0 0 15px rgba(0,255,195,.15);
-}
-
-.startButton,
-.restartButton{
-    width:100%;
+.diffBtn,
+.upgradeBtn,
+.mainBtn{
+    border:none;
+    border-radius:12px;
 
     padding:14px;
 
-    border-radius:11px;
+    color:white;
 
-    border:0;
-
-    background:
-        linear-gradient(
-            135deg,
-            #00ffc3,
-            #00b88e
-        );
-
-    color:#00100c;
+    background:#152126;
+    border:1px solid rgba(255,255,255,.14);
 
     font-size:15px;
+    font-weight:bold;
 
-    font-weight:900;
+    transition:.15s;
 }
 
-/* =========================================================
-   UPGRADE SCREEN
-========================================================= */
+.diffBtn:hover,
+.upgradeBtn:hover,
+.mainBtn:hover{
+    transform:translateY(-2px);
+    border-color:#45ffc2;
+    box-shadow:0 0 15px rgba(0,255,180,.2);
+}
+
+.diffBtn small{
+    display:block;
+    margin-top:5px;
+    color:#9daaad;
+    font-weight:normal;
+}
+
+.easy{
+    border-color:rgba(70,255,130,.4);
+}
+
+.normal{
+    border-color:rgba(255,210,70,.4);
+}
+
+.hard{
+    border-color:rgba(255,80,80,.4);
+}
+
+/* =========================
+   UPGRADE
+========================= */
 
 #upgradeScreen{
     display:none;
 }
 
-.upgradeTitle{
-    font-size:34px;
-
-    color:#00ffc3;
-
-    font-weight:900;
-
-    margin-bottom:5px;
-}
-
-.upgradeSubtitle{
-    color:#a4bbbb;
-
-    font-size:14px;
-
-    margin-bottom:8px;
-}
-
-.pointsText{
-    font-size:20px;
-
+.upgradePoints{
+    font-size:22px;
     font-weight:bold;
-
-    color:#ffe56b;
-
-    margin-bottom:18px;
+    color:#ffd84d;
+    margin:10px 0 18px;
 }
 
 .upgradeGrid{
     display:grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
+    grid-template-columns:repeat(2,1fr);
     gap:10px;
 }
 
-.upgradeButton{
-    min-height:100px;
-
-    padding:13px;
-
-    border-radius:13px;
-
-    border:1px solid rgba(0,255,195,.28);
-
-    background:
-        linear-gradient(
-            145deg,
-            #0a1a1c,
-            #071012
-        );
-
-    color:white;
-
-    cursor:pointer;
-
-    transition:.15s;
+.upgradeBtn{
+    text-align:left;
+    min-height:92px;
 }
 
-.upgradeButton:hover{
-    border-color:#00ffc3;
-
-    transform:translateY(-2px);
-
-    box-shadow:
-        0 0 15px rgba(0,255,195,.1);
-}
-
-.upgradeIcon{
-    font-size:27px;
-
+.upgradeTitle{
+    font-size:16px;
+    color:#5fffc7;
     margin-bottom:5px;
 }
 
-.upgradeName{
-    color:#00ffc3;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    margin-bottom:4px;
-}
-
-.upgradeDescription{
-    color:#9db1b0;
-
-    font-size:11px;
-
-    line-height:1.35;
+.upgradeDesc{
+    font-size:12px;
+    color:#aeb9bd;
+    line-height:1.4;
 }
 
 .upgradeCost{
-    margin-top:6px;
-
-    color:#ffe56b;
-
+    display:inline-block;
+    margin-top:7px;
+    padding:3px 7px;
+    border-radius:6px;
+    background:rgba(255,216,77,.12);
+    color:#ffd84d;
     font-size:11px;
-
-    font-weight:bold;
 }
 
-/* =========================================================
-   RESULT
-========================================================= */
+/* =========================
+   GAME OVER / WIN
+========================= */
 
-.resultTitle{
-    font-size:38px;
+#gameOverScreen,
+#winScreen{
+    display:none;
+}
 
-    font-weight:900;
-
-    margin-bottom:12px;
+.bigResult{
+    font-size:42px;
+    font-weight:bold;
+    margin-bottom:10px;
 }
 
 .resultText{
-    color:#a8bbbb;
-
+    color:#b8c4c7;
     line-height:1.6;
-
-    margin-bottom:22px;
 }
 
-/* =========================================================
+/* =========================
    JOYSTICK
-========================================================= */
+========================= */
 
 #joystick{
-    position:absolute;
+    position:fixed;
 
     left:25px;
-    bottom:28px;
+    bottom:25px;
 
-    width:145px;
-    height:145px;
+    width:135px;
+    height:135px;
+
+    z-index:15;
 
     border-radius:50%;
 
-    background:rgba(0,20,20,.38);
-
-    border:
-        2px solid
-        rgba(0,255,195,.2);
-
-    z-index:35;
+    background:rgba(255,255,255,.07);
+    border:2px solid rgba(255,255,255,.15);
 
     display:none;
 
     touch-action:none;
 }
 
-#joystickKnob{
+#stick{
     position:absolute;
 
-    width:62px;
-    height:62px;
+    width:58px;
+    height:58px;
 
     left:50%;
     top:50%;
 
-    transform:
-        translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 
     border-radius:50%;
 
-    background:
-        rgba(0,255,195,.18);
+    background:rgba(0,255,180,.28);
+    border:2px solid rgba(0,255,180,.55);
 
-    border:
-        2px solid
-        rgba(0,255,195,.55);
-
-    box-shadow:
-        0 0 20px
-        rgba(0,255,195,.12);
+    box-shadow:0 0 15px rgba(0,255,180,.2);
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:900px){
-
+@media(max-width:800px){
     #joystick{
         display:block;
     }
 
     .hudBox{
-        min-width:100px;
-
+        font-size:11px;
         padding:6px 8px;
-
-        font-size:10px;
     }
 
-    .hudValue{
-        font-size:14px;
-    }
-
-    .healthOuter{
-        width:130px;
-        height:10px;
-    }
-
-    #pauseButton{
-        top:8px;
+    #pauseBtn{
+        top:105px;
     }
 
     .panel{
-        padding:22px;
+        padding:20px;
     }
 
+    .panel h1{
+        font-size:27px;
+    }
+
+    .upgradeGrid{
+        grid-template-columns:1fr;
+        max-height:65vh;
+        overflow:auto;
+    }
 }
 
 @media(max-width:520px){
-
-    .upgradeGrid{
-        gap:7px;
+    .difficultyGrid{
+        grid-template-columns:1fr;
     }
-
-    .upgradeButton{
-        min-height:92px;
-
-        padding:9px;
-    }
-
-    .upgradeIcon{
-        font-size:23px;
-    }
-
-    .upgradeName{
-        font-size:12px;
-    }
-
-    .upgradeDescription{
-        font-size:9px;
-    }
-
 }
-
 </style>
-
 </head>
 
 <body>
 
-<div id="gameWrapper">
+<canvas id="game"></canvas>
 
-<canvas id="gameCanvas"></canvas>
-
-
-<!-- =====================================================
+<!-- =========================
      HUD
-===================================================== -->
+========================= -->
 
 <div id="hud">
 
-    <div class="hudLeft">
-
-        <div class="hudBox">
-
-            ❤️ Leben
-
-            <div class="healthOuter">
-                <div id="healthBar"></div>
-            </div>
-
-        </div>
-
-        <div class="hudBox">
-
-            Level:
-            <span
-                class="hudValue"
-                id="levelDisplay">
-                1 / 20
-            </span>
-
-        </div>
-
+    <div class="hudBox">
+        LEVEL:
+        <span id="levelText">1</span>
     </div>
 
+    <div class="hudBox">
+        KILLS:
+        <span id="killsText">0 / 10</span>
+    </div>
 
-    <div class="hudRight">
+    <div class="hudBox">
+        ZOMBIES:
+        <span id="zombieText">0</span>
+    </div>
 
-        <div class="hudBox">
+    <div class="hudBox">
+        PUNKTE:
+        <span id="pointsText">0</span>
+    </div>
 
-            🧟 Zombies:
-            <span
-                class="hudValue"
-                id="zombieDisplay">
-                0
-            </span>
-
+    <div class="hudBox">
+        HP
+        <div id="healthBar">
+            <div id="healthFill"></div>
         </div>
-
-        <div class="hudBox">
-
-            ☠ Kills:
-            <span
-                class="hudValue"
-                id="killDisplay">
-                0
-            </span>
-
-        </div>
-
     </div>
 
 </div>
 
+<button id="pauseBtn">⏸ Pause</button>
 
-<button id="pauseButton">
-    Ⅱ
-</button>
+<!-- =========================
+     START
+========================= -->
 
-
-<!-- =====================================================
-     JOYSTICK
-===================================================== -->
-
-<div id="joystick">
-
-    <div id="joystickKnob"></div>
-
-</div>
-
-
-<!-- =====================================================
-     START SCREEN
-===================================================== -->
-
-<div
-    class="overlay"
-    id="startScreen">
+<div class="overlay" id="startScreen">
 
     <div class="panel">
 
-        <div class="title">
-            ZOMBIE SURVIVAL
-        </div>
+        <h1>🧟 ZOMBIE SURVIVAL</h1>
 
-        <div class="subtitle">
+        <p>
+            Überlebe 20 Level und erledige genügend Zombies,
+            um das nächste Level freizuschalten.
+        </p>
 
-            Überlebe 20 Level in einer
-            riesigen Welt. Deine Waffe
-            schießt automatisch.
+        <p>
+            Du hast unendlich Munition und zielst automatisch
+            auf den nächsten Zombie.
+        </p>
 
-        </div>
+        <h2>Schwierigkeit wählen</h2>
 
-        <div class="difficultyTitle">
-            SCHWIERIGKEIT
-        </div>
+        <div class="difficultyGrid">
 
-        <div class="difficultyButtons">
-
-            <button
-                class="diffButton active"
-                data-difficulty="easy">
-                LEICHT
+            <button class="diffBtn easy" onclick="startGame('easy')">
+                🟢 LEICHT
+                <small>Weniger Zombies</small>
             </button>
 
-            <button
-                class="diffButton"
-                data-difficulty="normal">
-                MITTEL
+            <button class="diffBtn normal" onclick="startGame('normal')">
+                🟡 MITTEL
+                <small>Normale Schwierigkeit</small>
             </button>
 
-            <button
-                class="diffButton"
-                data-difficulty="hard">
-                SCHWER
+            <button class="diffBtn hard" onclick="startGame('hard')">
+                🔴 SCHWER
+                <small>Schnelle Zombies</small>
             </button>
 
         </div>
-
-        <button
-            class="startButton"
-            id="startButton">
-
-            SPIEL STARTEN
-
-        </button>
 
     </div>
 
 </div>
 
+<!-- =========================
+     UPGRADE
+========================= -->
 
-<!-- =====================================================
-     UPGRADE SCREEN
-===================================================== -->
-
-<div
-    class="overlay"
-    id="upgradeScreen">
+<div class="overlay" id="upgradeScreen">
 
     <div class="panel">
 
-        <div class="upgradeTitle">
-            LEVEL GESCHAFFT!
-        </div>
+        <h1>⬆ LEVEL GESCHAFFT!</h1>
 
-        <div class="upgradeSubtitle">
-            Wähle ein Upgrade für deinen Charakter.
-        </div>
+        <p id="upgradeLevelText">
+            Du hast das nächste Level freigeschaltet.
+        </p>
 
-        <div
-            class="pointsText"
-            id="pointsText">
-            ⭐ 3 Punkte
+        <div class="upgradePoints">
+            Upgrade-Punkte:
+            <span id="upgradePointsText">3</span>
         </div>
 
         <div class="upgradeGrid">
 
-            <button
-                class="upgradeButton"
-                data-upgrade="fireRate">
-
-                <div class="upgradeIcon">
-                    🔫
+            <button class="upgradeBtn" onclick="buyUpgrade('fireRate')">
+                <div class="upgradeTitle">⚡ Schnellere Schüsse</div>
+                <div class="upgradeDesc">
+                    Verkürzt die Zeit zwischen deinen Schüssen.
                 </div>
-
-                <div class="upgradeName">
-                    SCHNELLER FEUERN
-                </div>
-
-                <div class="upgradeDescription">
-                    Verkürzt die Zeit zwischen
-                    den Schüssen.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-fireRate">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-fireRate">1 Punkt</span>
             </button>
 
-
-            <button
-                class="upgradeButton"
-                data-upgrade="health">
-
-                <div class="upgradeIcon">
-                    ❤️
+            <button class="upgradeBtn" onclick="buyUpgrade('health')">
+                <div class="upgradeTitle">❤️ Mehr Leben</div>
+                <div class="upgradeDesc">
+                    Erhöht deine maximale Lebensenergie.
                 </div>
-
-                <div class="upgradeName">
-                    MEHR LEBEN
-                </div>
-
-                <div class="upgradeDescription">
-                    Erhöht deine maximale
-                    Lebensenergie.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-health">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-health">1 Punkt</span>
             </button>
 
-
-            <button
-                class="upgradeButton"
-                data-upgrade="damage">
-
-                <div class="upgradeIcon">
-                    💥
+            <button class="upgradeBtn" onclick="buyUpgrade('damage')">
+                <div class="upgradeTitle">💥 Mehr Schaden</div>
+                <div class="upgradeDesc">
+                    Deine Kugeln verursachen mehr Schaden.
                 </div>
-
-                <div class="upgradeName">
-                    MEHR SCHADEN
-                </div>
-
-                <div class="upgradeDescription">
-                    Deine Geschosse verursachen
-                    mehr Schaden.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-damage">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-damage">1 Punkt</span>
             </button>
 
-
-            <button
-                class="upgradeButton"
-                data-upgrade="speed">
-
-                <div class="upgradeIcon">
-                    🏃
+            <button class="upgradeBtn" onclick="buyUpgrade('speed')">
+                <div class="upgradeTitle">🏃 Schneller bewegen</div>
+                <div class="upgradeDesc">
+                    Erhöht deine Bewegungsgeschwindigkeit.
                 </div>
-
-                <div class="upgradeName">
-                    SCHNELLER LAUFEN
-                </div>
-
-                <div class="upgradeDescription">
-                    Erhöht deine
-                    Bewegungsgeschwindigkeit.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-speed">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-speed">1 Punkt</span>
             </button>
 
-
-            <button
-                class="upgradeButton"
-                data-upgrade="bulletSpeed">
-
-                <div class="upgradeIcon">
-                    ⚡
+            <button class="upgradeBtn" onclick="buyUpgrade('bulletSpeed')">
+                <div class="upgradeTitle">🚀 Schnellere Kugeln</div>
+                <div class="upgradeDesc">
+                    Deine Geschosse erreichen Zombies schneller.
                 </div>
-
-                <div class="upgradeName">
-                    SCHNELLERE GESCHOSSE
-                </div>
-
-                <div class="upgradeDescription">
-                    Deine Geschosse fliegen
-                    schneller zum Ziel.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-bulletSpeed">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-bulletSpeed">1 Punkt</span>
             </button>
 
-
-            <button
-                class="upgradeButton"
-                data-upgrade="heal">
-
-                <div class="upgradeIcon">
-                    💚
+            <button class="upgradeBtn" onclick="buyUpgrade('heal')">
+                <div class="upgradeTitle">💚 Heilung</div>
+                <div class="upgradeDesc">
+                    Stellt sofort einen Teil deiner Lebensenergie wieder her.
                 </div>
-
-                <div class="upgradeName">
-                    HEILUNG
-                </div>
-
-                <div class="upgradeDescription">
-                    Stellt einen Teil deiner
-                    Lebensenergie wieder her.
-                </div>
-
-                <div
-                    class="upgradeCost"
-                    id="cost-heal">
-                    Kosten: 1 Punkt
-                </div>
-
+                <span class="upgradeCost" id="cost-heal">1 Punkt</span>
             </button>
 
         </div>
@@ -882,110 +528,69 @@ canvas{
 
 </div>
 
+<!-- =========================
+     GAME OVER
+========================= -->
 
-<!-- =====================================================
-     PAUSE
-===================================================== -->
-
-<div
-    class="overlay"
-    id="pauseScreen"
-    style="display:none">
+<div class="overlay" id="gameOverScreen">
 
     <div class="panel">
 
-        <div class="resultTitle">
-            PAUSE
-        </div>
+        <div class="bigResult">☠ GAME OVER</div>
 
         <div class="resultText">
-            Das Spiel wurde pausiert.
+            Du hast Level
+            <strong id="finalLevel">1</strong>
+            erreicht.<br><br>
+
+            Zombies erledigt:
+            <strong id="finalKills">0</strong>
         </div>
 
-        <button
-            class="restartButton"
-            id="resumeButton">
+        <br>
 
-            WEITERSPIELEN
-
+        <button class="mainBtn" onclick="location.reload()">
+            🔄 Erneut spielen
         </button>
 
     </div>
 
 </div>
 
-
-<!-- =====================================================
-     GAME OVER
-===================================================== -->
-
-<div
-    class="overlay"
-    id="gameOverScreen"
-    style="display:none">
-
-    <div class="panel">
-
-        <div class="resultTitle">
-            GAME OVER
-        </div>
-
-        <div
-            class="resultText"
-            id="gameOverText">
-
-        </div>
-
-        <button
-            class="restartButton"
-            id="restartButton">
-
-            NOCHMAL SPIELEN
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
+<!-- =========================
      WIN
-===================================================== -->
+========================= -->
 
-<div
-    class="overlay"
-    id="winScreen"
-    style="display:none">
+<div class="overlay" id="winScreen">
 
     <div class="panel">
 
-        <div
-            class="resultTitle"
-            style="color:#00ffc3">
+        <div class="bigResult">🏆 SIEG!</div>
 
-            SIEG!
+        <div class="resultText">
+            Du hast alle 20 Level überlebt!<br><br>
 
+            Zombies erledigt:
+            <strong id="winKills">0</strong>
         </div>
 
-        <div
-            class="resultText"
-            id="winText">
+        <br>
 
-        </div>
-
-        <button
-            class="restartButton"
-            id="winRestartButton">
-
-            NOCHMAL SPIELEN
-
+        <button class="mainBtn" onclick="location.reload()">
+            🔄 Nochmal spielen
         </button>
 
     </div>
 
 </div>
 
+<!-- =========================
+     JOYSTICK
+========================= -->
+
+<div id="joystick">
+    <div id="stick"></div>
+</div>
 
 <script>
 
@@ -993,330 +598,56 @@ canvas{
    CANVAS
 ========================================================= */
 
-const canvas =
-    document.getElementById("gameCanvas");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-const ctx =
-    canvas.getContext("2d");
+let W = innerWidth;
+let H = innerHeight;
 
-let W = window.innerWidth;
-let H = window.innerHeight;
+function resize(){
 
-let dpr =
-    Math.min(
-        window.devicePixelRatio || 1,
-        2
-    );
-
-function resizeCanvas(){
-
-    W = window.innerWidth;
-    H = window.innerHeight;
-
-    dpr =
-        Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
-
-    canvas.width =
-        W * dpr;
-
-    canvas.height =
-        H * dpr;
-
-    canvas.style.width =
-        W + "px";
-
-    canvas.style.height =
-        H + "px";
-
-    ctx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
+    W = canvas.width = innerWidth;
+    H = canvas.height = innerHeight;
 
 }
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
-
-resizeCanvas();
+addEventListener("resize",resize);
+resize();
 
 
 /* =========================================================
-   WELT
+   WORLD
 ========================================================= */
 
 const WORLD = {
-
     width:5000,
     height:5000
-
 };
 
 
 /* =========================================================
-   KAMERA
+   GAME
 ========================================================= */
 
-const camera = {
-
-    x:0,
-    y:0
-
-};
-
-
-/* =========================================================
-   SPIELER
-========================================================= */
-
-const player = {
-
-    x:
-        WORLD.width / 2,
-
-    y:
-        WORLD.height / 2,
-
-    radius:21,
-
-    speed:270,
-
-    health:100,
-
-    maxHealth:100,
-
-    angle:0,
-
-    shootCooldown:0,
-
-    fireRate:0.55,
-
-    damage:22,
-
-    bulletSpeed:620
-
-};
-
-
-/* =========================================================
-   UPGRADE SYSTEM
-========================================================= */
-
-let upgradePoints = 0;
-
-const upgradeLevels = {
-
-    fireRate:0,
-    health:0,
-    damage:0,
-    speed:0,
-    bulletSpeed:0,
-    heal:0
-
-};
-
-function getUpgradeCost(type){
-
-    const level =
-        upgradeLevels[type];
-
-    return 1 + Math.floor(level / 3);
-
-}
-
-
-function updateUpgradeScreen(){
-
-    document
-    .getElementById("pointsText")
-    .textContent =
-        "⭐ " +
-        upgradePoints +
-        " Punkte";
-
-    const types = [
-        "fireRate",
-        "health",
-        "damage",
-        "speed",
-        "bulletSpeed",
-        "heal"
-    ];
-
-    for(const type of types){
-
-        const cost =
-            getUpgradeCost(type);
-
-        document
-        .getElementById(
-            "cost-" + type
-        )
-        .textContent =
-            "Kosten: " +
-            cost +
-            " Punkt" +
-            (cost === 1 ? "" : "e");
-
-    }
-
-}
-
-
-/* =========================================================
-   UPGRADE AUSFÜHREN
-========================================================= */
-
-function buyUpgrade(type){
-
-    const cost =
-        getUpgradeCost(type);
-
-    if(upgradePoints < cost){
-        return;
-    }
-
-    upgradePoints -= cost;
-
-    upgradeLevels[type]++;
-
-
-    /* SCHNELLER FEUERN */
-
-    if(type === "fireRate"){
-
-        player.fireRate =
-            Math.max(
-                0.12,
-                player.fireRate - 0.07
-            );
-
-    }
-
-
-    /* MEHR LEBEN */
-
-    if(type === "health"){
-
-        player.maxHealth += 20;
-
-        player.health += 20;
-
-    }
-
-
-    /* MEHR SCHADEN */
-
-    if(type === "damage"){
-
-        player.damage += 7;
-
-    }
-
-
-    /* SCHNELLER LAUFEN */
-
-    if(type === "speed"){
-
-        player.speed += 25;
-
-    }
-
-
-    /* SCHNELLERE GESCHOSSE */
-
-    if(type === "bulletSpeed"){
-
-        player.bulletSpeed += 80;
-
-    }
-
-
-    /* HEILUNG */
-
-    if(type === "heal"){
-
-        player.health =
-            Math.min(
-                player.maxHealth,
-                player.health + 30
-            );
-
-    }
-
-    updateUpgradeScreen();
-
-    updateHUD();
-
-}
-
-
-/* =========================================================
-   UPGRADE BUTTONS
-========================================================= */
-
-document
-.querySelectorAll(".upgradeButton")
-.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            buyUpgrade(
-                button.dataset.upgrade
-            );
-
-            /*
-             * Eine Auswahl kostet Punkte.
-             * Sobald keine Punkte mehr vorhanden sind,
-             * geht das Spiel automatisch weiter.
-             */
-
-            if(upgradePoints <= 0){
-
-                closeUpgradeScreen();
-
-            }
-
-        }
-    );
-
-});
-
-
-/* =========================================================
-   SPIELSTATUS
-========================================================= */
+const MAX_LEVEL = 20;
 
 let gameRunning = false;
-
 let paused = false;
 
 let level = 1;
 
-const MAX_LEVEL = 20;
+let totalKills = 0;
+let levelKills = 0;
 
-let kills = 0;
-
-let levelTime = 0;
-
-const LEVEL_DURATION = 30000;
+let upgradePoints = 0;
 
 let spawnTimer = 0;
 
+let difficulty = null;
+
 
 /* =========================================================
-   SCHWIERIGKEIT
+   DIFFICULTIES
 ========================================================= */
 
 const difficulties = {
@@ -1344,65 +675,59 @@ const difficulties = {
 
 };
 
-let selectedDifficulty =
-    "easy";
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x:WORLD.width/2,
+    y:WORLD.height/2,
+
+    radius:21,
+
+    speed:270,
+
+    health:100,
+    maxHealth:100,
+
+    angle:0,
+
+    shootCooldown:0,
+
+    fireRate:.55,
+
+    damage:22,
+
+    bulletSpeed:620
+
+};
 
 
 /* =========================================================
-   ARRAYS
+   CAMERA
+========================================================= */
+
+const camera = {
+
+    x:0,
+    y:0,
+
+    width:W,
+    height:H
+
+};
+
+
+/* =========================================================
+   OBJECTS
 ========================================================= */
 
 const zombies = [];
-
 const bullets = [];
-
 const particles = [];
-
 const decorations = [];
-
-
-/* =========================================================
-   DEKORATION
-========================================================= */
-
-function createDecorations(){
-
-    decorations.length = 0;
-
-    for(
-        let i=0;
-        i<420;
-        i++
-    ){
-
-        decorations.push({
-
-            x:
-                60 +
-                Math.random() *
-                (WORLD.width-120),
-
-            y:
-                60 +
-                Math.random() *
-                (WORLD.height-120),
-
-            type:
-                Math.random()<.62
-                ? "tree"
-                : "rock",
-
-            size:
-                10 +
-                Math.random()*18
-
-        });
-
-    }
-
-}
-
-createDecorations();
 
 
 /* =========================================================
@@ -1411,320 +736,153 @@ createDecorations();
 
 const keys = {};
 
-window.addEventListener(
-    "keydown",
-    e => {
+addEventListener("keydown",e=>{
 
-        keys[
-            e.key.toLowerCase()
-        ] = true;
+    keys[e.key.toLowerCase()] = true;
 
-        if(
-            [
-                "arrowup",
-                "arrowdown",
-                "arrowleft",
-                "arrowright",
-                " "
-            ].includes(
-                e.key.toLowerCase()
-            )
-        ){
-
-            e.preventDefault();
-
-        }
-
-        if(
-            e.key.toLowerCase() === "p"
-        ){
-
-            togglePause();
-
-        }
-
+    if(
+        ["arrowup","arrowdown","arrowleft","arrowright"," "]
+        .includes(e.key.toLowerCase())
+    ){
+        e.preventDefault();
     }
-);
 
-window.addEventListener(
-    "keyup",
-    e => {
+});
 
-        keys[
-            e.key.toLowerCase()
-        ] = false;
+addEventListener("keyup",e=>{
 
-    }
-);
+    keys[e.key.toLowerCase()] = false;
+
+});
 
 
 /* =========================================================
    JOYSTICK
 ========================================================= */
 
-const joystick =
-    document.getElementById(
-        "joystick"
-    );
-
-const joystickKnob =
-    document.getElementById(
-        "joystickKnob"
-    );
+const joystick = document.getElementById("joystick");
+const stick = document.getElementById("stick");
 
 let joystickActive = false;
 
 let joystickX = 0;
-
 let joystickY = 0;
 
-let joystickPointerId = null;
+function joystickMove(clientX,clientY){
 
+    const rect = joystick.getBoundingClientRect();
 
-function updateJoystick(e){
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
 
-    const rect =
-        joystick.getBoundingClientRect();
+    let dx = clientX-centerX;
+    let dy = clientY-centerY;
 
-    const centerX =
-        rect.left +
-        rect.width/2;
+    const max = rect.width/2 - 30;
 
-    const centerY =
-        rect.top +
-        rect.height/2;
+    const distance = Math.hypot(dx,dy);
 
-    let dx =
-        e.clientX-centerX;
+    if(distance > max){
 
-    let dy =
-        e.clientY-centerY;
-
-    const maxDistance =
-        rect.width*.29;
-
-    const distance =
-        Math.sqrt(
-            dx*dx+
-            dy*dy
-        );
-
-    if(distance>maxDistance){
-
-        dx =
-            dx/distance*
-            maxDistance;
-
-        dy =
-            dy/distance*
-            maxDistance;
+        dx = dx/distance*max;
+        dy = dy/distance*max;
 
     }
 
-    joystickX =
-        dx/maxDistance;
+    joystickX = dx/max;
+    joystickY = dy/max;
 
-    joystickY =
-        dy/maxDistance;
+    stick.style.left =
+        `calc(50% + ${dx}px)`;
 
-    joystickKnob.style.transform =
-        `translate(
-            calc(-50% + ${dx}px),
-            calc(-50% + ${dy}px)
-        )`;
+    stick.style.top =
+        `calc(50% + ${dy}px)`;
 
 }
 
+joystick.addEventListener("touchstart",e=>{
 
-joystick.addEventListener(
-    "pointerdown",
-    e => {
+    joystickActive = true;
 
-        joystickActive = true;
+    const t = e.touches[0];
 
-        joystickPointerId =
-            e.pointerId;
+    joystickMove(t.clientX,t.clientY);
 
-        joystick.setPointerCapture(
-            e.pointerId
-        );
+    e.preventDefault();
 
-        updateJoystick(e);
+},{passive:false});
 
-    }
-);
+joystick.addEventListener("touchmove",e=>{
 
+    if(!joystickActive) return;
 
-joystick.addEventListener(
-    "pointermove",
-    e => {
+    const t = e.touches[0];
 
-        if(
-            !joystickActive ||
-            e.pointerId !==
-            joystickPointerId
-        ){
-            return;
-        }
+    joystickMove(t.clientX,t.clientY);
 
-        updateJoystick(e);
+    e.preventDefault();
 
-    }
-);
+},{passive:false});
 
-
-function resetJoystick(){
+joystick.addEventListener("touchend",()=>{
 
     joystickActive = false;
 
-    joystickPointerId = null;
-
     joystickX = 0;
-
     joystickY = 0;
 
-    joystickKnob.style.transform =
-        "translate(-50%,-50%)";
-
-}
-
-joystick.addEventListener(
-    "pointerup",
-    resetJoystick
-);
-
-joystick.addEventListener(
-    "pointercancel",
-    resetJoystick
-);
-
-
-/* =========================================================
-   SCHWIERIGKEIT
-========================================================= */
-
-document
-.querySelectorAll(".diffButton")
-.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            document
-            .querySelectorAll(
-                ".diffButton"
-            )
-            .forEach(b =>
-                b.classList.remove(
-                    "active"
-                )
-            );
-
-            button.classList.add(
-                "active"
-            );
-
-            selectedDifficulty =
-                button.dataset.difficulty;
-
-        }
-    );
+    stick.style.left = "50%";
+    stick.style.top = "50%";
 
 });
 
 
 /* =========================================================
-   START
+   START GAME
 ========================================================= */
 
-document
-.getElementById("startButton")
-.addEventListener(
-    "click",
-    startGame
-);
+function startGame(mode){
 
+    difficulty = difficulties[mode];
 
-function startGame(){
+    document.getElementById("startScreen").style.display = "none";
 
-    document
-    .getElementById(
-        "startScreen"
-    )
-    .style.display =
-        "none";
-
-    document
-    .getElementById(
-        "gameOverScreen"
-    )
-    .style.display =
-        "none";
-
-    document
-    .getElementById(
-        "winScreen"
-    )
-    .style.display =
-        "none";
-
-    document
-    .getElementById(
-        "upgradeScreen"
-    )
-    .style.display =
-        "none";
+    gameRunning = true;
+    paused = false;
 
     level = 1;
 
-    kills = 0;
+    totalKills = 0;
+    levelKills = 0;
 
     upgradePoints = 0;
 
-    for(const key in upgradeLevels){
-        upgradeLevels[key] = 0;
-    }
+    spawnTimer = 0;
 
-    player.x =
-        WORLD.width/2;
+    zombies.length = 0;
+    bullets.length = 0;
+    particles.length = 0;
 
-    player.y =
-        WORLD.height/2;
+    player.x = WORLD.width/2;
+    player.y = WORLD.height/2;
 
     player.speed = 270;
 
+    player.health = 100;
     player.maxHealth = 100;
 
-    player.health = 100;
-
     player.fireRate = .55;
-
     player.damage = 22;
-
     player.bulletSpeed = 620;
 
-    player.shootCooldown = 0;
+    upgradeLevels.fireRate = 0;
+    upgradeLevels.health = 0;
+    upgradeLevels.damage = 0;
+    upgradeLevels.speed = 0;
+    upgradeLevels.bulletSpeed = 0;
+    upgradeLevels.heal = 0;
 
-    zombies.length = 0;
-
-    bullets.length = 0;
-
-    particles.length = 0;
-
-    levelTime = 0;
-
-    spawnTimer = 0;
-
-    paused = false;
-
-    gameRunning = true;
-
-    camera.x =
-        player.x-W/2;
-
-    camera.y =
-        player.y-H/2;
+    createDecorations();
 
     updateHUD();
 
@@ -1732,230 +890,388 @@ function startGame(){
 
 
 /* =========================================================
-   PAUSE
+   LEVEL KILL TARGET
 ========================================================= */
 
-document
-.getElementById("pauseButton")
-.addEventListener(
-    "click",
-    togglePause
-);
+function getKillsRequired(){
+
+    /*
+       Level 1 = 10
+       Level 2 = 15
+       Level 3 = 20
+       Level 4 = 25
+       usw.
+    */
+
+    return 10 + (level-1)*5;
+
+}
 
 
-document
-.getElementById("resumeButton")
-.addEventListener(
-    "click",
-    togglePause
-);
+/* =========================================================
+   LEVEL CHECK
+========================================================= */
 
+function checkLevelComplete(){
 
-function togglePause(){
+    const required = getKillsRequired();
 
-    if(!gameRunning){
+    if(levelKills < required) return;
+
+    if(level >= MAX_LEVEL){
+
+        winGame();
+
         return;
+
     }
 
-    paused =
-        !paused;
+    level++;
 
-    document
-    .getElementById(
-        "pauseScreen"
-    )
-    .style.display =
-        paused
-        ? "flex"
-        : "none";
+    levelKills = 0;
+
+    upgradePoints += 3;
+
+    showUpgradeScreen();
 
 }
 
 
 /* =========================================================
-   SPIELER
+   UPGRADE LEVELS
 ========================================================= */
 
-function updatePlayer(dt){
+const upgradeLevels = {
 
-    let moveX = 0;
+    fireRate:0,
+    health:0,
+    damage:0,
+    speed:0,
+    bulletSpeed:0,
+    heal:0
 
-    let moveY = 0;
+};
 
-    if(
-        keys["w"] ||
-        keys["arrowup"]
-    ){
-        moveY--;
-    }
 
-    if(
-        keys["s"] ||
-        keys["arrowdown"]
-    ){
-        moveY++;
-    }
+/* =========================================================
+   UPGRADE COST
+========================================================= */
 
-    if(
-        keys["a"] ||
-        keys["arrowleft"]
-    ){
-        moveX--;
-    }
+function getUpgradeCost(type){
 
-    if(
-        keys["d"] ||
-        keys["arrowright"]
-    ){
-        moveX++;
-    }
+    const currentLevel = upgradeLevels[type];
 
-    if(joystickActive){
-
-        moveX += joystickX;
-
-        moveY += joystickY;
-
-    }
-
-    const length =
-        Math.sqrt(
-            moveX*moveX+
-            moveY*moveY
-        );
-
-    if(length>0){
-
-        moveX/=length;
-
-        moveY/=length;
-
-        player.x +=
-            moveX*
-            player.speed*
-            dt;
-
-        player.y +=
-            moveY*
-            player.speed*
-            dt;
-
-    }
-
-    const margin = 35;
-
-    player.x =
-        Math.max(
-            margin,
-            Math.min(
-                WORLD.width-margin,
-                player.x
-            )
-        );
-
-    player.y =
-        Math.max(
-            margin,
-            Math.min(
-                WORLD.height-margin,
-                player.y
-            )
-        );
+    return 1 + Math.floor(currentLevel/3);
 
 }
 
 
 /* =========================================================
-   KAMERA
+   SHOW UPGRADE
 ========================================================= */
 
-function updateCamera(dt){
+function showUpgradeScreen(){
 
-    const maxX =
-        Math.max(
-            0,
-            WORLD.width-W
-        );
+    gameRunning = false;
+    paused = false;
 
-    const maxY =
-        Math.max(
-            0,
-            WORLD.height-H
-        );
+    document.getElementById("upgradeScreen").style.display = "flex";
 
-    const targetX =
-        player.x-W/2;
+    document.getElementById("upgradeLevelText").textContent =
+        `Willkommen in Level ${level}. Wähle deine Verbesserungen.`;
 
-    const targetY =
-        player.y-H/2;
-
-    const smooth =
-        Math.min(
-            1,
-            dt*8
-        );
-
-    camera.x +=
-        (targetX-camera.x)*
-        smooth;
-
-    camera.y +=
-        (targetY-camera.y)*
-        smooth;
-
-    camera.x =
-        Math.max(
-            0,
-            Math.min(
-                maxX,
-                camera.x
-            )
-        );
-
-    camera.y =
-        Math.max(
-            0,
-            Math.min(
-                maxY,
-                camera.y
-            )
-        );
+    updateUpgradeScreen();
 
 }
 
 
 /* =========================================================
-   NÄCHSTER ZOMBIE
+   UPDATE UPGRADE SCREEN
 ========================================================= */
 
-function getNearestZombie(){
+function updateUpgradeScreen(){
+
+    document.getElementById("upgradePointsText").textContent =
+        upgradePoints;
+
+    const types = [
+        "fireRate",
+        "health",
+        "damage",
+        "speed",
+        "bulletSpeed",
+        "heal"
+    ];
+
+    types.forEach(type=>{
+
+        const cost = getUpgradeCost(type);
+
+        const element =
+            document.getElementById("cost-"+type);
+
+        element.textContent =
+            `${cost} ${cost === 1 ? "Punkt" : "Punkte"}`;
+
+    });
+
+}
+
+
+/* =========================================================
+   BUY UPGRADE
+========================================================= */
+
+function buyUpgrade(type){
+
+    const cost = getUpgradeCost(type);
+
+    if(upgradePoints < cost) return;
+
+    upgradePoints -= cost;
+
+    upgradeLevels[type]++;
+
+    switch(type){
+
+        case "fireRate":
+
+            player.fireRate =
+                Math.max(
+                    .12,
+                    player.fireRate-.07
+                );
+
+            break;
+
+
+        case "health":
+
+            player.maxHealth += 20;
+
+            player.health += 20;
+
+            break;
+
+
+        case "damage":
+
+            player.damage += 7;
+
+            break;
+
+
+        case "speed":
+
+            player.speed += 25;
+
+            break;
+
+
+        case "bulletSpeed":
+
+            player.bulletSpeed += 80;
+
+            break;
+
+
+        case "heal":
+
+            player.health =
+                Math.min(
+                    player.maxHealth,
+                    player.health+30
+                );
+
+            break;
+
+    }
+
+    updateUpgradeScreen();
+    updateHUD();
+
+    /*
+       Wenn alle 3 Punkte ausgegeben wurden,
+       geht es automatisch weiter.
+    */
+
+    if(upgradePoints <= 0){
+
+        closeUpgradeScreen();
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE UPGRADE
+========================================================= */
+
+function closeUpgradeScreen(){
+
+    document.getElementById("upgradeScreen").style.display = "none";
+
+    gameRunning = true;
+    paused = false;
+
+    spawnTimer = 0;
+
+    /*
+       Ein paar Zombies sofort spawnen,
+       damit das neue Level nicht leer startet.
+    */
+
+    const amount =
+        2 + Math.floor(level/4);
+
+    for(let i=0;i<amount;i++){
+
+        spawnZombie();
+
+    }
+
+}
+
+
+/* =========================================================
+   RANDOM WORLD POSITION
+========================================================= */
+
+function randomWorldPosition(){
+
+    return {
+
+        x:Math.random()*WORLD.width,
+
+        y:Math.random()*WORLD.height
+
+    };
+
+}
+
+
+/* =========================================================
+   DECORATIONS
+========================================================= */
+
+function createDecorations(){
+
+    decorations.length = 0;
+
+    for(let i=0;i<450;i++){
+
+        const p = randomWorldPosition();
+
+        decorations.push({
+
+            x:p.x,
+            y:p.y,
+
+            size:4+Math.random()*18,
+
+            type:Math.random()
+
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   SPAWN ZOMBIE
+========================================================= */
+
+function spawnZombie(){
+
+    if(!difficulty) return;
+
+    if(zombies.length >= difficulty.maxZombies) return;
+
+    let angle =
+        Math.random()*Math.PI*2;
+
+    /*
+       Zombies spawnen nicht direkt neben dem Spieler.
+       Gleichzeitig aber nicht am anderen Ende der Welt.
+    */
+
+    const minDistance =
+        Math.min(W,H)*.48;
+
+    const maxDistance =
+        Math.min(W,H)*.72;
+
+    const distance =
+        minDistance+
+        Math.random()*
+        (maxDistance-minDistance);
+
+    let x =
+        player.x+
+        Math.cos(angle)*distance;
+
+    let y =
+        player.y+
+        Math.sin(angle)*distance;
+
+    x = Math.max(40,Math.min(WORLD.width-40,x));
+    y = Math.max(40,Math.min(WORLD.height-40,y));
+
+    const health =
+        42+
+        level*7;
+
+    const speed =
+        (38+level*3)*
+        difficulty.zombieSpeed*
+        (.88+Math.random()*.2);
+
+    zombies.push({
+
+        x,
+        y,
+
+        radius:19,
+
+        health,
+        maxHealth:health,
+
+        speed,
+
+        damage:difficulty.damage,
+
+        hitCooldown:0,
+
+        wobble:Math.random()*Math.PI*2
+
+    });
+
+}
+
+
+/* =========================================================
+   FIND NEAREST ZOMBIE
+========================================================= */
+
+function findNearestZombie(){
 
     let nearest = null;
-
-    let nearestDistance =
-        Infinity;
+    let nearestDistance = Infinity;
 
     for(const zombie of zombies){
 
-        const dx =
-            zombie.x-player.x;
-
-        const dy =
-            zombie.y-player.y;
+        const dx = zombie.x-player.x;
+        const dy = zombie.y-player.y;
 
         const distance =
             dx*dx+dy*dy;
 
-        if(
-            distance <
-            nearestDistance
-        ){
+        if(distance < nearestDistance){
 
-            nearestDistance =
-                distance;
-
-            nearest =
-                zombie;
+            nearestDistance = distance;
+            nearest = zombie;
 
         }
 
@@ -1967,229 +1283,50 @@ function getNearestZombie(){
 
 
 /* =========================================================
-   AUTOMATISCHE WAFFE
+   AUTO SHOOT
 ========================================================= */
 
 function autoShoot(dt){
 
     player.shootCooldown -= dt;
 
-    const target =
-        getNearestZombie();
+    const target = findNearestZombie();
 
-    if(!target){
-        return;
-    }
+    if(!target) return;
 
-    const dx =
-        target.x-player.x;
+    const dx = target.x-player.x;
+    const dy = target.y-player.y;
 
-    const dy =
-        target.y-player.y;
+    const distance =
+        Math.hypot(dx,dy);
 
     player.angle =
-        Math.atan2(
-            dy,
-            dx
-        );
+        Math.atan2(dy,dx);
 
-    if(
-        player.shootCooldown<=0
-    ){
+    if(player.shootCooldown > 0) return;
 
-        bullets.push({
+    player.shootCooldown =
+        player.fireRate;
 
-            x:
-                player.x+
-                Math.cos(
-                    player.angle
-                )*27,
+    const speed = player.bulletSpeed;
 
-            y:
-                player.y+
-                Math.sin(
-                    player.angle
-                )*27,
+    bullets.push({
 
-            vx:
-                Math.cos(
-                    player.angle
-                )*
-                player.bulletSpeed,
+        x:player.x+
+          Math.cos(player.angle)*25,
 
-            vy:
-                Math.sin(
-                    player.angle
-                )*
-                player.bulletSpeed,
+        y:player.y+
+          Math.sin(player.angle)*25,
 
-            radius:5,
+        vx:Math.cos(player.angle)*speed,
 
-            life:2,
+        vy:Math.sin(player.angle)*speed,
 
-            damage:
-                player.damage
+        radius:5,
 
-        });
+        damage:player.damage,
 
-        player.shootCooldown =
-            player.fireRate;
-
-        createMuzzleParticles();
-
-    }
-
-}
-
-
-/* =========================================================
-   ZOMBIE SPAWN
-========================================================= */
-
-function spawnZombie(){
-
-    const difficulty =
-        difficulties[
-            selectedDifficulty
-        ];
-
-    if(
-        zombies.length >=
-        difficulty.maxZombies
-    ){
-        return;
-    }
-
-    let x;
-
-    let y;
-
-    let valid = false;
-
-
-    /*
-     * WICHTIG:
-     * Zombies kommen jetzt deutlich näher.
-     *
-     * Dadurch sieht man sie auch wirklich,
-     * bevor die automatische Waffe sie erwischt.
-     */
-
-    const minDistance =
-        Math.min(W,H)*.48;
-
-    const maxDistance =
-        Math.min(W,H)*.72;
-
-
-    for(
-        let attempt=0;
-        attempt<30;
-        attempt++
-    ){
-
-        const angle =
-            Math.random()*
-            Math.PI*2;
-
-        const distance =
-            minDistance+
-            Math.random()*
-            (maxDistance-minDistance);
-
-        x =
-            player.x+
-            Math.cos(angle)*
-            distance;
-
-        y =
-            player.y+
-            Math.sin(angle)*
-            distance;
-
-        if(
-            x>45 &&
-            x<WORLD.width-45 &&
-            y>45 &&
-            y<WORLD.height-45
-        ){
-
-            valid = true;
-
-            break;
-
-        }
-
-    }
-
-
-    if(!valid){
-
-        x =
-            Math.max(
-                45,
-                Math.min(
-                    WORLD.width-45,
-                    player.x+
-                    (Math.random()<.5?-1:1)*
-                    minDistance
-                )
-            );
-
-        y =
-            Math.max(
-                45,
-                Math.min(
-                    WORLD.height-45,
-                    player.y+
-                    (Math.random()<.5?-1:1)*
-                    minDistance
-                )
-            );
-
-    }
-
-
-    /*
-     * Zombies werden nicht mehr mit absurdem
-     * Anfangsleben ausgestattet.
-     */
-
-    const health =
-        42+
-        level*7;
-
-
-    zombies.push({
-
-        x:x,
-
-        y:y,
-
-        radius:
-            18+
-            Math.random()*5,
-
-        speed:
-            (
-                38+
-                level*3
-            )*
-            difficulty.zombieSpeed*
-            (
-                .88+
-                Math.random()*.2
-            ),
-
-        health:health,
-
-        maxHealth:health,
-
-        attackCooldown:0,
-
-        wobble:
-            Math.random()*
-            Math.PI*2
+        life:2
 
     });
 
@@ -2197,24 +1334,115 @@ function spawnZombie(){
 
 
 /* =========================================================
-   ZOMBIES
+   UPDATE PLAYER
+========================================================= */
+
+function updatePlayer(dt){
+
+    let mx = 0;
+    let my = 0;
+
+    if(keys["w"] || keys["arrowup"])
+        my -= 1;
+
+    if(keys["s"] || keys["arrowdown"])
+        my += 1;
+
+    if(keys["a"] || keys["arrowleft"])
+        mx -= 1;
+
+    if(keys["d"] || keys["arrowright"])
+        mx += 1;
+
+    if(joystickActive){
+
+        mx = joystickX;
+        my = joystickY;
+
+    }
+
+    const length =
+        Math.hypot(mx,my);
+
+    if(length > 0){
+
+        mx /= length;
+        my /= length;
+
+        player.x +=
+            mx*player.speed*dt;
+
+        player.y +=
+            my*player.speed*dt;
+
+    }
+
+    player.x =
+        Math.max(
+            player.radius,
+            Math.min(
+                WORLD.width-player.radius,
+                player.x
+            )
+        );
+
+    player.y =
+        Math.max(
+            player.radius,
+            Math.min(
+                WORLD.height-player.radius,
+                player.y
+            )
+        );
+
+}
+
+
+/* =========================================================
+   UPDATE CAMERA
+========================================================= */
+
+function updateCamera(){
+
+    camera.width = W;
+    camera.height = H;
+
+    camera.x =
+        player.x-W/2;
+
+    camera.y =
+        player.y-H/2;
+
+    camera.x =
+        Math.max(
+            0,
+            Math.min(
+                WORLD.width-W,
+                camera.x
+            )
+        );
+
+    camera.y =
+        Math.max(
+            0,
+            Math.min(
+                WORLD.height-H,
+                camera.y
+            )
+        );
+
+}
+
+
+/* =========================================================
+   UPDATE ZOMBIES
 ========================================================= */
 
 function updateZombies(dt){
 
-    const difficulty =
-        difficulties[
-            selectedDifficulty
-        ];
+    for(let i=zombies.length-1;i>=0;i--){
 
-    for(
-        let i=zombies.length-1;
-        i>=0;
-        i--
-    ){
-
-        const zombie =
-            zombies[i];
+        const zombie = zombies[i];
 
         const dx =
             player.x-zombie.x;
@@ -2223,17 +1451,9 @@ function updateZombies(dt){
             player.y-zombie.y;
 
         const distance =
-            Math.sqrt(
-                dx*dx+
-                dy*dy
-            );
+            Math.hypot(dx,dy);
 
-        if(
-            distance >
-            player.radius+
-            zombie.radius+
-            3
-        ){
+        if(distance > 0){
 
             zombie.x +=
                 dx/distance*
@@ -2246,32 +1466,38 @@ function updateZombies(dt){
                 dt;
 
         }
-        else{
 
-            zombie.attackCooldown -= dt;
+        zombie.wobble += dt*5;
 
-            if(
-                zombie.attackCooldown<=0
-            ){
+        zombie.hitCooldown -= dt;
 
-                player.health -=
-                    difficulty.damage;
+        /*
+           Kollision mit Spieler
+        */
 
-                zombie.attackCooldown =
-                    .85;
+        if(
+            distance <
+            player.radius+
+            zombie.radius
+        ){
+
+            if(zombie.hitCooldown <= 0){
+
+                player.health -= zombie.damage;
+
+                zombie.hitCooldown = .8;
 
                 createHitParticles(
                     player.x,
-                    player.y
+                    player.y,
+                    5
                 );
 
-                if(
-                    player.health<=0
-                ){
+                if(player.health <= 0){
 
-                    player.health=0;
+                    player.health = 0;
 
-                    endGame();
+                    gameOver();
 
                     return;
 
@@ -2281,116 +1507,103 @@ function updateZombies(dt){
 
         }
 
-        zombie.wobble +=
-            dt*5;
-
     }
 
 }
 
 
 /* =========================================================
-   BULLETS
+   UPDATE BULLETS
 ========================================================= */
 
 function updateBullets(dt){
 
-    for(
-        let i=bullets.length-1;
-        i>=0;
-        i--
-    ){
+    for(let i=bullets.length-1;i>=0;i--){
 
-        const bullet =
-            bullets[i];
+        const bullet = bullets[i];
 
-        bullet.x +=
-            bullet.vx*dt;
-
-        bullet.y +=
-            bullet.vy*dt;
+        bullet.x += bullet.vx*dt;
+        bullet.y += bullet.vy*dt;
 
         bullet.life -= dt;
 
-        let hit = false;
+        let remove = false;
 
-
-        for(
-            let j=zombies.length-1;
-            j>=0;
-            j--
+        if(
+            bullet.life <= 0 ||
+            bullet.x < 0 ||
+            bullet.y < 0 ||
+            bullet.x > WORLD.width ||
+            bullet.y > WORLD.height
         ){
 
-            const zombie =
-                zombies[j];
+            remove = true;
 
-            const dx =
-                bullet.x-zombie.x;
+        }
 
-            const dy =
-                bullet.y-zombie.y;
+        if(!remove){
 
-            const distance =
-                Math.sqrt(
-                    dx*dx+
-                    dy*dy
-                );
+            for(let j=zombies.length-1;j>=0;j--){
 
-            if(
-                distance<
-                bullet.radius+
-                zombie.radius
-            ){
+                const zombie = zombies[j];
 
-                zombie.health -=
-                    bullet.damage;
+                const dx =
+                    zombie.x-bullet.x;
 
-                createHitParticles(
-                    bullet.x,
-                    bullet.y
-                );
+                const dy =
+                    zombie.y-bullet.y;
 
-                hit=true;
-
+                const distance =
+                    Math.hypot(dx,dy);
 
                 if(
-                    zombie.health<=0
+                    distance <
+                    zombie.radius+
+                    bullet.radius
                 ){
 
-                    kills++;
+                    zombie.health -=
+                        bullet.damage;
 
-                    createDeathParticles(
-                        zombie.x,
-                        zombie.y
+                    createHitParticles(
+                        bullet.x,
+                        bullet.y,
+                        2
                     );
 
-                    zombies.splice(
-                        j,
-                        1
-                    );
+                    remove = true;
+
+                    if(zombie.health <= 0){
+
+                        createHitParticles(
+                            zombie.x,
+                            zombie.y,
+                            8
+                        );
+
+                        zombies.splice(j,1);
+
+                        totalKills++;
+                        levelKills++;
+
+                        checkLevelComplete();
+
+                        if(!gameRunning)
+                            break;
+
+                    }
+
+                    break;
 
                 }
-
-                break;
 
             }
 
         }
 
+        if(remove){
 
-        if(
-            hit ||
-            bullet.life<=0 ||
-            bullet.x<0 ||
-            bullet.x>WORLD.width ||
-            bullet.y<0 ||
-            bullet.y>WORLD.height
-        ){
-
-            bullets.splice(
-                i,
-                1
-            );
+            bullets.splice(i,1);
 
         }
 
@@ -2400,46 +1613,32 @@ function updateBullets(dt){
 
 
 /* =========================================================
-   LEVEL
+   PARTICLES
 ========================================================= */
 
-function updateLevel(dt){
+function createHitParticles(x,y,count){
 
-    levelTime += dt;
+    for(let i=0;i<count;i++){
 
-    if(
-        levelTime>=
-        LEVEL_DURATION
-    ){
+        const angle =
+            Math.random()*Math.PI*2;
 
-        levelTime=0;
+        const speed =
+            30+Math.random()*100;
 
-        if(
-            level<
-            MAX_LEVEL
-        ){
+        particles.push({
 
-            level++;
+            x,
+            y,
 
-            /*
-             * Drei neue Punkte pro Level.
-             */
+            vx:Math.cos(angle)*speed,
+            vy:Math.sin(angle)*speed,
 
-            upgradePoints += 3;
+            life:.3+Math.random()*.4,
 
-            /*
-             * Ein kleiner Teil der Zombies bleibt,
-             * damit der Übergang nicht komplett leer ist.
-             */
+            size:2+Math.random()*3
 
-            showUpgradeScreen();
-
-        }
-        else{
-
-            winGame();
-
-        }
+        });
 
     }
 
@@ -2447,250 +1646,26 @@ function updateLevel(dt){
 
 
 /* =========================================================
-   UPGRADE SCREEN
+   UPDATE PARTICLES
 ========================================================= */
-
-function showUpgradeScreen(){
-
-    gameRunning = false;
-
-    paused = false;
-
-    updateUpgradeScreen();
-
-    document
-    .getElementById(
-        "upgradeScreen"
-    )
-    .style.display =
-        "flex";
-
-}
-
-
-function closeUpgradeScreen(){
-
-    document
-    .getElementById(
-        "upgradeScreen"
-    )
-    .style.display =
-        "none";
-
-    /*
-     * Nach dem Upgrade geht es weiter.
-     */
-
-    gameRunning = true;
-
-    levelTime = 0;
-
-    spawnTimer = 0;
-
-    /*
-     * Kleine Startwelle des neuen Levels.
-     */
-
-    for(
-        let i=0;
-        i<Math.min(
-            2+Math.floor(level/4),
-            5
-        );
-        i++
-    ){
-
-        spawnZombie();
-
-    }
-
-}
-
-
-/* =========================================================
-   PARTIKEL
-========================================================= */
-
-function createMuzzleParticles(){
-
-    for(
-        let i=0;
-        i<5;
-        i++
-    ){
-
-        const angle =
-            player.angle+
-            (
-                Math.random()-.5
-            )*.6;
-
-        const speed =
-            70+
-            Math.random()*90;
-
-        particles.push({
-
-            x:
-                player.x+
-                Math.cos(
-                    player.angle
-                )*28,
-
-            y:
-                player.y+
-                Math.sin(
-                    player.angle
-                )*28,
-
-            vx:
-                Math.cos(angle)*
-                speed,
-
-            vy:
-                Math.sin(angle)*
-                speed,
-
-            life:
-                .2+
-                Math.random()*.2,
-
-            size:
-                2+
-                Math.random()*3
-
-        });
-
-    }
-
-}
-
-
-function createHitParticles(
-    x,
-    y
-){
-
-    for(
-        let i=0;
-        i<5;
-        i++
-    ){
-
-        const angle =
-            Math.random()*
-            Math.PI*2;
-
-        const speed =
-            40+
-            Math.random()*100;
-
-        particles.push({
-
-            x:x,
-            y:y,
-
-            vx:
-                Math.cos(angle)*
-                speed,
-
-            vy:
-                Math.sin(angle)*
-                speed,
-
-            life:
-                .3+
-                Math.random()*.25,
-
-            size:
-                2+
-                Math.random()*3
-
-        });
-
-    }
-
-}
-
-
-function createDeathParticles(
-    x,
-    y
-){
-
-    for(
-        let i=0;
-        i<12;
-        i++
-    ){
-
-        const angle =
-            Math.random()*
-            Math.PI*2;
-
-        const speed =
-            50+
-            Math.random()*130;
-
-        particles.push({
-
-            x:x,
-            y:y,
-
-            vx:
-                Math.cos(angle)*
-                speed,
-
-            vy:
-                Math.sin(angle)*
-                speed,
-
-            life:
-                .35+
-                Math.random()*.4,
-
-            size:
-                2+
-                Math.random()*4
-
-        });
-
-    }
-
-}
-
 
 function updateParticles(dt){
 
-    for(
-        let i=particles.length-1;
-        i>=0;
-        i--
-    ){
+    for(let i=particles.length-1;i>=0;i--){
 
-        const p =
-            particles[i];
+        const p = particles[i];
 
-        p.x +=
-            p.vx*dt;
+        p.x += p.vx*dt;
+        p.y += p.vy*dt;
 
-        p.y +=
-            p.vy*dt;
-
-        p.vx *= .96;
-
-        p.vy *= .96;
+        p.vx *= .94;
+        p.vy *= .94;
 
         p.life -= dt;
 
-        if(
-            p.life<=0
-        ){
+        if(p.life <= 0){
 
-            particles.splice(
-                i,
-                1
-            );
+            particles.splice(i,1);
 
         }
 
@@ -2700,13 +1675,85 @@ function updateParticles(dt){
 
 
 /* =========================================================
-   WELT
+   SPAWNING
+========================================================= */
+
+function updateSpawning(dt){
+
+    spawnTimer -= dt;
+
+    if(spawnTimer > 0) return;
+
+    const spawnInterval =
+        Math.max(
+            .42,
+            (1.25-level*.025)/
+            difficulty.spawnMultiplier
+        );
+
+    spawnTimer =
+        spawnInterval;
+
+    if(zombies.length < difficulty.maxZombies){
+
+        spawnZombie();
+
+        if(level >= 6 && Math.random()<.25){
+
+            spawnZombie();
+
+        }
+
+        if(level >= 12 && Math.random()<.15){
+
+            spawnZombie();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    document.getElementById("levelText").textContent =
+        level;
+
+    document.getElementById("killsText").textContent =
+        `${levelKills} / ${getKillsRequired()}`;
+
+    document.getElementById("zombieText").textContent =
+        zombies.length;
+
+    document.getElementById("pointsText").textContent =
+        upgradePoints;
+
+    const healthPercent =
+        Math.max(
+            0,
+            player.health/
+            player.maxHealth*
+            100
+        );
+
+    document.getElementById("healthFill").style.width =
+        healthPercent+"%";
+
+}
+
+
+/* =========================================================
+   DRAW WORLD
 ========================================================= */
 
 function drawWorld(){
 
-    ctx.fillStyle =
-        "#07100d";
+    ctx.fillStyle = "#121913";
 
     ctx.fillRect(
         0,
@@ -2715,114 +1762,88 @@ function drawWorld(){
         H
     );
 
+    /*
+       Bodenraster
+    */
 
-    ctx.fillStyle =
-        "#091510";
-
-    ctx.fillRect(
-        -camera.x,
-        -camera.y,
-        WORLD.width,
-        WORLD.height
-    );
-
-
-    const grid=100;
+    const grid = 100;
 
     ctx.strokeStyle =
-        "rgba(0,255,170,.045)";
+        "rgba(100,150,120,.07)";
 
-    ctx.lineWidth=1;
+    ctx.lineWidth = 1;
 
     const startX =
-        Math.floor(
-            camera.x/grid
-        )*grid;
+        Math.floor(camera.x/grid)*grid;
 
     const startY =
-        Math.floor(
-            camera.y/grid
-        )*grid;
-
+        Math.floor(camera.y/grid)*grid;
 
     for(
         let x=startX;
-        x<=camera.x+W;
+        x<camera.x+W+grid;
         x+=grid
     ){
 
+        const sx = x-camera.x;
+
         ctx.beginPath();
 
-        ctx.moveTo(
-            x-camera.x,
-            0
-        );
-
-        ctx.lineTo(
-            x-camera.x,
-            H
-        );
+        ctx.moveTo(sx,0);
+        ctx.lineTo(sx,H);
 
         ctx.stroke();
 
     }
-
 
     for(
         let y=startY;
-        y<=camera.y+H;
+        y<camera.y+H+grid;
         y+=grid
     ){
 
+        const sy = y-camera.y;
+
         ctx.beginPath();
 
-        ctx.moveTo(
-            0,
-            y-camera.y
-        );
-
-        ctx.lineTo(
-            W,
-            y-camera.y
-        );
+        ctx.moveTo(0,sy);
+        ctx.lineTo(W,sy);
 
         ctx.stroke();
 
     }
 
+}
 
-    for(
-        const d of decorations
-    ){
 
-        const sx =
-            d.x-camera.x;
+/* =========================================================
+   DRAW DECORATIONS
+========================================================= */
 
-        const sy =
-            d.y-camera.y;
+function drawDecorations(){
 
-        if(
-            sx<-50 ||
-            sx>W+50 ||
-            sy<-50 ||
-            sy>H+50
-        ){
-            continue;
-        }
-
+    for(const d of decorations){
 
         if(
-            d.type==="tree"
-        ){
+            d.x < camera.x-50 ||
+            d.x > camera.x+W+50 ||
+            d.y < camera.y-50 ||
+            d.y > camera.y+H+50
+        ) continue;
+
+        const x = d.x-camera.x;
+        const y = d.y-camera.y;
+
+        if(d.type < .5){
 
             ctx.fillStyle =
-                "rgba(9,52,38,.85)";
+                "rgba(45,80,55,.65)";
 
             ctx.beginPath();
 
             ctx.arc(
-                sx,
-                sy,
+                x,
+                y,
                 d.size,
                 0,
                 Math.PI*2
@@ -2830,419 +1851,32 @@ function drawWorld(){
 
             ctx.fill();
 
+        }else{
 
             ctx.fillStyle =
-                "rgba(65,100,65,.65)";
+                "rgba(65,65,65,.7)";
 
-            ctx.beginPath();
-
-            ctx.arc(
-                sx-4,
-                sy-5,
-                d.size*.55,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fill();
-
-        }
-        else{
-
-            ctx.fillStyle =
-                "rgba(65,75,70,.7)";
-
-            ctx.beginPath();
-
-            ctx.ellipse(
-                sx,
-                sy,
+            ctx.fillRect(
+                x-d.size/2,
+                y-d.size/2,
                 d.size,
-                d.size*.7,
-                .3,
-                0,
-                Math.PI*2
+                d.size
             );
-
-            ctx.fill();
 
         }
 
     }
 
-
-    ctx.strokeStyle =
-        "rgba(0,255,195,.6)";
-
-    ctx.lineWidth=4;
-
-    ctx.strokeRect(
-        -camera.x,
-        -camera.y,
-        WORLD.width,
-        WORLD.height
-    );
-
 }
 
 
 /* =========================================================
-   ZIEL
-========================================================= */
-
-function drawTarget(){
-
-    const target =
-        getNearestZombie();
-
-    if(!target){
-        return;
-    }
-
-    const x =
-        target.x-camera.x;
-
-    const y =
-        target.y-camera.y;
-
-    const px =
-        player.x-camera.x;
-
-    const py =
-        player.y-camera.y;
-
-
-    /*
-     * Die Zielhilfe wird jetzt schwächer dargestellt.
-     * Dadurch sieht das Spiel nicht so aus,
-     * als würde ein Laserstrahl alles verraten.
-     */
-
-    ctx.strokeStyle =
-        "rgba(0,255,195,.08)";
-
-    ctx.lineWidth=1;
-
-    ctx.setLineDash([
-        5,
-        9
-    ]);
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        px,
-        py
-    );
-
-    ctx.lineTo(
-        x,
-        y
-    );
-
-    ctx.stroke();
-
-    ctx.setLineDash([]);
-
-
-    ctx.strokeStyle =
-        "rgba(255,90,90,.65)";
-
-    ctx.lineWidth=2;
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y,
-        target.radius+7,
-        0,
-        Math.PI*2
-    );
-
-    ctx.stroke();
-
-}
-
-
-/* =========================================================
-   SPIELER
-========================================================= */
-
-function drawPlayer(){
-
-    const x =
-        player.x-camera.x;
-
-    const y =
-        player.y-camera.y;
-
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.4)";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        x,
-        y+17,
-        24,
-        9,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.strokeStyle =
-        "rgba(0,255,195,.5)";
-
-    ctx.lineWidth=5;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x,
-        y
-    );
-
-    ctx.lineTo(
-        x+
-        Math.cos(
-            player.angle
-        )*34,
-
-        y+
-        Math.sin(
-            player.angle
-        )*34
-    );
-
-    ctx.stroke();
-
-
-    ctx.shadowBlur=18;
-
-    ctx.shadowColor =
-        "rgba(0,255,195,.4)";
-
-    ctx.fillStyle =
-        "#00ffc3";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y,
-        player.radius,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.shadowBlur=0;
-
-
-    ctx.fillStyle =
-        "#d8fff5";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        x,
-        y-5,
-        7,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    ctx.strokeStyle =
-        "#b8fff0";
-
-    ctx.lineWidth=7;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        x+
-        Math.cos(
-            player.angle
-        )*8,
-
-        y+
-        Math.sin(
-            player.angle
-        )*8
-    );
-
-    ctx.lineTo(
-        x+
-        Math.cos(
-            player.angle
-        )*30,
-
-        y+
-        Math.sin(
-            player.angle
-        )*30
-    );
-
-    ctx.stroke();
-
-}
-
-
-/* =========================================================
-   ZOMBIES
-========================================================= */
-
-function drawZombies(){
-
-    for(
-        const zombie of zombies
-    ){
-
-        const x =
-            zombie.x-camera.x;
-
-        const y =
-            zombie.y-camera.y;
-
-
-        if(
-            x<-50 ||
-            x>W+50 ||
-            y<-50 ||
-            y>H+50
-        ){
-            continue;
-        }
-
-
-        ctx.fillStyle =
-            "rgba(0,0,0,.4)";
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            x,
-            y+15,
-            zombie.radius*1.1,
-            zombie.radius*.45,
-            0,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.fillStyle =
-            "#5eae70";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y,
-            zombie.radius,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.fillStyle =
-            "#80c887";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y-7,
-            zombie.radius*.62,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        ctx.fillStyle =
-            "#172219";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x-5,
-            y-9,
-            3,
-            0,
-            Math.PI*2
-        );
-
-        ctx.arc(
-            x+5,
-            y-9,
-            3,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-
-        const barWidth =
-            zombie.radius*2.2;
-
-        const health =
-            Math.max(
-                0,
-                zombie.health/
-                zombie.maxHealth
-            );
-
-        ctx.fillStyle =
-            "rgba(0,0,0,.7)";
-
-        ctx.fillRect(
-            x-barWidth/2,
-            y-zombie.radius-10,
-            barWidth,
-            4
-        );
-
-        ctx.fillStyle =
-            "#ff5555";
-
-        ctx.fillRect(
-            x-barWidth/2,
-            y-zombie.radius-10,
-            barWidth*health,
-            4
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   BULLETS
+   DRAW BULLETS
 ========================================================= */
 
 function drawBullets(){
 
-    for(
-        const bullet of bullets
-    ){
+    for(const bullet of bullets){
 
         const x =
             bullet.x-camera.x;
@@ -3251,12 +1885,10 @@ function drawBullets(){
             bullet.y-camera.y;
 
         ctx.fillStyle =
-            "#fff5a0";
+            "#ffe66b";
 
-        ctx.shadowBlur=12;
-
-        ctx.shadowColor =
-            "#00ffc3";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "#ffe66b";
 
         ctx.beginPath();
 
@@ -3270,7 +1902,7 @@ function drawBullets(){
 
         ctx.fill();
 
-        ctx.shadowBlur=0;
+        ctx.shadowBlur = 0;
 
     }
 
@@ -3278,14 +1910,274 @@ function drawBullets(){
 
 
 /* =========================================================
-   PARTICLES
+   DRAW ZOMBIES
+========================================================= */
+
+function drawZombies(){
+
+    for(const zombie of zombies){
+
+        const x =
+            zombie.x-camera.x;
+
+        const y =
+            zombie.y-camera.y;
+
+        /*
+           Körper
+        */
+
+        ctx.save();
+
+        const wobble =
+            Math.sin(zombie.wobble)*2;
+
+        ctx.fillStyle =
+            "#4fa85d";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y+wobble,
+            zombie.radius,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+           Kopf
+        */
+
+        ctx.fillStyle =
+            "#65bd6e";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y-7+wobble,
+            14,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+           Augen
+        */
+
+        ctx.fillStyle = "#111";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x-5,
+            y-9+wobble,
+            2.5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+5,
+            y-9+wobble,
+            2.5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        /*
+           Arme
+        */
+
+        ctx.strokeStyle =
+            "#4fa85d";
+
+        ctx.lineWidth = 5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x-13,
+            y+2
+        );
+
+        ctx.lineTo(
+            x-25,
+            y+12
+        );
+
+        ctx.moveTo(
+            x+13,
+            y+2
+        );
+
+        ctx.lineTo(
+            x+25,
+            y+12
+        );
+
+        ctx.stroke();
+
+        ctx.restore();
+
+        /*
+           Lebensbalken
+        */
+
+        const barWidth = 38;
+
+        const healthPercent =
+            zombie.health/
+            zombie.maxHealth;
+
+        ctx.fillStyle =
+            "rgba(0,0,0,.7)";
+
+        ctx.fillRect(
+            x-barWidth/2,
+            y-35,
+            barWidth,
+            5
+        );
+
+        ctx.fillStyle =
+            "#55e86a";
+
+        ctx.fillRect(
+            x-barWidth/2,
+            y-35,
+            barWidth*
+            Math.max(0,healthPercent),
+            5
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW PLAYER
+========================================================= */
+
+function drawPlayer(){
+
+    const x =
+        player.x-camera.x;
+
+    const y =
+        player.y-camera.y;
+
+    /*
+       Schatten
+    */
+
+    ctx.fillStyle =
+        "rgba(0,0,0,.3)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        x,
+        y+17,
+        25,
+        9,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Körper
+    */
+
+    ctx.fillStyle =
+        "#36b7ff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        player.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    /*
+       Zielrichtung / Waffe
+    */
+
+    ctx.save();
+
+    ctx.translate(x,y);
+
+    ctx.rotate(player.angle);
+
+    ctx.fillStyle =
+        "#d9e0e2";
+
+    ctx.fillRect(
+        8,
+        -5,
+        30,
+        10
+    );
+
+    ctx.fillStyle =
+        "#4d565a";
+
+    ctx.fillRect(
+        18,
+        -7,
+        17,
+        14
+    );
+
+    ctx.restore();
+
+    /*
+       Markierung
+    */
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,.75)";
+
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        player.radius+3,
+        0,
+        Math.PI*2
+    );
+
+    ctx.stroke();
+
+}
+
+
+/* =========================================================
+   DRAW PARTICLES
 ========================================================= */
 
 function drawParticles(){
 
-    for(
-        const p of particles
-    ){
+    for(const p of particles){
 
         const x =
             p.x-camera.x;
@@ -3293,23 +2185,11 @@ function drawParticles(){
         const y =
             p.y-camera.y;
 
-        if(
-            x<-30 ||
-            x>W+30 ||
-            y<-30 ||
-            y>H+30
-        ){
-            continue;
-        }
-
         ctx.globalAlpha =
-            Math.max(
-                0,
-                p.life*2
-            );
+            Math.max(0,p.life);
 
         ctx.fillStyle =
-            "#00ffc3";
+            "#c6ffd8";
 
         ctx.beginPath();
 
@@ -3325,291 +2205,20 @@ function drawParticles(){
 
     }
 
-    ctx.globalAlpha=1;
+    ctx.globalAlpha = 1;
 
 }
 
 
 /* =========================================================
-   HUD
-========================================================= */
-
-function updateHUD(){
-
-    document
-    .getElementById(
-        "levelDisplay"
-    )
-    .textContent =
-        level+
-        " / "+
-        MAX_LEVEL;
-
-
-    document
-    .getElementById(
-        "killDisplay"
-    )
-    .textContent =
-        kills;
-
-
-    document
-    .getElementById(
-        "zombieDisplay"
-    )
-    .textContent =
-        zombies.length;
-
-
-    const healthPercent =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                player.health/
-                player.maxHealth*
-                100
-            )
-        );
-
-    document
-    .getElementById(
-        "healthBar"
-    )
-    .style.width =
-        healthPercent+"%";
-
-}
-
-
-/* =========================================================
-   GAME OVER
-========================================================= */
-
-function endGame(){
-
-    gameRunning=false;
-
-    paused=false;
-
-    document
-    .getElementById(
-        "pauseScreen"
-    )
-    .style.display =
-        "none";
-
-    document
-    .getElementById(
-        "upgradeScreen"
-    )
-    .style.display =
-        "none";
-
-    document
-    .getElementById(
-        "gameOverScreen"
-    )
-    .style.display =
-        "flex";
-
-
-    document
-    .getElementById(
-        "gameOverText"
-    )
-    .textContent =
-        "Du hast Level "+
-        level+
-        " erreicht und "+
-        kills+
-        " Zombies besiegt.";
-
-}
-
-
-/* =========================================================
-   SIEG
-========================================================= */
-
-function winGame(){
-
-    gameRunning=false;
-
-    paused=false;
-
-    document
-    .getElementById(
-        "winScreen"
-    )
-    .style.display =
-        "flex";
-
-
-    document
-    .getElementById(
-        "winText"
-    )
-    .textContent =
-        "Du hast alle 20 Level überlebt und "+
-        kills+
-        " Zombies besiegt.";
-
-}
-
-
-/* =========================================================
-   RESTART
-========================================================= */
-
-document
-.getElementById(
-    "restartButton"
-)
-.addEventListener(
-    "click",
-    startGame
-);
-
-
-document
-.getElementById(
-    "winRestartButton"
-)
-.addEventListener(
-    "click",
-    startGame
-);
-
-
-/* =========================================================
-   UPDATE
-========================================================= */
-
-function update(dt){
-
-    if(
-        !gameRunning ||
-        paused
-    ){
-        return;
-    }
-
-
-    updatePlayer(dt);
-
-    updateCamera(dt);
-
-
-    updateLevel(dt);
-
-    /*
-     * Wenn gerade nach einem Level
-     * das Upgrade-Fenster geöffnet wurde,
-     * nicht weiter aktualisieren.
-     */
-
-    if(!gameRunning){
-        return;
-    }
-
-
-    const difficulty =
-        difficulties[
-            selectedDifficulty
-        ];
-
-
-    spawnTimer -= dt;
-
-
-    /*
-     * Anfangs etwas mehr Zeit zwischen
-     * den Zombies.
-     *
-     * Mit jedem Level wird es schneller.
-     */
-
-    const spawnInterval =
-        Math.max(
-            .42,
-            (
-                1.25-
-                level*.025
-            )/
-            difficulty.spawnMultiplier
-        );
-
-
-    if(
-        spawnTimer<=0
-    ){
-
-        spawnTimer =
-            spawnInterval;
-
-
-        let amount=1;
-
-
-        if(
-            level>=6 &&
-            Math.random()<.22
-        ){
-            amount++;
-        }
-
-
-        if(
-            level>=12 &&
-            Math.random()<.25
-        ){
-            amount++;
-        }
-
-
-        for(
-            let i=0;
-            i<amount;
-            i++
-        ){
-
-            spawnZombie();
-
-        }
-
-    }
-
-
-    updateZombies(dt);
-
-
-    if(!gameRunning){
-        return;
-    }
-
-
-    autoShoot(dt);
-
-    updateBullets(dt);
-
-    updateParticles(dt);
-
-    updateHUD();
-
-}
-
-
-/* =========================================================
-   DRAW
+   MAIN DRAW
 ========================================================= */
 
 function draw(){
 
     drawWorld();
 
-    drawTarget();
+    drawDecorations();
 
     drawBullets();
 
@@ -3623,61 +2232,132 @@ function draw(){
 
 
 /* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(){
+
+    gameRunning = false;
+
+    document.getElementById("finalLevel").textContent =
+        level;
+
+    document.getElementById("finalKills").textContent =
+        totalKills;
+
+    document.getElementById("gameOverScreen").style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   WIN
+========================================================= */
+
+function winGame(){
+
+    gameRunning = false;
+
+    document.getElementById("winKills").textContent =
+        totalKills;
+
+    document.getElementById("winScreen").style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+document.getElementById("pauseBtn").addEventListener("click",()=>{
+
+    if(!gameRunning) return;
+
+    paused = !paused;
+
+    document.getElementById("pauseBtn").textContent =
+        paused ? "▶ Weiter" : "⏸ Pause";
+
+});
+
+
+/* =========================================================
+   MAIN UPDATE
+========================================================= */
+
+function update(dt){
+
+    if(!gameRunning || paused){
+
+        updateHUD();
+
+        return;
+
+    }
+
+    updatePlayer(dt);
+
+    updateCamera();
+
+    updateSpawning(dt);
+
+    updateZombies(dt);
+
+    if(!gameRunning) return;
+
+    autoShoot(dt);
+
+    updateBullets(dt);
+
+    updateParticles(dt);
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
    GAME LOOP
 ========================================================= */
 
 let lastTime =
     performance.now();
 
-
 function gameLoop(now){
 
     let dt =
         (now-lastTime)/1000;
 
-    lastTime=now;
+    lastTime = now;
+
+    /*
+       Schutz vor riesigen Zeit-Sprüngen
+    */
 
     dt =
-        Math.min(
-            dt,
-            .033
-        );
+        Math.min(dt,.033);
 
     update(dt);
 
     draw();
 
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(gameLoop);
 
 }
 
-requestAnimationFrame(
-    gameLoop
-);
+requestAnimationFrame(gameLoop);
 
 
 /* =========================================================
-   APP / TAB WECHSEL
+   INITIAL DRAW
 ========================================================= */
 
-document.addEventListener(
-    "visibilitychange",
-    () => {
+createDecorations();
 
-        if(
-            document.hidden &&
-            gameRunning &&
-            !paused
-        ){
-
-            togglePause();
-
-        }
-
-    }
-);
+updateHUD();
 
 </script>
 
