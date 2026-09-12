@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Memory</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    color:#fff;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,255,255,.12), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(255,0,255,.12), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(0,120,255,.15), transparent 35%),
+        linear-gradient(135deg,#050713,#090d1c 45%,#03050d);
+    overflow-x:hidden;
+}
+
+/* Hintergrund-Effekte */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+        linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+    background-size:35px 35px;
+}
+
+/* HEADER */
+
+header{
+    text-align:center;
+    padding:25px 15px 15px;
+}
+
+header h1{
+    margin:0;
+    font-size:clamp(32px,6vw,60px);
+    letter-spacing:5px;
+    text-transform:uppercase;
+    color:#fff;
+    text-shadow:
+        0 0 8px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px rgba(0,255,255,.7);
+}
+
+header p{
+    margin:8px 0 0;
+    color:#aeb9d4;
+    font-size:15px;
+}
+
+/* INFO */
+
+.info{
+    width:min(1250px,94%);
+    margin:15px auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.stat{
+    background:rgba(10,15,35,.78);
+    border:1px solid rgba(0,255,255,.25);
+    border-radius:15px;
+    padding:13px;
+    text-align:center;
+    box-shadow:
+        0 0 15px rgba(0,255,255,.06),
+        inset 0 0 20px rgba(255,255,255,.02);
+}
+
+.stat-label{
+    display:block;
+    color:#7f8eae;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:5px;
+}
+
+.stat-value{
+    display:block;
+    font-size:22px;
+    font-weight:bold;
+    color:#00ffff;
+    text-shadow:0 0 10px rgba(0,255,255,.6);
+}
+
+/* BUTTON */
+
+.controls{
+    text-align:center;
+    margin:18px auto 20px;
+}
+
+.new-game{
+    border:none;
+    border-radius:14px;
+    padding:14px 30px;
+    font-size:16px;
+    font-weight:bold;
+    color:#fff;
+    cursor:pointer;
+    background:linear-gradient(135deg,#00a8ff,#8b00ff);
+    box-shadow:
+        0 0 12px rgba(0,200,255,.5),
+        0 0 30px rgba(130,0,255,.25);
+    transition:.2s;
+}
+
+.new-game:hover{
+    transform:translateY(-2px) scale(1.03);
+    box-shadow:
+        0 0 18px rgba(0,255,255,.7),
+        0 0 35px rgba(170,0,255,.5);
+}
+
+.new-game:active{
+    transform:scale(.97);
+}
+
+/* FORTSCHRITT */
+
+.progress-wrap{
+    width:min(1250px,94%);
+    margin:0 auto 20px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    color:#8e9bb8;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.progress{
+    height:8px;
+    background:#11172b;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#00ffff,#008cff,#bf00ff);
+    box-shadow:0 0 12px #00ffff;
+    transition:.4s;
+}
+
+/* SPIELFELD */
+
+.memory-board{
+    width:min(1400px,96%);
+    margin:0 auto 35px;
+
+    display:grid;
+
+    /*
+       10 Spalten × 8 Reihen = 80 Karten
+    */
+    grid-template-columns:repeat(10,1fr);
+
+    gap:9px;
+
+    padding:16px;
+
+    background:rgba(4,8,20,.68);
+    border:1px solid rgba(0,255,255,.18);
+    border-radius:22px;
+
+    box-shadow:
+        0 0 30px rgba(0,0,0,.45),
+        inset 0 0 35px rgba(0,255,255,.025);
+}
+
+/* KARTE */
+
+.card{
+    aspect-ratio:1/1;
+
+    perspective:900px;
+    cursor:pointer;
+
+    min-width:0;
+}
+
+.card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+
+    transform-style:preserve-3d;
+    transition:transform .42s cubic-bezier(.2,.7,.2,1);
+}
+
+.card.flipped .card-inner,
+.card.matched .card-inner{
+    transform:rotateY(180deg);
+}
+
+.card-face{
+    position:absolute;
+    inset:0;
+
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+}
+
+/* RÜCKSEITE */
+
+.card-back{
+    background:
+        radial-gradient(circle at center,rgba(0,255,255,.14),transparent 50%),
+        linear-gradient(135deg,#101a36,#090d20);
+
+    border:1px solid rgba(0,255,255,.35);
+
+    box-shadow:
+        inset 0 0 15px rgba(0,255,255,.05),
+        0 2px 8px rgba(0,0,0,.35);
+}
+
+.card-back::before{
+    content:"✦";
+
+    font-size:clamp(16px,2vw,30px);
+
+    color:#00ffff;
+
+    text-shadow:
+        0 0 6px #00ffff,
+        0 0 15px #00ffff;
+
+    opacity:.8;
+}
+
+.card-back::after{
+    content:"";
+
+    position:absolute;
+    inset:5px;
+
+    border:1px solid rgba(255,0,255,.12);
+    border-radius:8px;
+}
+
+/* VORDERSEITE */
+
+.card-front{
+    transform:rotateY(180deg);
+
+    background:
+        radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),transparent 45%),
+        linear-gradient(145deg,#17213f,#0b1023);
+
+    border:1px solid rgba(0,255,255,.5);
+
+    font-size:clamp(22px,3vw,48px);
+
+    box-shadow:
+        inset 0 0 18px rgba(0,255,255,.07),
+        0 0 8px rgba(0,255,255,.08);
+}
+
+.card:hover:not(.flipped):not(.matched) .card-back{
+    border-color:#00ffff;
+
+    box-shadow:
+        0 0 12px rgba(0,255,255,.35),
+        inset 0 0 15px rgba(0,255,255,.08);
+
+    transform:scale(.97);
+}
+
+.card.matched .card-front{
+    border-color:#00ff88;
+
+    box-shadow:
+        0 0 12px rgba(0,255,130,.45),
+        inset 0 0 20px rgba(0,255,130,.08);
+}
+
+.card.matched{
+    cursor:default;
+}
+
+/* GEWINN */
+
+.win-overlay{
+    position:fixed;
+    inset:0;
+
+    background:rgba(2,4,12,.88);
+    backdrop-filter:blur(8px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.35s;
+
+    z-index:100;
+}
+
+.win-overlay.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.win-box{
+    width:min(500px,95%);
+
+    text-align:center;
+
+    padding:40px 25px;
+
+    border-radius:25px;
+
+    background:
+        radial-gradient(circle at top,#172a4b,#080c1c 70%);
+
+    border:1px solid rgba(0,255,255,.45);
+
+    box-shadow:
+        0 0 25px rgba(0,255,255,.25),
+        0 0 70px rgba(150,0,255,.2);
+}
+
+.win-box .emoji{
+    font-size:70px;
+
+    animation:float 1.5s ease-in-out infinite;
+}
+
+.win-box h2{
+    font-size:35px;
+    margin:15px 0 8px;
+
+    color:#00ffff;
+
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 25px rgba(0,255,255,.5);
+}
+
+.win-box p{
+    color:#b7c1d8;
+    line-height:1.6;
+}
+
+.win-button{
+    margin-top:15px;
+
+    border:none;
+    border-radius:13px;
+
+    padding:13px 25px;
+
+    background:linear-gradient(135deg,#00d9ff,#9b00ff);
+
+    color:#fff;
+    font-weight:bold;
+    font-size:15px;
+
+    cursor:pointer;
+}
+
+/* ANIMATION */
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+}
+
+/* TABLET */
+
+@media(max-width:900px){
+
+    .memory-board{
+        grid-template-columns:repeat(8,1fr);
+        gap:7px;
+        padding:10px;
+    }
+
+    .info{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+/* HANDY */
+
+@media(max-width:600px){
+
+    header{
+        padding-top:18px;
+    }
+
+    header h1{
+        font-size:32px;
+        letter-spacing:3px;
+    }
+
+    header p{
+        font-size:12px;
+    }
+
+    .memory-board{
+        width:98%;
+        grid-template-columns:repeat(8,1fr);
+        gap:5px;
+        padding:7px;
+        border-radius:14px;
+    }
+
+    .card-face{
+        border-radius:7px;
+    }
+
+    .card-front{
+        font-size:clamp(16px,5vw,27px);
+    }
+
+    .card-back::before{
+        font-size:15px;
+    }
+
+    .stat{
+        padding:10px 5px;
+    }
+
+    .stat-value{
+        font-size:18px;
+    }
+
+    .new-game{
+        padding:12px 22px;
+    }
+}
+
+/* SEHR KLEINE HANDYS */
+
+@media(max-width:380px){
+
+    .memory-board{
+        gap:4px;
+        padding:5px;
+    }
+
+    .card-front{
+        font-size:16px;
+    }
+
+    .card-back::before{
+        font-size:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🧠 MEMORY</h1>
+    <p>Finde alle 40 Paare!</p>
+</header>
+
+<div class="info">
+
+    <div class="stat">
+        <span class="stat-label">Paare</span>
+        <span class="stat-value" id="pairs">0 / 40</span>
+    </div>
+
+    <div class="stat">
+        <span class="stat-label">Züge</span>
+        <span class="stat-value" id="moves">0</span>
+    </div>
+
+    <div class="stat">
+        <span class="stat-label">Zeit</span>
+        <span class="stat-value" id="time">00:00</span>
+    </div>
+
+    <div class="stat">
+        <span class="stat-label">Karten</span>
+        <span class="stat-value">80</span>
+    </div>
+
+</div>
+
+<div class="controls">
+    <button class="new-game" onclick="newGame()">
+        🔄 Neues Spiel
+    </button>
+</div>
+
+<div class="progress-wrap">
+
+    <div class="progress-info">
+        <span>Fortschritt</span>
+        <span id="progressText">0%</span>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+</div>
+
+<div class="memory-board" id="board"></div>
+
+
+<!-- GEWINN-FENSTER -->
+
+<div class="win-overlay" id="winOverlay">
+
+    <div class="win-box">
+
+        <div class="emoji">🏆</div>
+
+        <h2>GESCHAFFT!</h2>
+
+        <p>
+            Du hast alle <strong>40 Paare</strong> gefunden!
+            <br><br>
+            Züge: <strong id="finalMoves">0</strong>
+            <br>
+            Zeit: <strong id="finalTime">00:00</strong>
+        </p>
+
+        <button class="win-button" onclick="newGame()">
+            🔄 Nochmal spielen
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/*
+========================================================
+MEMORY GAME
+40 PAARE = 80 KARTEN
+========================================================
+*/
+
+
+/*
+   Großer Pool an Symbolen.
+
+   Es werden pro Spiel 40 unterschiedliche Symbole
+   zufällig aus diesem Pool ausgewählt.
+
+   Dadurch kommen nicht bei jedem Spiel dieselben
+   40 Symbole zum Einsatz.
+*/
+
+const symbolPool = [
+
+    "😀","😎","🤖","👾","👻","💀","👽","🤡",
+    "🐶","🐱","🦊","🐼","🐸","🐵","🦁","🐯",
+    "🐨","🐷","🐙","🦄","🐲","🦖","🐳","🦋",
+    "🌈","⭐","🌙","☀️","⚡","🔥","❄️","🌪️",
+    "🍕","🍔","🍟","🌭","🍩","🍪","🍉","🍓",
+    "🍌","🍎","🍒","🥝","🍇","🥑","🌽","🍿",
+    "🚗","🚕","🚓","🚑","🚒","🚀","✈️","🚁",
+    "🏎️","🚲","🏍️","⛵","🎮","🕹️","🎲","🎯",
+    "⚽","🏀","🏈","⚾","🎾","🏆","🥇","🎸",
+    "🎹","🎧","🎤","🎬","📷","💎","💰","🔑",
+    "🛡️","⚔️","🏰","👑","💣","🔮","🧪","🛰️",
+    "🌍","🌋","🏔️","🌴","🌵","🌲","🌻","🍀",
+    "❤️","💙","💚","💛","💜","🧡","🩷","🖤",
+    "☠️","👑","🔱","🪄","🎃","🎄","🎁","🎈"
+];
+
+
+/*
+   Spielvariablen
+*/
+
+const TOTAL_PAIRS = 40;
+
+let cards = [];
+let firstCard = null;
+let secondCard = null;
+
+let lockBoard = false;
+
+let moves = 0;
+let matchedPairs = 0;
+
+let seconds = 0;
+let timer = null;
+
+let gameStarted = false;
+
+
+/*
+========================================================
+HILFSFUNKTION: ARRAY MISCHEN
+========================================================
+*/
+
+function shuffle(array){
+
+    for(let i = array.length - 1; i > 0; i--){
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [array[i],array[j]] =
+        [array[j],array[i]];
+    }
+
+    return array;
+}
+
+
+/*
+========================================================
+40 VERSCHIEDENE SYMBOLE AUSWÄHLEN
+========================================================
+
+Wichtig:
+
+Nicht nur die Kartenpositionen werden gemischt.
+
+Auch die 40 verwendeten Symbole werden
+bei jedem neuen Spiel neu ausgewählt.
+*/
+
+function getRandomSymbols(){
+
+    const pool = [...symbolPool];
+
+    shuffle(pool);
+
+    return pool.slice(0,TOTAL_PAIRS);
+}
+
+
+/*
+========================================================
+NEUES SPIEL
+========================================================
+*/
+
+function newGame(){
+
+    stopTimer();
+
+    /*
+       Spiel zurücksetzen
+    */
+
+    firstCard = null;
+    secondCard = null;
+
+    lockBoard = false;
+
+    moves = 0;
+    matchedPairs = 0;
+
+    seconds = 0;
+    gameStarted = false;
+
+    /*
+       Gewinnfenster schließen
+    */
+
+    document
+        .getElementById("winOverlay")
+        .classList.remove("show");
+
+
+    /*
+       40 zufällige Symbole auswählen
+    */
+
+    const selectedSymbols =
+        getRandomSymbols();
+
+
+    /*
+       Jedes Symbol zweimal hinzufügen
+    */
+
+    cards = [];
+
+    selectedSymbols.forEach(symbol => {
+
+        cards.push({
+            symbol:symbol,
+            id:Math.random()
+        });
+
+        cards.push({
+            symbol:symbol,
+            id:Math.random()
+        });
+
+    });
+
+
+    /*
+       Alle 80 Karten mischen
+    */
+
+    shuffle(cards);
+
+
+    /*
+       Spielfeld zeichnen
+    */
+
+    renderBoard();
+
+
+    /*
+       Anzeige aktualisieren
+    */
+
+    updateStats();
+}
+
+
+/*
+========================================================
+SPIELFELD ERSTELLEN
+========================================================
+*/
+
+function renderBoard(){
+
+    const board =
+        document.getElementById("board");
+
+    board.innerHTML = "";
+
+
+    cards.forEach((card,index) => {
+
+        const cardElement =
+            document.createElement("div");
+
+        cardElement.className = "card";
+
+        cardElement.dataset.index = index;
+
+
+        cardElement.innerHTML = `
+
+            <div class="card-inner">
+
+                <div class="card-face card-back"></div>
+
+                <div class="card-face card-front">
+                    ${card.symbol}
+                </div>
+
+            </div>
+
+        `;
+
+
+        cardElement.addEventListener(
+            "click",
+            () => flipCard(cardElement,index)
+        );
+
+
+        board.appendChild(cardElement);
+
+    });
+}
+
+
+/*
+========================================================
+KARTE AUFDECKEN
+========================================================
+*/
+
+function flipCard(element,index){
+
+    /*
+       Keine Eingabe zulassen wenn:
+
+       - Spielfeld gesperrt
+       - Karte bereits offen
+       - Karte bereits gefunden
+       - dieselbe Karte zweimal geklickt
+    */
+
+    if(
+        lockBoard ||
+        element.classList.contains("flipped") ||
+        element.classList.contains("matched") ||
+        element === firstCard
+    ){
+        return;
+    }
+
+
+    /*
+       Timer beim ersten Zug starten
+    */
+
+    if(!gameStarted){
+
+        gameStarted = true;
+
+        startTimer();
+    }
+
+
+    /*
+       Karte öffnen
+    */
+
+    element.classList.add("flipped");
+
+
+    /*
+       Erste Karte?
+    */
+
+    if(!firstCard){
+
+        firstCard = element;
+
+        return;
+    }
+
+
+    /*
+       Zweite Karte
+    */
+
+    secondCard = element;
+
+    moves++;
+
+    updateStats();
+
+
+    /*
+       Prüfen
+    */
+
+    checkMatch();
+}
+
+
+/*
+========================================================
+PAAR PRÜFEN
+========================================================
+*/
+
+function checkMatch(){
+
+    const firstIndex =
+        Number(firstCard.dataset.index);
+
+    const secondIndex =
+        Number(secondCard.dataset.index);
+
+
+    const firstSymbol =
+        cards[firstIndex].symbol;
+
+    const secondSymbol =
+        cards[secondIndex].symbol;
+
+
+    if(firstSymbol === secondSymbol){
+
+        /*
+           Treffer
+        */
+
+        firstCard.classList.add("matched");
+        secondCard.classList.add("matched");
+
+        matchedPairs++;
+
+        updateStats();
+
+        resetSelection();
+
+
+        /*
+           Prüfen ob gewonnen
+        */
+
+        if(matchedPairs === TOTAL_PAIRS){
+
+            setTimeout(gameWon,500);
+        }
+
+    }else{
+
+        /*
+           Falsches Paar
+
+           Board kurz sperren
+        */
+
+        lockBoard = true;
+
+
+        setTimeout(() => {
+
+            firstCard.classList.remove("flipped");
+            secondCard.classList.remove("flipped");
+
+            resetSelection();
+
+        },800);
+
+    }
+
+}
+
+
+/*
+========================================================
+AUSWAHL ZURÜCKSETZEN
+========================================================
+*/
+
+function resetSelection(){
+
+    firstCard = null;
+    secondCard = null;
+
+    lockBoard = false;
+}
+
+
+/*
+========================================================
+TIMER START
+========================================================
+*/
+
+function startTimer(){
+
+    stopTimer();
+
+    timer = setInterval(() => {
+
+        seconds++;
+
+        updateTime();
+
+    },1000);
+
+}
+
+
+/*
+========================================================
+TIMER STOP
+========================================================
+*/
+
+function stopTimer(){
+
+    if(timer){
+
+        clearInterval(timer);
+
+        timer = null;
+    }
+
+}
+
+
+/*
+========================================================
+ZEIT FORMATIEREN
+========================================================
+*/
+
+function formatTime(totalSeconds){
+
+    const minutes =
+        Math.floor(totalSeconds / 60);
+
+    const secs =
+        totalSeconds % 60;
+
+
+    return String(minutes).padStart(2,"0")
+        + ":"
+        + String(secs).padStart(2,"0");
+}
+
+
+/*
+========================================================
+ZEIT ANZEIGEN
+========================================================
+*/
+
+function updateTime(){
+
+    document
+        .getElementById("time")
+        .textContent =
+        formatTime(seconds);
+
+}
+
+
+/*
+========================================================
+STATISTIK AKTUALISIEREN
+========================================================
+*/
+
+function updateStats(){
+
+    document
+        .getElementById("pairs")
+        .textContent =
+        `${matchedPairs} / ${TOTAL_PAIRS}`;
+
+
+    document
+        .getElementById("moves")
+        .textContent =
+        moves;
+
+
+    updateTime();
+
+
+    /*
+       Fortschritt
+    */
+
+    const percent =
+        Math.round(
+            (matchedPairs / TOTAL_PAIRS) * 100
+        );
+
+
+    document
+        .getElementById("progressText")
+        .textContent =
+        percent + "%";
+
+
+    document
+        .getElementById("progressBar")
+        .style.width =
+        percent + "%";
+
+}
+
+
+/*
+========================================================
+GEWONNEN
+========================================================
+*/
+
+function gameWon(){
+
+    stopTimer();
+
+    document
+        .getElementById("finalMoves")
+        .textContent =
+        moves;
+
+
+    document
+        .getElementById("finalTime")
+        .textContent =
+        formatTime(seconds);
+
+
+    document
+        .getElementById("winOverlay")
+        .classList.add("show");
+
+}
+
+
+/*
+========================================================
+SPIEL STARTEN
+========================================================
+*/
+
+newGame();
+
+</script>
+
+</body>
+</html>
