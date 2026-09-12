@@ -1,0 +1,3507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Bulldog Mania 2 – 100 Level</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:15px;
+
+    background:
+        radial-gradient(circle at 50% -10%,
+            #fff7fb 0%,
+            #ffd9e7 28%,
+            #d85b83 65%,
+            #651d3b 100%);
+
+    color:#321421;
+}
+
+.game{
+    width:min(98vw,900px);
+    margin:auto;
+    padding:20px;
+
+    background:rgba(255,255,255,.96);
+
+    border-radius:28px;
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.35);
+}
+
+h1{
+    margin:0;
+    text-align:center;
+
+    font-size:
+        clamp(28px,6vw,48px);
+}
+
+.subtitle{
+    text-align:center;
+    color:#7c3b55;
+    margin:5px 0 16px;
+    font-weight:bold;
+}
+
+.topbar{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:7px;
+    margin-bottom:10px;
+}
+
+.info{
+    background:#fff0f5;
+    border:2px solid #f1b5ca;
+    border-radius:14px;
+    padding:8px 4px;
+    text-align:center;
+}
+
+.info span{
+    display:block;
+    font-size:11px;
+    color:#87526a;
+}
+
+.info strong{
+    display:block;
+    margin-top:2px;
+    font-size:19px;
+}
+
+.goal{
+    background:#fff8dc;
+    border:2px solid #e9cb6b;
+    border-radius:15px;
+    padding:10px;
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+#board{
+    width:min(94vw,700px);
+    margin:auto;
+
+    display:grid;
+
+    gap:4px;
+    padding:7px;
+
+    background:#542238;
+
+    border-radius:21px;
+
+    box-shadow:
+        inset 0 0 0 4px #7d4059,
+        0 10px 25px rgba(0,0,0,.25);
+}
+
+.cell{
+    position:relative;
+
+    min-width:0;
+    aspect-ratio:1/1;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:rgba(255,255,255,.11);
+
+    cursor:pointer;
+
+    transition:
+        transform .12s,
+        filter .12s;
+}
+
+.cell:hover{
+    filter:brightness(1.08);
+}
+
+.cell.blocked{
+    cursor:default;
+
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #777,
+            #777 7px,
+            #5e5e5e 7px,
+            #5e5e5e 14px
+        );
+
+    box-shadow:
+        inset 0 0 0 3px #444;
+}
+
+.cell.empty{
+    background:transparent;
+    cursor:default;
+}
+
+.cell.ice1{
+    background:#bdeaff;
+
+    box-shadow:
+        inset 0 0 0 3px #71c8ed;
+}
+
+.cell.ice2{
+    background:#8ddcff;
+
+    box-shadow:
+        inset 0 0 0 4px #42aede;
+}
+
+.cell.ice1::after,
+.cell.ice2::after{
+    content:"❄️";
+    position:absolute;
+    right:2px;
+    top:1px;
+    font-size:11px;
+    pointer-events:none;
+}
+
+.cell.crate{
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #c88642,
+            #c88642 7px,
+            #a96830 7px,
+            #a96830 13px
+        );
+
+    box-shadow:
+        inset 0 0 0 3px #70421f;
+}
+
+.cell.crate::after{
+    content:"📦";
+    position:absolute;
+    right:1px;
+    top:1px;
+    font-size:11px;
+    pointer-events:none;
+}
+
+.tile{
+    width:86%;
+    height:86%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:17px;
+
+    font-size:
+        clamp(22px,5.7vw,43px);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #f1d8e2
+        );
+
+    box-shadow:
+        0 4px 7px rgba(0,0,0,.28),
+        inset 0 2px 3px rgba(255,255,255,.9);
+
+    transition:
+        transform .14s,
+        opacity .14s;
+}
+
+.tile.selected{
+    transform:scale(1.13);
+
+    box-shadow:
+        0 0 0 4px #ffd83d,
+        0 5px 10px rgba(0,0,0,.35);
+}
+
+.tile.row{
+    background:
+        linear-gradient(
+            145deg,
+            #fff3a4,
+            #ffd13b
+        );
+}
+
+.tile.column{
+    background:
+        linear-gradient(
+            145deg,
+            #d5c3ff,
+            #9a6cff
+        );
+}
+
+.tile.bomb{
+    background:
+        linear-gradient(
+            145deg,
+            #ffb9d3,
+            #ff4d8a
+        );
+}
+
+.tile.color{
+    background:
+        linear-gradient(
+            145deg,
+            #b9f7ff,
+            #35c5e4
+        );
+}
+
+.tile.cross{
+    background:
+        linear-gradient(
+            145deg,
+            #c5ffc9,
+            #3ecf70
+        );
+}
+
+.tile.hit{
+    animation:
+        hit .18s ease;
+}
+
+@keyframes hit{
+    50%{
+        transform:scale(1.2);
+    }
+}
+
+.controls{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+
+    margin-top:14px;
+}
+
+button{
+    border:0;
+    border-radius:13px;
+
+    padding:10px 15px;
+
+    font-weight:bold;
+    font-size:14px;
+
+    color:white;
+
+    background:#d84d78;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 4px 8px rgba(0,0,0,.2);
+}
+
+button:hover{
+    filter:brightness(1.08);
+}
+
+button:active{
+    transform:translateY(1px);
+}
+
+button.secondary{
+    background:#67384d;
+}
+
+button.green{
+    background:#329c68;
+}
+
+button.blue{
+    background:#347bc7;
+}
+
+.message{
+    min-height:25px;
+    margin-top:9px;
+
+    text-align:center;
+    font-weight:bold;
+}
+
+.objectives{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:7px;
+
+    margin-top:9px;
+}
+
+.objective{
+    padding:6px 10px;
+
+    border-radius:12px;
+
+    background:#f8edf2;
+    border:1px solid #e2bdca;
+
+    font-size:12px;
+    font-weight:bold;
+}
+
+.objective.done{
+    background:#d9f5e4;
+    border-color:#80c89b;
+    color:#22653b;
+}
+
+.combo{
+    min-height:28px;
+
+    text-align:center;
+
+    font-size:20px;
+    font-weight:900;
+
+    color:#e04a78;
+
+    text-shadow:
+        1px 1px white;
+}
+
+.levelMap{
+    margin-top:18px;
+
+    padding:12px;
+
+    background:#fff0f5;
+
+    border:2px solid #f1b5ca;
+
+    border-radius:17px;
+}
+
+.levelMapTitle{
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.levelButtons{
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    gap:4px;
+}
+
+.levelButton{
+    padding:7px 2px;
+
+    font-size:11px;
+
+    border-radius:8px;
+
+    background:#d9a0b5;
+}
+
+.levelButton.current{
+    background:#d43c70;
+}
+
+.levelButton.completed{
+    background:#54a875;
+}
+
+.levelButton.locked{
+    background:#999;
+    cursor:not-allowed;
+}
+
+.legend{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+
+    margin-top:9px;
+
+    font-size:11px;
+    color:#70495a;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    z-index:50;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:15px;
+
+    background:rgba(32,8,20,.75);
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.popup{
+    width:min(94vw,470px);
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:27px;
+
+    text-align:center;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.45);
+}
+
+.popup h2{
+    margin-top:0;
+    font-size:30px;
+}
+
+.stars{
+    margin:12px 0;
+    font-size:39px;
+}
+
+.popupStats{
+    background:#fff3f7;
+    border-radius:14px;
+    padding:10px;
+    margin:12px 0;
+}
+
+@media(max-width:650px){
+
+    body{
+        padding:6px;
+    }
+
+    .game{
+        padding:11px;
+        border-radius:18px;
+    }
+
+    .topbar{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .topbar .info:last-child{
+        grid-column:span 2;
+    }
+
+    #board{
+        gap:3px;
+        padding:4px;
+    }
+
+    .tile{
+        border-radius:10px;
+    }
+
+    .levelButtons{
+        grid-template-columns:repeat(8,1fr);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>🐶 Bulldog Mania 2 🐶</h1>
+
+<div class="subtitle">
+100 verrückte Bulldoggen-Level
+</div>
+
+<div class="topbar">
+
+<div class="info">
+<span>LEVEL</span>
+<strong id="level">1</strong>
+</div>
+
+<div class="info">
+<span>PUNKTE</span>
+<strong id="score">0</strong>
+</div>
+
+<div class="info">
+<span>ZÜGE</span>
+<strong id="moves">0</strong>
+</div>
+
+<div class="info">
+<span>ZIEL</span>
+<strong id="target">0</strong>
+</div>
+
+<div class="info">
+<span>COMBO</span>
+<strong id="combo">x1</strong>
+</div>
+
+</div>
+
+<div class="goal" id="goal">
+Level wird geladen...
+</div>
+
+<div class="objectives" id="objectives"></div>
+
+<div class="combo" id="comboText"></div>
+
+<div id="board"></div>
+
+<div class="message" id="message"></div>
+
+<div class="controls">
+
+<button onclick="restartLevel()">
+🔄 Level neu
+</button>
+
+<button class="blue" onclick="showHelp()">
+❓ Hilfe
+</button>
+
+<button class="secondary" onclick="resetProgress()">
+🗑️ Fortschritt löschen
+</button>
+
+</div>
+
+<div class="levelMap">
+
+<div class="levelMapTitle">
+🗺️ Bulldog-Mania-Karte – 100 Level
+</div>
+
+<div
+class="levelButtons"
+id="levelButtons">
+</div>
+
+<div class="legend">
+<span>🔴 Aktuell</span>
+<span>🟢 Geschafft</span>
+<span>🔒 Gesperrt</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="overlay" id="overlay">
+
+<div class="popup">
+
+<h2 id="popupTitle">
+Level geschafft!
+</h2>
+
+<div class="stars" id="popupStars">
+⭐⭐⭐
+</div>
+
+<div class="popupStats" id="popupStats"></div>
+
+<p id="popupText"></p>
+
+<button
+class="green"
+onclick="nextLevel()">
+➡️ Nächstes Level
+</button>
+
+<button
+class="secondary"
+onclick="closePopup()">
+Weiter spielen
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==========================================================
+   BULLDOG MANIA 2
+   100 LEVEL
+   ========================================================== */
+
+const MAX_LEVEL = 100;
+
+const SYMBOLS = [
+    "🐶",
+    "🐾",
+    "🦴",
+    "🎾",
+    "❤️",
+    "🎀"
+];
+
+const SIZE_LIMITS = [6,7,8,9];
+
+let board = [];
+let selected = null;
+let currentLevel = 1;
+let score = 0;
+let moves = 0;
+let locked = false;
+let combo = 0;
+
+let levelStats = {
+    ice:0,
+    crates:0
+};
+
+
+/* ==========================================================
+   LEVELGENERIERUNG
+   ========================================================== */
+
+function buildLevels(){
+
+    const list=[];
+
+    for(let i=1;i<=MAX_LEVEL;i++){
+
+        let size;
+
+        if(i<16) size=6;
+        else if(i<36) size=7;
+        else if(i<66) size=8;
+        else size=9;
+
+        let difficulty =
+            Math.min(
+                1,
+                (i-1)/99
+            );
+
+        let target =
+            Math.round(
+                2200 +
+                i*i*42 +
+                i*260
+            );
+
+        let baseMoves;
+
+        if(i<=10) baseMoves=30;
+        else if(i<=25) baseMoves=28;
+        else if(i<=40) baseMoves=25;
+        else if(i<=55) baseMoves=22;
+        else if(i<=70) baseMoves=20;
+        else if(i<=85) baseMoves=18;
+        else baseMoves=16;
+
+        baseMoves -=
+            Math.floor(i/20);
+
+        const map =
+            chooseMap(i);
+
+        let type;
+
+        if(i<=15)
+            type="score";
+
+        else if(i<=30)
+            type="collect";
+
+        else if(i<=45)
+            type="ice";
+
+        else if(i<=60)
+            type="crates";
+
+        else if(i<=75)
+            type="mixed";
+
+        else if(i<=90)
+            type="hard";
+
+        else
+            type="extreme";
+
+        list.push({
+            level:i,
+            size,
+            target,
+            moves:Math.max(7,baseMoves),
+            map,
+            type,
+            difficulty
+        });
+
+    }
+
+    return list;
+}
+
+const levels = buildLevels();
+
+
+/* ==========================================================
+   KARTEN
+   ========================================================== */
+
+function chooseMap(level){
+
+    const maps = [
+
+        "empty",
+        "corners",
+        "horizontal",
+        "vertical",
+        "diamond",
+        "cross",
+        "checker",
+        "ring",
+        "islands",
+        "snake",
+        "plus",
+        "hourglass",
+        "maze",
+        "split",
+        "spiral",
+        "gates",
+        "zigzag",
+        "center",
+        "four",
+        "walls",
+        "stairs",
+        "fortress",
+        "labyrinth",
+        "double",
+        "arena",
+        "holes",
+        "arrow",
+        "butterfly",
+        "bridge",
+        "chaos"
+
+    ];
+
+    return maps[
+        Math.floor(
+            ((level-1)*1.37) %
+            maps.length
+        )
+    ];
+}
+
+
+/* ==========================================================
+   KARTENBLOCK
+   ========================================================== */
+
+function isBlocked(r,c,size){
+
+    const map =
+        getLevelData().map;
+
+    const mid =
+        (size-1)/2;
+
+    switch(map){
+
+        case "empty":
+            return false;
+
+        case "corners":
+            return (
+                (r<1 && c<1) ||
+                (r<1 && c>=size-1) ||
+                (r>=size-1 && c<1) ||
+                (r>=size-1 && c>=size-1)
+            );
+
+        case "horizontal":
+            return (
+                r===Math.floor(size/2)
+                &&
+                c>1
+                &&
+                c<size-2
+            );
+
+        case "vertical":
+            return (
+                c===Math.floor(size/2)
+                &&
+                r>1
+                &&
+                r<size-2
+            );
+
+        case "diamond":
+            return (
+                Math.abs(r-mid)+
+                Math.abs(c-mid)>
+                mid+1
+            );
+
+        case "cross":
+            return (
+                r===Math.floor(size/2) &&
+                c!==Math.floor(size/2)
+            ) ||
+            (
+                c===Math.floor(size/2) &&
+                r!==Math.floor(size/2)
+            );
+
+        case "checker":
+            return (
+                (r+c)%2===0 &&
+                r!==0 &&
+                c!==0 &&
+                r!==size-1 &&
+                c!==size-1
+            );
+
+        case "ring":
+            return (
+                (r===1 || r===size-2) &&
+                c>1 &&
+                c<size-2
+            ) ||
+            (
+                (c===1 || c===size-2) &&
+                r>1 &&
+                r<size-2
+            );
+
+        case "islands":
+            return (
+                (r<2 && c<2) ||
+                (r<2 && c>=size-2) ||
+                (r>=size-2 && c<2) ||
+                (r>=size-2 && c>=size-2)
+            );
+
+        case "snake":
+            return (
+                (r%3===1 && c<size-2) ||
+                (r%3===0 && c>1)
+            );
+
+        case "plus":
+            return (
+                r!==Math.floor(size/2) &&
+                c!==Math.floor(size/2) &&
+                Math.abs(r-mid)>1 &&
+                Math.abs(c-mid)>1
+            );
+
+        case "hourglass":
+            return (
+                (r===1 || r===size-2) &&
+                c>1 &&
+                c<size-2
+            ) ||
+            Math.abs(r-mid)===Math.abs(c-mid)
+        ;
+
+        case "maze":
+            return (
+                (r%2===1 && c>0 && c<size-1) ||
+                (c%3===0 && r>1)
+            );
+
+        case "split":
+            return (
+                c===Math.floor(size/2)
+            );
+
+        case "spiral":
+            return (
+                (r===1 && c>1) ||
+                (c===size-2 && r>1 && r<size-2) ||
+                (r===size-2 && c<size-2 && c>1) ||
+                (c===1 && r>2 && r<size-2)
+            );
+
+        case "gates":
+            return (
+                c===1 &&
+                r>1 &&
+                r<size-2
+            ) ||
+            (
+                c===size-2 &&
+                r>1 &&
+                r<size-2
+            );
+
+        case "zigzag":
+            return (
+                (r%2===1 && c%2===0) ||
+                (r%2===0 && c%2===1)
+            );
+
+        case "center":
+            return (
+                Math.abs(r-mid)<=1 &&
+                Math.abs(c-mid)<=1
+            );
+
+        case "four":
+            return (
+                (
+                    r===Math.floor(size/3) ||
+                    r===Math.floor(size*2/3)
+                ) &&
+                c>1 &&
+                c<size-2
+            );
+
+        case "walls":
+            return (
+                c===2 ||
+                c===size-3
+            ) &&
+            r!==Math.floor(size/2);
+
+        case "stairs":
+            return (
+                c===r ||
+                c===size-r-1
+            );
+
+        case "fortress":
+            return (
+                (
+                    r===1 ||
+                    r===size-2 ||
+                    c===1 ||
+                    c===size-2
+                ) &&
+                !(r===1 && c===Math.floor(size/2)) &&
+                !(r===size-2 && c===Math.floor(size/2))
+            );
+
+        case "labyrinth":
+            return (
+                (r%2===1 && c>1) ||
+                (c%2===0 && r>2 && r<size-2)
+            );
+
+        case "double":
+            return (
+                c===2 ||
+                c===size-3 ||
+                r===2 ||
+                r===size-3
+            ) &&
+            !(r===Math.floor(size/2) ||
+              c===Math.floor(size/2));
+
+        case "arena":
+            return (
+                (
+                    r===1 ||
+                    r===size-2
+                ) &&
+                c>1 &&
+                c<size-2
+            );
+
+        case "holes":
+            return (
+                (
+                    r===1 ||
+                    r===size-2
+                ) &&
+                (
+                    c===1 ||
+                    c===size-2
+                )
+            );
+
+        case "arrow":
+            return (
+                Math.abs(c-mid)>
+                Math.abs(r-mid)+1
+            );
+
+        case "butterfly":
+            return (
+                (
+                    Math.abs(c-mid)===1 &&
+                    Math.abs(r-mid)>1
+                ) ||
+                (
+                    Math.abs(r-mid)===1 &&
+                    Math.abs(c-mid)>1
+                )
+            );
+
+        case "bridge":
+            return (
+                r===1 ||
+                r===size-2
+            ) &&
+            c!==Math.floor(size/2);
+
+        case "chaos":
+            return (
+                ((r*7+c*11)%5===0) ||
+                ((r+c)%7===0 && r>1)
+            );
+
+    }
+
+    return false;
+}
+
+
+/* ==========================================================
+   LEVELDATEN
+   ========================================================== */
+
+function getLevelData(){
+    return levels[currentLevel-1];
+}
+
+
+/* ==========================================================
+   LEVELTYP
+   ========================================================== */
+
+function getObjective(){
+
+    const data=getLevelData();
+
+    const i=currentLevel;
+
+    if(data.type==="score"){
+
+        return {
+            score:data.target
+        };
+
+    }
+
+    if(data.type==="collect"){
+
+        return {
+            score:data.target,
+            collect:SYMBOLS[
+                i%SYMBOLS.length
+            ],
+            amount:
+                10+
+                Math.floor(i/3)
+        };
+
+    }
+
+    if(data.type==="ice"){
+
+        return {
+            score:data.target,
+            ice:
+                4+
+                Math.floor(i/3)
+        };
+
+    }
+
+    if(data.type==="crates"){
+
+        return {
+            score:data.target,
+            crates:
+                4+
+                Math.floor(i/4)
+        };
+
+    }
+
+    if(data.type==="mixed"){
+
+        return {
+            score:data.target,
+            collect:
+                SYMBOLS[
+                    i%SYMBOLS.length
+                ],
+            amount:
+                12+
+                Math.floor(i/4),
+            ice:
+                5+
+                Math.floor(i/5)
+        };
+
+    }
+
+    if(data.type==="hard"){
+
+        return {
+            score:data.target,
+            collect:
+                SYMBOLS[
+                    (i+2)%SYMBOLS.length
+                ],
+            amount:
+                15+
+                Math.floor(i/5),
+            ice:
+                7+
+                Math.floor(i/6),
+            crates:
+                5+
+                Math.floor(i/6)
+        };
+
+    }
+
+    return {
+        score:data.target,
+        collect:
+            SYMBOLS[
+                (i+3)%SYMBOLS.length
+            ],
+        amount:
+            18+
+            Math.floor(i/4),
+        ice:
+            8+
+            Math.floor(i/5),
+        crates:
+            7+
+            Math.floor(i/5)
+    };
+}
+
+
+/* ==========================================================
+   ZIELFORTSCHRITT
+   ========================================================== */
+
+function objectiveComplete(){
+
+    const obj=getObjective();
+
+    if(score<obj.score)
+        return false;
+
+    if(obj.collect){
+
+        if(
+            collected[obj.collect] <
+            obj.amount
+        )
+            return false;
+
+    }
+
+    if(obj.ice){
+
+        if(levelStats.ice <
+            obj.ice)
+            return false;
+
+    }
+
+    if(obj.crates){
+
+        if(levelStats.crates <
+            obj.crates)
+            return false;
+
+    }
+
+    return true;
+}
+
+
+/* ==========================================================
+   GESAMMELTE SYMBOLE
+   ========================================================== */
+
+let collected={};
+
+function resetCollected(){
+
+    collected={};
+
+    SYMBOLS.forEach(
+        s=>collected[s]=0
+    );
+
+}
+
+
+/* ==========================================================
+   STEIN
+   ========================================================== */
+
+function createTile(){
+
+    return {
+        symbol:
+            randomSymbol(),
+        special:null
+    };
+
+}
+
+function randomSymbol(){
+
+    return SYMBOLS[
+        Math.floor(
+            Math.random()*
+            SYMBOLS.length
+        )
+    ];
+
+}
+
+
+/* ==========================================================
+   LEVEL START
+   ========================================================== */
+
+function startLevel(){
+
+    const data=getLevelData();
+
+    score=0;
+    moves=data.moves;
+
+    selected=null;
+    locked=false;
+    combo=0;
+
+    resetCollected();
+
+    levelStats={
+        ice:0,
+        crates:0
+    };
+
+    createBoard();
+
+    let attempts=0;
+
+    while(
+        findMatches().length &&
+        attempts<200
+    ){
+
+        fillBoard();
+
+        attempts++;
+
+    }
+
+    updateUI();
+
+}
+
+
+/* ==========================================================
+   BOARD
+   ========================================================== */
+
+function createBoard(){
+
+    board=[];
+
+    const size=getLevelData().size;
+
+    for(let r=0;r<size;r++){
+
+        board[r]=[];
+
+        for(let c=0;c<size;c++){
+
+            if(isBlocked(r,c,size)){
+
+                board[r][c]={
+                    type:"blocked"
+                };
+
+            }else{
+
+                board[r][c]=createTile();
+
+            }
+
+        }
+
+    }
+
+    applyObstacles();
+
+    renderBoard();
+
+}
+
+
+function fillBoard(){
+
+    const size=getLevelData().size;
+
+    for(let r=0;r<size;r++){
+
+        for(let c=0;c<size;c++){
+
+            if(isPlayable(r,c) &&
+               board[r][c] &&
+               !board[r][c].symbol){
+
+                board[r][c]=createTile();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   HINDERNISSE
+   ========================================================== */
+
+function applyObstacles(){
+
+    const data=getLevelData();
+
+    const size=data.size;
+
+    let obstacleLevel=
+        currentLevel<20
+        ?0
+        :currentLevel<40
+        ?1
+        :currentLevel<60
+        ?2
+        :currentLevel<80
+        ?3
+        :4;
+
+    if(obstacleLevel===0)
+        return;
+
+    let candidates=[];
+
+    for(let r=0;r<size;r++){
+
+        for(let c=0;c<size;c++){
+
+            if(
+                isPlayable(r,c)
+            ){
+
+                candidates.push({
+                    r,c
+                });
+
+            }
+
+        }
+
+    }
+
+    shuffle(candidates);
+
+    const iceCount =
+        Math.min(
+            Math.floor(
+                candidates.length*
+                (0.06+
+                 obstacleLevel*.025)
+            ),
+            16
+        );
+
+    const crateCount =
+        Math.min(
+            Math.floor(
+                candidates.length*
+                (0.04+
+                 obstacleLevel*.018)
+            ),
+            12
+        );
+
+    for(let i=0;i<iceCount;i++){
+
+        const p=candidates[i];
+
+        if(
+            board[p.r][p.c] &&
+            board[p.r][p.c].symbol
+        ){
+
+            board[p.r][p.c].ice =
+                obstacleLevel>=3
+                ?2
+                :1;
+
+        }
+
+    }
+
+    for(
+        let i=iceCount;
+        i<iceCount+crateCount;
+        i++
+    ){
+
+        const p=candidates[i];
+
+        if(
+            board[p.r][p.c] &&
+            board[p.r][p.c].symbol
+        ){
+
+            board[p.r][p.c].crate=1;
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   SPIELBAR
+   ========================================================== */
+
+function isPlayable(r,c){
+
+    const size=getLevelData().size;
+
+    if(
+        r<0 ||
+        c<0 ||
+        r>=size ||
+        c>=size
+    )
+        return false;
+
+    return !isBlocked(r,c,size);
+
+}
+
+
+/* ==========================================================
+   RENDER
+   ========================================================== */
+
+function renderBoard(){
+
+    const el=
+        document.getElementById(
+            "board"
+        );
+
+    const size=getLevelData().size;
+
+    el.style.gridTemplateColumns=
+        `repeat(${size},1fr)`;
+
+    el.innerHTML="";
+
+    for(let r=0;r<size;r++){
+
+        for(let c=0;c<size;c++){
+
+            const cell=
+                document.createElement("div");
+
+            cell.className="cell";
+
+            const data=board[r][c];
+
+            if(!data){
+
+                cell.classList.add("empty");
+
+            }
+
+            else if(
+                data.type==="blocked"
+            ){
+
+                cell.classList.add(
+                    "blocked"
+                );
+
+            }
+
+            else{
+
+                if(data.ice===1)
+                    cell.classList.add("ice1");
+
+                if(data.ice===2)
+                    cell.classList.add("ice2");
+
+                if(data.crate)
+                    cell.classList.add("crate");
+
+                if(data.symbol){
+
+                    const tile=
+                        document.createElement("div");
+
+                    tile.className="tile";
+
+                    if(
+                        data.special
+                    ){
+
+                        tile.classList.add(
+                            data.special
+                        );
+
+                        tile.textContent=
+                            specialIcon(
+                                data.special
+                            );
+
+                    }else{
+
+                        tile.textContent=
+                            data.symbol;
+
+                    }
+
+                    if(
+                        selected &&
+                        selected.r===r &&
+                        selected.c===c
+                    ){
+
+                        tile.classList.add(
+                            "selected"
+                        );
+
+                    }
+
+                    cell.appendChild(tile);
+
+                }
+
+                cell.onclick=()=>
+                    selectCell(r,c);
+
+            }
+
+            el.appendChild(cell);
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   SPEZIAL-ICONS
+   ========================================================== */
+
+function specialIcon(type){
+
+    switch(type){
+
+        case "row":
+            return "🐶↔️";
+
+        case "column":
+            return "🐶↕️";
+
+        case "bomb":
+            return "💣🐶";
+
+        case "color":
+            return "🌈🐶";
+
+        case "cross":
+            return "⚡🐶";
+
+    }
+
+    return "🐶";
+
+}
+
+
+/* ==========================================================
+   AUSWÄHLEN
+   ========================================================== */
+
+function selectCell(r,c){
+
+    if(
+        locked ||
+        !isPlayable(r,c) ||
+        !board[r][c] ||
+        !board[r][c].symbol
+    )
+        return;
+
+    if(
+        board[r][c].crate
+    ){
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "📦 Diese Kiste blockiert das Feld.";
+
+    }
+
+    if(!selected){
+
+        selected={r,c};
+
+        renderBoard();
+
+        return;
+
+    }
+
+    if(
+        selected.r===r &&
+        selected.c===c
+    ){
+
+        selected=null;
+
+        renderBoard();
+
+        return;
+
+    }
+
+    if(
+        isAdjacent(
+            selected.r,
+            selected.c,
+            r,c
+        )
+    ){
+
+        const a={...selected};
+
+        selected=null;
+
+        swapTiles(
+            a.r,a.c,r,c
+        );
+
+    }else{
+
+        selected={r,c};
+
+        renderBoard();
+
+    }
+
+}
+
+
+function isAdjacent(r1,c1,r2,c2){
+
+    return(
+        Math.abs(r1-r2)+
+        Math.abs(c1-c2)
+    )===1;
+
+}
+
+
+/* ==========================================================
+   TAUSCH
+   ========================================================== */
+
+async function swapTiles(
+    r1,c1,r2,c2
+){
+
+    locked=true;
+
+    const a=board[r1][c1];
+    const b=board[r2][c2];
+
+    /*
+       Spezial + Spezial
+    */
+
+    if(
+        a &&
+        b &&
+        a.special &&
+        b.special
+    ){
+
+        moves--;
+
+        await specialCombo(
+            r1,c1,r2,c2
+        );
+
+        locked=false;
+
+        updateUI();
+        checkLevelEnd();
+
+        return;
+
+    }
+
+    board[r1][c1]=b;
+    board[r2][c2]=a;
+
+    renderBoard();
+
+    await sleep(100);
+
+    let matches=findMatches();
+
+    /*
+       Spezialstein aktiviert
+    */
+
+    if(
+        matches.length===0 &&
+        (
+            a?.special ||
+            b?.special
+        )
+    ){
+
+        moves--;
+
+        if(a?.special)
+            triggerSpecial(r1,c1);
+
+        if(b?.special)
+            triggerSpecial(r2,c2);
+
+        await processMatches();
+
+        locked=false;
+
+        updateUI();
+        checkLevelEnd();
+
+        return;
+
+    }
+
+    if(matches.length===0){
+
+        board[r1][c1]=a;
+        board[r2][c2]=b;
+
+        renderBoard();
+
+        locked=false;
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "❌ Keine Kombination.";
+
+        return;
+
+    }
+
+    moves--;
+
+    combo=0;
+
+    await processMatches();
+
+    locked=false;
+
+    updateUI();
+
+    checkLevelEnd();
+
+}
+
+
+/* ==========================================================
+   SPEZIAL-KOMBINATIONEN
+   ========================================================== */
+
+async function specialCombo(
+    r1,c1,r2,c2
+){
+
+    const a=board[r1][c1];
+    const b=board[r2][c2];
+
+    if(
+        !a ||
+        !b
+    )
+        return;
+
+    const sa=a.special;
+    const sb=b.special;
+
+    /*
+       FARBE + FARBE
+    */
+
+    if(
+        sa==="color" &&
+        sb==="color"
+    ){
+
+        clearEverything(2500);
+
+    }
+
+    /*
+       FARBE + ALLES
+    */
+
+    else if(
+        sa==="color" ||
+        sb==="color"
+    ){
+
+        const colorTile=
+            sa==="color"
+            ? a
+            : b;
+
+        const other=
+            sa==="color"
+            ? b
+            : a;
+
+        const target=
+            other.symbol;
+
+        for(
+            let r=0;
+            r<getLevelData().size;
+            r++
+        ){
+
+            for(
+                let c=0;
+                c<getLevelData().size;
+                c++
+            ){
+
+                if(
+                    board[r][c] &&
+                    board[r][c].symbol===target
+                ){
+
+                    board[r][c].special=
+                        Math.random()<.5
+                        ?"row"
+                        :"bomb";
+
+                }
+
+            }
+
+        }
+
+        board[r1][c1]=null;
+        board[r2][c2]=null;
+
+    }
+
+    /*
+       BOMBE + BOMBE
+    */
+
+    else if(
+        sa==="bomb" &&
+        sb==="bomb"
+    ){
+
+        clearRadius(
+            Math.floor(getLevelData().size/2),
+            Math.floor(getLevelData().size/2),
+            2
+        );
+
+        board[r1][c1]=null;
+        board[r2][c2]=null;
+
+    }
+
+    /*
+       REIHE + SPALTE
+    */
+
+    else if(
+        (
+            sa==="row" &&
+            sb==="column"
+        ) ||
+        (
+            sa==="column" &&
+            sb==="row"
+        )
+    ){
+
+        clearRow(r1);
+        clearColumn(c2);
+
+        board[r1][c1]=null;
+        board[r2][c2]=null;
+
+    }
+
+    /*
+       REIHE + REIHE
+    */
+
+    else if(
+        sa==="row" &&
+        sb==="row"
+    ){
+
+        clearRow(r1);
+        clearRow(r2);
+
+        board[r1][c1]=null;
+        board[r2][c2]=null;
+
+    }
+
+    /*
+       SPALTE + SPALTE
+    */
+
+    else if(
+        sa==="column" &&
+        sb==="column"
+    ){
+
+        clearColumn(c1);
+        clearColumn(c2);
+
+        board[r1][c1]=null;
+        board[r2][c2]=null;
+
+    }
+
+    /*
+       CROSS + ALLES
+    */
+
+    else{
+
+        triggerSpecial(r1,c1);
+        triggerSpecial(r2,c2);
+
+    }
+
+    addScore(3000);
+
+    renderBoard();
+
+    await sleep(220);
+
+    collapseBoard();
+
+    fillBoard();
+
+    renderBoard();
+
+    await sleep(220);
+
+}
+
+
+/* ==========================================================
+   SPEZIALSTEIN
+   ========================================================== */
+
+function triggerSpecial(r,c){
+
+    const tile=board[r][c];
+
+    if(
+        !tile ||
+        !tile.special
+    )
+        return;
+
+    const type=tile.special;
+
+    if(type==="row"){
+
+        clearRow(r);
+
+    }
+
+    else if(type==="column"){
+
+        clearColumn(c);
+
+    }
+
+    else if(type==="bomb"){
+
+        clearRadius(r,c,1);
+
+    }
+
+    else if(type==="color"){
+
+        const target=tile.symbol;
+
+        for(
+            let y=0;
+            y<getLevelData().size;
+            y++
+        ){
+
+            for(
+                let x=0;
+                x<getLevelData().size;
+                x++
+            ){
+
+                if(
+                    board[y][x] &&
+                    board[y][x].symbol===target
+                ){
+
+                    destroyCell(y,x);
+
+                }
+
+            }
+
+        }
+
+    }
+
+    else if(type==="cross"){
+
+        clearRow(r);
+        clearColumn(c);
+
+    }
+
+    board[r][c]=null;
+
+}
+
+
+/* ==========================================================
+   REIHE
+   ========================================================== */
+
+function clearRow(r){
+
+    const size=getLevelData().size;
+
+    for(let c=0;c<size;c++){
+
+        if(isPlayable(r,c))
+            destroyCell(r,c);
+
+    }
+
+}
+
+
+/* ==========================================================
+   SPALTE
+   ========================================================== */
+
+function clearColumn(c){
+
+    const size=getLevelData().size;
+
+    for(let r=0;r<size;r++){
+
+        if(isPlayable(r,c))
+            destroyCell(r,c);
+
+    }
+
+}
+
+
+/* ==========================================================
+   RADIUS
+   ========================================================== */
+
+function clearRadius(r,c,radius){
+
+    const size=getLevelData().size;
+
+    for(
+        let y=r-radius;
+        y<=r+radius;
+        y++
+    ){
+
+        for(
+            let x=c-radius;
+            x<=c+radius;
+            x++
+        ){
+
+            if(
+                isPlayable(y,x)
+            ){
+
+                destroyCell(y,x);
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   ALLES LÖSCHEN
+   ========================================================== */
+
+function clearEverything(points){
+
+    const size=getLevelData().size;
+
+    for(let r=0;r<size;r++){
+
+        for(let c=0;c<size;c++){
+
+            if(
+                isPlayable(r,c)
+            ){
+
+                destroyCell(r,c);
+
+            }
+
+        }
+
+    }
+
+    addScore(points);
+
+}
+
+
+/* ==========================================================
+   ZELLE ZERSTÖREN
+   ========================================================== */
+
+function destroyCell(r,c){
+
+    if(
+        !isPlayable(r,c) ||
+        !board[r][c]
+    )
+        return;
+
+    const tile=board[r][c];
+
+    /*
+       Kiste zuerst
+    */
+
+    if(tile.crate){
+
+        tile.crate--;
+
+        levelStats.crates++;
+
+        addScore(100);
+
+        if(tile.crate<=0){
+
+            tile.crate=0;
+
+        }
+
+        /*
+           Bei Kiste bleibt Stein erhalten.
+        */
+
+    }
+
+    /*
+       Eis
+    */
+
+    if(tile.ice){
+
+        tile.ice--;
+
+        levelStats.ice++;
+
+        addScore(100);
+
+        if(tile.ice<=0){
+
+            tile.ice=0;
+
+        }
+
+        /*
+           Stein bleibt nach Eis-Treffer.
+        */
+
+    }
+
+    /*
+       Wenn noch Hindernisse existieren,
+       wird der Stein nicht gelöscht.
+    */
+
+    if(
+        tile.crate ||
+        tile.ice
+    ){
+
+        return;
+
+    }
+
+    if(tile.symbol){
+
+        collected[
+            tile.symbol
+        ]++;
+
+        addScore(40);
+
+    }
+
+    board[r][c]=null;
+
+}
+
+
+/* ==========================================================
+   MATCHES
+   ========================================================== */
+
+function findMatches(){
+
+    const size=getLevelData().size;
+
+    const result=[];
+
+    /*
+       Horizontal
+    */
+
+    for(let r=0;r<size;r++){
+
+        let start=0;
+
+        for(
+            let c=1;
+            c<=size;
+            c++
+        ){
+
+            const prev=
+                board[r][c-1];
+
+            const cur=
+                c<size
+                ?board[r][c]
+                :null;
+
+            const same=
+                cur &&
+                prev &&
+                cur.symbol &&
+                prev.symbol &&
+                cur.symbol===prev.symbol;
+
+            if(same)
+                continue;
+
+            const len=c-start;
+
+            if(
+                len>=3 &&
+                prev &&
+                prev.symbol
+            ){
+
+                for(
+                    let x=start;
+                    x<c;
+                    x++
+                ){
+
+                    result.push({
+                        r,
+                        c:x,
+                        length:len,
+                        direction:"horizontal"
+                    });
+
+                }
+
+            }
+
+            start=c;
+
+        }
+
+    }
+
+    /*
+       Vertikal
+    */
+
+    for(let c=0;c<size;c++){
+
+        let start=0;
+
+        for(
+            let r=1;
+            r<=size;
+            r++
+        ){
+
+            const prev=
+                board[r-1][c];
+
+            const cur=
+                r<size
+                ?board[r][c]
+                :null;
+
+            const same=
+                cur &&
+                prev &&
+                cur.symbol &&
+                prev.symbol &&
+                cur.symbol===prev.symbol;
+
+            if(same)
+                continue;
+
+            const len=r-start;
+
+            if(
+                len>=3 &&
+                prev &&
+                prev.symbol
+            ){
+
+                for(
+                    let y=start;
+                    y<r;
+                    y++
+                ){
+
+                    result.push({
+                        r:y,
+                        c,
+                        length:len,
+                        direction:"vertical"
+                    });
+
+                }
+
+            }
+
+            start=r;
+
+        }
+
+    }
+
+    return uniqueMatches(result);
+
+}
+
+
+/* ==========================================================
+   EINDEUTIGE MATCHES
+   ========================================================== */
+
+function uniqueMatches(matches){
+
+    const map=new Map();
+
+    for(
+        const m of matches
+    ){
+
+        const key=
+            `${m.r}-${m.c}`;
+
+        if(!map.has(key))
+            map.set(key,m);
+
+    }
+
+    return [
+        ...map.values()
+    ];
+
+}
+
+
+/* ==========================================================
+   MATCHES ABARBEITEN
+   ========================================================== */
+
+async function processMatches(){
+
+    combo=0;
+
+    while(true){
+
+        const matches=findMatches();
+
+        if(!matches.length)
+            break;
+
+        combo++;
+
+        const multiplier=
+            1+
+            (combo-1)*0.5;
+
+        document.getElementById(
+            "combo"
+        ).textContent=
+            "x"+
+            multiplier.toFixed(1);
+
+        if(combo>=2){
+
+            document.getElementById(
+                "comboText"
+            ).textContent=
+                "🔥 COMBO x"+
+                multiplier.toFixed(1);
+
+        }else{
+
+            document.getElementById(
+                "comboText"
+            ).textContent="";
+
+        }
+
+        let points=0;
+
+        for(
+            const m of matches
+        ){
+
+            if(m.length>=5)
+                points+=1000;
+
+            else if(m.length===4)
+                points+=600;
+
+            else
+                points+=300;
+
+        }
+
+        points=
+            Math.round(
+                points*multiplier
+            );
+
+        addScore(points);
+
+        /*
+           Spezialsteine vorbereiten
+        */
+
+        const specials=[];
+
+        for(
+            const m of matches
+        ){
+
+            const tile=
+                board[m.r][m.c];
+
+            if(!tile)
+                continue;
+
+            if(m.length>=5){
+
+                specials.push({
+                    r:m.r,
+                    c:m.c,
+                    type:"color",
+                    symbol:tile.symbol
+                });
+
+            }
+
+            else if(m.length===4){
+
+                specials.push({
+                    r:m.r,
+                    c:m.c,
+                    type:
+                        m.direction==="horizontal"
+                        ?"row"
+                        :"column",
+                    symbol:tile.symbol
+                });
+
+            }
+
+        }
+
+        /*
+           Alle Treffer bearbeiten
+        */
+
+        for(
+            const m of matches
+        ){
+
+            destroyCell(
+                m.r,
+                m.c
+            );
+
+        }
+
+        /*
+           Spezialstein setzen
+        */
+
+        if(specials.length){
+
+            const s=specials[0];
+
+            if(
+                isPlayable(s.r,s.c)
+            ){
+
+                board[s.r][s.c]={
+                    symbol:s.symbol,
+                    special:s.type
+                };
+
+                if(s.type==="color")
+                    addScore(2500);
+
+                else
+                    addScore(1000);
+
+            }
+
+        }
+
+        renderBoard();
+
+        await sleep(
+            Math.max(
+                110,
+                210-combo*10
+            )
+        );
+
+        collapseBoard();
+
+        fillBoard();
+
+        renderBoard();
+
+        await sleep(130);
+
+    }
+
+    document.getElementById(
+        "combo"
+    ).textContent="x1";
+
+}
+
+
+/* ==========================================================
+   FALLLOGIK
+   ========================================================== */
+
+function collapseBoard(){
+
+    const size=getLevelData().size;
+
+    /*
+       Wir lassen jeden einzelnen
+       Spaltenbereich separat fallen.
+    */
+
+    for(let c=0;c<size;c++){
+
+        let write=size-1;
+
+        for(
+            let r=size-1;
+            r>=0;
+            r--
+        ){
+
+            if(
+                !isPlayable(r,c)
+            )
+                continue;
+
+            if(
+                board[r][c] &&
+                board[r][c].symbol
+            ){
+
+                /*
+                   Suche nächsten freien
+                   spielbaren Platz.
+                */
+
+                while(
+                    write>=0 &&
+                    !isPlayable(write,c)
+                ){
+
+                    write--;
+
+                }
+
+                if(write>=0){
+
+                    board[write][c]=
+                        board[r][c];
+
+                    if(write!==r)
+                        board[r][c]=null;
+
+                    write--;
+
+                }
+
+            }
+
+        }
+
+        for(
+            let r=write;
+            r>=0;
+            r--
+        ){
+
+            if(
+                isPlayable(r,c)
+            ){
+
+                board[r][c]=
+                    createTile();
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================================
+   PUNKTE
+   ========================================================== */
+
+function addScore(points){
+
+    score+=points;
+
+    updateUI();
+
+}
+
+
+/* ==========================================================
+   UI
+   ========================================================== */
+
+function updateUI(){
+
+    const data=getLevelData();
+    const obj=getObjective();
+
+    document.getElementById(
+        "level"
+    ).textContent=
+        currentLevel;
+
+    document.getElementById(
+        "score"
+    ).textContent=
+        score.toLocaleString("de-DE");
+
+    document.getElementById(
+        "moves"
+    ).textContent=
+        moves;
+
+    document.getElementById(
+        "target"
+    ).textContent=
+        obj.score.toLocaleString("de-DE");
+
+    document.getElementById(
+        "goal"
+    ).textContent=
+        "🎯 "+
+        objectiveText(obj);
+
+    renderObjectives(obj);
+
+    createLevelButtons();
+
+}
+
+
+/* ==========================================================
+   ZIELTEXT
+   ========================================================== */
+
+function objectiveText(obj){
+
+    const parts=[];
+
+    parts.push(
+        "Erreiche "+
+        obj.score.toLocaleString("de-DE")+
+        " Punkte"
+    );
+
+    if(obj.collect){
+
+        parts.push(
+            "sammle "+
+            obj.amount+
+            " "+obj.collect
+        );
+
+    }
+
+    if(obj.ice){
+
+        parts.push(
+            "zerstöre "+
+            obj.ice+
+            " Eis"
+        );
+
+    }
+
+    if(obj.crates){
+
+        parts.push(
+            "zerstöre "+
+            obj.crates+
+            " Kisten"
+        );
+
+    }
+
+    return parts.join(" • ");
+
+}
+
+
+/* ==========================================================
+   ZIEL-ANZEIGE
+   ========================================================== */
+
+function renderObjectives(obj){
+
+    const el=
+        document.getElementById(
+            "objectives"
+        );
+
+    el.innerHTML="";
+
+    addObjective(
+        el,
+        "🎯 "+
+        score.toLocaleString("de-DE")+
+        " / "+
+        obj.score.toLocaleString("de-DE")
+    ,
+        score>=obj.score
+    );
+
+    if(obj.collect){
+
+        addObjective(
+            el,
+            obj.collect+
+            " "+
+            collected[obj.collect]+
+            " / "+
+            obj.amount,
+            collected[obj.collect]>=obj.amount
+        );
+
+    }
+
+    if(obj.ice){
+
+        addObjective(
+            el,
+            "🧊 "+
+            levelStats.ice+
+            " / "+
+            obj.ice,
+            levelStats.ice>=obj.ice
+        );
+
+    }
+
+    if(obj.crates){
+
+        addObjective(
+            el,
+            "📦 "+
+            levelStats.crates+
+            " / "+
+            obj.crates,
+            levelStats.crates>=obj.crates
+        );
+
+    }
+
+}
+
+
+function addObjective(
+    parent,
+    text,
+    done
+){
+
+    const div=
+        document.createElement("div");
+
+    div.className=
+        "objective"+
+        (done?" done":"");
+
+    div.textContent=
+        done
+        ?"✓ "+text
+        :text;
+
+    parent.appendChild(div);
+
+}
+
+
+/* ==========================================================
+   LEVELENDE
+   ========================================================== */
+
+function checkLevelEnd(){
+
+    if(
+        objectiveComplete()
+    ){
+
+        showWin();
+
+        return;
+
+    }
+
+    if(moves<=0){
+
+        showLose();
+
+    }
+
+}
+
+
+/* ==========================================================
+   GEWINN
+   ========================================================== */
+
+function showWin(){
+
+    locked=true;
+
+    const obj=getObjective();
+
+    let stars=1;
+
+    const efficiency=
+        score/
+        Math.max(1,obj.score);
+
+    if(
+        efficiency>=1.65 &&
+        moves>=Math.ceil(
+            getLevelData().moves*.25
+        )
+    ){
+
+        stars=3;
+
+    }else if(
+        efficiency>=1.25
+    ){
+
+        stars=2;
+
+    }
+
+    saveCompletion(
+        currentLevel,
+        stars
+    );
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent=
+        "🐶 Level geschafft!";
+
+    document.getElementById(
+        "popupStars"
+    ).textContent=
+        "⭐".repeat(stars);
+
+    document.getElementById(
+        "popupStats"
+    ).innerHTML=
+        "<b>"+score.toLocaleString("de-DE")+
+        "</b> Punkte<br>"+
+        "Restliche Züge: <b>"+
+        moves+
+        "</b><br>"+
+        "Beste Bewertung: <b>"+
+        stars+
+        " ⭐</b>";
+
+    document.getElementById(
+        "popupText"
+    ).textContent=
+        currentLevel<100
+        ?"Das nächste Level wird freigeschaltet."
+        :"🏆 Du hast alle 100 Bulldog-Mania-Level bezwungen!";
+
+    document.getElementById(
+        "overlay"
+    ).classList.add("show");
+
+}
+
+
+/* ==========================================================
+   VERLIEREN
+   ========================================================== */
+
+function showLose(){
+
+    locked=true;
+
+    const obj=getObjective();
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent=
+        "😵 Level nicht geschafft";
+
+    document.getElementById(
+        "popupStars"
+    ).textContent=
+        "💥";
+
+    document.getElementById(
+        "popupStats"
+    ).innerHTML=
+        "Punkte: <b>"+
+        score.toLocaleString("de-DE")+
+        "</b><br>"+
+        "Ziel: <b>"+
+        obj.score.toLocaleString("de-DE")+
+        "</b>";
+
+    document.getElementById(
+        "popupText"
+    ).textContent=
+        "Die Bulldoggen verlangen offenbar mehr Einsatz.";
+
+    document.getElementById(
+        "overlay"
+    ).classList.add("show");
+
+}
+
+
+/* ==========================================================
+   SPEICHERN
+   ========================================================== */
+
+function saveCompletion(
+    level,
+    stars
+){
+
+    const unlocked=
+        getUnlockedLevel();
+
+    if(level>=unlocked){
+
+        localStorage.setItem(
+            "bulldogMania2Unlocked",
+            Math.min(
+                MAX_LEVEL,
+                level+1
+            )
+        );
+
+    }
+
+    const oldStars=
+        parseInt(
+            localStorage.getItem(
+                "bulldogMania2Stars_"+level
+            ) || "0"
+        );
+
+    if(stars>oldStars){
+
+        localStorage.setItem(
+            "bulldogMania2Stars_"+level,
+            stars
+        );
+
+    }
+
+    localStorage.setItem(
+        "bulldogMania2Current",
+        Math.min(
+            MAX_LEVEL,
+            level+1
+        )
+    );
+
+}
+
+
+/* ==========================================================
+   NÄCHSTES LEVEL
+   ========================================================== */
+
+function nextLevel(){
+
+    closePopup();
+
+    if(currentLevel<MAX_LEVEL){
+
+        currentLevel++;
+
+        localStorage.setItem(
+            "bulldogMania2Current",
+            currentLevel
+        );
+
+        startLevel();
+
+    }else{
+
+        currentLevel=100;
+
+        startLevel();
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent=
+            "🏆 BULLDOG-MANIA-MEISTER!";
+
+        document.getElementById(
+            "popupStars"
+        ).textContent=
+            "🐶⭐🐶⭐🐶";
+
+        document.getElementById(
+            "popupText"
+        ).textContent=
+            "Alle 100 Level wurden geschafft.";
+
+        document.getElementById(
+            "overlay"
+        ).classList.add("show");
+
+    }
+
+}
+
+
+/* ==========================================================
+   LEVEL NEU
+   ========================================================== */
+
+function restartLevel(){
+
+    closePopup();
+
+    startLevel();
+
+    document.getElementById(
+        "message"
+    ).textContent=
+        "🔄 Level neu gestartet.";
+
+}
+
+
+/* ==========================================================
+   POPUP
+   ========================================================== */
+
+function closePopup(){
+
+    document.getElementById(
+        "overlay"
+    ).classList.remove("show");
+
+    locked=false;
+
+}
+
+
+/* ==========================================================
+   HILFE
+   ========================================================== */
+
+function showHelp(){
+
+    document.getElementById(
+        "popupTitle"
+    ).textContent=
+        "🐶 Bulldog Mania 2";
+
+    document.getElementById(
+        "popupStars"
+    ).textContent=
+        "🎮";
+
+    document.getElementById(
+        "popupStats"
+    ).innerHTML=
+        "<b>3 gleiche</b> = Match<br>"+
+        "<b>4 gleiche</b> = Spezialstein<br>"+
+        "<b>5 gleiche</b> = Farb-Bulldogge<br>"+
+        "<b>Spezial + Spezial</b> = Superangriff";
+
+    document.getElementById(
+        "popupText"
+    ).innerHTML=
+        "🧊 Eis muss mehrfach getroffen werden.<br>"+
+        "📦 Kisten werden durch Treffer beschädigt.<br>"+
+        "🎯 Spätere Level besitzen mehrere Ziele gleichzeitig.<br>"+
+        "🔥 Lange Ketten erzeugen stärkere Combos.";
+
+    document.getElementById(
+        "overlay"
+    ).classList.add("show");
+
+}
+
+
+/* ==========================================================
+   LEVEL BUTTONS
+   ========================================================== */
+
+function createLevelButtons(){
+
+    const container=
+        document.getElementById(
+            "levelButtons"
+        );
+
+    container.innerHTML="";
+
+    const unlocked=
+        getUnlockedLevel();
+
+    for(
+        let i=1;
+        i<=MAX_LEVEL;
+        i++
+    ){
+
+        const button=
+            document.createElement("button");
+
+        button.className=
+            "levelButton";
+
+        if(i===currentLevel){
+
+            button.classList.add(
+                "current"
+            );
+
+        }
+
+        const stars=
+            parseInt(
+                localStorage.getItem(
+                    "bulldogMania2Stars_"+i
+                ) || "0"
+            );
+
+        if(i<=unlocked){
+
+            if(stars>0){
+
+                button.classList.add(
+                    "completed"
+                );
+
+                button.textContent=
+                    i+" "+
+                    "⭐".repeat(stars);
+
+            }else{
+
+                button.textContent=i;
+
+            }
+
+            button.onclick=()=>{
+
+                currentLevel=i;
+
+                localStorage.setItem(
+                    "bulldogMania2Current",
+                    i
+                );
+
+                startLevel();
+
+            };
+
+        }else{
+
+            button.classList.add(
+                "locked"
+            );
+
+            button.textContent="🔒";
+
+            button.disabled=true;
+
+        }
+
+        container.appendChild(button);
+
+    }
+
+}
+
+
+/* ==========================================================
+   FREIGESCHALTET
+   ========================================================== */
+
+function getUnlockedLevel(){
+
+    return parseInt(
+        localStorage.getItem(
+            "bulldogMania2Unlocked"
+        ) || "1"
+    );
+
+}
+
+
+/* ==========================================================
+   FORTSCHRITT LÖSCHEN
+   ========================================================== */
+
+function resetProgress(){
+
+    if(
+        !confirm(
+            "Wirklich den gesamten Bulldog-Mania-2-Fortschritt löschen?"
+        )
+    )
+        return;
+
+    localStorage.removeItem(
+        "bulldogMania2Unlocked"
+    );
+
+    localStorage.removeItem(
+        "bulldogMania2Current"
+    );
+
+    for(
+        let i=1;
+        i<=MAX_LEVEL;
+        i++
+    ){
+
+        localStorage.removeItem(
+            "bulldogMania2Stars_"+i
+        );
+
+    }
+
+    currentLevel=1;
+
+    closePopup();
+
+    startLevel();
+
+}
+
+
+/* ==========================================================
+   SHUFFLE
+   ========================================================== */
+
+function shuffle(array){
+
+    for(
+        let i=array.length-1;
+        i>0;
+        i--
+    ){
+
+        const j=
+            Math.floor(
+                Math.random()*(i+1)
+            );
+
+        [
+            array[i],
+            array[j]
+        ]=[
+            array[j],
+            array[i]
+        ];
+
+    }
+
+    return array;
+
+}
+
+
+/* ==========================================================
+   SLEEP
+   ========================================================== */
+
+function sleep(ms){
+
+    return new Promise(
+        resolve=>
+            setTimeout(resolve,ms)
+    );
+
+}
+
+
+/* ==========================================================
+   INITIALISIERUNG
+   ========================================================== */
+
+let savedLevel=
+    parseInt(
+        localStorage.getItem(
+            "bulldogMania2Current"
+        ) || "1"
+    );
+
+let unlockedLevel=
+    getUnlockedLevel();
+
+currentLevel=
+    Math.min(
+        MAX_LEVEL,
+        Math.max(
+            1,
+            Math.min(
+                savedLevel,
+                unlockedLevel
+            )
+        )
+    );
+
+startLevel();
+
+</script>
+
+</body>
+</html>
