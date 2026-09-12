@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CBD Shop | Natural Vibes</title>
+
+<meta
+    name="description"
+    content="Willkommen bei unserem CBD Shop. Entdecke unseren Store, unsere Produkte und unseren Standort."
+>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background: #07110c;
+    color: #f5f7f4;
+
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+    --green: #24c66a;
+    --green-dark: #0d6b38;
+    --yellow: #f4d35e;
+    --red: #d94b4b;
+
+    --bg: #07110c;
+    --bg2: #0b1811;
+
+    --text: #f5f7f4;
+    --muted: #a8b2aa;
+
+    --glass: rgba(255,255,255,0.045);
+    --border: rgba(255,255,255,0.09);
+
+    --radius: 22px;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(36,198,106,0.13),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(244,211,94,0.09),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(217,75,75,0.08),
+            transparent 35%
+        );
+
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.025;
+
+    background-image:
+        radial-gradient(
+            rgba(255,255,255,0.8) 1px,
+            transparent 1px
+        );
+
+    background-size: 26px 26px;
+
+    z-index: -1;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    padding: 16px 20px;
+}
+
+.navbar {
+    max-width: 1180px;
+    margin: auto;
+
+    min-height: 68px;
+
+    padding: 10px 14px 10px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background:
+        rgba(5,15,10,0.78);
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.25);
+}
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+
+.logo img {
+    width: 48px;
+    height: 48px;
+
+    object-fit: contain;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green),
+            var(--yellow)
+        );
+
+    padding: 4px;
+}
+
+.logo-name {
+    font-size: 19px;
+    line-height: 1;
+}
+
+.logo-name strong {
+    display: block;
+    color: white;
+}
+
+.logo-name span {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: var(--green);
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   NAV
+========================================================= */
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+nav a {
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    color: #c8d0ca;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+nav a:hover {
+    background: rgba(36,198,106,0.12);
+    color: white;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        150px 20px
+        90px;
+
+    position: relative;
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        0.85fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+.hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 8px 13px;
+
+    margin-bottom: 24px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(36,198,106,0.08);
+
+    border:
+        1px solid rgba(36,198,106,0.22);
+
+    color: #9ee7ba;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+.hero-label::before {
+    content: "";
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow:
+        0 0 12px var(--green);
+}
+
+.hero h1 {
+    font-size:
+        clamp(50px, 7vw, 88px);
+
+    line-height: 0.98;
+
+    letter-spacing: -4px;
+
+    font-weight: 900;
+
+    max-width: 850px;
+}
+
+.hero h1 .green {
+    color: var(--green);
+}
+
+.hero h1 .gold {
+    color: var(--yellow);
+}
+
+.hero-description {
+    max-width: 650px;
+
+    margin-top: 27px;
+
+    color: var(--muted);
+
+    font-size: 18px;
+
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 34px;
+}
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 50px;
+
+    padding:
+        0 22px;
+
+    border-radius: 12px;
+
+    font-weight: 800;
+    font-size: 14px;
+
+    transition: 0.25s ease;
+}
+
+.btn-primary {
+    background:
+        linear-gradient(
+            135deg,
+            var(--green),
+            #18a957
+        );
+
+    color: #031008;
+
+    box-shadow:
+        0 10px 30px rgba(36,198,106,0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 35px rgba(36,198,106,0.28);
+}
+
+.btn-secondary {
+    border: 1px solid var(--border);
+
+    background: rgba(255,255,255,0.035);
+
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.08);
+
+    transform: translateY(-3px);
+}
+
+/* =========================================================
+   HERO CARD
+========================================================= */
+
+.hero-card {
+    position: relative;
+
+    min-height: 440px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 32px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(36,198,106,0.22),
+            transparent 52%
+        ),
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.07),
+            rgba(255,255,255,0.015)
+        );
+
+    border:
+        1px solid rgba(255,255,255,0.1);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.35);
+}
+
+.hero-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(244,211,94,0.18);
+
+    box-shadow:
+        0 0 80px rgba(36,198,106,0.1);
+
+    animation:
+        pulse 5s ease-in-out infinite;
+}
+
+.hero-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(217,75,75,0.2);
+}
+
+.hero-logo {
+    position: relative;
+    z-index: 2;
+
+    width: 190px;
+    height: 190px;
+
+    object-fit: contain;
+
+    border-radius: 45px;
+
+    padding: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(36,198,106,0.95),
+            rgba(244,211,94,0.95)
+        );
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.35);
+}
+
+.hero-leaf {
+    position: absolute;
+
+    font-size: 70px;
+
+    opacity: 0.13;
+
+    user-select: none;
+}
+
+.leaf-one {
+    top: 35px;
+    left: 45px;
+    transform: rotate(-25deg);
+}
+
+.leaf-two {
+    bottom: 30px;
+    right: 40px;
+    transform: rotate(30deg);
+}
+
+@keyframes pulse {
+
+    0%,100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+section {
+    padding: 110px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1180px;
+    margin: auto;
+}
+
+.section-heading {
+    max-width: 700px;
+
+    margin-bottom: 50px;
+}
+
+.section-tag {
+    color: var(--green);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+.section-heading h2 {
+    margin-top: 10px;
+
+    font-size:
+        clamp(34px, 5vw, 54px);
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+}
+
+.section-heading p {
+    margin-top: 18px;
+
+    color: var(--muted);
+
+    font-size: 17px;
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.features {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.feature {
+    padding: 30px;
+
+    min-height: 240px;
+
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.018)
+        );
+
+    border:
+        1px solid var(--border);
+
+    transition: 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-7px);
+
+    border-color:
+        rgba(36,198,106,0.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(36,198,106,0.09),
+            rgba(255,255,255,0.02)
+        );
+}
+
+.feature-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        rgba(36,198,106,0.1);
+
+    border:
+        1px solid rgba(36,198,106,0.18);
+
+    font-size: 24px;
+
+    margin-bottom: 22px;
+}
+
+.feature h3 {
+    font-size: 20px;
+
+    margin-bottom: 10px;
+}
+
+.feature p {
+    color: var(--muted);
+
+    font-size: 15px;
+
+    line-height: 1.75;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-grid {
+    display: grid;
+
+    grid-template-columns:
+        0.9fr
+        1.1fr;
+
+    gap: 60px;
+
+    align-items: center;
+}
+
+.about-visual {
+    min-height: 430px;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(36,198,106,0.16),
+            rgba(244,211,94,0.05)
+        );
+
+    border:
+        1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.about-visual::before {
+    content: "🌿";
+
+    font-size: 150px;
+
+    opacity: 0.8;
+
+    filter:
+        drop-shadow(
+            0 15px 30px
+            rgba(36,198,106,0.25)
+        );
+}
+
+.about-content p {
+    color: var(--muted);
+
+    font-size: 17px;
+
+    line-height: 1.85;
+
+    margin-bottom: 20px;
+}
+
+.about-highlight {
+    display: inline-block;
+
+    margin-top: 8px;
+
+    color: var(--yellow);
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   OPENING HOURS
+========================================================= */
+
+.hours-section {
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(36,198,106,0.035),
+            transparent
+        );
+}
+
+.hours-box {
+    max-width: 760px;
+
+    margin: auto;
+
+    padding: 12px;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+    border:
+        1px solid var(--border);
+}
+
+.hours-row {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    padding: 17px 20px;
+
+    border-radius: 14px;
+
+    color: #dce2dd;
+}
+
+.hours-row:nth-child(odd) {
+    background:
+        rgba(255,255,255,0.025);
+}
+
+.hours-row strong {
+    text-align: right;
+
+    color: var(--green);
+}
+
+/* =========================================================
+   MAP
+========================================================= */
+
+.map-wrapper {
+    border-radius: 26px;
+
+    overflow: hidden;
+
+    border:
+        1px solid var(--border);
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,0.3);
+}
+
+.map-wrapper iframe {
+    display: block;
+
+    width: 100%;
+    height: 500px;
+
+    border: 0;
+
+    filter:
+        grayscale(0.15)
+        contrast(1.05);
+}
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.contact-card {
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.035);
+
+    border:
+        1px solid var(--border);
+
+    text-align: center;
+}
+
+.contact-card-icon {
+    font-size: 28px;
+
+    margin-bottom: 13px;
+}
+
+.contact-card h3 {
+    margin-bottom: 7px;
+
+    font-size: 17px;
+}
+
+.contact-card p,
+.contact-card a {
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+.contact-card a:hover {
+    color: var(--green);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    border-top:
+        1px solid rgba(255,255,255,0.08);
+
+    padding:
+        35px 20px;
+
+    background:
+        rgba(0,0,0,0.2);
+}
+
+.footer-inner {
+    max-width: 1180px;
+
+    margin: auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    color: #778079;
+
+    font-size: 12px;
+}
+
+.impressum {
+    color: #929b94;
+
+    transition: 0.2s;
+}
+
+.impressum:hover {
+    color: var(--yellow);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .hero-content {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+    .hero-card {
+        min-height: 350px;
+    }
+
+    .hero-logo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .features,
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-visual {
+        min-height: 300px;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 10px;
+    }
+
+    .navbar {
+        min-height: 60px;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hero {
+        padding-top: 125px;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    section {
+        padding:
+            80px 18px;
+    }
+
+    .section-heading {
+        margin-bottom: 35px;
+    }
+
+    .map-wrapper iframe {
+        height: 380px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .logo-name {
+        font-size: 16px;
+    }
+
+    .logo img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .hero h1 {
+        font-size: 46px;
+    }
+
+    .hero-card {
+        min-height: 290px;
+    }
+
+    .hero-logo {
+        width: 125px;
+        height: 125px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .hours-row {
+        font-size: 14px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="navbar">
+
+        <a href="#start" class="logo">
+
+            <!-- DEIN LOGO -->
+            <img
+                src="logo.png"
+                alt="CBD Shop Logo"
+            >
+
+            <div class="logo-name">
+                <strong>CBD SHOP</strong>
+                <span>Natural Vibes</span>
+            </div>
+
+        </a>
+
+
+        <nav>
+
+            <a href="#start">
+                Start
+            </a>
+
+            <a href="#shop">
+                Shop
+            </a>
+
+            <a href="#ueber-uns">
+                Über uns
+            </a>
+
+            <a href="#zeiten">
+                Öffnungszeiten
+            </a>
+
+            <a href="#anfahrt">
+                Anfahrt
+            </a>
+
+            <a href="#kontakt">
+                Kontakt
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero" id="start">
+
+    <div class="hero-content">
+
+
+        <div>
+
+            <div class="hero-label">
+                Natural • Conscious • Good Vibes
+            </div>
+
+
+            <h1>
+                <span class="green">
+                    Natural
+                </span>
+
+                <br>
+
+                <span class="gold">
+                    Vibes.
+                </span>
+            </h1>
+
+
+            <p class="hero-description">
+                Willkommen in unserem CBD Shop.
+                Entdecke einen modernen Store mit entspannter
+                Atmosphäre, persönlicher Beratung und
+                natürlichen Produkten.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="#anfahrt"
+                    class="btn btn-primary"
+                >
+                    📍 Standort ansehen
+                </a>
+
+                <a
+                    href="#ueber-uns"
+                    class="btn btn-secondary"
+                >
+                    Mehr erfahren
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="hero-card">
+
+            <div class="hero-leaf leaf-one">
+                🌿
+            </div>
+
+            <div class="hero-leaf leaf-two">
+                🌿
+            </div>
+
+
+            <!--
+                DEIN LOGO WIRD AUCH HIER ANGEZEIGT.
+                Falls du hier lieber ein eigenes Bild
+                möchtest, einfach logo.png ersetzen.
+            -->
+
+            <img
+                class="hero-logo"
+                src="logo.png"
+                alt="CBD Shop"
+            >
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     SHOP / VORTEILE
+========================================================= -->
+
+<section id="shop">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="section-tag">
+                Unser Konzept
+            </span>
+
+            <h2>
+                Mehr als nur ein Shop.
+            </h2>
+
+            <p>
+                Eine entspannte Umgebung, persönliche Beratung
+                und ein moderner Zugang zu unserem Sortiment.
+            </p>
+
+        </div>
+
+
+        <div class="features">
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🌿
+                </div>
+
+                <h3>
+                    Natürlich
+                </h3>
+
+                <p>
+                    Wir legen Wert auf einen bewussten Umgang
+                    mit unseren Produkten und eine angenehme
+                    Atmosphäre.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💬
+                </div>
+
+                <h3>
+                    Persönliche Beratung
+                </h3>
+
+                <p>
+                    Fragen zu unseren Produkten?
+                    Wir nehmen uns Zeit und beraten dich
+                    persönlich vor Ort.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🎵
+                </div>
+
+                <h3>
+                    Good Vibes
+                </h3>
+
+                <p>
+                    Moderne Optik trifft entspannte Reggae-
+                    inspirierte Atmosphäre.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ÜBER UNS
+========================================================= -->
+
+<section id="ueber-uns">
+
+    <div class="container">
+
+        <div class="about-grid">
+
+
+            <div class="about-visual">
+
+                <span
+                    style="
+                    position:absolute;
+                    bottom:20px;
+                    left:25px;
+                    color:rgba(255,255,255,0.35);
+                    font-size:11px;
+                    letter-spacing:2px;
+                    text-transform:uppercase;
+                    "
+                >
+                    Natural Vibes
+                </span>
+
+            </div>
+
+
+            <div class="about-content">
+
+                <div class="section-heading">
+
+                    <span class="section-tag">
+                        Über uns
+                    </span>
+
+                    <h2>
+                        Entspannt.
+                        Persönlich.
+                        Modern.
+                    </h2>
+
+                </div>
+
+
+                <p>
+                    Unser Shop verbindet moderne Präsentation
+                    mit einer entspannten Atmosphäre.
+                    Wir möchten einen Ort schaffen, an dem
+                    Informationen und persönliche Beratung
+                    im Mittelpunkt stehen.
+                </p>
+
+
+                <p>
+                    Besuche uns direkt vor Ort und entdecke
+                    unseren Store. Unser Team hilft dir gerne
+                    dabei, dich in unserem Sortiment
+                    zurechtzufinden.
+                </p>
+
+
+                <span class="about-highlight">
+                    🌿 Good products. Good atmosphere. Good vibes.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ÖFFNUNGSZEITEN
+========================================================= -->
+
+<section
+    class="hours-section"
+    id="zeiten"
+>
+
+    <div class="container">
+
+        <div
+            class="section-heading"
+            style="margin-left:auto;margin-right:auto;text-align:center;"
+        >
+
+            <span class="section-tag">
+                Wann sind wir da?
+            </span>
+
+            <h2>
+                Öffnungszeiten
+            </h2>
+
+            <p>
+                Wir freuen uns auf deinen Besuch.
+            </p>
+
+        </div>
+
+
+        <div class="hours-box">
+
+
+            <div class="hours-row">
+                <span>Montag</span>
+                <strong>09:00 – 18:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Dienstag</span>
+                <strong>09:00 – 18:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Mittwoch</span>
+                <strong>09:00 – 18:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Donnerstag</span>
+                <strong>09:00 – 18:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Freitag</span>
+                <strong>09:00 – 18:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Samstag</span>
+                <strong>10:00 – 16:00</strong>
+            </div>
+
+            <div class="hours-row">
+                <span>Sonntag</span>
+                <strong>Geschlossen</strong>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     GOOGLE MAPS
+========================================================= -->
+
+<section id="anfahrt">
+
+    <div class="container">
+
+
+        <div class="section-heading">
+
+            <span class="section-tag">
+                Hier findest du uns
+            </span>
+
+            <h2>
+                Komm vorbei.
+            </h2>
+
+            <p>
+                Unsere genaue Lage findest du direkt auf
+                der Karte.
+            </p>
+
+        </div>
+
+
+        <div class="map-wrapper">
+
+            <!--
+                HIER DEINEN GOOGLE-MAPS-IFRAME EINSETZEN
+
+                Google Maps:
+                Standort suchen
+                → Teilen
+                → Karte einbetten
+                → HTML kopieren
+            -->
+
+            <iframe
+                src="https://www.google.com/maps?q=Wien%2C%20%C3%96sterreich&output=embed"
+                loading="lazy"
+                title="Standort des CBD Shops"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     KONTAKT
+========================================================= -->
+
+<section id="kontakt">
+
+    <div class="container">
+
+
+        <div
+            class="section-heading"
+            style="margin-left:auto;margin-right:auto;text-align:center;"
+        >
+
+            <span class="section-tag">
+                Kontakt
+            </span>
+
+            <h2>
+                Wir freuen uns auf dich.
+            </h2>
+
+        </div>
+
+
+        <div class="contact-grid">
+
+
+            <div class="contact-card">
+
+                <div class="contact-card-icon">
+                    📍
+                </div>
+
+                <h3>
+                    Adresse
+                </h3>
+
+                <p>
+                    Musterstraße 12<br>
+                    1010 Wien<br>
+                    Österreich
+                </p>
+
+            </div>
+
+
+            <div class="contact-card">
+
+                <div class="contact-card-icon">
+                    ☎️
+                </div>
+
+                <h3>
+                    Telefon
+                </h3>
+
+                <a href="tel:+43123456789">
+                    +43 1 234 56 789
+                </a>
+
+            </div>
+
+
+            <div class="contact-card">
+
+                <div class="contact-card-icon">
+                    ✉️
+                </div>
+
+                <h3>
+                    E-Mail
+                </h3>
+
+                <a href="mailto:office@example.at">
+                    office@example.at
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div>
+            © 2026 CBD Shop · Natural Vibes
+        </div>
+
+        <a
+            href="#"
+            class="impressum"
+            onclick="openImpressum(); return false;"
+        >
+            Impressum
+        </a>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =========================================================
+     IMPRESSUM
+========================================================= -->
+
+<div
+    id="impressumModal"
+    style="
+        display:none;
+        position:fixed;
+        inset:0;
+        z-index:5000;
+        background:rgba(0,0,0,0.82);
+        backdrop-filter:blur(10px);
+        padding:20px;
+        align-items:center;
+        justify-content:center;
+    "
+>
+
+    <div
+        style="
+            width:100%;
+            max-width:650px;
+            max-height:85vh;
+            overflow:auto;
+            background:#0b1811;
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius:24px;
+            padding:35px;
+            position:relative;
+            box-shadow:0 30px 100px rgba(0,0,0,0.6);
+        "
+    >
+
+        <button
+            onclick="closeImpressum()"
+            style="
+                position:absolute;
+                right:20px;
+                top:15px;
+                border:0;
+                background:none;
+                color:#aaa;
+                font-size:28px;
+                cursor:pointer;
+            "
+        >
+            ×
+        </button>
+
+
+        <div
+            style="
+                color:#24c66a;
+                font-size:12px;
+                letter-spacing:2px;
+                text-transform:uppercase;
+                margin-bottom:8px;
+            "
+        >
+            Rechtliches
+        </div>
+
+
+        <h2
+            style="
+                font-size:36px;
+                margin-bottom:25px;
+            "
+        >
+            Impressum
+        </h2>
+
+
+        <h3 style="color:#f4d35e;margin-bottom:8px;">
+            Angaben gemäß § 5 ECG
+        </h3>
+
+        <p style="color:#a8b2aa;margin-bottom:20px;">
+            Musterfirma GmbH<br>
+            Musterstraße 12<br>
+            1010 Wien<br>
+            Österreich
+        </p>
+
+
+        <h3 style="color:#f4d35e;margin-bottom:8px;">
+            Kontakt
+        </h3>
+
+        <p style="color:#a8b2aa;margin-bottom:20px;">
+            Telefon: +43 1 234 56 789<br>
+            E-Mail: office@example.at
+        </p>
+
+
+        <h3 style="color:#f4d35e;margin-bottom:8px;">
+            Unternehmensangaben
+        </h3>
+
+        <p style="color:#a8b2aa;margin-bottom:20px;">
+            Firmenbuchnummer: FN 123456a<br>
+            Firmenbuchgericht: Handelsgericht Wien<br>
+            UID-Nr.: ATU12345678
+        </p>
+
+
+        <h3 style="color:#f4d35e;margin-bottom:8px;">
+            Verantwortlich für den Inhalt
+        </h3>
+
+        <p style="color:#a8b2aa;">
+            Max Mustermann
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   IMPRESSUM
+========================================================= */
+
+function openImpressum() {
+
+    const modal =
+        document.getElementById("impressumModal");
+
+    modal.style.display = "flex";
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeImpressum() {
+
+    const modal =
+        document.getElementById("impressumModal");
+
+    modal.style.display = "none";
+
+    document.body.style.overflow = "";
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+            closeImpressum();
+        }
+
+    }
+);
+
+
+/* =========================================================
+   KLICK AUF HINTERGRUND SCHLIESST IMPRESSUM
+========================================================= */
+
+document
+    .getElementById("impressumModal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === this) {
+                closeImpressum();
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
