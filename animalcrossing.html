@@ -9,7 +9,7 @@
       maximum-scale=1.0,
       user-scalable=no">
 
-<title>AnimalMania 3.1</title>
+<title>AnimalMania 3.2</title>
 
 <style>
 
@@ -50,7 +50,7 @@ body{
     left:12px;
     z-index:20;
 
-    min-width:205px;
+    min-width:215px;
 
     padding:11px 14px;
 
@@ -154,6 +154,8 @@ body{
     pointer-events:none;
 
     text-align:center;
+
+    white-space:nowrap;
 }
 
 /* =========================================================
@@ -551,6 +553,8 @@ body{
 
     font-size:17px;
     font-weight:bold;
+
+    cursor:pointer;
 }
 
 /* =========================================================
@@ -600,6 +604,8 @@ body{
     #prompt{
         bottom:164px;
         max-width:82vw;
+
+        white-space:normal;
     }
 }
 
@@ -617,7 +623,7 @@ body{
 <div id="hud">
 
     <div id="title">
-        🌿 AnimalMania 3.1
+        🌿 AnimalMania 3.2
     </div>
 
     <div id="stats">
@@ -643,16 +649,12 @@ body{
         <br>
 
         🌤️
-        <span id="timeText">
-            Tag
-        </span>
+        <span id="timeText">Tag</span>
 
         <br>
 
         🧱 Block:
-        <span id="selected">
-            Gras
-        </span>
+        <span id="selected">Gras</span>
 
     </div>
 
@@ -670,38 +672,32 @@ body{
 
 <div id="hotbar">
 
-    <div class="slot active"
-         data-slot="0">
+    <div class="slot active" data-slot="0">
         🟩
         <small>1</small>
     </div>
 
-    <div class="slot"
-         data-slot="1">
+    <div class="slot" data-slot="1">
         🟫
         <small>2</small>
     </div>
 
-    <div class="slot"
-         data-slot="2">
+    <div class="slot" data-slot="2">
         🪨
         <small>3</small>
     </div>
 
-    <div class="slot"
-         data-slot="3">
+    <div class="slot" data-slot="3">
         🪵
         <small>4</small>
     </div>
 
-    <div class="slot"
-         data-slot="4">
+    <div class="slot" data-slot="4">
         🟨
         <small>5</small>
     </div>
 
-    <div class="slot"
-         data-slot="5">
+    <div class="slot" data-slot="5">
         🌸
         <small>6</small>
     </div>
@@ -714,9 +710,7 @@ body{
 
 <div id="inventory">
 
-    <h2>
-        🎒 Inventar
-    </h2>
+    <h2>🎒 Inventar</h2>
 
     <div class="invrow">
         <span>🪵 Holz</span>
@@ -743,12 +737,8 @@ body{
         <strong id="invFish">0</strong>
     </div>
 
-    <button
-        class="close"
-        id="closeInventory">
-
+    <button class="close" id="closeInventory">
         Schließen
-
     </button>
 
 </div>
@@ -763,73 +753,43 @@ body{
 
     <div id="movePad">
 
-        <button
-            class="moveBtn"
-            id="up">
-            ▲
-        </button>
+        <button class="moveBtn" id="up">▲</button>
 
-        <button
-            class="moveBtn"
-            id="down">
-            ▼
-        </button>
+        <button class="moveBtn" id="down">▼</button>
 
-        <button
-            class="moveBtn"
-            id="left">
-            ◀
-        </button>
+        <button class="moveBtn" id="left">◀</button>
 
-        <button
-            class="moveBtn"
-            id="right">
-            ▶
-        </button>
+        <button class="moveBtn" id="right">▶</button>
 
     </div>
 
     <div id="actions">
 
-        <button
-            class="actionBtn"
-            id="jumpBtn">
+        <button class="actionBtn" id="jumpBtn">
             SPRUNG
         </button>
 
-        <button
-            class="actionBtn"
-            id="buildBtn">
+        <button class="actionBtn" id="buildBtn">
             BAUEN
         </button>
 
-        <button
-            class="actionBtn"
-            id="interactBtn">
+        <button class="actionBtn" id="interactBtn">
             E
         </button>
 
-        <button
-            class="actionBtn"
-            id="breakBtn">
+        <button class="actionBtn" id="breakBtn">
             ABBAUEN
         </button>
 
-        <button
-            class="actionBtn"
-            id="blockPrev">
+        <button class="actionBtn" id="blockPrev">
             BLOCK −
         </button>
 
-        <button
-            class="actionBtn"
-            id="blockNext">
+        <button class="actionBtn" id="blockNext">
             BLOCK +
         </button>
 
-        <button
-            class="actionBtn"
-            id="inventoryBtn">
+        <button class="actionBtn" id="inventoryBtn">
             🎒
         </button>
 
@@ -845,19 +805,17 @@ body{
 
     <div class="startBox">
 
-        <h1>
-            🌿 AnimalMania
-        </h1>
+        <h1>🌿 AnimalMania</h1>
 
         <p>
-            Deine eigene kleine Blockwelt.
-            Sammle Ressourcen, erkunde die Insel,
+            Deine eigene große Blockwelt.
+            Erkunde die flache Insel, sammle Ressourcen,
             triff Tiere und baue dein eigenes Zuhause.
         </p>
 
         <p>
             <b>WASD</b> bewegen<br>
-            <b>Maus</b> Kamera<br>
+            <b>Linke Maustaste ziehen</b> Kamera drehen<br>
             <b>Linksklick</b> abbauen<br>
             <b>Rechtsklick</b> bauen<br>
             <b>1–6</b> Block auswählen<br>
@@ -881,41 +839,49 @@ body{
 "use strict";
 
 /* =========================================================
-   ANIMALMANIA 3.1
-   STABILER VOXEL-RENDERER
-   ========================================================= */
-
-/* =========================================================
    CANVAS / WEBGL
    ========================================================= */
 
 const canvas =
     document.getElementById("game");
 
-let gl = null;
-let program = null;
+let gl=null;
+let program=null;
 
-let fatalError = false;
-let running = false;
+let fatalError=false;
+let running=false;
 
 /* =========================================================
    WELT
    ========================================================= */
 
-const WORLD_W = 48;
-const WORLD_D = 48;
-const WORLD_H = 16;
+/*
+   Größere Welt als vorher.
 
-const SEA_LEVEL = 2;
+   96 x 96:
+   Viel mehr Platz zum Bauen.
 
-const CHUNK_X = 12;
-const CHUNK_Y = 8;
-const CHUNK_Z = 12;
+   Die Insel selbst ist komplett flach.
+*/
 
-let world =
+const WORLD_W=96;
+const WORLD_D=96;
+const WORLD_H=24;
+
+const ISLAND_RADIUS=44;
+const BEACH_RADIUS=36;
+
+const GROUND_TOP=5;
+const WATER_Y=5.18;
+
+const CHUNK_X=12;
+const CHUNK_Y=8;
+const CHUNK_Z=12;
+
+let world=
     new Uint8Array(
-        WORLD_W *
-        WORLD_H *
+        WORLD_W*
+        WORLD_H*
         WORLD_D
     );
 
@@ -923,139 +889,97 @@ let world =
    BLOCKTYPEN
    ========================================================= */
 
-const BLOCK = {
+const BLOCK={
 
     AIR:0,
-
     GRASS:1,
-
     DIRT:2,
-
     STONE:3,
-
     WOOD:4,
-
     LEAVES:5,
-
     SAND:6,
-
     FLOWER:7,
-
     PLANK:8,
-
     GLASS:9
 };
 
-const blockNames = {
+const blockNames={
 
     1:"Gras",
-
     2:"Erde",
-
     3:"Stein",
-
     4:"Holz",
-
     5:"Blätter",
-
     6:"Sand",
-
     7:"Blume",
-
     8:"Bretter",
-
     9:"Glas"
 };
 
-const blockColors = {
+const blockColors={
 
     1:[.30,.70,.20],
-
     2:[.48,.30,.16],
-
     3:[.44,.45,.46],
-
     4:[.48,.27,.11],
-
     5:[.15,.54,.13],
-
     6:[.84,.73,.42],
-
     7:[.90,.25,.55],
-
     8:[.68,.43,.21],
-
     9:[.40,.76,.86]
 };
 
-const hotbarBlocks = [
+const hotbarBlocks=[
 
     BLOCK.GRASS,
-
     BLOCK.DIRT,
-
     BLOCK.STONE,
-
     BLOCK.WOOD,
-
     BLOCK.PLANK,
-
     BLOCK.FLOWER
-
 ];
 
-let selectedSlot = 0;
+let selectedSlot=0;
 
 /* =========================================================
    SPIELER
    ========================================================= */
 
-const player = {
+const player={
 
-    x:24.5,
-
+    x:48.5,
     y:6,
-
-    z:34.5,
+    z:57.5,
 
     vx:0,
-
     vy:0,
-
     vz:0,
 
     yaw:0,
-
     pitch:-.32,
 
     onGround:false,
 
     speed:5,
-
     jump:8.5
 };
 
-const camera = {
-
+const camera={
     distance:7
 };
 
-let keys = {};
+let keys={};
 
 /* =========================================================
    INVENTAR
    ========================================================= */
 
-const inventory = {
+const inventory={
 
     wood:12,
-
     stone:10,
-
     seeds:8,
-
     planks:20,
-
     fish:0
 };
 
@@ -1063,44 +987,7 @@ const inventory = {
    TIERE
    ========================================================= */
 
-const animals = [
-
-    {
-        type:"rabbit",
-        x:31,
-        z:28,
-        dir:1,
-        speed:.65,
-        timer:1
-    },
-
-    {
-        type:"rabbit",
-        x:16,
-        z:28,
-        dir:-1,
-        speed:.55,
-        timer:2
-    },
-
-    {
-        type:"bear",
-        x:35,
-        z:16,
-        dir:2,
-        speed:.3,
-        timer:3
-    },
-
-    {
-        type:"fox",
-        x:13,
-        z:19,
-        dir:.5,
-        speed:.5,
-        timer:2
-    }
-];
+const animals=[];
 
 /* =========================================================
    MATHE
@@ -1111,11 +998,8 @@ function mat4(){
     return new Float32Array([
 
         1,0,0,0,
-
         0,1,0,0,
-
         0,0,1,0,
-
         0,0,0,1
 
     ]);
@@ -1123,7 +1007,7 @@ function mat4(){
 
 function multiply(a,b){
 
-    const o =
+    const o=
         new Float32Array(16);
 
     for(
@@ -1138,25 +1022,12 @@ function multiply(a,b){
             r++
         ){
 
-            o[c*4+r] =
+            o[c*4+r]=
 
-                a[r] *
-                b[c*4]
-
-                +
-
-                a[4+r] *
-                b[c*4+1]
-
-                +
-
-                a[8+r] *
-                b[c*4+2]
-
-                +
-
-                a[12+r] *
-                b[c*4+3];
+                a[r]*b[c*4]+
+                a[4+r]*b[c*4+1]+
+                a[8+r]*b[c*4+2]+
+                a[12+r]*b[c*4+3];
         }
     }
 
@@ -1193,11 +1064,8 @@ function rotationY(a){
     return new Float32Array([
 
         c,0,-s,0,
-
         0,1,0,0,
-
         s,0,c,0,
-
         0,0,0,1
 
     ]);
@@ -1209,29 +1077,26 @@ function model(
     ry=0
 ){
 
-    let m =
-        translation(x,y,z);
+    let m=
+        translation(
+            x,y,z
+        );
 
     if(ry){
 
-        m =
+        m=
             multiply(
                 m,
                 rotationY(ry)
             );
     }
 
-    m =
-        multiply(
-            m,
-            scale(
-                sx,
-                sy,
-                sz
-            )
-        );
-
-    return m;
+    return multiply(
+        m,
+        scale(
+            sx,sy,sz
+        )
+    );
 }
 
 function perspective(
@@ -1241,14 +1106,14 @@ function perspective(
     far
 ){
 
-    const f =
-        1 /
+    const f=
+        1/
         Math.tan(
             fov/2
         );
 
-    const nf =
-        1 /
+    const nf=
+        1/
         (near-far);
 
     return new Float32Array([
@@ -1264,6 +1129,7 @@ function perspective(
         0,0,
         (2*far*near)*nf,
         0
+
     ]);
 }
 
@@ -1272,59 +1138,53 @@ function lookAt(
     target
 ){
 
-    let zx =
-        eye[0]-
-        target[0];
+    let zx=
+        eye[0]-target[0];
 
-    let zy =
-        eye[1]-
-        target[1];
+    let zy=
+        eye[1]-target[1];
 
-    let zz =
-        eye[2]-
-        target[2];
+    let zz=
+        eye[2]-target[2];
 
-    let len =
+    let len=
         Math.hypot(
-            zx,
-            zy,
-            zz
+            zx,zy,zz
         );
+
+    if(len===0)
+        len=1;
 
     zx/=len;
     zy/=len;
     zz/=len;
 
-    let xx =
-        zz;
+    let xx=zz;
+    let xy=0;
+    let xz=-zx;
 
-    let xy =
-        0;
-
-    let xz =
-        -zx;
-
-    len =
+    len=
         Math.hypot(
-            xx,
-            xy,
-            xz
+            xx,xy,xz
         );
+
+    if(len===0)
+        len=1;
 
     xx/=len;
     xy/=len;
     xz/=len;
 
-    const yx =
-        zy*xz -
+    const yx=
+        zy*xz-
         zz*xy;
 
-    const yy =
-        zz*xx -
+    const yy=
+        zz*xx-
         zx*xz;
 
-    const yz =
-        zx*xy -
+    const yz=
+        zx*xy-
         zy*xx;
 
     return new Float32Array([
@@ -1335,20 +1195,19 @@ function lookAt(
 
         xz,yz,zz,0,
 
-        -(xx*eye[0] +
-          xy*eye[1] +
+        -(xx*eye[0]+
+          xy*eye[1]+
           xz*eye[2]),
 
-        -(yx*eye[0] +
-          yy*eye[1] +
+        -(yx*eye[0]+
+          yy*eye[1]+
           yz*eye[2]),
 
-        -(zx*eye[0] +
-          zy*eye[1] +
+        -(zx*eye[0]+
+          zy*eye[1]+
           zz*eye[2]),
 
         1
-
     ]);
 }
 
@@ -1356,7 +1215,7 @@ function lookAt(
    SHADER
    ========================================================= */
 
-const vertexShaderSource = `
+const vertexShaderSource=`
 
 attribute vec3 aPosition;
 attribute vec3 aNormal;
@@ -1372,31 +1231,31 @@ varying vec3 vColor;
 
 void main(){
 
-    vec4 worldPosition =
-        uModel *
+    vec4 worldPosition=
+        uModel*
         vec4(
             aPosition,
             1.0
         );
 
-    vWorld =
+    vWorld=
         worldPosition.xyz;
 
-    vNormal =
-        mat3(uModel) *
+    vNormal=
+        mat3(uModel)*
         aNormal;
 
-    vColor =
+    vColor=
         aColor;
 
-    gl_Position =
-        uProjection *
-        uView *
+    gl_Position=
+        uProjection*
+        uView*
         worldPosition;
 }
 `;
 
-const fragmentShaderSource = `
+const fragmentShaderSource=`
 
 precision mediump float;
 
@@ -1414,12 +1273,12 @@ varying vec3 vColor;
 
 void main(){
 
-    vec3 normal =
+    vec3 normal=
         normalize(
             vNormal
         );
 
-    float light =
+    float light=
         max(
             dot(
                 normal,
@@ -1428,34 +1287,32 @@ void main(){
             0.0
         );
 
-    float brightness =
-        uAmbient +
-        light * .72;
+    float brightness=
+        uAmbient+
+        light*.72;
 
-    vec3 color =
-        vColor *
+    vec3 color=
+        vColor*
         brightness;
 
-    float distanceToCamera =
-        length(
-            vWorld
-        );
+    float distanceToCamera=
+        length(vWorld);
 
-    float fog =
+    float fog=
         smoothstep(
             uFogStart,
             uFogEnd,
             distanceToCamera
         );
 
-    color =
+    color=
         mix(
             color,
             uFogColor,
             fog
         );
 
-    gl_FragColor =
+    gl_FragColor=
         vec4(
             color,
             1.0
@@ -1472,7 +1329,7 @@ function compileShader(
     source
 ){
 
-    const shader =
+    const shader=
         gl.createShader(type);
 
     gl.shaderSource(
@@ -1503,34 +1360,30 @@ function compileShader(
 
 function createProgram(){
 
-    const vs =
+    const vs=
         compileShader(
             gl.VERTEX_SHADER,
             vertexShaderSource
         );
 
-    const fs =
+    const fs=
         compileShader(
             gl.FRAGMENT_SHADER,
             fragmentShaderSource
         );
 
-    const p =
+    const p=
         gl.createProgram();
 
     gl.attachShader(
-        p,
-        vs
+        p,vs
     );
 
     gl.attachShader(
-        p,
-        fs
+        p,fs
     );
 
-    gl.linkProgram(
-        p
-    );
+    gl.linkProgram(p);
 
     if(
         !gl.getProgramParameter(
@@ -1540,9 +1393,7 @@ function createProgram(){
     ){
 
         throw new Error(
-            gl.getProgramInfoLog(
-                p
-            )
+            gl.getProgramInfoLog(p)
         );
     }
 
@@ -1550,14 +1401,13 @@ function createProgram(){
 }
 
 /* =========================================================
-   BLOCK MESH
+   BLOCK FACES
    ========================================================= */
 
-const faces = [
+const faces=[
 
     {
         dir:[0,1,0],
-
         corners:[
             [-.5,.5,-.5],
             [.5,.5,-.5],
@@ -1568,7 +1418,6 @@ const faces = [
 
     {
         dir:[0,-1,0],
-
         corners:[
             [-.5,-.5,.5],
             [.5,-.5,.5],
@@ -1579,7 +1428,6 @@ const faces = [
 
     {
         dir:[0,0,1],
-
         corners:[
             [-.5,-.5,.5],
             [-.5,.5,.5],
@@ -1590,7 +1438,6 @@ const faces = [
 
     {
         dir:[0,0,-1],
-
         corners:[
             [.5,-.5,-.5],
             [.5,.5,-.5],
@@ -1601,7 +1448,6 @@ const faces = [
 
     {
         dir:[1,0,0],
-
         corners:[
             [.5,-.5,.5],
             [.5,.5,.5],
@@ -1612,7 +1458,6 @@ const faces = [
 
     {
         dir:[-1,0,0],
-
         corners:[
             [-.5,-.5,-.5],
             [-.5,.5,-.5],
@@ -1623,7 +1468,7 @@ const faces = [
 ];
 
 /* =========================================================
-   CUBE
+   CUBE MESH
    ========================================================= */
 
 let cubeMesh=null;
@@ -1638,7 +1483,7 @@ function createCubeMesh(){
         const face of faces
     ){
 
-        const start =
+        const start=
             vertices.length/3;
 
         for(
@@ -1685,7 +1530,7 @@ function createMesh(
 
     const mesh={};
 
-    mesh.v =
+    mesh.v=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1695,13 +1540,11 @@ function createMesh(
 
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(
-            vertices
-        ),
+        new Float32Array(vertices),
         gl.STATIC_DRAW
     );
 
-    mesh.n =
+    mesh.n=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1711,13 +1554,11 @@ function createMesh(
 
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(
-            normals
-        ),
+        new Float32Array(normals),
         gl.STATIC_DRAW
     );
 
-    mesh.i =
+    mesh.i=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1727,13 +1568,11 @@ function createMesh(
 
     gl.bufferData(
         gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(
-            indices
-        ),
+        new Uint16Array(indices),
         gl.STATIC_DRAW
     );
 
-    mesh.count =
+    mesh.count=
         indices.length;
 
     return mesh;
@@ -1756,28 +1595,28 @@ function createChunkMesh(
     const colors=[];
     const indices=[];
 
-    const xStart =
+    const xStart=
         cx*CHUNK_X;
 
-    const yStart =
+    const yStart=
         cy*CHUNK_Y;
 
-    const zStart =
+    const zStart=
         cz*CHUNK_Z;
 
-    const xEnd =
+    const xEnd=
         Math.min(
             xStart+CHUNK_X,
             WORLD_W
         );
 
-    const yEnd =
+    const yEnd=
         Math.min(
             yStart+CHUNK_Y,
             WORLD_H
         );
 
-    const zEnd =
+    const zEnd=
         Math.min(
             zStart+CHUNK_Z,
             WORLD_D
@@ -1801,47 +1640,41 @@ function createChunkMesh(
                 x++
             ){
 
-                const type =
+                const type=
                     getBlock(
                         x,y,z
                     );
 
                 if(
-                    type===
-                    BLOCK.AIR
+                    type===BLOCK.AIR
                 )
                     continue;
 
-                const color =
-                    blockColors[type] ||
+                const color=
+                    blockColors[type]||
                     [1,1,1];
 
                 for(
                     const face of faces
                 ){
 
-                    const nx =
-                        x+
-                        face.dir[0];
+                    const nx=
+                        x+face.dir[0];
 
-                    const ny =
-                        y+
-                        face.dir[1];
+                    const ny=
+                        y+face.dir[1];
 
-                    const nz =
-                        z+
-                        face.dir[2];
+                    const nz=
+                        z+face.dir[2];
 
                     if(
                         getBlock(
-                            nx,
-                            ny,
-                            nz
+                            nx,ny,nz
                         )!==BLOCK.AIR
                     )
                         continue;
 
-                    const start =
+                    const start=
                         vertices.length/3;
 
                     for(
@@ -1853,6 +1686,7 @@ function createChunkMesh(
                             x+c[0],
                             y+c[1],
                             z+c[2]
+
                         );
 
                         normals.push(
@@ -1860,6 +1694,7 @@ function createChunkMesh(
                             face.dir[0],
                             face.dir[1],
                             face.dir[2]
+
                         );
 
                         colors.push(
@@ -1867,6 +1702,7 @@ function createChunkMesh(
                             color[0],
                             color[1],
                             color[2]
+
                         );
                     }
 
@@ -1885,9 +1721,24 @@ function createChunkMesh(
         }
     }
 
+    return createMeshWithColor(
+        vertices,
+        normals,
+        colors,
+        indices
+    );
+}
+
+function createMeshWithColor(
+    vertices,
+    normals,
+    colors,
+    indices
+){
+
     const mesh={};
 
-    mesh.v =
+    mesh.v=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1897,13 +1748,11 @@ function createChunkMesh(
 
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(
-            vertices
-        ),
+        new Float32Array(vertices),
         gl.STATIC_DRAW
     );
 
-    mesh.n =
+    mesh.n=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1913,13 +1762,11 @@ function createChunkMesh(
 
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(
-            normals
-        ),
+        new Float32Array(normals),
         gl.STATIC_DRAW
     );
 
-    mesh.c =
+    mesh.c=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1929,13 +1776,11 @@ function createChunkMesh(
 
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(
-            colors
-        ),
+        new Float32Array(colors),
         gl.STATIC_DRAW
     );
 
-    mesh.i =
+    mesh.i=
         gl.createBuffer();
 
     gl.bindBuffer(
@@ -1945,13 +1790,11 @@ function createChunkMesh(
 
     gl.bufferData(
         gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(
-            indices
-        ),
+        new Uint16Array(indices),
         gl.STATIC_DRAW
     );
 
-    mesh.count =
+    mesh.count=
         indices.length;
 
     return mesh;
@@ -1963,44 +1806,41 @@ function rebuildChunks(){
         const chunk of chunks
     ){
 
-        if(chunk.mesh){
+        if(!chunk.mesh)
+            continue;
 
-            gl.deleteBuffer(
-                chunk.mesh.v
-            );
+        gl.deleteBuffer(
+            chunk.mesh.v
+        );
 
-            gl.deleteBuffer(
-                chunk.mesh.n
-            );
+        gl.deleteBuffer(
+            chunk.mesh.n
+        );
 
-            gl.deleteBuffer(
-                chunk.mesh.c
-            );
+        gl.deleteBuffer(
+            chunk.mesh.c
+        );
 
-            gl.deleteBuffer(
-                chunk.mesh.i
-            );
-        }
+        gl.deleteBuffer(
+            chunk.mesh.i
+        );
     }
 
     chunks=[];
 
-    const nx =
+    const nx=
         Math.ceil(
-            WORLD_W/
-            CHUNK_X
+            WORLD_W/CHUNK_X
         );
 
-    const ny =
+    const ny=
         Math.ceil(
-            WORLD_H/
-            CHUNK_Y
+            WORLD_H/CHUNK_Y
         );
 
-    const nz =
+    const nz=
         Math.ceil(
-            WORLD_D/
-            CHUNK_Z
+            WORLD_D/CHUNK_Z
         );
 
     for(
@@ -2029,9 +1869,7 @@ function rebuildChunks(){
 
                     mesh:
                         createChunkMesh(
-                            x,
-                            y,
-                            z
+                            x,y,z
                         )
                 });
             }
@@ -2047,7 +1885,7 @@ function worldIndex(
     x,y,z
 ){
 
-    return (
+    return(
         x+
         WORLD_W*
         (
@@ -2061,7 +1899,7 @@ function inside(
     x,y,z
 ){
 
-    return (
+    return(
 
         x>=0 &&
         x<WORLD_W &&
@@ -2079,9 +1917,7 @@ function getBlock(
 ){
 
     if(
-        !inside(
-            x,y,z
-        )
+        !inside(x,y,z)
     )
         return BLOCK.AIR;
 
@@ -2097,9 +1933,7 @@ function setBlock(
 ){
 
     if(
-        !inside(
-            x,y,z
-        )
+        !inside(x,y,z)
     )
         return;
 
@@ -2110,81 +1944,53 @@ function setBlock(
     ]=type;
 }
 
-function noise(
-    x,z
-){
-
-    const n =
-        Math.sin(
-            x*12.9898+
-            z*78.233
-        )*
-        43758.5453;
-
-    return n-
-        Math.floor(n);
-}
+/* =========================================================
+   FLACHES TERRAIN
+   ========================================================= */
 
 function terrainHeight(
     x,z
 ){
 
-    const cx =
+    const cx=
         WORLD_W/2;
 
-    const cz =
+    const cz=
         WORLD_D/2;
 
-    const dx =
-        x-cx;
-
-    const dz =
-        z-cz;
-
-    const dist =
+    const dist=
         Math.hypot(
-            dx,dz
+            x-cx,
+            z-cz
         );
 
-    const radius=21;
-
     if(
-        dist>radius
+        dist>ISLAND_RADIUS
     )
         return -1;
 
-    const edge =
-        1-dist/radius;
-
-    let h =
-        3+
-        edge*4;
-
-    h +=
-        Math.sin(
-            x*.31
-        )*.5;
-
-    h +=
-        Math.cos(
-            z*.27
-        )*.45;
-
-    h +=
-        (noise(x,z)-.5)*
-        1.1;
-
-    return Math.max(
-        2,
-        Math.floor(h)
-    );
+    return GROUND_TOP;
 }
+
+/* =========================================================
+   WELT GENERIEREN
+   ========================================================= */
 
 function generateWorld(){
 
     world.fill(
         BLOCK.AIR
     );
+
+    const cx=
+        WORLD_W/2;
+
+    const cz=
+        WORLD_D/2;
+
+    /*
+       Komplette flache Insel.
+    */
 
     for(
         let x=0;
@@ -2198,162 +2004,160 @@ function generateWorld(){
             z++
         ){
 
-            const h =
-                terrainHeight(
-                    x,z
+            const dist=
+                Math.hypot(
+                    x-cx,
+                    z-cz
                 );
 
-            if(h<0)
+            if(
+                dist>ISLAND_RADIUS
+            )
                 continue;
+
+            /*
+               Untergrund.
+            */
 
             for(
                 let y=0;
-                y<=h;
+                y<=3;
                 y++
             ){
 
-                let type;
+                setBlock(
+                    x,y,z,
+                    BLOCK.STONE
+                );
+            }
 
-                const dist =
-                    Math.hypot(
-                        x-WORLD_W/2,
-                        z-WORLD_D/2
-                    );
+            setBlock(
+                x,4,z,
+                BLOCK.DIRT
+            );
 
-                if(
-                    y===h
-                ){
+            /*
+               Sandstrand.
+            */
 
-                    if(
-                        dist>17
-                    )
-                        type=
-                            BLOCK.SAND;
-
-                    else
-                        type=
-                            BLOCK.GRASS;
-
-                }else if(
-                    y>=h-2
-                ){
-
-                    type=
-                        BLOCK.DIRT;
-
-                }else{
-
-                    type=
-                        BLOCK.STONE;
-                }
+            if(
+                dist>BEACH_RADIUS
+            ){
 
                 setBlock(
-                    x,y,z,type
+                    x,5,z,
+                    BLOCK.SAND
+                );
+
+            }else{
+
+                setBlock(
+                    x,5,z,
+                    BLOCK.GRASS
                 );
             }
         }
     }
 
-    /* Bäume */
+    createTrees();
 
-    const treePositions=[
-
-        [-16,-12],
-        [-11,-16],
-        [-6,-17],
-        [4,-16],
-        [12,-14],
-        [16,-8],
-        [18,2],
-        [15,11],
-        [8,15],
-        [-4,17],
-        [-13,13],
-        [-17,6],
-        [-17,-2],
-        [16,-2],
-        [-2,-18],
-        [2,18]
-    ];
-
-    for(
-        const p of treePositions
-    ){
-
-        const x =
-            Math.round(
-                WORLD_W/2+p[0]
-            );
-
-        const z =
-            Math.round(
-                WORLD_D/2+p[1]
-            );
-
-        const h =
-            terrainHeight(
-                x,z
-            );
-
-        if(
-            h>2
-        ){
-
-            createTree(
-                x,
-                h+1,
-                z
-            );
-        }
-    }
-
-    /* Blumen */
-
-    for(
-        let i=0;
-        i<40;
-        i++
-    ){
-
-        const x =
-            Math.floor(
-                WORLD_W/2-
-                15+
-                Math.random()*30
-            );
-
-        const z =
-            Math.floor(
-                WORLD_D/2-
-                15+
-                Math.random()*30
-            );
-
-        const h =
-            terrainHeight(
-                x,z
-            );
-
-        if(
-            h>3 &&
-            getBlock(
-                x,h,z
-            )===
-            BLOCK.GRASS
-        ){
-
-            setBlock(
-                x,
-                h+1,
-                z,
-                BLOCK.FLOWER
-            );
-        }
-    }
+    createFlowers();
 
     createHouse();
 
+    createRandomAnimals();
+
     rebuildChunks();
+}
+
+/* =========================================================
+   BÄUME
+   ========================================================= */
+
+function createTrees(){
+
+    const cx=
+        WORLD_W/2;
+
+    const cz=
+        WORLD_D/2;
+
+    let attempts=0;
+    let created=0;
+
+    while(
+        created<42 &&
+        attempts<300
+    ){
+
+        attempts++;
+
+        const angle=
+            Math.random()*
+            Math.PI*2;
+
+        const radius=
+            8+
+            Math.random()*26;
+
+        const x=
+            Math.floor(
+                cx+
+                Math.cos(angle)*
+                radius
+            );
+
+        const z=
+            Math.floor(
+                cz+
+                Math.sin(angle)*
+                radius
+            );
+
+        if(
+            terrainHeight(x,z)<0
+        )
+            continue;
+
+        if(
+            getBlock(
+                x,5,z
+            )!==BLOCK.GRASS
+        )
+            continue;
+
+        /*
+           Spawngebiet freihalten.
+        */
+
+        if(
+            Math.hypot(
+                x-cx,
+                z-(cz+9)
+            )<8
+        )
+            continue;
+
+        /*
+           Nicht direkt neben andere Bäume.
+        */
+
+        let tooClose=false;
+
+        for(
+            const a of animals
+        ){
+            if(false){}
+        }
+
+        createTree(
+            x,
+            6,
+            z
+        );
+
+        created++;
+    }
 }
 
 function createTree(
@@ -2362,7 +2166,7 @@ function createTree(
     z
 ){
 
-    const trunk =
+    const trunk=
         4+
         Math.floor(
             Math.random()*2
@@ -2382,7 +2186,7 @@ function createTree(
         );
     }
 
-    const top =
+    const top=
         y+trunk;
 
     for(
@@ -2422,21 +2226,96 @@ function createTree(
 }
 
 /* =========================================================
+   BLUMEN
+   ========================================================= */
+
+function createFlowers(){
+
+    const cx=
+        WORLD_W/2;
+
+    const cz=
+        WORLD_D/2;
+
+    for(
+        let i=0;
+        i<180;
+        i++
+    ){
+
+        const angle=
+            Math.random()*
+            Math.PI*2;
+
+        const radius=
+            Math.random()*38;
+
+        const x=
+            Math.floor(
+                cx+
+                Math.cos(angle)*
+                radius
+            );
+
+        const z=
+            Math.floor(
+                cz+
+                Math.sin(angle)*
+                radius
+            );
+
+        if(
+            terrainHeight(x,z)!==
+            GROUND_TOP
+        )
+            continue;
+
+        if(
+            getBlock(
+                x,5,z
+            )!==BLOCK.GRASS
+        )
+            continue;
+
+        if(
+            getBlock(
+                x,6,z
+            )===BLOCK.AIR
+        ){
+
+            setBlock(
+                x,6,z,
+                BLOCK.FLOWER
+            );
+        }
+    }
+}
+
+/* =========================================================
    HAUS
    ========================================================= */
 
 function createHouse(){
 
-    const cx=19;
-    const cz=17;
+    /*
+       Das Haus liegt westlich vom Spawn.
+    */
 
-    const ground =
-        terrainHeight(
-            cx+4,
-            cz+3
-        );
+    const cx=
+        Math.floor(
+            WORLD_W/2
+        )-12;
 
-    /* Boden */
+    const cz=
+        Math.floor(
+            WORLD_D/2
+        )-12;
+
+    const ground=5;
+
+    /*
+       Boden
+    */
 
     for(
         let x=0;
@@ -2459,7 +2338,9 @@ function createHouse(){
         }
     }
 
-    /* Wände */
+    /*
+       Wände
+    */
 
     for(
         let x=0;
@@ -2479,13 +2360,13 @@ function createHouse(){
                 y++
             ){
 
-                const wall =
+                const wall=
                     x===0 ||
                     x===8 ||
                     z===0 ||
                     z===6;
 
-                const door =
+                const door=
                     z===0 &&
                     x===4 &&
                     y<=3;
@@ -2506,7 +2387,9 @@ function createHouse(){
         }
     }
 
-    /* Fenster */
+    /*
+       Fenster.
+    */
 
     setBlock(
         cx+1,
@@ -2522,7 +2405,9 @@ function createHouse(){
         BLOCK.GLASS
     );
 
-    /* Dach */
+    /*
+       Dach.
+    */
 
     for(
         let r=0;
@@ -2531,7 +2416,7 @@ function createHouse(){
     ){
 
         const width=
-            3-r;
+            2-r;
 
         for(
             let x=0;
@@ -2555,7 +2440,9 @@ function createHouse(){
         }
     }
 
-    /* Bett */
+    /*
+       Bett.
+    */
 
     setBlock(
         cx+2,
@@ -2571,7 +2458,9 @@ function createHouse(){
         BLOCK.FLOWER
     );
 
-    /* Tisch */
+    /*
+       Tisch.
+    */
 
     setBlock(
         cx+6,
@@ -2582,17 +2471,109 @@ function createHouse(){
 }
 
 /* =========================================================
+   TIERE ERZEUGEN
+   ========================================================= */
+
+function createRandomAnimals(){
+
+    animals.length=0;
+
+    const cx=
+        WORLD_W/2;
+
+    const cz=
+        WORLD_D/2;
+
+    const types=[
+
+        "rabbit",
+        "rabbit",
+        "rabbit",
+        "rabbit",
+        "fox",
+        "fox",
+        "bear",
+        "bear"
+
+    ];
+
+    for(
+        let i=0;
+        i<16;
+        i++
+    ){
+
+        const angle=
+            Math.random()*
+            Math.PI*2;
+
+        const radius=
+            12+
+            Math.random()*24;
+
+        const x=
+            cx+
+            Math.cos(angle)*
+            radius;
+
+        const z=
+            cz+
+            Math.sin(angle)*
+            radius;
+
+        if(
+            Math.hypot(
+                x-cx,
+                z-(cz+9)
+            )<9
+        )
+            continue;
+
+        const type=
+            types[
+                Math.floor(
+                    Math.random()*
+                    types.length
+                )
+            ];
+
+        animals.push({
+
+            type,
+
+            x,
+            z,
+
+            dir:
+                Math.random()*
+                Math.PI*2,
+
+            speed:
+                type==="bear"
+                ? .28
+                : type==="fox"
+                ? .48
+                : .62,
+
+            timer:
+                1+
+                Math.random()*4
+        });
+    }
+}
+
+/* =========================================================
    SPIELER BODEN
    ========================================================= */
 
 function playerGround(){
 
-    const gx =
+    const gx=
         Math.floor(
             player.x
         );
 
-    const gz =
+    const gz=
         Math.floor(
             player.z
         );
@@ -2602,7 +2583,7 @@ function playerGround(){
             gx,0,gz
         )
     )
-        return 3;
+        return 6;
 
     for(
         let y=WORLD_H-1;
@@ -2612,9 +2593,7 @@ function playerGround(){
 
         if(
             getBlock(
-                gx,
-                y,
-                gz
+                gx,y,gz
             )!==BLOCK.AIR
         ){
 
@@ -2622,7 +2601,86 @@ function playerGround(){
         }
     }
 
-    return 3;
+    return 6;
+}
+
+/* =========================================================
+   SPIELER-KOLLISION
+   ========================================================= */
+
+function solidAtPlayer(
+    x,
+    y,
+    z
+){
+
+    const minX=
+        x-.32;
+
+    const maxX=
+        x+.32;
+
+    const minY=
+        y;
+
+    const maxY=
+        y+1.85;
+
+    const minZ=
+        z-.32;
+
+    const maxZ=
+        z+.32;
+
+    const x0=
+        Math.floor(minX);
+
+    const x1=
+        Math.floor(maxX);
+
+    const y0=
+        Math.floor(minY);
+
+    const y1=
+        Math.floor(maxY);
+
+    const z0=
+        Math.floor(minZ);
+
+    const z1=
+        Math.floor(maxZ);
+
+    for(
+        let bx=x0;
+        bx<=x1;
+        bx++
+    ){
+
+        for(
+            let by=y0;
+            by<=y1;
+            by++
+        ){
+
+            for(
+                let bz=z0;
+                bz<=z1;
+                bz++
+            ){
+
+                if(
+                    getBlock(
+                        bx,by,bz
+                    )!==BLOCK.AIR
+                ){
+
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 /* =========================================================
@@ -2635,13 +2693,12 @@ function getCamera(){
 
         player.x,
 
-        player.y+
-        1.3,
+        player.y+1.3,
 
         player.z
     ];
 
-    const cp =
+    const cp=
         Math.cos(
             player.pitch
         );
@@ -2649,27 +2706,21 @@ function getCamera(){
     const eye=[
 
         target[0]+
-        Math.sin(
-            player.yaw
-        )*
+        Math.sin(player.yaw)*
         cp*
         camera.distance,
 
         target[1]-
-        Math.sin(
-            player.pitch
-        )*
+        Math.sin(player.pitch)*
         camera.distance,
 
         target[2]+
-        Math.cos(
-            player.yaw
-        )*
+        Math.cos(player.yaw)*
         cp*
         camera.distance
     ];
 
-    return {
+    return{
         eye,
         target
     };
@@ -2686,7 +2737,7 @@ function drawCube(
     ry=0
 ){
 
-    const m =
+    const m=
         model(
             x,y,z,
             sx,sy,sz,
@@ -2769,31 +2820,31 @@ function drawWater(){
 
         WORLD_W/2,
 
-        SEA_LEVEL-.7,
+        WATER_Y,
 
         WORLD_D/2,
 
-        65,
+        100,
 
-        .15,
+        .12,
 
-        65,
+        100,
 
         [
-            .07,
-            .38,
-            .66
+            .055,
+            .32,
+            .62
         ]
     );
 }
 
 /* =========================================================
-   TIERE
+   TIERE RENDERING
    ========================================================= */
 
 function drawRabbit(a){
 
-    const h =
+    const h=
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
@@ -2802,27 +2853,22 @@ function drawRabbit(a){
     if(h<0)
         return;
 
-    const y=h+1.3;
+    const y=
+        h+1.3;
 
     const body=[
-        .78,
-        .70,
-        .55
+        .78,.70,.55
     ];
 
     const white=[
-        .90,
-        .90,
-        .84
+        .90,.90,.84
     ];
 
     drawCube(
         a.x,
         y,
         a.z,
-        .8,
-        .55,
-        .55,
+        .8,.55,.55,
         body,
         a.dir
     );
@@ -2830,12 +2876,14 @@ function drawRabbit(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.42,
+
         y+.28,
+
         a.z+
         Math.cos(a.dir)*.42,
-        .42,
-        .42,
-        .42,
+
+        .42,.42,.42,
+
         white,
         a.dir
     );
@@ -2843,12 +2891,14 @@ function drawRabbit(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.45,
+
         y+.72,
+
         a.z+
         Math.cos(a.dir)*.45,
-        .11,
-        .45,
-        .11,
+
+        .11,.45,.11,
+
         white,
         a.dir
     );
@@ -2856,19 +2906,21 @@ function drawRabbit(a){
     drawCube(
         a.x-
         Math.sin(a.dir)*.15,
+
         y+.2,
+
         a.z-
         Math.cos(a.dir)*.15,
-        .20,
-        .20,
-        .20,
+
+        .20,.20,.20,
+
         white
     );
 }
 
 function drawBear(a){
 
-    const h =
+    const h=
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
@@ -2877,27 +2929,22 @@ function drawBear(a){
     if(h<0)
         return;
 
-    const y=h+1.35;
+    const y=
+        h+1.35;
 
     const brown=[
-        .30,
-        .18,
-        .10
+        .30,.18,.10
     ];
 
     const dark=[
-        .08,
-        .05,
-        .03
+        .08,.05,.03
     ];
 
     drawCube(
         a.x,
         y,
         a.z,
-        1.05,
-        .90,
-        .85,
+        1.05,.90,.85,
         brown,
         a.dir
     );
@@ -2905,12 +2952,14 @@ function drawBear(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.5,
+
         y+.35,
+
         a.z+
         Math.cos(a.dir)*.5,
-        .62,
-        .62,
-        .62,
+
+        .62,.62,.62,
+
         brown,
         a.dir
     );
@@ -2918,12 +2967,14 @@ function drawBear(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.82,
+
         y+.36,
+
         a.z+
         Math.cos(a.dir)*.82,
-        .18,
-        .18,
-        .15,
+
+        .18,.18,.15,
+
         dark,
         a.dir
     );
@@ -2931,7 +2982,7 @@ function drawBear(a){
 
 function drawFox(a){
 
-    const h =
+    const h=
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
@@ -2940,27 +2991,22 @@ function drawFox(a){
     if(h<0)
         return;
 
-    const y=h+1.15;
+    const y=
+        h+1.15;
 
     const orange=[
-        .85,
-        .30,
-        .07
+        .85,.30,.07
     ];
 
     const white=[
-        .95,
-        .90,
-        .75
+        .95,.90,.75
     ];
 
     drawCube(
         a.x,
         y,
         a.z,
-        .9,
-        .62,
-        .5,
+        .9,.62,.5,
         orange,
         a.dir
     );
@@ -2968,12 +3014,14 @@ function drawFox(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.48,
+
         y+.25,
+
         a.z+
         Math.cos(a.dir)*.48,
-        .48,
-        .48,
-        .45,
+
+        .48,.48,.45,
+
         orange,
         a.dir
     );
@@ -2981,12 +3029,14 @@ function drawFox(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.76,
+
         y+.25,
+
         a.z+
         Math.cos(a.dir)*.76,
-        .16,
-        .16,
-        .16,
+
+        .16,.16,.16,
+
         white,
         a.dir
     );
@@ -3008,35 +3058,35 @@ function updateAnimals(dt){
                 2+
                 Math.random()*4;
 
-            a.dir +=
-                (Math.random()-.5)
-                *2.5;
+            a.dir+=
+                (Math.random()-.5)*
+                2.5;
         }
 
-        const nx =
+        const nx=
             a.x+
             Math.sin(a.dir)*
             a.speed*
             dt;
 
-        const nz =
+        const nz=
             a.z+
             Math.cos(a.dir)*
             a.speed*
             dt;
 
-        const h =
+        const h=
             terrainHeight(
                 Math.round(nx),
                 Math.round(nz)
             );
 
         if(
-            h>0 &&
+            h>=GROUND_TOP &&
             Math.hypot(
                 nx-WORLD_W/2,
                 nz-WORLD_D/2
-            )<19
+            )<ISLAND_RADIUS-2
         ){
 
             a.x=nx;
@@ -3050,53 +3100,45 @@ function updateAnimals(dt){
 }
 
 /* =========================================================
-   SPIELER
+   SPIELER RENDERING
    ========================================================= */
 
 function drawPlayer(time){
 
-    const moving =
+    const moving=
         Math.abs(player.vx)+
         Math.abs(player.vz)>.2;
 
-    const walk =
+    const walk=
         moving
-        ? Math.sin(
+        ?
+        Math.sin(
             time*.012
         )*.12
-        : 0;
+        :
+        0;
 
     const skin=[
-        .88,
-        .67,
-        .50
+        .88,.67,.50
     ];
 
     const shirt=[
-        .15,
-        .45,
-        .80
+        .15,.45,.80
     ];
 
     const pants=[
-        .10,
-        .14,
-        .20
+        .10,.14,.20
     ];
 
     const hair=[
-        .08,
-        .05,
-        .025
+        .08,.05,.025
     ];
 
     drawCube(
         player.x,
         player.y+.95,
         player.z,
-        .65,
-        .95,
-        .42,
+        .65,.95,.42,
         shirt,
         player.yaw
     );
@@ -3105,9 +3147,7 @@ function drawPlayer(time){
         player.x,
         player.y+1.72,
         player.z,
-        .5,
-        .5,
-        .5,
+        .5,.5,.5,
         skin,
         player.yaw
     );
@@ -3116,9 +3156,7 @@ function drawPlayer(time){
         player.x,
         player.y+1.99,
         player.z,
-        .53,
-        .17,
-        .53,
+        .53,.17,.53,
         hair,
         player.yaw
     );
@@ -3127,9 +3165,7 @@ function drawPlayer(time){
         player.x-.19,
         player.y+.35+walk,
         player.z,
-        .20,
-        .65,
-        .22,
+        .20,.65,.22,
         pants,
         player.yaw
     );
@@ -3138,130 +3174,117 @@ function drawPlayer(time){
         player.x+.19,
         player.y+.35-walk,
         player.z,
-        .20,
-        .65,
-        .22,
+        .20,.65,.22,
         pants,
         player.yaw
     );
 }
 
 /* =========================================================
-   RAYCAST
+   PRÄZISER RAYCAST
    ========================================================= */
 
-function raycast(){
+function raycast(
+    maxDistance=8
+){
 
-    const cam =
+    const cam=
         getCamera();
 
-    let dx =
+    let dx=
         cam.target[0]-
         cam.eye[0];
 
-    let dy =
+    let dy=
         cam.target[1]-
         cam.eye[1];
 
-    let dz =
+    let dz=
         cam.target[2]-
         cam.eye[2];
 
-    const len =
+    const len=
         Math.hypot(
             dx,dy,dz
         );
+
+    if(!len)
+        return null;
 
     dx/=len;
     dy/=len;
     dz/=len;
 
-    let x =
-        Math.floor(
-            cam.eye[0]
-        );
+    /*
+       Kleine Schritte sorgen dafür,
+       dass die Auswahl deutlich genauer
+       dem Fadenkreuz folgt.
+    */
 
-    let y =
-        Math.floor(
-            cam.eye[1]
-        );
+    const step=.035;
 
-    let z =
-        Math.floor(
-            cam.eye[2]
-        );
-
-    const stepX =
-        dx>=0 ? 1 : -1;
-
-    const stepY =
-        dy>=0 ? 1 : -1;
-
-    const stepZ =
-        dz>=0 ? 1 : -1;
-
-    let tMaxX =
-        dx>=0
-        ? (x+1-cam.eye[0])/dx
-        : (cam.eye[0]-x)/-dx;
-
-    let tMaxY =
-        dy>=0
-        ? (y+1-cam.eye[1])/dy
-        : (cam.eye[1]-y)/-dy;
-
-    let tMaxZ =
-        dz>=0
-        ? (z+1-cam.eye[2])/dz
-        : (cam.eye[2]-z)/-dz;
-
-    const tDeltaX =
-        Math.abs(1/dx);
-
-    const tDeltaY =
-        Math.abs(1/dy);
-
-    const tDeltaZ =
-        Math.abs(1/dz);
-
-    if(!isFinite(tMaxX))
-        tMaxX=Infinity;
-
-    if(!isFinite(tMaxY))
-        tMaxY=Infinity;
-
-    if(!isFinite(tMaxZ))
-        tMaxZ=Infinity;
-
-    let previous={
-        x,
-        y,
-        z
-    };
+    let previous=null;
 
     for(
-        let i=0;
-        i<55;
-        i++
+        let distance=0;
+        distance<=maxDistance;
+        distance+=step
     ){
 
+        const px=
+            cam.eye[0]+
+            dx*distance;
+
+        const py=
+            cam.eye[1]+
+            dy*distance;
+
+        const pz=
+            cam.eye[2]+
+            dz*distance;
+
+        const x=
+            Math.floor(px);
+
+        const y=
+            Math.floor(py);
+
+        const z=
+            Math.floor(pz);
+
         if(
-            inside(
-                x,y,z
-            ) &&
-            getBlock(
-                x,y,z
-            )!==BLOCK.AIR
+            !inside(x,y,z)
         ){
 
-            return {
+            previous={
+                x,y,z
+            };
+
+            continue;
+        }
+
+        const block=
+            getBlock(
+                x,y,z
+            );
+
+        if(
+            block!==BLOCK.AIR
+        ){
+
+            return{
 
                 x,
                 y,
                 z,
 
-                previous
-
+                previous:
+                    previous||
+                    {
+                        x,
+                        y,
+                        z
+                    }
             };
         }
 
@@ -3270,46 +3293,6 @@ function raycast(){
             y,
             z
         };
-
-        if(
-            tMaxX<
-            tMaxY
-        ){
-
-            if(
-                tMaxX<
-                tMaxZ
-            ){
-
-                x+=stepX;
-                tMaxX+=
-                    tDeltaX;
-
-            }else{
-
-                z+=stepZ;
-                tMaxZ+=
-                    tDeltaZ;
-            }
-
-        }else{
-
-            if(
-                tMaxY<
-                tMaxZ
-            ){
-
-                y+=stepY;
-                tMaxY+=
-                    tDeltaY;
-
-            }else{
-
-                z+=stepZ;
-                tMaxZ+=
-                    tDeltaZ;
-            }
-        }
     }
 
     return null;
@@ -3329,26 +3312,22 @@ function selectedBlock(){
 function canPlace(type){
 
     if(
-        type===
-        BLOCK.WOOD
+        type===BLOCK.WOOD
     )
         return inventory.wood>0;
 
     if(
-        type===
-        BLOCK.STONE
+        type===BLOCK.STONE
     )
         return inventory.stone>0;
 
     if(
-        type===
-        BLOCK.PLANK
+        type===BLOCK.PLANK
     )
         return inventory.planks>0;
 
     if(
-        type===
-        BLOCK.FLOWER
+        type===BLOCK.FLOWER
     )
         return inventory.seeds>0;
 
@@ -3358,26 +3337,22 @@ function canPlace(type){
 function consumeBlock(type){
 
     if(
-        type===
-        BLOCK.WOOD
+        type===BLOCK.WOOD
     )
         inventory.wood--;
 
     if(
-        type===
-        BLOCK.STONE
+        type===BLOCK.STONE
     )
         inventory.stone--;
 
     if(
-        type===
-        BLOCK.PLANK
+        type===BLOCK.PLANK
     )
         inventory.planks--;
 
     if(
-        type===
-        BLOCK.FLOWER
+        type===BLOCK.FLOWER
     )
         inventory.seeds--;
 }
@@ -3385,46 +3360,99 @@ function consumeBlock(type){
 function giveBlock(type){
 
     if(
-        type===
-        BLOCK.WOOD
+        type===BLOCK.WOOD
     )
         inventory.wood++;
 
     if(
-        type===
-        BLOCK.STONE
+        type===BLOCK.STONE
     )
         inventory.stone++;
 
     if(
-        type===
-        BLOCK.PLANK
+        type===BLOCK.PLANK
     )
         inventory.planks++;
 
     if(
-        type===
-        BLOCK.FLOWER
+        type===BLOCK.FLOWER
     )
         inventory.seeds++;
 }
 
+/* =========================================================
+   BLOCK SPIELERKOLLISION
+   ========================================================= */
+
+function blockIntersectsPlayer(
+    x,y,z
+){
+
+    const blockMinX=x;
+    const blockMaxX=x+1;
+
+    const blockMinY=y;
+    const blockMaxY=y+1;
+
+    const blockMinZ=z;
+    const blockMaxZ=z+1;
+
+    const playerMinX=
+        player.x-.32;
+
+    const playerMaxX=
+        player.x+.32;
+
+    const playerMinY=
+        player.y;
+
+    const playerMaxY=
+        player.y+1.85;
+
+    const playerMinZ=
+        player.z-.32;
+
+    const playerMaxZ=
+        player.z+.32;
+
+    return(
+
+        playerMaxX>blockMinX &&
+        playerMinX<blockMaxX &&
+
+        playerMaxY>blockMinY &&
+        playerMinY<blockMaxY &&
+
+        playerMaxZ>blockMinZ &&
+        playerMinZ<blockMaxZ
+    );
+}
+
 function buildBlock(){
 
-    const hit =
+    const hit=
         raycast();
 
     if(!hit){
 
         showMessage(
-            "Kein Block anvisiert."
+            "🎯 Kein Block anvisiert."
         );
 
         return;
     }
 
-    const p =
+    const p=
         hit.previous;
+
+    if(!p){
+
+        showMessage(
+            "Hier kannst du nicht bauen."
+        );
+
+        return;
+    }
 
     if(
         !inside(
@@ -3435,7 +3463,7 @@ function buildBlock(){
     ){
 
         showMessage(
-            "Hier kannst du nicht bauen."
+            "🚫 Außerhalb der Welt."
         );
 
         return;
@@ -3447,10 +3475,16 @@ function buildBlock(){
             p.y,
             p.z
         )!==BLOCK.AIR
-    )
-        return;
+    ){
 
-    const type =
+        showMessage(
+            "🚫 Dieser Platz ist bereits belegt."
+        );
+
+        return;
+    }
+
+    const type=
         selectedBlock();
 
     if(
@@ -3458,28 +3492,26 @@ function buildBlock(){
     ){
 
         showMessage(
-            "Davon hast du nichts mehr."
+            "❌ Davon hast du nichts mehr."
         );
 
         return;
     }
 
+    /*
+       Kein Block darf in den Spieler gesetzt werden.
+    */
+
     if(
-        Math.abs(
-            p.x+.5-player.x
-        )<.8 &&
-
-        Math.abs(
-            p.z+.5-player.z
-        )<.8 &&
-
-        Math.abs(
-            p.y-player.y
-        )<2
+        blockIntersectsPlayer(
+            p.x,
+            p.y,
+            p.z
+        )
     ){
 
         showMessage(
-            "Du stehst dort gerade."
+            "🚫 Der Block würde dich treffen."
         );
 
         return;
@@ -3492,9 +3524,7 @@ function buildBlock(){
         type
     );
 
-    consumeBlock(
-        type
-    );
+    consumeBlock(type);
 
     rebuildChunks();
 
@@ -3511,13 +3541,13 @@ function buildBlock(){
 
 function breakBlock(){
 
-    const hit =
+    const hit=
         raycast();
 
     if(!hit)
         return;
 
-    const type =
+    const type=
         getBlock(
             hit.x,
             hit.y,
@@ -3525,10 +3555,25 @@ function breakBlock(){
         );
 
     if(
-        type===
-        BLOCK.AIR
+        type===BLOCK.AIR
     )
         return;
+
+    /*
+       Boden darf abgebaut werden,
+       aber die unterste Schicht bleibt bestehen.
+    */
+
+    if(
+        hit.y===0
+    ){
+
+        showMessage(
+            "🚫 Dieser Untergrund kann nicht abgebaut werden."
+        );
+
+        return;
+    }
 
     setBlock(
         hit.x,
@@ -3538,22 +3583,16 @@ function breakBlock(){
     );
 
     if(
-        type===
-        BLOCK.WOOD ||
-        type===
-        BLOCK.STONE ||
-        type===
-        BLOCK.PLANK
+        type===BLOCK.WOOD ||
+        type===BLOCK.STONE ||
+        type===BLOCK.PLANK
     ){
 
-        giveBlock(
-            type
-        );
+        giveBlock(type);
     }
 
     if(
-        type===
-        BLOCK.FLOWER
+        type===BLOCK.FLOWER
     ){
 
         inventory.seeds++;
@@ -3578,34 +3617,34 @@ function getMoveInput(){
     let side=0;
 
     if(
-        keys["w"] ||
-        keys["W"] ||
+        keys["w"]||
+        keys["W"]||
         keys["ArrowUp"]
     )
         forward++;
 
     if(
-        keys["s"] ||
-        keys["S"] ||
+        keys["s"]||
+        keys["S"]||
         keys["ArrowDown"]
     )
         forward--;
 
     if(
-        keys["a"] ||
-        keys["A"] ||
+        keys["a"]||
+        keys["A"]||
         keys["ArrowLeft"]
     )
         side--;
 
     if(
-        keys["d"] ||
-        keys["D"] ||
+        keys["d"]||
+        keys["D"]||
         keys["ArrowRight"]
     )
         side++;
 
-    const len =
+    const len=
         Math.hypot(
             forward,
             side
@@ -3617,48 +3656,103 @@ function getMoveInput(){
         side/=len;
     }
 
-    return {
+    return{
         forward,
         side
     };
 }
 
+function tryMove(
+    dx,
+    dz
+){
+
+    const nx=
+        player.x+dx;
+
+    const nz=
+        player.z+dz;
+
+    const cx=
+        WORLD_W/2;
+
+    const cz=
+        WORLD_D/2;
+
+    const dist=
+        Math.hypot(
+            nx-cx,
+            nz-cz
+        );
+
+    /*
+       Spieler bleibt auf der Insel.
+    */
+
+    if(
+        dist>ISLAND_RADIUS-1.2
+    )
+        return;
+
+    /*
+       Kollisionen mit der Welt.
+    */
+
+    if(
+        solidAtPlayer(
+            nx,
+            player.y,
+            player.z
+        )
+    )
+        return;
+
+    if(
+        solidAtPlayer(
+            player.x,
+            player.y,
+            nz
+        )
+    )
+        return;
+
+    player.x=nx;
+    player.z=nz;
+}
+
 function updatePlayer(dt){
 
-    const input =
+    const input=
         getMoveInput();
 
-    const sin =
+    const sin=
         Math.sin(
             player.yaw
         );
 
-    const cos =
+    const cos=
         Math.cos(
             player.yaw
         );
 
-    const dx =
+    const dx=
         (-sin)*
         input.forward+
-
         cos*
         input.side;
 
-    const dz =
+    const dz=
         (-cos)*
         input.forward+
-
         (-sin)*
         input.side;
 
-    const targetSpeed =
+    const targetSpeed=
         player.speed;
 
-    player.vx +=
+    player.vx+=
         (
-            dx*
-            targetSpeed-
+            dx*targetSpeed-
             player.vx
         )*
         Math.min(
@@ -3666,10 +3760,9 @@ function updatePlayer(dt){
             dt*10
         );
 
-    player.vz +=
+    player.vz+=
         (
-            dz*
-            targetSpeed-
+            dz*targetSpeed-
             player.vz
         )*
         Math.min(
@@ -3678,76 +3771,40 @@ function updatePlayer(dt){
         );
 
     if(
-        Math.abs(
-            input.forward
-        )+
-        Math.abs(
-            input.side
-        )<.01
+        Math.abs(input.forward)+
+        Math.abs(input.side)<.01
     ){
 
-        player.vx *=
+        player.vx*=
             Math.pow(
                 .001,
                 dt
             );
 
-        player.vz *=
+        player.vz*=
             Math.pow(
                 .001,
                 dt
             );
     }
 
-    player.x +=
-        player.vx*dt;
+    tryMove(
+        player.vx*dt,
+        0
+    );
 
-    player.z +=
-        player.vz*dt;
+    tryMove(
+        0,
+        player.vz*dt
+    );
 
-    const centerX =
-        WORLD_W/2;
-
-    const centerZ =
-        WORLD_D/2;
-
-    const dx2 =
-        player.x-centerX;
-
-    const dz2 =
-        player.z-centerZ;
-
-    const dist =
-        Math.hypot(
-            dx2,
-            dz2
-        );
-
-    const radius=20;
-
-    if(
-        dist>radius
-    ){
-
-        const f=
-            radius/dist;
-
-        player.x=
-            centerX+
-            dx2*f;
-
-        player.z=
-            centerZ+
-            dz2*f;
-    }
-
-    player.vy -=
+    player.vy-=
         20*dt;
 
-    player.y +=
+    player.y+=
         player.vy*dt;
 
-    const ground =
+    const ground=
         playerGround();
 
     if(
@@ -3785,12 +3842,12 @@ function jump(){
 
 function interact(){
 
-    const hit =
+    const hit=
         raycast();
 
     if(hit){
 
-        const type =
+        const type=
             getBlock(
                 hit.x,
                 hit.y,
@@ -3798,8 +3855,7 @@ function interact(){
             );
 
         if(
-            type===
-            BLOCK.FLOWER
+            type===BLOCK.FLOWER
         ){
 
             setBlock(
@@ -3827,7 +3883,7 @@ function interact(){
         const a of animals
     ){
 
-        const d =
+        const d=
             Math.hypot(
                 a.x-player.x,
                 a.z-player.z
@@ -3838,16 +3894,14 @@ function interact(){
         ){
 
             if(
-                a.type===
-                "rabbit"
+                a.type==="rabbit"
             )
                 showMessage(
                     "🐰 Das Kaninchen schaut dich an."
                 );
 
             else if(
-                a.type===
-                "bear"
+                a.type==="bear"
             )
                 showMessage(
                     "🐻 Der Bär brummt zufrieden."
@@ -3862,14 +3916,20 @@ function interact(){
         }
     }
 
-    const houseDist =
+    const houseX=
+        WORLD_W/2-8;
+
+    const houseZ=
+        WORLD_D/2-9;
+
+    const houseDist=
         Math.hypot(
-            player.x-23,
-            player.z-20
+            player.x-houseX,
+            player.z-houseZ
         );
 
     if(
-        houseDist<5
+        houseDist<8
     ){
 
         showMessage(
@@ -3890,7 +3950,7 @@ function interact(){
 
 function showMessage(text){
 
-    const el =
+    const el=
         document.getElementById(
             "message"
         );
@@ -3903,7 +3963,7 @@ function showMessage(text){
         showMessage.timer
     );
 
-    showMessage.timer =
+    showMessage.timer=
         setTimeout(
             ()=>{
                 el.style.opacity="0";
@@ -3972,7 +4032,6 @@ function updateUI(){
         )
         .forEach(
             (el,i)=>{
-
                 el.classList.toggle(
                     "active",
                     i===selectedSlot
@@ -3983,9 +4042,7 @@ function updateUI(){
 
 function selectSlot(n){
 
-    if(
-        n<0
-    )
+    if(n<0)
         n=
             hotbarBlocks.length-1;
 
@@ -4005,27 +4062,27 @@ function selectSlot(n){
 
 function updatePrompt(){
 
-    const hit =
+    const hit=
         raycast();
 
-    const p =
+    const p=
         document.getElementById(
             "prompt"
         );
 
     if(hit){
 
-        const type =
+        const type=
             getBlock(
                 hit.x,
                 hit.y,
                 hit.z
             );
 
-        p.textContent =
-            "🖱 Linksklick: Abbauen   •   Rechtsklick: Bauen   •   "+
+        p.textContent=
+            "🖱 Linksklick: Abbauen  •  Rechtsklick: Bauen  •  "+
             (
-                blockNames[type] ||
+                blockNames[type]||
                 "Block"
             );
 
@@ -4043,16 +4100,17 @@ function updatePrompt(){
 
 function toggleInventory(){
 
-    const inv =
+    const inv=
         document.getElementById(
             "inventory"
         );
 
-    inv.style.display =
-        inv.style.display===
-        "block"
-        ? "none"
-        : "block";
+    inv.style.display=
+        inv.style.display==="block"
+        ?
+        "none"
+        :
+        "block";
 
     updateUI();
 }
@@ -4061,8 +4119,8 @@ function toggleInventory(){
    SAVE / LOAD
    ========================================================= */
 
-const SAVE_KEY =
-    "animalmania31_save";
+const SAVE_KEY=
+    "animalmania32_save";
 
 function saveGame(){
 
@@ -4070,25 +4128,23 @@ function saveGame(){
 
         const data={
 
+            version:32,
+
             world:
-                Array.from(
-                    world
-                ),
+                Array.from(world),
 
             player:{
 
                 x:player.x,
-
                 y:player.y,
-
                 z:player.z,
 
                 yaw:player.yaw,
-
                 pitch:player.pitch
             },
 
             inventory:{
+
                 wood:inventory.wood,
                 stone:inventory.stone,
                 seeds:inventory.seeds,
@@ -4096,7 +4152,10 @@ function saveGame(){
                 fish:inventory.fish
             },
 
-            selectedSlot
+            selectedSlot,
+
+            worldTime
+
         };
 
         localStorage.setItem(
@@ -4117,7 +4176,7 @@ function loadGame(){
 
     try{
 
-        const raw =
+        const raw=
             localStorage.getItem(
                 SAVE_KEY
             );
@@ -4125,8 +4184,12 @@ function loadGame(){
         if(!raw)
             return false;
 
-        const data =
+        const data=
             JSON.parse(raw);
+
+        /*
+           Nur passende neue Welten laden.
+        */
 
         if(
             data.world &&
@@ -4137,11 +4200,13 @@ function loadGame(){
             world.set(
                 data.world
             );
+
+        }else{
+
+            return false;
         }
 
-        if(
-            data.player
-        ){
+        if(data.player){
 
             Object.assign(
                 player,
@@ -4149,9 +4214,7 @@ function loadGame(){
             );
         }
 
-        if(
-            data.inventory
-        ){
+        if(data.inventory){
 
             Object.assign(
                 inventory,
@@ -4165,8 +4228,22 @@ function loadGame(){
             )
         ){
 
-            selectedSlot =
-                data.selectedSlot;
+            selectedSlot=
+                Math.max(
+                    0,
+                    Math.min(
+                        hotbarBlocks.length-1,
+                        data.selectedSlot
+                    )
+                );
+        }
+
+        if(
+            typeof data.worldTime==="number"
+        ){
+
+            worldTime=
+                data.worldTime;
         }
 
         rebuildChunks();
@@ -4192,7 +4269,7 @@ let worldTime=9;
 
 function updateTime(dt){
 
-    worldTime +=
+    worldTime+=
         dt*.30;
 
     if(
@@ -4233,11 +4310,11 @@ function updateTime(dt){
 function skyColor(){
 
     if(
-        worldTime<6 ||
+        worldTime<6||
         worldTime>21
     ){
 
-        return [
+        return[
             .035,
             .065,
             .11
@@ -4248,7 +4325,7 @@ function skyColor(){
         worldTime<8
     ){
 
-        return [
+        return[
             .34,
             .52,
             .65
@@ -4259,14 +4336,14 @@ function skyColor(){
         worldTime>18
     ){
 
-        return [
+        return[
             .55,
             .40,
             .29
         ];
     }
 
-    return [
+    return[
         .40,
         .70,
         .90
@@ -4279,24 +4356,24 @@ function skyColor(){
 
 function resize(){
 
-    const dpr =
+    const dpr=
         Math.min(
             window.devicePixelRatio||1,
             1.5
         );
 
-    const width =
+    const width=
         Math.floor(
             innerWidth*dpr
         );
 
-    const height =
+    const height=
         Math.floor(
             innerHeight*dpr
         );
 
     if(
-        canvas.width!==width ||
+        canvas.width!==width||
         canvas.height!==height
     ){
 
@@ -4304,12 +4381,15 @@ function resize(){
         canvas.height=height;
     }
 
-    gl.viewport(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    if(gl){
+
+        gl.viewport(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    }
 }
 
 function setCommonUniforms(
@@ -4338,8 +4418,8 @@ function setCommonUniforms(
         light[2]
     );
 
-    const night =
-        worldTime<6 ||
+    const night=
+        worldTime<6||
         worldTime>21;
 
     gl.uniform1f(
@@ -4354,14 +4434,18 @@ function setCommonUniforms(
         sky[2]
     );
 
+    /*
+       Größere Sichtweite für die 96x96 Welt.
+    */
+
     gl.uniform1f(
         program.uFogStart,
-        32
+        42
     );
 
     gl.uniform1f(
         program.uFogEnd,
-        72
+        105
     );
 }
 
@@ -4369,7 +4453,7 @@ function render(time){
 
     resize();
 
-    const sky =
+    const sky=
         skyColor();
 
     gl.clearColor(
@@ -4384,26 +4468,26 @@ function render(time){
         gl.DEPTH_BUFFER_BIT
     );
 
-    const cam =
+    const cam=
         getCamera();
 
-    const projection =
+    const projection=
         perspective(
             Math.PI/3,
             canvas.width/
             canvas.height,
             .1,
-            100
+            120
         );
 
-    const view =
+    const view=
         lookAt(
             cam.eye,
             cam.target
         );
 
-    const night =
-        worldTime<6 ||
+    const night=
+        worldTime<6||
         worldTime>21;
 
     const light=[
@@ -4415,9 +4499,7 @@ function render(time){
         -.4
     ];
 
-    gl.useProgram(
-        program
-    );
+    gl.useProgram(program);
 
     setCommonUniforms(
         projection,
@@ -4430,14 +4512,11 @@ function render(time){
 
     drawWater();
 
-    /* Voxel-Welt */
+    /* Welt */
 
     for(
         const chunk of chunks
     ){
-
-        const m =
-            mat4();
 
         gl.bindBuffer(
             gl.ARRAY_BUFFER,
@@ -4501,7 +4580,7 @@ function render(time){
         gl.uniformMatrix4fv(
             program.uModel,
             false,
-            m
+            mat4()
         );
 
         gl.drawElements(
@@ -4519,14 +4598,12 @@ function render(time){
     ){
 
         if(
-            a.type===
-            "rabbit"
+            a.type==="rabbit"
         )
             drawRabbit(a);
 
         else if(
-            a.type===
-            "bear"
+            a.type==="bear"
         )
             drawBear(a);
 
@@ -4547,7 +4624,7 @@ function initGL(){
 
     try{
 
-        gl =
+        gl=
             canvas.getContext(
                 "webgl",
                 {
@@ -4578,81 +4655,81 @@ function initGL(){
             gl.LEQUAL
         );
 
-        program =
+        program=
             createProgram();
 
-        program.aPosition =
+        program.aPosition=
             gl.getAttribLocation(
                 program,
                 "aPosition"
             );
 
-        program.aNormal =
+        program.aNormal=
             gl.getAttribLocation(
                 program,
                 "aNormal"
             );
 
-        program.aColor =
+        program.aColor=
             gl.getAttribLocation(
                 program,
                 "aColor"
             );
 
-        program.uProjection =
+        program.uProjection=
             gl.getUniformLocation(
                 program,
                 "uProjection"
             );
 
-        program.uView =
+        program.uView=
             gl.getUniformLocation(
                 program,
                 "uView"
             );
 
-        program.uModel =
+        program.uModel=
             gl.getUniformLocation(
                 program,
                 "uModel"
             );
 
-        program.uLight =
+        program.uLight=
             gl.getUniformLocation(
                 program,
                 "uLight"
             );
 
-        program.uAmbient =
+        program.uAmbient=
             gl.getUniformLocation(
                 program,
                 "uAmbient"
             );
 
-        program.uFogColor =
+        program.uFogColor=
             gl.getUniformLocation(
                 program,
                 "uFogColor"
             );
 
-        program.uFogStart =
+        program.uFogStart=
             gl.getUniformLocation(
                 program,
                 "uFogStart"
             );
 
-        program.uFogEnd =
+        program.uFogEnd=
             gl.getUniformLocation(
                 program,
                 "uFogEnd"
             );
 
-        cubeMesh =
+        cubeMesh=
             createCubeMesh();
 
         generateWorld();
 
-        const loaded =
+        const loaded=
             loadGame();
 
         if(!loaded){
@@ -4675,7 +4752,7 @@ function initGL(){
 
         fatalError=true;
 
-        const error =
+        const error=
             document.getElementById(
                 "error"
             );
@@ -4707,7 +4784,7 @@ window.addEventListener(
         keys[e.key]=true;
 
         if(
-            e.key>="1" &&
+            e.key>="1"&&
             e.key<="6"
         ){
 
@@ -4759,84 +4836,28 @@ window.addEventListener(
 );
 
 /* =========================================================
-   MAUS KAMERA
+   DESKTOP MAUS
    ========================================================= */
 
-let mouseDown=false;
+/*
+   Wichtig:
+
+   Linksklick alleine = abbauen
+
+   Linksklick + Bewegung = Kamera
+
+   Dadurch wird beim Drehen der Kamera
+   nicht mehr versehentlich ein Block abgebaut.
+*/
+
+let mousePressed=false;
+let mouseDragged=false;
+
+let mouseStartX=0;
+let mouseStartY=0;
 
 let lastMouseX=0;
 let lastMouseY=0;
-
-canvas.addEventListener(
-    "mousedown",
-    e=>{
-
-        if(
-            e.button===0
-        ){
-
-            mouseDown=true;
-
-            lastMouseX=
-                e.clientX;
-
-            lastMouseY=
-                e.clientY;
-        }
-    }
-);
-
-window.addEventListener(
-    "mouseup",
-    ()=>{
-        mouseDown=false;
-    }
-);
-
-canvas.addEventListener(
-    "mousemove",
-    e=>{
-
-        if(!mouseDown)
-            return;
-
-        const dx =
-            e.clientX-
-            lastMouseX;
-
-        const dy =
-            e.clientY-
-            lastMouseY;
-
-        lastMouseX=
-            e.clientX;
-
-        lastMouseY=
-            e.clientY;
-
-        player.yaw -=
-            dx*.006;
-
-        player.pitch -=
-            dy*.005;
-
-        player.pitch =
-            Math.max(
-                -.95,
-                Math.min(
-                    .6,
-                    player.pitch
-                )
-            );
-    }
-);
-
-canvas.addEventListener(
-    "contextmenu",
-    e=>{
-        e.preventDefault();
-    }
-);
 
 canvas.addEventListener(
     "mousedown",
@@ -4847,13 +4868,126 @@ canvas.addEventListener(
 
         if(
             e.button===0
-        )
-            breakBlock();
+        ){
+
+            mousePressed=true;
+            mouseDragged=false;
+
+            mouseStartX=
+                e.clientX;
+
+            mouseStartY=
+                e.clientY;
+
+            lastMouseX=
+                e.clientX;
+
+            lastMouseY=
+                e.clientY;
+
+            e.preventDefault();
+        }
 
         if(
             e.button===2
-        )
+        ){
+
             buildBlock();
+
+            e.preventDefault();
+        }
+    }
+);
+
+window.addEventListener(
+    "mousemove",
+    e=>{
+
+        if(!mousePressed)
+            return;
+
+        const totalDX=
+            e.clientX-
+            mouseStartX;
+
+        const totalDY=
+            e.clientY-
+            mouseStartY;
+
+        if(
+            Math.hypot(
+                totalDX,
+                totalDY
+            )>5
+        ){
+
+            mouseDragged=true;
+        }
+
+        if(!mouseDragged)
+            return;
+
+        const dx=
+            e.clientX-
+            lastMouseX;
+
+        const dy=
+            e.clientY-
+            lastMouseY;
+
+        lastMouseX=
+            e.clientX;
+
+        lastMouseY=
+            e.clientY;
+
+        player.yaw-=
+            dx*.006;
+
+        player.pitch-=
+            dy*.005;
+
+        player.pitch=
+            Math.max(
+                -.95,
+                Math.min(
+                    .6,
+                    player.pitch
+                )
+            );
+    }
+);
+
+window.addEventListener(
+    "mouseup",
+    e=>{
+
+        if(
+            e.button===0&&
+            mousePressed
+        ){
+
+            /*
+               Nur ein echter Klick baut ab.
+            */
+
+            if(
+                !mouseDragged&&
+                running
+            ){
+
+                breakBlock();
+            }
+
+            mousePressed=false;
+        }
+    }
+);
+
+canvas.addEventListener(
+    "contextmenu",
+    e=>{
+        e.preventDefault();
     }
 );
 
@@ -4861,7 +4995,7 @@ canvas.addEventListener(
    MOBILE KAMERA
    ========================================================= */
 
-const cameraZone =
+const cameraZone=
     document.getElementById(
         "cameraZone"
     );
@@ -4900,11 +5034,11 @@ cameraZone.addEventListener(
         )
             return;
 
-        const dx =
+        const dx=
             e.clientX-
             cameraPX;
 
-        const dy =
+        const dy=
             e.clientY-
             cameraPY;
 
@@ -4914,13 +5048,13 @@ cameraZone.addEventListener(
         cameraPY=
             e.clientY;
 
-        player.yaw -=
+        player.yaw-=
             dx*.008;
 
-        player.pitch -=
+        player.pitch-=
             dy*.006;
 
-        player.pitch =
+        player.pitch=
             Math.max(
                 -.95,
                 Math.min(
@@ -4954,7 +5088,7 @@ function bindMove(
     key
 ){
 
-    const el =
+    const el=
         document.getElementById(
             id
         );
@@ -4994,25 +5128,10 @@ function bindMove(
     );
 }
 
-bindMove(
-    "up",
-    "w"
-);
-
-bindMove(
-    "down",
-    "s"
-);
-
-bindMove(
-    "left",
-    "a"
-);
-
-bindMove(
-    "right",
-    "d"
-);
+bindMove("up","w");
+bindMove("down","s");
+bindMove("left","a");
+bindMove("right","d");
 
 /* =========================================================
    MOBILE BUTTONS
@@ -5145,7 +5264,7 @@ document.getElementById(
         canvas.focus();
 
         showMessage(
-            "🌿 Willkommen in AnimalMania!"
+            "🌿 Willkommen in AnimalMania 3.2!"
         );
     }
 );
@@ -5154,40 +5273,31 @@ document.getElementById(
    LOOP
    ========================================================= */
 
-let lastTime =
+let lastTime=
     performance.now();
 
 let saveTimer=0;
 
 function loop(now){
 
-    if(
-        fatalError
-    )
+    if(fatalError)
         return;
 
-    const dt =
+    const dt=
         Math.min(
             .05,
-            (now-lastTime)/
-            1000
+            (now-lastTime)/1000
         );
 
     lastTime=now;
 
     if(running){
 
-        updatePlayer(
-            dt
-        );
+        updatePlayer(dt);
 
-        updateAnimals(
-            dt
-        );
+        updateAnimals(dt);
 
-        updateTime(
-            dt
-        );
+        updateTime(dt);
 
         updatePrompt();
 
@@ -5217,9 +5327,7 @@ function loop(now){
         );
     }
 
-    requestAnimationFrame(
-        loop
-    );
+    requestAnimationFrame(loop);
 }
 
 /* =========================================================
@@ -5238,9 +5346,7 @@ window.addEventListener(
 
 initGL();
 
-requestAnimationFrame(
-    loop
-);
+requestAnimationFrame(loop);
 
 </script>
 
