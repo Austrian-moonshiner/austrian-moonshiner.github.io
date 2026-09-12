@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Valley 3D</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#07110b;
+    color:#fff;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+}
+
+canvas{
+    display:block;
+}
+
+.ui{
+    position:fixed;
+    z-index:20;
+    pointer-events:none;
+}
+
+.topbar{
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.logo{
+    background:rgba(8,25,15,.88);
+    border:1px solid rgba(130,255,150,.25);
+    backdrop-filter:blur(12px);
+    padding:10px 16px;
+    border-radius:14px;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+
+.logo strong{
+    display:block;
+    font-size:20px;
+    color:#8dff9e;
+}
+
+.logo span{
+    font-size:11px;
+    color:#b7c9ba;
+}
+
+.stats{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+}
+
+.stat{
+    background:rgba(8,25,15,.88);
+    border:1px solid rgba(130,255,150,.18);
+    backdrop-filter:blur(12px);
+    border-radius:12px;
+    padding:9px 13px;
+    min-width:90px;
+}
+
+.stat small{
+    display:block;
+    color:#a7b6aa;
+    font-size:10px;
+}
+
+.stat b{
+    font-size:15px;
+}
+
+.panel{
+    position:fixed;
+    z-index:20;
+    right:15px;
+    top:105px;
+    width:220px;
+    background:rgba(7,20,12,.88);
+    border:1px solid rgba(130,255,150,.2);
+    backdrop-filter:blur(12px);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.panel h3{
+    margin:0 0 10px;
+    color:#91ff9e;
+}
+
+.panel p{
+    margin:7px 0;
+    font-size:13px;
+    color:#c2cec5;
+}
+
+.bar{
+    height:8px;
+    background:#18291d;
+    border-radius:20px;
+    overflow:hidden;
+    margin:6px 0 12px;
+}
+
+.bar div{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#55e875,#b4ff68);
+    transition:.3s;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    margin-top:12px;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+    padding:10px 7px;
+    background:#183921;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.15s;
+}
+
+button:hover{
+    background:#285a34;
+    transform:translateY(-1px);
+}
+
+button.active{
+    background:#67d878;
+    color:#08210d;
+}
+
+.bottom{
+    left:50%;
+    bottom:16px;
+    transform:translateX(-50%);
+    background:rgba(7,20,12,.9);
+    border:1px solid rgba(130,255,150,.2);
+    backdrop-filter:blur(12px);
+    border-radius:17px;
+    padding:9px;
+    display:flex;
+    gap:7px;
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.tool{
+    width:65px;
+    height:55px;
+    font-size:11px;
+}
+
+.tool span{
+    display:block;
+    font-size:21px;
+    margin-bottom:3px;
+}
+
+#message{
+    position:fixed;
+    z-index:30;
+    left:50%;
+    top:80px;
+    transform:translateX(-50%) translateY(-15px);
+    background:rgba(10,30,15,.95);
+    border:1px solid rgba(120,255,145,.3);
+    border-radius:12px;
+    padding:11px 18px;
+    opacity:0;
+    transition:.25s;
+    pointer-events:none;
+}
+
+#message.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+#crosshair{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:8px;
+    height:8px;
+    border:1px solid rgba(255,255,255,.65);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    z-index:10;
+    pointer-events:none;
+}
+
+.help{
+    position:fixed;
+    left:15px;
+    bottom:15px;
+    z-index:20;
+    background:rgba(7,20,12,.8);
+    padding:9px 12px;
+    border-radius:10px;
+    color:#b6c5b9;
+    font-size:11px;
+    border:1px solid rgba(130,255,150,.15);
+}
+
+#plantMenu{
+    display:none;
+    position:fixed;
+    z-index:40;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:min(420px,90vw);
+    background:rgba(7,20,12,.97);
+    border:1px solid rgba(130,255,150,.3);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 20px 70px rgba(0,0,0,.6);
+}
+
+#plantMenu.show{
+    display:block;
+}
+
+#plantMenu h2{
+    margin-top:0;
+    color:#91ff9e;
+}
+
+.cropGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+}
+
+.crop{
+    text-align:left;
+    background:#142b1a;
+    border:1px solid rgba(150,255,160,.12);
+}
+
+.crop strong{
+    font-size:15px;
+}
+
+.crop small{
+    display:block;
+    color:#9eaea2;
+    margin-top:4px;
+}
+
+.close{
+    margin-top:12px;
+    width:100%;
+    background:#34201d;
+}
+
+@media(max-width:800px){
+    .panel{
+        display:none;
+    }
+
+    .logo{
+        padding:8px 11px;
+    }
+
+    .logo strong{
+        font-size:16px;
+    }
+
+    .stat{
+        min-width:70px;
+        padding:7px 9px;
+    }
+
+    .stat:nth-child(3),
+    .stat:nth-child(4){
+        display:none;
+    }
+
+    .bottom{
+        bottom:10px;
+        max-width:96vw;
+        overflow-x:auto;
+    }
+
+    .tool{
+        min-width:60px;
+    }
+
+    .help{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game"></div>
+
+<div class="ui topbar">
+
+    <div class="logo">
+        <strong>🌱 Farm Valley 3D</strong>
+        <span>Deine kleine 3D-Farm</span>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <small>Geld</small>
+            💰 <b id="money">1500</b> €
+        </div>
+
+        <div class="stat">
+            <small>Level</small>
+            ⭐ <b id="level">1</b>
+        </div>
+
+        <div class="stat">
+            <small>Tag</small>
+            📅 <b id="day">1</b>
+        </div>
+
+        <div class="stat">
+            <small>Wetter</small>
+            ☀️ <b id="weather">Sonne</b>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel">
+
+    <h3>🚜 Meine Farm</h3>
+
+    <p>Erfahrung</p>
+    <div class="bar">
+        <div id="xpBar"></div>
+    </div>
+
+    <p>Ernte: <b id="harvests">0</b></p>
+    <p>Felder: <b id="fieldCount">6</b></p>
+    <p>Tiere: <b id="animalCount">3</b></p>
+
+    <div class="buttons">
+        <button onclick="expandFarm()">➕ Feld</button>
+        <button onclick="saveGame()">💾 Speichern</button>
+        <button onclick="sellAll()">💰 Verkaufen</button>
+        <button onclick="resetGame()">🔄 Reset</button>
+    </div>
+
+</div>
+
+<div class="bottom">
+
+    <button class="tool active" id="plantTool" onclick="selectTool('plant')">
+        <span>🌱</span>
+        Pflanzen
+    </button>
+
+    <button class="tool" onclick="selectTool('harvest')">
+        <span>🌾</span>
+        Ernten
+    </button>
+
+    <button class="tool" onclick="selectTool('animal')">
+        <span>🐄</span>
+        Tiere
+    </button>
+
+    <button class="tool" onclick="collectAnimals()">
+        <span>🥚</span>
+        Sammeln
+    </button>
+
+    <button class="tool" onclick="sellAll()">
+        <span>💰</span>
+        Verkaufen
+    </button>
+
+</div>
+
+<div class="help">
+    🖱️ Linksklick = Aktion · Mausrad = Zoom · Rechte Maustaste = Kamera drehen
+</div>
+
+<div id="crosshair"></div>
+<div id="message"></div>
+
+<div id="plantMenu">
+
+    <h2>🌱 Pflanze auswählen</h2>
+
+    <div class="cropGrid">
+
+        <button class="crop" onclick="plant('wheat')">
+            🌾 <strong>Weizen</strong>
+            <small>25 € · Verkauf 60 €</small>
+        </button>
+
+        <button class="crop" onclick="plant('carrot')">
+            🥕 <strong>Karotte</strong>
+            <small>35 € · Verkauf 85 €</small>
+        </button>
+
+        <button class="crop" onclick="plant('corn')">
+            🌽 <strong>Mais</strong>
+            <small>50 € · Verkauf 125 €</small>
+        </button>
+
+        <button class="crop" onclick="plant('potato')">
+            🥔 <strong>Kartoffel</strong>
+            <small>70 € · Verkauf 180 €</small>
+        </button>
+
+        <button class="crop" onclick="plant('pumpkin')">
+            🎃 <strong>Kürbis</strong>
+            <small>120 € · Verkauf 330 €</small>
+        </button>
+
+        <button class="crop" onclick="plant('tomato')">
+            🍅 <strong>Tomate</strong>
+            <small>90 € · Verkauf 240 €</small>
+        </button>
+
+    </div>
+
+    <button class="close" onclick="closePlantMenu()">Schließen</button>
+
+</div>
+
+<script type="module">
+
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
+import { OrbitControls } from
+'https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js';
+
+
+/* =========================================================
+   SPIELDATEN
+========================================================= */
+
+let game = {
+    money:1500,
+    level:1,
+    xp:0,
+    day:1,
+    harvests:0,
+    weather:"sun",
+    unlockedFields:6,
+    expansions:0,
+
+    inventory:{
+        wheat:0,
+        carrot:0,
+        corn:0,
+        potato:0,
+        pumpkin:0,
+        tomato:0,
+        egg:0,
+        milk:0,
+        truffle:0
+    }
+};
+
+let selectedTool="plant";
+let selectedField=null;
+
+
+/* =========================================================
+   PFLANZEN
+========================================================= */
+
+const crops={
+
+    wheat:{
+        name:"Weizen",
+        emoji:"🌾",
+        seed:25,
+        sell:60,
+        grow:25000,
+        xp:18
+    },
+
+    carrot:{
+        name:"Karotte",
+        emoji:"🥕",
+        seed:35,
+        sell:85,
+        grow:35000,
+        xp:25
+    },
+
+    corn:{
+        name:"Mais",
+        emoji:"🌽",
+        seed:50,
+        sell:125,
+        grow:45000,
+        xp:34
+    },
+
+    potato:{
+        name:"Kartoffel",
+        emoji:"🥔",
+        seed:70,
+        sell:180,
+        grow:60000,
+        xp:45
+    },
+
+    pumpkin:{
+        name:"Kürbis",
+        emoji:"🎃",
+        seed:120,
+        sell:330,
+        grow:85000,
+        xp:65
+    },
+
+    tomato:{
+        name:"Tomate",
+        emoji:"🍅",
+        seed:90,
+        sell:240,
+        grow:70000,
+        xp:52
+    }
+};
+
+
+/* =========================================================
+   THREE.JS GRUNDLAGE
+========================================================= */
+
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0x8fd7ff);
+
+scene.fog = new THREE.Fog(
+    0x8fd7ff,
+    35,
+    130
+);
+
+
+const camera = new THREE.PerspectiveCamera(
+    55,
+    innerWidth / innerHeight,
+    0.1,
+    300
+);
+
+camera.position.set(
+    28,
+    30,
+    32
+);
+
+
+const renderer = new THREE.WebGLRenderer({
+    antialias:true,
+    powerPreference:"high-performance"
+});
+
+renderer.setSize(
+    innerWidth,
+    innerHeight
+);
+
+renderer.setPixelRatio(
+    Math.min(devicePixelRatio,2)
+);
+
+renderer.shadowMap.enabled=true;
+
+renderer.shadowMap.type =
+THREE.PCFSoftShadowMap;
+
+renderer.outputColorSpace =
+THREE.SRGBColorSpace;
+
+document
+.getElementById("game")
+.appendChild(renderer.domElement);
+
+
+/* =========================================================
+   KAMERA
+========================================================= */
+
+const controls =
+new OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.target.set(
+    0,
+    0,
+    0
+);
+
+controls.enableDamping=true;
+
+controls.dampingFactor=.06;
+
+controls.minDistance=12;
+
+controls.maxDistance=70;
+
+controls.maxPolarAngle=Math.PI/2.08;
+
+
+/* =========================================================
+   LICHT
+========================================================= */
+
+const hemi =
+new THREE.HemisphereLight(
+    0xbcecff,
+    0x355c2d,
+    2.1
+);
+
+scene.add(hemi);
+
+
+const sun =
+new THREE.DirectionalLight(
+    0xfff2cf,
+    3.0
+);
+
+sun.position.set(
+    35,
+    55,
+    20
+);
+
+sun.castShadow=true;
+
+sun.shadow.mapSize.width=2048;
+sun.shadow.mapSize.height=2048;
+
+sun.shadow.camera.left=-55;
+sun.shadow.camera.right=55;
+sun.shadow.camera.top=55;
+sun.shadow.camera.bottom=-55;
+
+scene.add(sun);
+
+
+/* =========================================================
+   MATERIALIEN
+========================================================= */
+
+const matGrass =
+new THREE.MeshStandardMaterial({
+    color:0x4e9d43,
+    roughness:1
+});
+
+const matGrassDark =
+new THREE.MeshStandardMaterial({
+    color:0x347638,
+    roughness:1
+});
+
+const matDirt =
+new THREE.MeshStandardMaterial({
+    color:0x7b512e,
+    roughness:1
+});
+
+const matWood =
+new THREE.MeshStandardMaterial({
+    color:0x704126,
+    roughness:.9
+});
+
+const matRoof =
+new THREE.MeshStandardMaterial({
+    color:0x9b3c2e,
+    roughness:.8
+});
+
+const matStone =
+new THREE.MeshStandardMaterial({
+    color:0x747b76,
+    roughness:1
+});
+
+const matWater =
+new THREE.MeshStandardMaterial({
+    color:0x278bc2,
+    roughness:.2,
+    metalness:.05
+});
+
+
+/* =========================================================
+   GRUNDSTÜCK
+========================================================= */
+
+const ground =
+new THREE.Mesh(
+    new THREE.BoxGeometry(
+        100,
+        1,
+        100
+    ),
+    matGrass
+);
+
+ground.position.y=-.5;
+
+ground.receiveShadow=true;
+
+scene.add(ground);
+
+
+/* =========================================================
+   FLUSS
+========================================================= */
+
+const river =
+new THREE.Mesh(
+    new THREE.BoxGeometry(
+        13,
+        .2,
+        100
+    ),
+    matWater
+);
+
+river.position.set(
+    -24,
+    .02,
+    0
+);
+
+river.receiveShadow=true;
+
+scene.add(river);
+
+
+/* =========================================================
+   WEGE
+========================================================= */
+
+function createPath(
+    x,
+    z,
+    w,
+    d
+){
+
+    const path =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            w,
+            .08,
+            d
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0xb79869,
+            roughness:1
+        })
+    );
+
+    path.position.set(
+        x,
+        .04,
+        z
+    );
+
+    path.receiveShadow=true;
+
+    scene.add(path);
+
+}
+
+createPath(4,0,5,100);
+createPath(12,0,30,4);
+createPath(0,15,30,4);
+
+
+/* =========================================================
+   FELDER
+========================================================= */
+
+const fields=[];
+
+const fieldPositions=[
+    [-12,12],
+    [-4,12],
+    [4,12],
+    [-12,21],
+    [-4,21],
+    [4,21],
+
+    [-12,30],
+    [-4,30],
+    [4,30],
+    [-12,39],
+    [-4,39],
+    [4,39]
+];
+
+
+function createField(index){
+
+    const [x,z]=fieldPositions[index];
+
+    const group=
+    new THREE.Group();
+
+    group.position.set(
+        x,
+        .08,
+        z
+    );
+
+    const soil=
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            7,
+            .25,
+            7
+        ),
+        matDirt.clone()
+    );
+
+    soil.castShadow=true;
+    soil.receiveShadow=true;
+
+    group.add(soil);
+
+    /* kleine Furchen */
+
+    for(let i=-2;i<=2;i++){
+
+        const furrow=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                6.6,
+                .035,
+                .12
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x593a23
+            })
+        );
+
+        furrow.position.set(
+            0,
+            .14,
+            i*1.15
+        );
+
+        group.add(furrow);
+    }
+
+    group.userData={
+        index:index,
+        crop:null,
+        plantedAt:0,
+        growTime:0,
+        ready:false
+    };
+
+    scene.add(group);
+
+    fields.push(group);
+
+    return group;
+}
+
+
+for(
+    let i=0;
+    i<fieldPositions.length;
+    i++
+){
+    createField(i);
+}
+
+
+/* =========================================================
+   BÄUME
+========================================================= */
+
+function createTree(x,z,scale=1){
+
+    const tree=
+    new THREE.Group();
+
+    tree.position.set(
+        x,
+        0,
+        z
+    );
+
+    tree.scale.setScalar(scale);
+
+    const trunk=
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            .35,
+            .5,
+            3,
+            8
+        ),
+        matWood
+    );
+
+    trunk.position.y=1.5;
+
+    trunk.castShadow=true;
+
+    tree.add(trunk);
+
+
+    const crownMat=
+    new THREE.MeshStandardMaterial({
+        color:0x2f7d38,
+        roughness:1
+    });
+
+
+    const crown1=
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            1.8,
+            10,
+            8
+        ),
+        crownMat
+    );
+
+    crown1.position.y=3.7;
+
+    crown1.castShadow=true;
+
+    tree.add(crown1);
+
+
+    const crown2=
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            1.35,
+            10,
+            8
+        ),
+        crownMat
+    );
+
+    crown2.position.set(
+        .8,
+        4.5,
+        .1
+    );
+
+    crown2.castShadow=true;
+
+    tree.add(crown2);
+
+
+    scene.add(tree);
+}
+
+
+[
+    [-39,-36,1.2],
+    [-35,-12,1],
+    [-37,18,1.3],
+    [-38,44,1],
+    [29,-40,1.3],
+    [38,-15,1],
+    [38,15,1.2],
+    [32,43,1]
+].forEach(
+    t=>createTree(...t)
+);
+
+
+/* =========================================================
+   SCHEUNE
+========================================================= */
+
+function createBarn(){
+
+    const barn=
+    new THREE.Group();
+
+    barn.position.set(
+        18,
+        0,
+        19
+    );
+
+    const body=
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            13,
+            7,
+            9
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0xa9513b
+        })
+    );
+
+    body.position.y=3.5;
+
+    body.castShadow=true;
+
+    body.receiveShadow=true;
+
+    barn.add(body);
+
+
+    const roof=
+    new THREE.Mesh(
+        new THREE.ConeGeometry(
+            9,
+            5,
+            4
+        ),
+        matRoof
+    );
+
+    roof.rotation.y=Math.PI/4;
+
+    roof.position.y=9;
+
+    roof.scale.z=.72;
+
+    roof.castShadow=true;
+
+    barn.add(roof);
+
+
+    const door=
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            3.5,
+            4.5,
+            .25
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x4d2d20
+        })
+    );
+
+    door.position.set(
+        0,
+        2.25,
+        4.6
+    );
+
+    barn.add(door);
+
+
+    for(
+        let x=-4;
+        x<=4;
+        x+=4
+    ){
+
+        const window=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.5,
+                1.5,
+                .2
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x9ddcf0,
+                emissive:0x174d5a
+            })
+        );
+
+        window.position.set(
+            x,
+            4.7,
+            4.58
+        );
+
+        barn.add(window);
+    }
+
+    scene.add(barn);
+}
+
+createBarn();
+
+
+/* =========================================================
+   WINDMÜHLE
+========================================================= */
+
+const windmillBlades=[];
+
+function createWindmill(){
+
+    const group=
+    new THREE.Group();
+
+    group.position.set(
+        28,
+        0,
+        -8
+    );
+
+    const tower=
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.2,
+            2,
+            11,
+            6
+        ),
+        matStone
+    );
+
+    tower.position.y=5.5;
+
+    tower.castShadow=true;
+
+    group.add(tower);
+
+
+    const center=
+    new THREE.Group();
+
+    center.position.set(
+        0,
+        10,
+        1.2
+    );
+
+    for(
+        let i=0;
+        i<4;
+        i++
+    ){
+
+        const blade=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .45,
+                6,
+                .18
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0xf0e4c3
+            })
+        );
+
+        blade.position.y=3;
+
+        blade.rotation.z=
+        i*Math.PI/2;
+
+        blade.castShadow=true;
+
+        center.add(blade);
+    }
+
+    group.add(center);
+
+    windmillBlades.push(center);
+
+    scene.add(group);
+}
+
+createWindmill();
+
+
+/* =========================================================
+   ZAUN
+========================================================= */
+
+function createFence(){
+
+    for(
+        let x=-18;
+        x<=8;
+        x+=3
+    ){
+
+        const post=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .25,
+                1.5,
+                .25
+            ),
+            matWood
+        );
+
+        post.position.set(
+            x,
+            .75,
+            7
+        );
+
+        post.castShadow=true;
+
+        scene.add(post);
+
+
+        const rail=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                3,
+                .18,
+                .18
+            ),
+            matWood
+        );
+
+        rail.position.set(
+            x+1.5,
+            .9,
+            7
+        );
+
+        scene.add(rail);
+
+        const rail2=rail.clone();
+
+        rail2.position.y=1.35;
+
+        scene.add(rail2);
+    }
+}
+
+createFence();
+
+
+/* =========================================================
+   TIERE
+========================================================= */
+
+const animals=[];
+
+
+function createAnimal(
+    type,
+    x,
+    z
+){
+
+    const group=
+    new THREE.Group();
+
+    group.position.set(
+        x,
+        0,
+        z
+    );
+
+    let bodyColor;
+
+    if(type==="cow")
+        bodyColor=0xf1eadb;
+
+    if(type==="chicken")
+        bodyColor=0xf5f5ef;
+
+    if(type==="pig")
+        bodyColor=0xf1a1a4;
+
+
+    const body=
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            1.15,
+            12,
+            8
+        ),
+        new THREE.MeshStandardMaterial({
+            color:bodyColor
+        })
+    );
+
+    body.scale.set(
+        1.4,
+        .9,
+        1
+    );
+
+    body.position.y=1.1;
+
+    body.castShadow=true;
+
+    group.add(body);
+
+
+    const head=
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            .75,
+            12,
+            8
+        ),
+        new THREE.MeshStandardMaterial({
+            color:bodyColor
+        })
+    );
+
+    head.position.set(
+        1.15,
+        1.35,
+        0
+    );
+
+    head.castShadow=true;
+
+    group.add(head);
+
+
+    for(
+        let i=0;
+        i<4;
+        i++
+    ){
+
+        const leg=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .25,
+                .9,
+                .25
+            ),
+            new THREE.MeshStandardMaterial({
+                color:type==="pig"
+                    ?0x9c6867
+                    :0x47352a
+            })
+        );
+
+        leg.position.set(
+            i<2 ? -.7:.7,
+            .45,
+            i%2 ? .45:-.45
+        );
+
+        leg.castShadow=true;
+
+        group.add(leg);
+    }
+
+
+    group.userData={
+        type:type,
+        targetX:x,
+        targetZ:z,
+        timer:Math.random()*5
+    };
+
+
+    scene.add(group);
+
+    animals.push(group);
+}
+
+
+/* Tiere */
+createAnimal("cow",18,30);
+createAnimal("cow",24,34);
+createAnimal("chicken",12,29);
+createAnimal("chicken",15,33);
+createAnimal("pig",23,29);
+
+
+/* =========================================================
+   PFLANZEN
+========================================================= */
+
+function clearPlants(field){
+
+    while(field.children.length>1){
+
+        field.remove(
+            field.children[field.children.length-1]
+        );
+    }
+}
+
+
+function createCropVisual(field,type,progress){
+
+    clearPlants(field);
+
+    const crop=crops[type];
+
+    const group=
+    new THREE.Group();
+
+    const count=16;
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const x=
+        ((i%4)-1.5)*1.35;
+
+        const z=
+        (Math.floor(i/4)-1.5)*1.35;
+
+        const h=
+        .4 + progress*1.7;
+
+        const stem=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .07,
+                .09,
+                h,
+                6
+            ),
+            new THREE.MeshStandardMaterial({
+                color:0x4c9d3f
+            })
+        );
+
+        stem.position.set(
+            x,
+            .35+h/2,
+            z
+        );
+
+        stem.castShadow=true;
+
+        group.add(stem);
+
+
+        if(progress>.35){
+
+            const leaf=
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    .28 + progress*.12,
+                    7,
+                    6
+                ),
+                new THREE.MeshStandardMaterial({
+                    color:
+                        type==="pumpkin"
+                        ?0xc8782c
+                        :type==="tomato"
+                        ?0xd94432
+                        :0x75ae43
+                })
+            );
+
+            leaf.scale.y=.7;
+
+            leaf.position.set(
+                x,
+                .45+h,
+                z
+            );
+
+            leaf.castShadow=true;
+
+            group.add(leaf);
+        }
+    }
+
+    field.add(group);
+}
+
+
+/* =========================================================
+   FELD CLICK
+========================================================= */
+
+const raycaster=
+new THREE.Raycaster();
+
+const mouse=
+new THREE.Vector2();
+
+
+renderer.domElement.addEventListener(
+    "pointerdown",
+    event=>{
+
+        if(event.button!==0)
+            return;
+
+        mouse.x=
+        (event.clientX/innerWidth)*2-1;
+
+        mouse.y=
+        -(event.clientY/innerHeight)*2+1;
+
+        raycaster.setFromCamera(
+            mouse,
+            camera
+        );
+
+        const objects=[];
+
+        fields.forEach(
+            field=>{
+                objects.push(field);
+            }
+        );
+
+        const hits=
+        raycaster.intersectObjects(
+            objects,
+            true
+        );
+
+        if(!hits.length)
+            return;
+
+        let obj=hits[0].object;
+
+        while(
+            obj.parent &&
+            !fields.includes(obj)
+        ){
+            obj=obj.parent;
+        }
+
+        if(!fields.includes(obj))
+            return;
+
+        const field=obj;
+
+        if(
+            field.userData.index >=
+            game.unlockedFields
+        ){
+
+            notify(
+                "🔒 Dieses Feld ist noch gesperrt."
+            );
+
+            return;
+        }
+
+
+        selectedField=field;
+
+
+        if(
+            selectedTool==="plant"
+        ){
+
+            if(field.userData.crop){
+
+                if(field.userData.ready){
+
+                    harvestField(field);
+
+                }else{
+
+                    notify(
+                        "🌱 Dieses Feld wächst noch."
+                    );
+                }
+
+            }else{
+
+                openPlantMenu();
+            }
+        }
+
+
+        if(
+            selectedTool==="harvest"
+        ){
+
+            if(field.userData.ready)
+                harvestField(field);
+            else
+                notify("🌱 Noch nicht bereit.");
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PFLANZEN
+========================================================= */
+
+window.plant=function(type){
+
+    if(!selectedField)
+        return;
+
+    const field=selectedField;
+
+    if(field.userData.crop){
+
+        notify(
+            "Dieses Feld ist bereits bepflanzt."
+        );
+
+        return;
+    }
+
+    const crop=crops[type];
+
+    if(game.money<crop.seed){
+
+        notify(
+            "💰 Nicht genug Geld."
+        );
+
+        return;
+    }
+
+    game.money-=crop.seed;
+
+    field.userData.crop=type;
+    field.userData.plantedAt=Date.now();
+    field.userData.growTime=crop.grow;
+    field.userData.ready=false;
+
+    createCropVisual(
+        field,
+        type,
+        0
+    );
+
+    closePlantMenu();
+
+    notify(
+        "🌱 "+crop.name+" gepflanzt!"
+    );
+
+    updateUI();
+};
+
+
+/* =========================================================
+   ERNTEN
+========================================================= */
+
+function harvestField(field){
+
+    if(!field.userData.crop)
+        return;
+
+    if(!field.userData.ready)
+        return;
+
+    const type=
+    field.userData.crop;
+
+    const crop=crops[type];
+
+    game.inventory[type]++;
+
+    game.harvests++;
+
+    addXP(crop.xp);
+
+    field.userData.crop=null;
+    field.userData.ready=false;
+
+    clearPlants(field);
+
+    notify(
+        "🌾 "+crop.name+" geerntet!"
+    );
+
+    updateUI();
+}
+
+
+/* =========================================================
+   WACHSTUM
+========================================================= */
+
+function updateCrops(){
+
+    const now=Date.now();
+
+    fields.forEach(
+        field=>{
+
+            if(!field.userData.crop)
+                return;
+
+            const elapsed=
+                now-field.userData.plantedAt;
+
+            const progress=
+                Math.min(
+                    1,
+                    elapsed/
+                    field.userData.growTime
+                );
+
+            if(
+                progress>=1
+            ){
+
+                if(
+                    !field.userData.ready
+                ){
+
+                    field.userData.ready=true;
+
+                    createCropVisual(
+                        field,
+                        field.userData.crop,
+                        1
+                    );
+
+                    notify(
+                        "🌾 Eine Ernte ist bereit!"
+                    );
+                }
+
+            }else{
+
+                createCropVisual(
+                    field,
+                    field.userData.crop,
+                    progress
+                );
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   XP
+========================================================= */
+
+function addXP(amount){
+
+    game.xp+=amount;
+
+    const needed=
+        100+
+        (game.level-1)*75;
+
+    if(game.xp>=needed){
+
+        game.xp-=needed;
+
+        game.level++;
+
+        game.money+=250;
+
+        notify(
+            "⭐ Level "+game.level+" erreicht! +250 €"
+        );
+    }
+
+    updateUI();
+}
+
+
+/* =========================================================
+   VERKAUF
+========================================================= */
+
+window.sellAll=function(){
+
+    let total=0;
+
+    for(
+        const type in game.inventory
+    ){
+
+        const amount=
+            game.inventory[type];
+
+        if(
+            !amount
+        )
+            continue;
+
+
+        let price=0;
+
+        if(crops[type])
+            price=crops[type].sell;
+
+        if(type==="egg")
+            price=55;
+
+        if(type==="milk")
+            price=145;
+
+        if(type==="truffle")
+            price=260;
+
+        total+=
+            amount*price;
+
+        game.inventory[type]=0;
+    }
+
+    if(total===0){
+
+        notify(
+            "📦 Dein Lager ist leer."
+        );
+
+        return;
+    }
+
+    game.money+=total;
+
+    notify(
+        "💰 Verkauft: +"+total+" €"
+    );
+
+    updateUI();
+};
+
+
+/* =========================================================
+   TIERE SAMMELN
+========================================================= */
+
+window.collectAnimals=function(){
+
+    let eggs=
+        Math.floor(game.day*.3);
+
+    let milk=
+        Math.floor(game.day*.15);
+
+    let truffle=
+        Math.floor(game.day*.08);
+
+    if(eggs<1)
+        eggs=1;
+
+    game.inventory.egg+=eggs;
+
+    game.inventory.milk+=milk;
+
+    game.inventory.truffle+=truffle;
+
+    game.money+=
+        eggs*10+
+        milk*20+
+        truffle*40;
+
+    notify(
+        "🐔 Tiere eingesammelt!"
+    );
+
+    updateUI();
+};
+
+
+/* =========================================================
+   FARM ERWEITERN
+========================================================= */
+
+window.expandFarm=function(){
+
+    if(
+        game.unlockedFields>=12
+    ){
+
+        notify(
+            "🌾 Alle Felder sind bereits freigeschaltet."
+        );
+
+        return;
+    }
+
+    const cost=
+        700+
+        game.expansions*850;
+
+    if(game.money<cost){
+
+        notify(
+            "💰 Erweiterung kostet "+cost+" €"
+        );
+
+        return;
+    }
+
+    game.money-=cost;
+
+    game.unlockedFields++;
+
+    game.expansions++;
+
+    notify(
+        "🏡 Neues Feld freigeschaltet!"
+    );
+
+    updateUI();
+};
+
+
+/* =========================================================
+   TOOL
+========================================================= */
+
+window.selectTool=function(tool){
+
+    selectedTool=tool;
+
+    document
+    .querySelectorAll(".tool")
+    .forEach(
+        b=>b.classList.remove("active")
+    );
+
+    if(tool==="plant")
+        document
+        .getElementById("plantTool")
+        .classList.add("active");
+
+    if(tool==="harvest"){
+
+        document
+        .querySelectorAll(".tool")[1]
+        .classList.add("active");
+    }
+};
+
+
+/* =========================================================
+   MENÜ
+========================================================= */
+
+function openPlantMenu(){
+
+    document
+    .getElementById("plantMenu")
+    .classList.add("show");
+}
+
+window.closePlantMenu=function(){
+
+    document
+    .getElementById("plantMenu")
+    .classList.remove("show");
+};
+
+
+/* =========================================================
+   TAG / WETTER
+========================================================= */
+
+let lastDay=
+Date.now();
+
+let lastWeather=
+Date.now();
+
+
+function updateDay(){
+
+    const now=Date.now();
+
+    if(
+        now-lastDay>120000
+    ){
+
+        lastDay=now;
+
+        game.day++;
+
+        notify(
+            "🌅 Tag "+game.day
+        );
+
+        updateUI();
+    }
+
+
+    if(
+        now-lastWeather>30000
+    ){
+
+        lastWeather=now;
+
+        const r=
+            Math.random();
+
+        if(r<.25)
+            game.weather="rain";
+
+        else if(r<.55)
+            game.weather="cloud";
+
+        else
+            game.weather="sun";
+
+        updateWeather();
+    }
+}
+
+
+function updateWeather(){
+
+    const weather=
+        document.getElementById("weather");
+
+    if(game.weather==="sun"){
+
+        weather.textContent="Sonne";
+
+        scene.background.set(
+            0x8fd7ff
+        );
+
+        scene.fog.color.set(
+            0x8fd7ff
+        );
+
+        sun.intensity=3;
+    }
+
+    if(game.weather==="cloud"){
+
+        weather.textContent="Bewölkt";
+
+        scene.background.set(
+            0x8cabb5
+        );
+
+        scene.fog.color.set(
+            0x8cabb5
+        );
+
+        sun.intensity=1.4;
+    }
+
+    if(game.weather==="rain"){
+
+        weather.textContent="Regen";
+
+        scene.background.set(
+            0x617b87
+        );
+
+        scene.fog.color.set(
+            0x617b87
+        );
+
+        sun.intensity=.8;
+    }
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    document
+    .getElementById("money")
+    .textContent=
+        game.money;
+
+    document
+    .getElementById("level")
+    .textContent=
+        game.level;
+
+    document
+    .getElementById("day")
+    .textContent=
+        game.day;
+
+    document
+    .getElementById("harvests")
+    .textContent=
+        game.harvests;
+
+    document
+    .getElementById("fieldCount")
+    .textContent=
+        game.unlockedFields;
+
+    document
+    .getElementById("animalCount")
+    .textContent=
+        animals.length;
+
+
+    const needed=
+        100+
+        (game.level-1)*75;
+
+    document
+    .getElementById("xpBar")
+    .style.width=
+        Math.min(
+            100,
+            game.xp/needed*100
+        )+"%";
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+let messageTimer;
+
+function notify(text){
+
+    const el=
+        document.getElementById("message");
+
+    el.textContent=text;
+
+    el.classList.add("show");
+
+    clearTimeout(messageTimer);
+
+    messageTimer=
+        setTimeout(
+            ()=>{
+                el.classList.remove("show");
+            },
+            2200
+        );
+}
+
+
+/* =========================================================
+   SPEICHERN
+========================================================= */
+
+window.saveGame=function(){
+
+    localStorage.setItem(
+        "farmValley3D",
+        JSON.stringify(game)
+    );
+
+    notify(
+        "💾 Spiel gespeichert!"
+    );
+};
+
+
+function loadGame(){
+
+    try{
+
+        const saved=
+            localStorage.getItem(
+                "farmValley3D"
+            );
+
+        if(!saved)
+            return;
+
+        game={
+            ...game,
+            ...JSON.parse(saved)
+        };
+
+    }catch(e){
+
+        console.log(e);
+    }
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+window.resetGame=function(){
+
+    if(
+        !confirm(
+            "Spiel wirklich zurücksetzen?"
+        )
+    )
+        return;
+
+    localStorage.removeItem(
+        "farmValley3D"
+    );
+
+    location.reload();
+};
+
+
+/* =========================================================
+   TIER BEWEGUNG
+========================================================= */
+
+function updateAnimals(delta){
+
+    animals.forEach(
+        animal=>{
+
+            animal.userData.timer-=delta;
+
+            if(
+                animal.userData.timer<=0
+            ){
+
+                animal.userData.timer=
+                    3+
+                    Math.random()*5;
+
+                animal.userData.targetX=
+                    animal.position.x+
+                    (Math.random()-.5)*8;
+
+                animal.userData.targetZ=
+                    animal.position.z+
+                    (Math.random()-.5)*8;
+            }
+
+
+            const dx=
+                animal.userData.targetX-
+                animal.position.x;
+
+            const dz=
+                animal.userData.targetZ-
+                animal.position.z;
+
+            const dist=
+                Math.sqrt(
+                    dx*dx+
+                    dz*dz
+                );
+
+            if(dist>.5){
+
+                animal.position.x+=
+                    dx/dist*delta*.8;
+
+                animal.position.z+=
+                    dz/dist*delta*.8;
+
+                animal.rotation.y=
+                    Math.atan2(
+                        dx,
+                        dz
+                    );
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   WINDMÜHLE
+========================================================= */
+
+function animateWindmill(delta){
+
+    windmillBlades.forEach(
+        blade=>{
+            blade.rotation.z+=
+                delta*.7;
+        }
+    );
+}
+
+
+/* =========================================================
+   TAG/NACHT
+========================================================= */
+
+let worldTime=0;
+
+
+function animateDayNight(delta){
+
+    worldTime+=delta;
+
+    const cycle=
+        (worldTime%180)/180;
+
+    const angle=
+        cycle*Math.PI*2;
+
+    sun.position.x=
+        Math.cos(angle)*45;
+
+    sun.position.y=
+        Math.sin(angle)*50+10;
+
+    sun.position.z=
+        Math.sin(angle)*30;
+
+    const daylight=
+        Math.max(
+            .25,
+            Math.sin(angle)*.5+.6
+        );
+
+    sun.intensity=
+        daylight*
+        (
+            game.weather==="rain"
+            ?1
+            :game.weather==="cloud"
+            ?1.5
+            :2.7
+        );
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+const clock=
+new THREE.Clock();
+
+let cropTimer=0;
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    const delta=
+        clock.getDelta();
+
+    controls.update();
+
+    updateAnimals(delta);
+
+    animateWindmill(delta);
+
+    animateDayNight(delta);
+
+    updateDay();
+
+    cropTimer+=delta;
+
+    if(cropTimer>.5){
+
+        cropTimer=0;
+
+        updateCrops();
+    }
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        camera.aspect=
+            innerWidth/
+            innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            innerWidth,
+            innerHeight
+        );
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadGame();
+
+updateWeather();
+
+updateUI();
+
+animate();
+
+setInterval(
+    saveGame,
+    15000
+);
+
+document.addEventListener(
+    "visibilitychange",
+    ()=>{
+        if(document.hidden)
+            saveGame();
+    }
+);
+
+</script>
+
+</body>
+</html>
