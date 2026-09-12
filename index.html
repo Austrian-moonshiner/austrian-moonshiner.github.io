@@ -1,1521 +1,1399 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Austrian Moonshiner</title>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Austrian Moonshiner</title>
 
 <style>
 
-    /* ========================================= */
-    /* GRUNDLAYOUT */
-    /* ========================================= */
+/* =========================================================
+   GRUNDLAYOUT
+========================================================= */
 
-    * {
-        box-sizing: border-box;
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    color:#fff;
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(0,255,255,.18),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(255,0,170,.18),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            rgba(100,0,255,.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(0,255,130,.12),
+            transparent 25%
+        ),
+        linear-gradient(
+            135deg,
+            #050814,
+            #0a1024 45%,
+            #12051c
+        );
+
+    background-attachment:fixed;
+
+    text-align:center;
+
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   HAUPTCONTAINER
+========================================================= */
+
+.container{
+    width:94%;
+    max-width:950px;
+
+    margin:30px auto 50px;
+
+    padding:30px 20px 55px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,15,35,.94),
+            rgba(15,7,30,.94)
+        );
+
+    border:1px solid rgba(0,255,255,.35);
+
+    border-radius:24px;
+
+    box-shadow:
+        0 0 25px rgba(0,255,255,.12),
+        0 0 60px rgba(140,0,255,.08),
+        0 20px 60px rgba(0,0,0,.5);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+    display:block;
+
+    width:80%;
+    max-width:270px;
+
+    margin:0 auto 15px;
+
+    filter:
+        drop-shadow(0 0 8px rgba(0,255,255,.45))
+        drop-shadow(0 0 18px rgba(255,0,200,.2));
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+nav{
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin:15px auto 25px;
+}
+
+nav a{
+    display:inline-block;
+
+    padding:9px 15px;
+
+    color:#dffcff;
+
+    text-decoration:none;
+
+    font-size:14px;
+    font-weight:bold;
+
+    border:1px solid rgba(0,255,255,.35);
+
+    border-radius:10px;
+
+    background:rgba(0,180,255,.08);
+
+    transition:.2s;
+}
+
+nav a:hover{
+    color:#fff;
+
+    border-color:#00ffff;
+
+    background:rgba(0,255,255,.16);
+
+    box-shadow:
+        0 0 12px rgba(0,255,255,.25);
+
+    transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   TITEL
+========================================================= */
+
+h1{
+    margin:15px 0 8px;
+
+    font-size:40px;
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ffff,
+            #ffffff,
+            #ff00c8,
+            #8c5cff,
+            #00ffff
+        );
+
+    background-size:300% 100%;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    animation:titleGlow 7s linear infinite;
+
+    text-shadow:
+        0 0 20px rgba(0,255,255,.15);
+}
+
+@keyframes titleGlow{
+
+    0%{
+        background-position:0% 50%;
     }
 
-    html {
-        scroll-behavior: smooth;
+    50%{
+        background-position:100% 50%;
     }
 
-    body {
-        margin: 0;
-        min-height: 100vh;
+    100%{
+        background-position:0% 50%;
+    }
+}
 
-        font-family: Arial, Helvetica, sans-serif;
+p{
+    line-height:1.6;
+}
 
-        color: #ffffff;
 
-        background:
-            radial-gradient(circle at 10% 10%, rgba(0, 255, 255, 0.18), transparent 25%),
-            radial-gradient(circle at 90% 15%, rgba(255, 0, 170, 0.18), transparent 25%),
-            radial-gradient(circle at 20% 80%, rgba(100, 0, 255, 0.18), transparent 30%),
-            radial-gradient(circle at 85% 85%, rgba(0, 255, 130, 0.12), transparent 25%),
-            linear-gradient(135deg, #050814, #0a1024 45%, #12051c);
+/* =========================================================
+   HINWEIS
+========================================================= */
 
-        background-attachment: fixed;
+.hinweis{
+    width:95%;
 
-        text-align: center;
+    margin:25px auto;
 
-        overflow-x: hidden;
+    padding:15px;
+
+    color:#dffcff;
+
+    font-size:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,180,0,.08),
+            rgba(255,0,100,.08)
+        );
+
+    border:1px solid rgba(255,190,0,.35);
+
+    border-radius:14px;
+
+    box-shadow:
+        0 0 15px rgba(255,180,0,.08);
+}
+
+
+/* =========================================================
+   HAUPTSPIELE
+========================================================= */
+
+.haupt-buttons{
+    width:95%;
+
+    margin:35px auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+}
+
+
+/* =========================================================
+   BATTLE AGES
+========================================================= */
+
+.battleages-button{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100px;
+
+    padding:20px;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:28px;
+    font-weight:900;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(10,35,50,.98),
+            rgba(10,15,30,.98)
+        );
+
+    border:2px solid rgba(0,255,255,.65);
+
+    box-shadow:
+        0 0 15px rgba(0,255,255,.15),
+        inset 0 0 20px rgba(0,255,255,.04);
+
+    transition:.25s;
+}
+
+.battleages-button span{
+
+    margin-top:7px;
+
+    font-size:14px;
+    font-weight:normal;
+
+    color:#9defff;
+}
+
+.battleages-button:hover{
+
+    transform:translateY(-4px) scale(1.01);
+
+    border-color:#00ffff;
+
+    box-shadow:
+        0 0 25px rgba(0,255,255,.3),
+        0 15px 30px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
+   TOWER DEFENSE 2
+========================================================= */
+
+.tower2-button{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:90px;
+
+    padding:18px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:26px;
+    font-weight:900;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #09264a,
+            #102d6b,
+            #351064
+        );
+
+    border:1px solid rgba(0,200,255,.6);
+
+    box-shadow:
+        0 0 18px rgba(0,140,255,.18);
+
+    transition:.25s;
+}
+
+.tower2-button span{
+
+    margin-top:6px;
+
+    font-size:14px;
+    font-weight:normal;
+
+    color:#bdeaff;
+}
+
+.tower2-button:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 30px rgba(0,180,255,.35),
+        0 12px 25px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
+   DORFHERRSCHER
+========================================================= */
+
+.dorf-button{
+
+    width:100%;
+
+    min-height:90px;
+
+    padding:18px;
+
+    color:#fff;
+
+    font-family:inherit;
+
+    font-size:25px;
+    font-weight:900;
+
+    border-radius:17px;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3a2110,
+            #6b3d14,
+            #241308
+        );
+
+    border:1px solid rgba(255,190,70,.65);
+
+    box-shadow:
+        0 0 18px rgba(255,150,30,.12);
+
+    transition:.25s;
+}
+
+.dorf-button span{
+
+    font-size:14px;
+    font-weight:normal;
+
+    color:#ffe5ae;
+}
+
+.dorf-button:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 28px rgba(255,170,50,.3),
+        0 12px 25px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
+   SPEZIAL BUTTONS
+========================================================= */
+
+.special-button{
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    min-height:76px;
+
+    padding:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:24px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    transition:.25s;
+}
+
+.special-button:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 0 25px rgba(255,255,255,.15);
+}
+
+
+/* TOWER DEFENSE */
+
+.tower-button{
+
+    background:
+        linear-gradient(
+            135deg,
+            #0c422c,
+            #12633d,
+            #082719
+        );
+
+    border:1px solid rgba(0,255,150,.55);
+}
+
+
+/* ZOMBIE */
+
+.zombie-button{
+
+    background:
+        linear-gradient(
+            135deg,
+            #441014,
+            #7b1820,
+            #21080c
+        );
+
+    border:1px solid rgba(255,50,70,.6);
+}
+
+
+/* =========================================================
+   TRENNER
+========================================================= */
+
+.section-divider{
+
+    width:85%;
+
+    margin:55px auto 30px;
+
+    padding:12px 20px;
+
+    color:#fff;
+
+    font-size:20px;
+    font-weight:bold;
+
+    border-top:1px solid rgba(0,255,255,.3);
+    border-bottom:1px solid rgba(255,0,200,.3);
+
+    border-radius:30px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,255,255,.05),
+            rgba(255,0,200,.08),
+            rgba(120,70,255,.05)
+        );
+}
+
+
+/* =========================================================
+   SPIELE-BEREICH
+========================================================= */
+
+.spiele-bereich{
+
+    width:92%;
+    max-width:720px;
+
+    margin:55px auto;
+}
+
+.spiele-bereich h2{
+
+    margin-bottom:30px;
+
+    font-size:34px;
+
+    color:white;
+
+    text-shadow:
+        0 0 10px rgba(0,255,255,.5),
+        0 0 20px rgba(255,0,200,.25);
+}
+
+
+/* =========================================================
+   SPIEL BUTTONS
+========================================================= */
+
+.spiel-button{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:100%;
+
+    min-height:76px;
+
+    margin-bottom:22px;
+
+    padding:15px 20px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:24px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(30,40,65,.95),
+            rgba(20,15,45,.95)
+        );
+
+    border:1px solid rgba(0,220,255,.35);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.4);
+
+    transition:.2s;
+}
+
+.spiel-button:hover{
+
+    transform:
+        translateY(-4px)
+        scale(1.015);
+
+    border-color:#00ffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,100,130,.5),
+            rgba(100,0,130,.5)
+        );
+
+    box-shadow:
+        0 0 15px rgba(0,255,255,.35),
+        0 10px 25px rgba(0,0,0,.45);
+}
+
+.spiel-button:active{
+
+    transform:
+        translateY(2px)
+        scale(.98);
+}
+
+
+/* Farbwechsel */
+
+.spiele-bereich
+.spiel-button:nth-of-type(3n+1){
+
+    border-color:
+        rgba(0,255,255,.55);
+}
+
+.spiele-bereich
+.spiel-button:nth-of-type(3n+2){
+
+    border-color:
+        rgba(255,0,200,.55);
+}
+
+.spiele-bereich
+.spiel-button:nth-of-type(3n){
+
+    border-color:
+        rgba(130,80,255,.60);
+}
+
+
+/* =========================================================
+   PC TOOLS
+========================================================= */
+
+.tool-button{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:92%;
+    max-width:720px;
+
+    min-height:70px;
+
+    margin:20px auto;
+
+    padding:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:22px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    transition:.25s;
+}
+
+.tool-button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 25px rgba(0,255,255,.2);
+}
+
+
+/* Netzteil */
+
+.netzteil{
+
+    background:
+        linear-gradient(
+            135deg,
+            #17384a,
+            #10232f,
+            #172044
+        );
+
+    border:1px solid rgba(0,220,255,.55);
+}
+
+
+/* WAV */
+
+.wav-mp3-button{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:92%;
+    max-width:720px;
+
+    min-height:70px;
+
+    margin:20px auto;
+
+    padding:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:22px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #30205a,
+            #56175f,
+            #24133e
+        );
+
+    border:1px solid rgba(255,0,220,.55);
+
+    transition:.25s;
+}
+
+.wav-mp3-button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 25px rgba(255,0,220,.2);
+}
+
+
+/* QR */
+
+.qr-button{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:92%;
+    max-width:720px;
+
+    min-height:70px;
+
+    margin:20px auto;
+
+    padding:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:22px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #123f2d,
+            #164e39,
+            #102a22
+        );
+
+    border:1px solid rgba(0,255,160,.5);
+
+    transition:.25s;
+}
+
+.qr-button:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 25px rgba(0,255,160,.2);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+    margin-top:60px;
+
+    padding-top:25px;
+
+    color:#83909f;
+
+    font-size:13px;
+
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    .container{
+
+        width:96%;
+
+        margin:15px auto 30px;
+
+        padding:
+            22px 12px
+            40px;
     }
 
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
+    .logo{
 
-        pointer-events: none;
-
-        background:
-            linear-gradient(
-                115deg,
-                transparent 0%,
-                rgba(0, 255, 255, 0.035) 25%,
-                transparent 45%,
-                rgba(255, 0, 200, 0.035) 70%,
-                transparent 100%
-            );
-
-        z-index: -1;
+        width:75%;
     }
 
+    h1{
 
-    /* ========================================= */
-    /* HAUPTCONTAINER */
-    /* ========================================= */
+        font-size:29px;
 
-    .container {
-        width: 94%;
-        max-width: 950px;
-
-        margin: 30px auto 50px;
-
-        padding: 30px 20px 55px;
-
-        background:
-            linear-gradient(
-                145deg,
-                rgba(10, 18, 38, 0.94),
-                rgba(15, 8, 30, 0.94)
-            );
-
-        border: 1px solid rgba(0, 255, 255, 0.20);
-
-        border-radius: 24px;
-
-        box-shadow:
-            0 0 30px rgba(0, 255, 255, 0.08),
-            0 0 80px rgba(160, 0, 255, 0.08),
-            0 20px 60px rgba(0,0,0,0.65);
+        letter-spacing:1px;
     }
 
+    .spiele-bereich{
 
-    /* ========================================= */
-    /* LOGO */
-    /* ========================================= */
-
-    .logo {
-        display: block;
-
-        width: 80%;
-        max-width: 270px;
-
-        height: auto;
-
-        margin: 0 auto 25px;
-
-        filter:
-            drop-shadow(0 0 8px rgba(0,255,255,0.35))
-            drop-shadow(0 0 20px rgba(255,0,200,0.20));
+        width:95%;
     }
 
+    .spiele-bereich h2{
 
-    /* ========================================= */
-    /* TITEL */
-    /* ========================================= */
-
-    h1 {
-        margin: 15px 0;
-
-        font-size: 40px;
-
-        background:
-            linear-gradient(
-                90deg,
-                #00ffff,
-                #ffffff,
-                #ff32d2,
-                #9d5cff,
-                #00ffff
-            );
-
-        background-size: 300%;
-
-        -webkit-background-clip: text;
-        background-clip: text;
-
-        color: transparent;
-
-        animation: neonTitle 6s linear infinite;
-
-        text-shadow:
-            0 0 18px rgba(0,255,255,0.25);
+        font-size:28px;
     }
 
-    @keyframes neonTitle {
+    .spiel-button{
 
-        0% {
-            background-position: 0%;
-        }
+        min-height:68px;
 
-        100% {
-            background-position: 300%;
-        }
+        padding:13px 12px;
 
+        font-size:20px;
     }
 
+    .battleages-button{
 
-    p {
-        font-size: 18px;
+        font-size:23px;
 
-        line-height: 1.7;
-
-        color: #d8e8f2;
+        min-height:90px;
     }
 
+    .tower2-button{
 
-    /* ========================================= */
-    /* NAVIGATION */
-    /* ========================================= */
-
-    nav {
-        display: flex;
-
-        flex-wrap: wrap;
-
-        justify-content: center;
-
-        gap: 9px;
-
-        margin: 25px 0 40px;
+        font-size:21px;
     }
 
-    nav a {
-        display: inline-block;
+    .dorf-button{
 
-        padding: 8px 12px;
-
-        color: #c9faff;
-
-        text-decoration: none;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(0,255,255,0.08),
-                rgba(160,0,255,0.10)
-            );
-
-        border: 1px solid rgba(0,255,255,0.25);
-
-        border-radius: 8px;
-
-        font-size: 13px;
-
-        transition: 0.2s;
+        font-size:21px;
     }
 
-    nav a:hover {
-        color: #ffffff;
+    .special-button{
 
-        border-color: #00ffff;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(0,255,255,0.22),
-                rgba(255,0,200,0.20)
-            );
-
-        box-shadow:
-            0 0 12px rgba(0,255,255,0.35);
-
-        transform: translateY(-2px);
+        font-size:20px;
     }
 
+    .tool-button,
+    .wav-mp3-button,
+    .qr-button{
 
-    /* ========================================= */
-    /* HINWEIS */
-    /* ========================================= */
+        font-size:19px;
 
-    .hinweis {
-        max-width: 800px;
-
-        margin: 35px auto;
-
-        padding: 22px;
-
-        text-align: left;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(255,170,0,0.08),
-                rgba(255,0,120,0.06)
-            );
-
-        border: 1px solid rgba(255,190,0,0.35);
-
-        border-radius: 16px;
-
-        box-shadow:
-            0 0 20px rgba(255,170,0,0.08);
+        min-height:64px;
     }
 
-    .hinweis h2 {
-        margin-top: 0;
+    nav a{
 
-        text-align: center;
+        font-size:13px;
 
-        color: #ffe66d;
-
-        text-shadow:
-            0 0 12px rgba(255,220,50,0.5);
+        padding:8px 11px;
     }
-
-
-    /* ========================================= */
-    /* HAUPT-BUTTONS */
-    /* ========================================= */
-
-    .haupt-buttons {
-        width: 100%;
-
-        margin: 45px auto;
-    }
-
-
-    /* ========================================= */
-    /* BATTLE AGES */
-    /* ========================================= */
-
-    .battleages-button {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 90%;
-
-        max-width: 560px;
-
-        min-height: 145px;
-
-        margin: 30px auto;
-
-        text-decoration: none;
-
-        color: white;
-
-        background:
-            linear-gradient(
-                145deg,
-                #253743,
-                #0a1117
-            );
-
-        border: 2px solid #00eaff;
-
-        border-radius: 17px;
-
-        box-shadow:
-            0 0 12px rgba(0,234,255,0.35),
-            0 8px 0 #030609,
-            0 15px 35px rgba(0,0,0,0.55);
-
-        font-size: 32px;
-
-        font-weight: bold;
-
-        letter-spacing: 2px;
-
-        transition: 0.2s;
-    }
-
-    .battleages-button span {
-        margin-top: 10px;
-
-        font-size: 14px;
-
-        font-weight: normal;
-
-        letter-spacing: 1px;
-
-        color: #9eefff;
-    }
-
-    .battleages-button:hover {
-        transform: translateY(-5px);
-
-        border-color: #ffffff;
-
-        box-shadow:
-            0 0 22px rgba(0,234,255,0.65),
-            0 12px 0 #030609,
-            0 20px 40px rgba(0,0,0,0.6);
-    }
-
-
-    /* ========================================= */
-    /* TOWER DEFENSE 2 */
-    /* ========================================= */
-
-    .tower2-button {
-        display: block;
-
-        width: 90%;
-
-        max-width: 540px;
-
-        margin: 35px auto;
-
-        padding: 27px 20px;
-
-        background:
-            linear-gradient(
-                135deg,
-                #0066ff,
-                #00c8ff,
-                #643cff
-            );
-
-        background-size: 200%;
-
-        color: white;
-
-        text-decoration: none;
-
-        font-size: 27px;
-
-        font-weight: bold;
-
-        border-radius: 18px;
-
-        border: 2px solid #00ffff;
-
-        box-shadow:
-            0 0 15px rgba(0,200,255,0.45),
-            0 10px 30px rgba(0,0,0,0.45);
-
-        transition: 0.25s;
-    }
-
-    .tower2-button span {
-        display: block;
-
-        margin-top: 8px;
-
-        font-size: 15px;
-
-        font-weight: normal;
-    }
-
-    .tower2-button:hover {
-        transform: translateY(-5px);
-
-        background-position: 100%;
-
-        box-shadow:
-            0 0 30px rgba(0,220,255,0.65),
-            0 15px 35px rgba(0,0,0,0.5);
-    }
-
-
-    /* ========================================= */
-    /* DORFHERRSCHER */
-    /* ========================================= */
-
-    .dorf-button {
-        display: block;
-
-        width: 90%;
-
-        max-width: 540px;
-
-        margin: 35px auto;
-
-        padding: 22px;
-
-        font-size: 23px;
-
-        font-weight: bold;
-
-        font-family: Georgia, serif;
-
-        color: #ffe8ad;
-
-        background:
-            linear-gradient(
-                145deg,
-                #6d451d,
-                #211309
-            );
-
-        border: 2px solid #ffbd45;
-
-        border-radius: 15px;
-
-        cursor: pointer;
-
-        box-shadow:
-            0 0 15px rgba(255,180,40,0.25),
-            0 8px 25px rgba(0,0,0,0.5);
-
-        transition: 0.2s;
-    }
-
-    .dorf-button:hover {
-        transform: translateY(-4px);
-
-        box-shadow:
-            0 0 25px rgba(255,190,50,0.5),
-            0 12px 30px rgba(0,0,0,0.55);
-    }
-
-    .dorf-button span {
-        font-size: 14px;
-
-        font-weight: normal;
-    }
-
-
-    /* ========================================= */
-    /* TOWER / ZOMBIE */
-    /* ========================================= */
-
-    .special-button {
-        display: block;
-
-        width: 90%;
-
-        max-width: 540px;
-
-        padding: 23px;
-
-        margin: 30px auto;
-
-        font-size: 24px;
-
-        font-weight: bold;
-
-        color: white;
-
-        text-decoration: none;
-
-        border-radius: 16px;
-
-        box-shadow:
-            0 8px 25px rgba(0,0,0,0.45);
-
-        transition: 0.2s;
-    }
-
-    .special-button:hover {
-        transform: translateY(-5px);
-    }
-
-
-    .tower-button {
-        background:
-            linear-gradient(
-                135deg,
-                #00c853,
-                #087f23,
-                #00a844
-            );
-
-        border: 2px solid #43ff88;
-
-        box-shadow:
-            0 0 20px rgba(0,255,100,0.25),
-            0 8px 25px rgba(0,0,0,0.5);
-    }
-
-
-    .zombie-button {
-        background:
-            linear-gradient(
-                135deg,
-                #ff1744,
-                #650000,
-                #220000
-            );
-
-        border: 2px solid #ff315a;
-
-        box-shadow:
-            0 0 20px rgba(255,0,60,0.30),
-            0 8px 25px rgba(0,0,0,0.5);
-    }
-
-
-    /* ========================================= */
-    /* TRENNLINIE */
-    /* ========================================= */
-
-    .section-divider {
-        margin: 65px 0 35px;
-
-        text-align: center;
-    }
-
-    .section-divider-line {
-        height: 2px;
-
-        background:
-            linear-gradient(
-                90deg,
-                transparent,
-                #00ffff,
-                #ff00cc,
-                #8c52ff,
-                transparent
-            );
-
-        box-shadow:
-            0 0 12px rgba(0,255,255,0.5);
-
-        margin-bottom: 25px;
-    }
-
-    .section-title {
-        display: inline-block;
-
-        padding: 9px 24px;
-
-        border-radius: 25px;
-
-        background:
-            rgba(10,20,40,0.9);
-
-        border: 1px solid #00eaff;
-
-        color: #70f7ff;
-
-        font-weight: bold;
-
-        font-size: 17px;
-
-        box-shadow:
-            0 0 15px rgba(0,230,255,0.25);
-    }
-
-
-    /* ========================================= */
-    /* SPIELE */
-    /* ========================================= */
-
-    .spiele-bereich {
-        width: 92%;
-
-        max-width: 720px;
-
-        margin: 55px auto;
-    }
-
-    .spiele-bereich h2 {
-        font-size: 34px;
-
-        margin-bottom: 40px;
-
-        color: #ffffff;
-
-        text-shadow:
-            0 0 12px #00eaff,
-            0 0 25px rgba(255,0,200,0.5);
-    }
-
-
-    .spiel-button {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 100%;
-
-        min-height: 76px;
-
-        margin-bottom: 22px;
-
-        padding: 15px 20px;
-
-        color: white;
-
-        text-decoration: none;
-
-        font-size: 24px;
-
-        font-weight: bold;
-
-        border-radius: 15px;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(30,40,65,0.95),
-                rgba(20,15,45,0.95)
-            );
-
-        border: 1px solid rgba(0,220,255,0.35);
-
-        box-shadow:
-            0 5px 18px rgba(0,0,0,0.4);
-
-        transition: 0.2s;
-    }
-
-
-    .spiel-button:hover {
-        transform: translateY(-4px) scale(1.015);
-
-        border-color: #00ffff;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(0,100,130,0.5),
-                rgba(100,0,130,0.5)
-            );
-
-        box-shadow:
-            0 0 15px rgba(0,255,255,0.35),
-            0 10px 25px rgba(0,0,0,0.45);
-    }
-
-
-    .spiel-button:active {
-        transform: translateY(2px) scale(0.98);
-    }
-
-
-    /* Unterschiedliche Neonfarben */
-
-    .spiele-bereich .spiel-button:nth-of-type(3n+1) {
-        border-color: rgba(0,255,255,0.55);
-    }
-
-    .spiele-bereich .spiel-button:nth-of-type(3n+2) {
-        border-color: rgba(255,0,200,0.55);
-    }
-
-    .spiele-bereich .spiel-button:nth-of-type(3n) {
-        border-color: rgba(130,80,255,0.60);
-    }
-
-
-    /* ========================================= */
-    /* TOOLS */
-    /* ========================================= */
-
-    .tool-button {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 90%;
-
-        max-width: 680px;
-
-        min-height: 70px;
-
-        margin: 25px auto;
-
-        padding: 18px 25px;
-
-        color: white;
-
-        text-decoration: none;
-
-        font-size: 20px;
-
-        font-weight: bold;
-
-        border-radius: 15px;
-
-        transition: 0.2s;
-    }
-
-
-    .netzteil {
-        background:
-            linear-gradient(
-                135deg,
-                #0077ff,
-                #00c6ff,
-                #6246ff
-            );
-
-        border: 2px solid #00eaff;
-
-        box-shadow:
-            0 0 20px rgba(0,200,255,0.3),
-            0 8px 25px rgba(0,0,0,0.4);
-    }
-
-    .netzteil:hover {
-        transform: translateY(-4px);
-
-        box-shadow:
-            0 0 30px rgba(0,220,255,0.55);
-    }
-
-
-    /* ========================================= */
-    /* WAV MP3 */
-    /* ========================================= */
-
-    .wav-mp3-button {
-        display: flex;
-
-        align-items: center;
-
-        gap: 18px;
-
-        width: 90%;
-
-        max-width: 680px;
-
-        margin: 30px auto;
-
-        padding: 22px 28px;
-
-        text-decoration: none;
-
-        color: white;
-
-        text-align: left;
-
-        background:
-            linear-gradient(
-                135deg,
-                #00c6ff,
-                #0072ff,
-                #7b2cff,
-                #d900ff
-            );
-
-        background-size: 250%;
-
-        border-radius: 18px;
-
-        border: 2px solid #7deaff;
-
-        box-shadow:
-            0 0 20px rgba(0,150,255,0.35),
-            0 8px 25px rgba(0,0,0,0.4);
-
-        transition: 0.25s;
-    }
-
-    .wav-mp3-button:hover {
-        transform: translateY(-5px);
-
-        background-position: 100%;
-
-        box-shadow:
-            0 0 35px rgba(0,170,255,0.55),
-            0 12px 30px rgba(0,0,0,0.5);
-    }
-
-    .wav-mp3-icon {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 65px;
-
-        height: 65px;
-
-        min-width: 65px;
-
-        background:
-            rgba(255,255,255,0.16);
-
-        border: 1px solid rgba(255,255,255,0.35);
-
-        border-radius: 16px;
-
-        font-size: 34px;
-
-        box-shadow:
-            0 0 15px rgba(255,255,255,0.15);
-    }
-
-    .wav-mp3-text {
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 5px;
-    }
-
-    .wav-mp3-text strong {
-        font-size: 23px;
-    }
-
-    .wav-mp3-text small {
-        font-size: 14px;
-
-        opacity: 0.9;
-    }
-
-
-    /* ========================================= */
-    /* QR CODE */
-    /* ========================================= */
-
-    .qr-button {
-        display: block;
-
-        width: 90%;
-
-        max-width: 540px;
-
-        margin: 30px auto;
-
-        padding: 23px;
-
-        background:
-            linear-gradient(
-                135deg,
-                #111827,
-                #3b0764,
-                #172554
-            );
-
-        color: white;
-
-        text-decoration: none;
-
-        font-size: 23px;
-
-        font-weight: bold;
-
-        border: 2px solid #a855f7;
-
-        border-radius: 16px;
-
-        box-shadow:
-            0 0 18px rgba(168,85,247,0.35),
-            0 8px 25px rgba(0,0,0,0.45);
-
-        transition: 0.2s;
-    }
-
-    .qr-button:hover {
-        transform: translateY(-4px);
-
-        border-color: #e879f9;
-
-        box-shadow:
-            0 0 30px rgba(200,80,255,0.55);
-    }
-
-
-    /* ========================================= */
-    /* FOOTER */
-    /* ========================================= */
-
-    .footer {
-        margin-top: 60px;
-
-        padding-top: 25px;
-
-        border-top: 1px solid rgba(0,255,255,0.15);
-
-        color: #8095a5;
-
-        font-size: 14px;
-    }
-
-
-    /* ========================================= */
-    /* HANDY */
-    /* ========================================= */
-
-    @media (max-width: 600px) {
-
-        .container {
-            width: 96%;
-
-            margin: 12px auto 30px;
-
-            padding:
-                20px
-                10px
-                40px;
-        }
-
-        h1 {
-            font-size: 29px;
-        }
-
-        p {
-            font-size: 16px;
-        }
-
-        nav {
-            gap: 6px;
-        }
-
-        nav a {
-            font-size: 11px;
-
-            padding:
-                7px
-                9px;
-        }
-
-        .battleages-button {
-            min-height: 120px;
-
-            font-size: 25px;
-        }
-
-        .battleages-button span {
-            font-size: 12px;
-        }
-
-        .tower2-button {
-            font-size: 22px;
-        }
-
-        .special-button {
-            font-size: 21px;
-        }
-
-        .dorf-button {
-            font-size: 21px;
-        }
-
-        .spiele-bereich {
-            width: 94%;
-        }
-
-        .spiele-bereich h2 {
-            font-size: 27px;
-        }
-
-        .spiel-button {
-            min-height: 68px;
-
-            font-size: 20px;
-        }
-
-        .wav-mp3-button {
-            padding: 18px 15px;
-
-            gap: 13px;
-        }
-
-        .wav-mp3-icon {
-            width: 54px;
-
-            height: 54px;
-
-            min-width: 54px;
-
-            font-size: 27px;
-        }
-
-        .wav-mp3-text strong {
-            font-size: 18px;
-        }
-
-        .wav-mp3-text small {
-            font-size: 11px;
-        }
-
-        .tool-button {
-            font-size: 18px;
-        }
-
-        .qr-button {
-            font-size: 20px;
-        }
-
-    }
+}
 
 </style>
-
 </head>
 
+
 <body>
+
 
 <div class="container">
 
 
-<!-- ===================================== -->
-<!-- LOGO -->
-<!-- ===================================== -->
+    <!-- =====================================================
+         LOGO
+    ====================================================== -->
 
-<img
-    src="logo.png"
-    alt="Austrian Moonshiner Logo"
-    class="logo"
->
-
-
-<!-- ===================================== -->
-<!-- NAVIGATION -->
-<!-- ===================================== -->
-
-<nav>
-
-    <a href="index.html">🏠 Startseite</a>
-
-    <a href="minesweeper.html">💣 Minesweeper</a>
-
-    <a href="memory2.html">🧠 Memory2</a>
-
-    <a href="candycrush2v1.html">🍬 Candy Crush 2</a>
-
-    <a href="doodlejump.html">🦘 Doodle Jump</a>
-
-    <a href="candy-crush.html">🍭 Candy Crush</a>
-
-    <a href="Sudoku.html">🧩 Sudoku</a>
-
-    <a href="sidedifense.html">⚔️ Battle Ages</a>
-
-    <a href="impressum.html.html">📄 Impressum</a>
-
-    <a href="groß.html">🃏 Solitär</a>
-
-    <a href="snake.html">🐍 Snake</a>
-
-    <a href="Tetris.html">🟦 Tetris</a>
-
-    <a href="4gewinnt.html">🔴 4 Gewinnt</a>
-
-    <a href="flappybird.html">🐦 Flappy Bird</a>
-
-    <a href="pacman.html">🟡 Pac-Man</a>
-
-    <a href="breakout.html">🧱 Breakout</a>
-
-    <a href="birdmania.html">🐦 Birdmania</a>
-
-    <a href="birdmania_v2.html">🐦 Birdmania V2</a>
-
-    <a href="frenchie-mania.html">🐶 Frenchie-Mania</a>
-
-    <a href="schach.html">♟️ Schach</a>
-
-    <a href="birdjump.html">🐦 Birdjump</a>
-
-    <a href="towerdefense.html">🏰 Tower Defense</a>
-
-    <a href="zombiesurvival.html">🧟 Zombie Survival</a>
-
-</nav>
+    <img
+        src="logo.png"
+        alt="Austrian Moonshiner Logo"
+        class="logo"
+    >
 
 
-<!-- ===================================== -->
-<!-- TITEL -->
-<!-- ===================================== -->
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
 
-<h1>
-    AUSTRIAN MOONSHINER
-</h1>
+    <nav>
 
+        <a href="#spiele">
+            🎮 Spiele
+        </a>
 
-<p>
-    🎮 Online Arcade Spielhalle &amp; nützliche Tools
-</p>
+        <a href="#tools">
+            🛠️ Tools
+        </a>
 
+        <a href="impressum.html">
+            📄 Impressum
+        </a>
 
-<p>
-    Meine neue Projekt-Webseite für alle,
-    die ein bisschen spielen oder nützliche Tools
-    ausprobieren möchten.
-</p>
-
-
-<p>
-    Alle Spiele und Tools sind selbst programmiert.
-    Manche enthalten noch Fehler, die durch regelmäßige
-    Updates nach und nach verschwinden.
-</p>
+    </nav>
 
 
-<p>
-    Neue Spiele und Tools werden laufend hinzugefügt.
-    Alles kostenlos und ohne Werbung.
-</p>
+    <!-- =====================================================
+         TITEL
+    ====================================================== -->
 
-
-<!-- ===================================== -->
-<!-- HINWEIS -->
-<!-- ===================================== -->
-
-<div class="hinweis">
-
-    <h2>
-        ⚠️ Hinweis zu den Spielen
-    </h2>
+    <h1>
+        AUSTRIAN MOONSHINER
+    </h1>
 
     <p>
-        Die auf dieser Webseite angebotenen Spiele dienen
-        ausschließlich der Unterhaltung und dem Zeitvertreib.
+        🎮 Online Arcade Spielhalle &amp; nützliche Tools
     </p>
 
     <p>
-        Es werden keine Echtgeld-Einsätze angenommen und es
-        können keine echten Geldbeträge oder Sachpreise
-        gewonnen oder ausgezahlt werden.
+        Meine neue Projekt-Webseite mit selbst programmierten
+        Browser-Spielen und praktischen Tools.
     </p>
 
     <p>
-        Alle verwendeten Punkte, Guthaben und Gewinne sind
-        rein virtuell und haben keinen Geldwert.
+        Alle Spiele und Tools sind selbst programmiert
+        und werden laufend weiterentwickelt.
     </p>
 
     <p>
-        Die Spiele stellen kein Online-Casino und kein
-        Echtgeld-Glücksspielangebot dar.
+        Neue Spiele und Tools werden regelmäßig hinzugefügt.
     </p>
 
-    <p>
-        🎮 Nur zum Spaß spielen – ohne echtes Geld.
-    </p>
 
-</div>
+    <!-- =====================================================
+         HINWEIS
+    ====================================================== -->
 
+    <div class="hinweis">
 
-<!-- ===================================== -->
-<!-- HAUPTSPIELE -->
-<!-- ===================================== -->
+        ⚠️ <strong>Hinweis:</strong><br>
 
-<div class="haupt-buttons">
+        Alle Spiele dienen ausschließlich der Unterhaltung.
+        Es gibt keine echten Geldeinsätze und keine echten
+        Geldgewinne.
 
-
-    <!-- BATTLE AGES -->
-
-    <a
-        href="sidedifense.html"
-        class="battleages-button"
-    >
-
-        ⚔️ BATTLE AGES
-
-        <span>
-            Strategie • Einheiten • Wellen
-        </span>
-
-    </a>
-
-
-    <!-- TOWER DEFENSE 2 -->
-
-    <a
-        href="towerdefense2.html"
-        class="tower2-button"
-    >
-
-        🏰 TOWER DEFENSE 2
-
-        <span>
-            Verteidige deine Basis!
-        </span>
-
-    </a>
-
-
-    <!-- DORFHERRSCHER -->
-
-    <button
-        class="dorf-button"
-        onclick="window.location.href='dorfherrscher.html'"
-    >
-
-        🏰 Dorfherrscher
-
-        <br>
-
-        <span>
-            Baue dein Dorf auf und verteidige dein Reich
-        </span>
-
-    </button>
-
-
-    <!-- TOWER DEFENSE -->
-
-    <a
-        href="towerdefense.html"
-        class="special-button tower-button"
-    >
-
-        🏰 TOWER DEFENSE
-
-    </a>
-
-
-    <!-- ZOMBIE SURVIVAL -->
-
-    <a
-        href="zombiesurvival.html"
-        class="special-button zombie-button"
-    >
-
-        🧟 ZOMBIE SURVIVAL
-
-    </a>
-
-
-</div>
-
-
-<!-- ===================================== -->
-<!-- SPIELE -->
-<!-- ===================================== -->
-
-<section class="spiele-bereich">
-
-
-    <h2>
-        🎮 MEINE SPIELE
-    </h2>
-
-
-    <!-- BATTLE AGES 2 V2 -->
-    <!-- Jetzt gleicher Button-Stil wie alle anderen Spiele -->
-
-    <a
-        href="battleages2v2.html"
-        class="spiel-button"
-    >
-        ⚔️ Battle Ages 2 V2
-    </a>
-
-
-    <a
-        href="birdjump.html"
-        class="spiel-button"
-    >
-        🐦 Birdjump
-    </a>
-
-
-    <a
-        href="groß.html"
-        class="spiel-button"
-    >
-        🃏 Solitär
-    </a>
-
-
-    <a
-        href="Memory.html"
-        class="spiel-button"
-    >
-        🧠 Memory
-    </a>
-
-
-    <a
-        href="minesweeper.html"
-        class="spiel-button"
-    >
-        💣 Minesweeper
-    </a>
-
-
-    <a
-        href="snake.html"
-        class="spiel-button"
-    >
-        🐍 Snake
-    </a>
-
-
-    <a
-        href="Tetris.html"
-        class="spiel-button"
-    >
-        🟦 Tetris
-    </a>
-
-
-    <a
-        href="flappybird.html"
-        class="spiel-button"
-    >
-        🐦 Flappy Bird
-    </a>
-
-
-    <a
-        href="pacman.html"
-        class="spiel-button"
-    >
-        🟡 Pac-Man
-    </a>
-
-
-    <a
-        href="birdmania_v2.html"
-        class="spiel-button"
-    >
-        🍬 Birdmania
-    </a>
-
-
-    <a
-        href="Sudoku.html"
-        class="spiel-button"
-    >
-        🧩 Sudoku
-    </a>
-
-
-    <a
-        href="breakout.html"
-        class="spiel-button"
-    >
-        🧱 Breakout
-    </a>
-
-
-    <a
-        href="4gewinnt.html"
-        class="spiel-button"
-    >
-        🔴 4 Gewinnt
-    </a>
-
-
-    <a
-        href="frenchie-mania.html"
-        class="spiel-button"
-    >
-        🐶 Bulldoggen-Spiel
-    </a>
-
-
-    <a
-        href="schach.html"
-        class="spiel-button"
-    >
-        ♟️ Schach mit KI
-    </a>
-
-
-    <a
-        href="doodlejump.html"
-        class="spiel-button"
-    >
-        🦘 Doodle Jump
-    </a>
-
-
-    <a
-        href="candycrush2v1.html"
-        class="spiel-button"
-    >
-        🍬 Candy Crush 2
-    </a>
-
-
-    <a
-        href="candy-crush.html"
-        class="spiel-button"
-    >
-        🍭 Candy Crush
-    </a>
-
-
-    <a
-        href="birdmania.html"
-        class="spiel-button"
-    >
-        🐦 Birdmania Classic
-    </a>
-
-
-</section>
-
-
-<!-- ===================================== -->
-<!-- PC TOOLS -->
-<!-- ===================================== -->
-
-<div class="section-divider">
-
-    <div class="section-divider-line"></div>
-
-    <div class="section-title">
-        🖥️ PC-TOOLS
     </div>
 
+
+    <!-- =====================================================
+         HAUPTSPIELE
+    ====================================================== -->
+
+    <div class="haupt-buttons">
+
+
+        <!-- BATTLE AGES -->
+
+        <a
+            href="sidedifense.html"
+            class="battleages-button"
+        >
+
+            ⚔️ BATTLE AGES
+
+            <span>
+                Strategie • Einheiten • Wellen
+            </span>
+
+        </a>
+
+
+        <!-- TOWER DEFENSE 2 -->
+
+        <a
+            href="towerdefense2.html"
+            class="tower2-button"
+        >
+
+            🏰 TOWER DEFENSE 2
+
+            <span>
+                Verteidige deine Basis!
+            </span>
+
+        </a>
+
+
+        <!-- DORFHERRSCHER -->
+
+        <button
+            class="dorf-button"
+            onclick="window.location.href='dorfherrscher.html'"
+        >
+
+            🏰 Dorfherrscher
+
+            <br>
+
+            <span>
+                Baue dein Dorf auf und verteidige dein Reich
+            </span>
+
+        </button>
+
+
+        <!-- TOWER DEFENSE -->
+
+        <a
+            href="towerdefense.html"
+            class="special-button tower-button"
+        >
+
+            🏰 TOWER DEFENSE
+
+        </a>
+
+
+        <!-- ZOMBIE SURVIVAL -->
+
+        <a
+            href="zombiesurvival.html"
+            class="special-button zombie-button"
+        >
+
+            🧟 ZOMBIE SURVIVAL
+
+        </a>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         SPIELE
+    ====================================================== -->
+
+    <section
+        class="spiele-bereich"
+        id="spiele"
+    >
+
+        <h2>
+            🎮 MEINE SPIELE
+        </h2>
+
+
+        <!-- BATTLE AGES 2 -->
+
+        <a
+            href="battleages2v2.html"
+            class="spiel-button"
+        >
+            ⚔️ Battle Ages 2 V2
+        </a>
+
+
+        <!-- BIRDJUMP -->
+
+        <a
+            href="birdjump.html"
+            class="spiel-button"
+        >
+            🐦 Birdjump
+        </a>
+
+
+        <!-- SOLITÄR -->
+
+        <a
+            href="groß.html"
+            class="spiel-button"
+        >
+            🃏 Solitär
+        </a>
+
+
+        <!-- MEMORY -->
+
+        <a
+            href="Memory.html"
+            class="spiel-button"
+        >
+            🧠 Memory
+        </a>
+
+
+        <!-- MINESWEEPER -->
+
+        <a
+            href="minesweeper.html"
+            class="spiel-button"
+        >
+            💣 Minesweeper
+        </a>
+
+
+        <!-- SNAKE -->
+
+        <a
+            href="snake.html"
+            class="spiel-button"
+        >
+            🐍 Snake
+        </a>
+
+
+        <!-- TETRIS -->
+
+        <a
+            href="Tetris.html"
+            class="spiel-button"
+        >
+            🧱 Tetris
+        </a>
+
+
+        <!-- FLAPPY BIRD -->
+
+        <a
+            href="flappybird.html"
+            class="spiel-button"
+        >
+            🐦 Flappy Bird
+        </a>
+
+
+        <!-- PAC-MAN -->
+
+        <a
+            href="pacman.html"
+            class="spiel-button"
+        >
+            🟡 Pac-Man
+        </a>
+
+
+        <!-- BIRDMANIA -->
+
+        <a
+            href="birdmania_v2.html"
+            class="spiel-button"
+        >
+            🐦 Birdmania
+        </a>
+
+
+        <!-- SUDOKU -->
+
+        <a
+            href="Sudoku.html"
+            class="spiel-button"
+        >
+            🔢 Sudoku
+        </a>
+
+
+        <!-- BREAKOUT -->
+
+        <a
+            href="breakout.html"
+            class="spiel-button"
+        >
+            🧱 Breakout
+        </a>
+
+
+        <!-- 4 GEWINNT -->
+
+        <a
+            href="4gewinnt.html"
+            class="spiel-button"
+        >
+            🔴 4 Gewinnt
+        </a>
+
+
+        <!-- BULLDOGGEN SPIEL -->
+
+        <a
+            href="frenchie-mania.html"
+            class="spiel-button"
+        >
+            🐶 Bulldoggen-Spiel
+        </a>
+
+
+        <!-- BULLDOGMANIA 2 -->
+
+        <a
+            href="bulldogmania2.html"
+            class="spiel-button"
+        >
+            🐶 Bulldogmania 2
+        </a>
+
+
+        <!-- SCHACH -->
+
+        <a
+            href="schach.html"
+            class="spiel-button"
+        >
+            ♟️ Schach mit KI
+        </a>
+
+
+        <!-- DOODLE JUMP -->
+
+        <a
+            href="doodlejump.html"
+            class="spiel-button"
+        >
+            🚀 Doodle Jump
+        </a>
+
+
+        <!-- CANDY CRUSH 2 -->
+
+        <a
+            href="candycrush2v1.html"
+            class="spiel-button"
+        >
+            🍬 Candy Crush 2
+        </a>
+
+
+        <!-- CANDY CRUSH -->
+
+        <a
+            href="candy-crush.html"
+            class="spiel-button"
+        >
+            🍭 Candy Crush
+        </a>
+
+
+        <!-- BIRDMANIA CLASSIC -->
+
+        <a
+            href="birdmania.html"
+            class="spiel-button"
+        >
+            🐦 Birdmania Classic
+        </a>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         TOOLS TRENNER
+    ====================================================== -->
+
+    <div
+        class="section-divider"
+        id="tools"
+    >
+
+        🛠️ PC-TOOLS &amp; NÜTZLICHE WERKZEUGE
+
+    </div>
+
+
+    <!-- =====================================================
+         PC NETZTEIL RECHNER
+    ====================================================== -->
+
+    <a
+        href="pcnetzteilrechner.html"
+        class="tool-button netzteil"
+    >
+
+        ⚡ PC Netzteil Rechner
+
+    </a>
+
+
+    <!-- =====================================================
+         WAV → MP3
+    ====================================================== -->
+
+    <a
+        href="wav-mp3.html"
+        class="wav-mp3-button"
+    >
+
+        🎵 WAV → MP3 Konverter
+
+    </a>
+
+
+    <!-- =====================================================
+         QR GENERATOR
+    ====================================================== -->
+
+    <a
+        href="qr-generator.html"
+        class="qr-button"
+    >
+
+        🔲 QR-Code Generator
+
+    </a>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <div class="footer">
+
+        © Austrian Moonshiner
+
+        <br>
+        <br>
+
+        🎮 Alle Spiele und Tools werden laufend weiterentwickelt.
+
+    </div>
+
+
 </div>
 
-
-<!-- NETZTEIL RECHNER -->
-
-<a
-    href="pcnetzteilrechner.html"
-    class="tool-button netzteil"
->
-    ⚡ PC Netzteil Rechner
-</a>
-
-
-<!-- WAV MP3 -->
-
-<a
-    href="wav-mp3.html"
-    class="wav-mp3-button"
->
-
-    <span class="wav-mp3-icon">
-        🎵
-    </span>
-
-    <span class="wav-mp3-text">
-
-        <strong>
-            WAV → MP3 Konverter
-        </strong>
-
-        <small>
-            WAV-Dateien schnell in MP3 umwandeln
-        </small>
-
-    </span>
-
-</a>
-
-
-<!-- QR CODE -->
-
-<a
-    href="qr-generator.html"
-    class="qr-button"
->
-    🔲 QR-Code Generator
-</a>
-
-
-<!-- ===================================== -->
-<!-- FOOTER -->
-<!-- ===================================== -->
-
-<div class="footer">
-
-    © Austrian Moonshiner
-
-    <br><br>
-
-    🎮 Alle Spiele und Tools werden laufend weiterentwickelt.
-
-</div>
-
-
-</div>
 
 </body>
+
 </html>
