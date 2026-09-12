@@ -1,0 +1,3473 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Battle Ages 2</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    background:#15100c;
+    color:#f5ead5;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+body{
+    min-height:100vh;
+}
+
+/* =========================
+   STARTSCREEN
+========================= */
+
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:
+        radial-gradient(circle at 50% 30%,rgba(132,82,38,.25),transparent 35%),
+        linear-gradient(#160e09,#080604);
+}
+
+.startBox{
+    width:min(1000px,100%);
+    padding:35px;
+    border:3px solid #8b5a2b;
+    border-radius:18px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(66,40,21,.98),
+            rgba(27,17,10,.98)
+        );
+    box-shadow:
+        0 0 0 2px rgba(0,0,0,.5),
+        0 25px 70px rgba(0,0,0,.8);
+    text-align:center;
+}
+
+.logo{
+    font-size:clamp(34px,7vw,68px);
+    font-weight:900;
+    letter-spacing:5px;
+    color:#e8bd70;
+    text-shadow:
+        3px 3px 0 #3b2412,
+        0 0 18px rgba(232,189,112,.25);
+    margin-bottom:5px;
+}
+
+.subtitle{
+    color:#cbb797;
+    font-size:16px;
+    letter-spacing:2px;
+    margin-bottom:30px;
+}
+
+.startText{
+    color:#e4d4b7;
+    font-size:18px;
+    margin-bottom:25px;
+}
+
+.difficultyGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.difficultyButton{
+    position:relative;
+    min-height:190px;
+    padding:22px 15px;
+    border:2px solid #77502b;
+    border-radius:14px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(71,44,23,.95),
+            rgba(30,19,11,.98)
+        );
+    color:#f7e7c6;
+    cursor:pointer;
+    transition:
+        transform .15s,
+        border-color .15s,
+        background .15s,
+        box-shadow .15s;
+}
+
+.difficultyButton:hover{
+    transform:translateY(-5px);
+    border-color:#d5a45d;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(92,57,29,.98),
+            rgba(35,21,11,.98)
+        );
+    box-shadow:0 12px 30px rgba(0,0,0,.5);
+}
+
+.difficultyButton:active{
+    transform:translateY(-1px);
+}
+
+.difficultyIcon{
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.difficultyTitle{
+    font-size:25px;
+    font-weight:900;
+    margin-bottom:10px;
+}
+
+.difficultyDescription{
+    font-size:14px;
+    line-height:1.5;
+    color:#cdbd9e;
+}
+
+.easy{
+    border-color:#698d4d;
+}
+
+.medium{
+    border-color:#a87935;
+}
+
+.hard{
+    border-color:#9b4638;
+}
+
+.easy .difficultyTitle{
+    color:#9ac56e;
+}
+
+.medium .difficultyTitle{
+    color:#e0ad55;
+}
+
+.hard .difficultyTitle{
+    color:#d96a58;
+}
+
+.startInfo{
+    margin-top:28px;
+    color:#a99679;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* =========================
+   GAME
+========================= */
+
+#game{
+    width:min(1500px,100%);
+    margin:0 auto;
+    padding:10px;
+}
+
+.topbar{
+    display:grid;
+    grid-template-columns:1.5fr repeat(4,1fr);
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.topBox{
+    min-height:62px;
+    padding:8px 12px;
+    border:2px solid #76502a;
+    border-radius:9px;
+    background:
+        linear-gradient(
+            180deg,
+            #3a2515,
+            #21140c
+        );
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.08),
+        0 3px 8px rgba(0,0,0,.4);
+}
+
+.topTitle{
+    font-size:11px;
+    color:#aa9474;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.topValue{
+    font-size:21px;
+    font-weight:900;
+    color:#f0d18f;
+    margin-top:4px;
+}
+
+#gameTitle{
+    font-size:22px;
+    letter-spacing:2px;
+    color:#e6b86d;
+}
+
+#difficultyDisplay{
+    color:#d9b676;
+}
+
+/* =========================
+   CANVAS
+========================= */
+
+.canvasWrap{
+    position:relative;
+    border:3px solid #65411f;
+    border-radius:10px;
+    overflow:hidden;
+    background:#7eaa58;
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.65);
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    background:#82a95b;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.controls{
+    margin-top:8px;
+    padding:10px;
+    border:2px solid #65411f;
+    border-radius:10px;
+    background:
+        linear-gradient(
+            180deg,
+            #3a2515,
+            #1d120b
+        );
+}
+
+.unitButtons{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+button{
+    font-family:inherit;
+}
+
+.unitButton,
+.actionButton{
+    min-height:62px;
+    border:2px solid #76502a;
+    border-radius:8px;
+    background:
+        linear-gradient(
+            180deg,
+            #5a391e,
+            #2b1a0e
+        );
+    color:#f2dfbc;
+    cursor:pointer;
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.08),
+        0 3px 7px rgba(0,0,0,.4);
+    transition:.12s;
+}
+
+.unitButton:hover,
+.actionButton:hover{
+    border-color:#d19b4f;
+    transform:translateY(-2px);
+}
+
+.unitButton:active,
+.actionButton:active{
+    transform:translateY(1px);
+}
+
+.unitButton.disabled,
+.actionButton.disabled{
+    opacity:.38;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.unitName{
+    font-size:15px;
+    font-weight:900;
+}
+
+.unitInfo{
+    margin-top:5px;
+    font-size:12px;
+    color:#bca98b;
+}
+
+.bottomActions{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:8px;
+    margin-top:8px;
+}
+
+#ageButton{
+    border-color:#b58342;
+    background:
+        linear-gradient(
+            180deg,
+            #775027,
+            #39220f
+        );
+}
+
+#ageButton.ready{
+    border-color:#d7ae67;
+    box-shadow:
+        0 0 12px rgba(215,174,103,.35),
+        inset 0 1px rgba(255,255,255,.1);
+}
+
+.controlsInfo{
+    text-align:center;
+    color:#9e8d72;
+    font-size:12px;
+    margin-top:9px;
+}
+
+/* =========================
+   OVERLAY
+========================= */
+
+#messageOverlay{
+    position:absolute;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(0,0,0,.62);
+    z-index:20;
+}
+
+.messageBox{
+    width:min(600px,90%);
+    padding:30px;
+    border:3px solid #a7753d;
+    border-radius:15px;
+    background:
+        linear-gradient(
+            180deg,
+            #4a2e18,
+            #1d1109
+        );
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.7);
+}
+
+.messageTitle{
+    font-size:42px;
+    font-weight:900;
+    color:#e5bd73;
+    margin-bottom:10px;
+}
+
+.messageText{
+    color:#cbb999;
+    margin-bottom:20px;
+}
+
+.restartButton{
+    padding:14px 25px;
+    border:2px solid #a7753d;
+    border-radius:8px;
+    background:#563519;
+    color:#f3dfbd;
+    font-weight:900;
+    cursor:pointer;
+}
+
+@media(max-width:800px){
+
+    .topbar{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .difficultyGrid{
+        grid-template-columns:1fr;
+    }
+
+    .difficultyButton{
+        min-height:145px;
+    }
+
+    .bottomActions{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:500px){
+
+    #game{
+        padding:5px;
+    }
+
+    .topBox{
+        min-height:55px;
+    }
+
+    .topValue{
+        font-size:17px;
+    }
+
+    .unitButtons{
+        grid-template-columns:1fr;
+    }
+
+    .startBox{
+        padding:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+
+    <div class="startBox">
+
+        <div class="logo">BATTLE AGES</div>
+
+        <div class="subtitle">
+            ENTWICKLE DEINE ARMEE • EROBERUNG • ZEITALTER
+        </div>
+
+        <div class="startText">
+            Wähle den Schwierigkeitsgrad
+        </div>
+
+        <div class="difficultyGrid">
+
+            <button class="difficultyButton easy"
+                    onclick="startGame('easy')">
+
+                <div class="difficultyIcon">🌿</div>
+
+                <div class="difficultyTitle">
+                    LEICHT
+                </div>
+
+                <div class="difficultyDescription">
+                    Viel Startgold und hohes Einkommen.
+                    Der Gegner entwickelt sich langsamer
+                    und greift deutlich weniger aggressiv an.
+                </div>
+
+            </button>
+
+            <button class="difficultyButton medium"
+                    onclick="startGame('medium')">
+
+                <div class="difficultyIcon">⚔️</div>
+
+                <div class="difficultyTitle">
+                    MITTEL
+                </div>
+
+                <div class="difficultyDescription">
+                    Ausgeglichenes Einkommen und ein
+                    Gegner mit normaler Entwicklung.
+                    Eine faire Herausforderung.
+                </div>
+
+            </button>
+
+            <button class="difficultyButton hard"
+                    onclick="startGame('hard')">
+
+                <div class="difficultyIcon">🔥</div>
+
+                <div class="difficultyTitle">
+                    SCHWER
+                </div>
+
+                <div class="difficultyDescription">
+                    Weniger Startgold, höheres gegnerisches
+                    Einkommen und schnellerer Einheiten-
+                    Nachschub.
+                </div>
+
+            </button>
+
+        </div>
+
+        <div class="startInfo">
+            Dein Ziel: Entwickle deine Zivilisation durch fünf Zeitalter
+            und zerstöre die gegnerische Festung.
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="game">
+
+    <div class="topbar">
+
+        <div class="topBox">
+            <div class="topTitle">Spiel</div>
+            <div class="topValue" id="gameTitle">
+                BATTLE AGES
+            </div>
+        </div>
+
+        <div class="topBox">
+            <div class="topTitle">Gold</div>
+            <div class="topValue" id="goldDisplay">0</div>
+        </div>
+
+        <div class="topBox">
+            <div class="topTitle">Einkommen</div>
+            <div class="topValue" id="incomeDisplay">
+                +0 / Sek.
+            </div>
+        </div>
+
+        <div class="topBox">
+            <div class="topTitle">Zeitalter</div>
+            <div class="topValue" id="ageDisplay">-</div>
+        </div>
+
+        <div class="topBox">
+            <div class="topTitle">Schwierigkeit</div>
+            <div class="topValue" id="difficultyDisplay">-</div>
+        </div>
+
+    </div>
+
+
+    <div class="canvasWrap">
+
+        <canvas id="gameCanvas"
+                width="1400"
+                height="680"></canvas>
+
+        <div id="messageOverlay">
+
+            <div class="messageBox">
+
+                <div class="messageTitle" id="messageTitle">
+                    SIEG
+                </div>
+
+                <div class="messageText" id="messageText">
+                    Die gegnerische Festung wurde zerstört.
+                </div>
+
+                <button class="restartButton"
+                        onclick="restartGame()">
+                    NEUES SPIEL
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <div class="unitButtons" id="unitButtons"></div>
+
+        <div class="bottomActions">
+
+            <button class="actionButton"
+                    id="ageButton"
+                    onclick="ageUp()">
+                NÄCHSTES ZEITALTER
+            </button>
+
+            <button class="actionButton"
+                    id="pauseButton"
+                    onclick="togglePause()">
+                PAUSE
+            </button>
+
+            <button class="actionButton"
+                    onclick="restartGame()">
+                NEUSTART
+            </button>
+
+        </div>
+
+        <div class="controlsInfo">
+            Tastatur: 1 / 2 / 3 = Einheiten · U = Zeitalter ·
+            Leertaste = Pause
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+    document.getElementById("gameCanvas");
+
+const ctx =
+    canvas.getContext("2d", {
+        alpha:false
+    });
+
+const W = canvas.width;
+const H = canvas.height;
+
+
+/* =========================================================
+   WICHTIG:
+   CANVAS PIXEL-STABILISIERUNG
+========================================================= */
+
+ctx.imageSmoothingEnabled = true;
+
+
+/* =========================================================
+   SCHWIERIGKEITEN
+========================================================= */
+
+const DIFFICULTIES = {
+
+    easy:{
+        name:"LEICHT",
+        playerStartGold:1200,
+        enemyStartGold:350,
+        playerIncome:1.80,
+        enemyIncome:0.55,
+        enemySpawn:7.0,
+        enemyAgeChance:0.10,
+        enemyAgeDelay:18,
+        enemyDamage:0.75,
+        enemyHp:0.88
+    },
+
+    medium:{
+        name:"MITTEL",
+        playerStartGold:800,
+        enemyStartGold:450,
+        playerIncome:1.25,
+        enemyIncome:0.85,
+        enemySpawn:5.0,
+        enemyAgeChance:0.25,
+        enemyAgeDelay:13,
+        enemyDamage:0.90,
+        enemyHp:0.95
+    },
+
+    hard:{
+        name:"SCHWER",
+        playerStartGold:600,
+        enemyStartGold:650,
+        playerIncome:1.00,
+        enemyIncome:1.10,
+        enemySpawn:3.8,
+        enemyAgeChance:0.50,
+        enemyAgeDelay:9,
+        enemyDamage:1.05,
+        enemyHp:1.05
+    }
+
+};
+
+let difficultyKey = null;
+let difficulty = null;
+
+
+/* =========================================================
+   ZEITALTER
+========================================================= */
+
+const AGES = [
+
+    {
+        name:"STEINZEIT",
+        short:"I",
+        cost:0,
+        income:18,
+
+        colors:{
+            sky:"#9ec3d3",
+            ground:"#71984d",
+            accent:"#b17a45"
+        },
+
+        units:[
+
+            {
+                name:"Keulenkrieger",
+                cost:80,
+                hp:150,
+                damage:18,
+                range:35,
+                speed:30,
+                attackSpeed:1.05,
+                size:27,
+                melee:true,
+                weapon:"club",
+                armor:0
+            },
+
+            {
+                name:"Jäger",
+                cost:110,
+                hp:95,
+                damage:20,
+                range:170,
+                speed:24,
+                attackSpeed:1.5,
+                size:25,
+                melee:false,
+                weapon:"bow",
+                armor:0
+            },
+
+            {
+                name:"Speerkämpfer",
+                cost:145,
+                hp:190,
+                damage:25,
+                range:45,
+                speed:21,
+                attackSpeed:1.25,
+                size:29,
+                melee:true,
+                weapon:"spear",
+                armor:10
+            }
+
+        ]
+    },
+
+    {
+        name:"ANTIKE",
+        short:"II",
+        cost:600,
+        income:28,
+
+        colors:{
+            sky:"#a9c8ce",
+            ground:"#6c914b",
+            accent:"#c19a58"
+        },
+
+        units:[
+
+            {
+                name:"Legionär",
+                cost:180,
+                hp:240,
+                damage:30,
+                range:38,
+                speed:27,
+                attackSpeed:1,
+                size:29,
+                melee:true,
+                weapon:"sword",
+                armor:18
+            },
+
+            {
+                name:"Bogenschütze",
+                cost:210,
+                hp:120,
+                damage:30,
+                range:220,
+                speed:25,
+                attackSpeed:1.4,
+                size:26,
+                melee:false,
+                weapon:"bow",
+                armor:0
+            },
+
+            {
+                name:"Reiter",
+                cost:300,
+                hp:300,
+                damage:40,
+                range:42,
+                speed:42,
+                attackSpeed:1.2,
+                size:34,
+                melee:true,
+                weapon:"sword",
+                cavalry:true,
+                armor:12
+            }
+
+        ]
+    },
+
+    {
+        name:"MITTELALTER",
+        short:"III",
+        cost:1400,
+        income:42,
+
+        colors:{
+            sky:"#9ab8c7",
+            ground:"#66884b",
+            accent:"#a78a55"
+        },
+
+        units:[
+
+            {
+                name:"Ritter",
+                cost:350,
+                hp:390,
+                damage:48,
+                range:43,
+                speed:28,
+                attackSpeed:.95,
+                size:32,
+                melee:true,
+                weapon:"sword",
+                armor:25
+            },
+
+            {
+                name:"Armbrustschütze",
+                cost:390,
+                hp:150,
+                damage:55,
+                range:250,
+                speed:22,
+                attackSpeed:1.7,
+                size:27,
+                melee:false,
+                weapon:"crossbow",
+                armor:5
+            },
+
+            {
+                name:"Paladin",
+                cost:600,
+                hp:570,
+                damage:65,
+                range:48,
+                speed:23,
+                attackSpeed:1.1,
+                size:35,
+                melee:true,
+                weapon:"sword",
+                armor:35
+            }
+
+        ]
+    },
+
+    {
+        name:"INDUSTRIEZEITALTER",
+        short:"IV",
+        cost:3000,
+        income:62,
+
+        colors:{
+            sky:"#8ea6b4",
+            ground:"#607d4a",
+            accent:"#777777"
+        },
+
+        units:[
+
+            {
+                name:"Infanterist",
+                cost:550,
+                hp:480,
+                damage:65,
+                range:48,
+                speed:29,
+                attackSpeed:.9,
+                size:30,
+                melee:true,
+                weapon:"rifle",
+                armor:18
+            },
+
+            {
+                name:"Gewehrschütze",
+                cost:650,
+                hp:210,
+                damage:82,
+                range:280,
+                speed:25,
+                attackSpeed:1.35,
+                size:28,
+                melee:false,
+                weapon:"rifle",
+                armor:5
+            },
+
+            {
+                name:"Maschinengewehr",
+                cost:850,
+                hp:330,
+                damage:34,
+                range:300,
+                speed:15,
+                attackSpeed:.32,
+                size:32,
+                melee:false,
+                weapon:"machinegun",
+                armor:15
+            }
+
+        ]
+    },
+
+    {
+        name:"MODERNE ÄRA",
+        short:"V",
+        cost:6000,
+        income:90,
+
+        colors:{
+            sky:"#8199a9",
+            ground:"#587348",
+            accent:"#777f86"
+        },
+
+        units:[
+
+            {
+                name:"Sturmsoldat",
+                cost:850,
+                hp:600,
+                damage:88,
+                range:55,
+                speed:34,
+                attackSpeed:.72,
+                size:31,
+                melee:true,
+                weapon:"rifle",
+                armor:25
+            },
+
+            {
+                name:"Scharfschütze",
+                cost:1000,
+                hp:250,
+                damage:145,
+                range:370,
+                speed:23,
+                attackSpeed:2,
+                size:28,
+                melee:false,
+                weapon:"sniper",
+                armor:5
+            },
+
+            {
+                name:"Raketenwerfer",
+                cost:1350,
+                hp:420,
+                damage:210,
+                range:340,
+                speed:17,
+                attackSpeed:2.6,
+                size:34,
+                melee:false,
+                weapon:"rocket",
+                armor:18
+            }
+
+        ]
+    }
+
+];
+
+
+/* =========================================================
+   SPIELVARIABLEN
+========================================================= */
+
+let gold = 0;
+let enemyGold = 0;
+
+let currentAge = 0;
+let enemyCurrentAge = 0;
+
+let units = [];
+let enemyUnits = [];
+
+let projectiles = [];
+let effects = [];
+
+let baseHP = 1000;
+let enemyBaseHP = 1000;
+
+let incomeTimer = 0;
+let enemyTimer = 0;
+let enemyAgeTimer = 0;
+
+let gameRunning = false;
+let gameOver = false;
+
+let lastTime = performance.now();
+
+let playerKills = 0;
+let enemyKills = 0;
+
+
+/* =========================================================
+   HILFSFUNKTIONEN
+========================================================= */
+
+function clamp(value,min,max){
+    return Math.max(min,Math.min(max,value));
+}
+
+function rand(min,max){
+    return Math.random()*(max-min)+min;
+}
+
+function formatNumber(value){
+    return Math.floor(value).toLocaleString("de-DE");
+}
+
+
+/* =========================================================
+   PIXEL-HILFSFUNKTION
+========================================================= */
+
+function px(value){
+    return Math.round(value);
+}
+
+
+/* =========================================================
+   EINHEITENKOSTEN
+========================================================= */
+
+function getUnitCost(unit){
+
+    let cost = unit.cost;
+
+    if(difficultyKey==="easy"){
+        cost *= 0.80;
+    }
+    else if(difficultyKey==="medium"){
+        cost *= 0.92;
+    }
+
+    return Math.floor(cost);
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startGame(mode){
+
+    difficultyKey = mode;
+
+    difficulty = DIFFICULTIES[mode];
+
+    document.getElementById("startScreen").style.display="none";
+
+    resetGame();
+
+    gameRunning=true;
+
+    gameOver=false;
+
+    lastTime=performance.now();
+
+    updateUI();
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+    gold=difficulty.playerStartGold;
+
+    enemyGold=difficulty.enemyStartGold;
+
+    currentAge=0;
+
+    enemyCurrentAge=0;
+
+    units=[];
+
+    enemyUnits=[];
+
+    projectiles=[];
+
+    effects=[];
+
+    baseHP=1000;
+
+    enemyBaseHP=1000;
+
+    incomeTimer=0;
+
+    enemyTimer=0;
+
+    enemyAgeTimer=0;
+
+    playerKills=0;
+
+    enemyKills=0;
+
+    gameOver=false;
+
+    document.getElementById("messageOverlay").style.display="none";
+
+    document.getElementById("pauseButton").textContent="PAUSE";
+
+    updateUI();
+}
+
+
+/* =========================================================
+   NEUSTART
+========================================================= */
+
+function restartGame(){
+
+    if(!difficultyKey){
+
+        document.getElementById("startScreen").style.display="flex";
+
+        return;
+    }
+
+    resetGame();
+
+    gameRunning=true;
+
+    lastTime=performance.now();
+}
+
+
+/* =========================================================
+   EINKOMMEN
+========================================================= */
+
+function getPlayerIncome(){
+
+    return Math.floor(
+        AGES[currentAge].income *
+        difficulty.playerIncome
+    );
+
+}
+
+function getEnemyIncome(){
+
+    return Math.floor(
+        AGES[enemyCurrentAge].income *
+        difficulty.enemyIncome
+    );
+
+}
+
+
+/* =========================================================
+   ALTERUNG
+========================================================= */
+
+function ageUp(){
+
+    if(!gameRunning || gameOver){
+        return;
+    }
+
+    if(currentAge>=AGES.length-1){
+        return;
+    }
+
+    const nextAge=currentAge+1;
+
+    const cost=AGES[nextAge].cost;
+
+    if(gold<cost){
+        return;
+    }
+
+    gold-=cost;
+
+    currentAge=nextAge;
+
+    effects.push({
+
+        type:"age",
+
+        x:W/2,
+
+        y:200,
+
+        life:2,
+
+        maxLife:2,
+
+        text:AGES[currentAge].name
+
+    });
+
+    updateUI();
+}
+
+
+/* =========================================================
+   GEGNER ALTERUNG
+========================================================= */
+
+function enemyAgeUp(){
+
+    if(enemyCurrentAge>=AGES.length-1){
+        return;
+    }
+
+    const nextAge=enemyCurrentAge+1;
+
+    const cost=AGES[nextAge].cost;
+
+    if(enemyGold<cost){
+        return;
+    }
+
+    enemyGold-=cost;
+
+    enemyCurrentAge=nextAge;
+
+    effects.push({
+
+        type:"enemyAge",
+
+        x:W/2,
+
+        y:250,
+
+        life:1.8,
+
+        maxLife:1.8,
+
+        text:"FEIND: "+AGES[enemyCurrentAge].name
+
+    });
+
+}
+
+
+/* =========================================================
+   EINHEIT KAUFEN
+========================================================= */
+
+function spawnUnit(index){
+
+    if(!gameRunning || gameOver){
+        return;
+    }
+
+    const unitData=AGES[currentAge].units[index];
+
+    if(!unitData){
+        return;
+    }
+
+    const unitCost=getUnitCost(unitData);
+
+    if(gold<unitCost){
+        return;
+    }
+
+    gold-=unitCost;
+
+    units.push(
+        createUnit(
+            unitData,
+            false
+        )
+    );
+
+    updateUI();
+}
+
+
+/* =========================================================
+   EINHEIT ERSTELLEN
+========================================================= */
+
+function createUnit(data,enemy=false){
+
+    let finalHp=data.hp;
+
+    if(enemy && difficulty){
+        finalHp*=difficulty.enemyHp;
+    }
+
+    return {
+
+        ...data,
+
+        x:enemy ? W-150 : 150,
+
+        y:470 + rand(-7,7),
+
+        hp:finalHp,
+
+        maxHp:finalHp,
+
+        attackTimer:rand(0,data.attackSpeed),
+
+        animation:rand(0,10),
+
+        state:"walk",
+
+        enemy:enemy,
+
+        hitFlash:0,
+
+        deathTimer:0
+
+    };
+
+}
+
+
+/* =========================================================
+   GEGNER SPAWN
+========================================================= */
+
+function enemySpawn(){
+
+    const available=
+        AGES[enemyCurrentAge].units
+        .map((u,i)=>({u,i}))
+        .filter(obj=>enemyGold>=obj.u.cost);
+
+    if(!available.length){
+        return;
+    }
+
+    let choice;
+
+    if(difficultyKey==="hard"){
+
+        available.sort(
+            (a,b)=>
+                (b.u.damage+b.u.hp*.08)
+                -
+                (a.u.damage+a.u.hp*.08)
+        );
+
+        choice=
+            Math.random()<.72
+            ?available[0]
+            :available[
+                Math.floor(
+                    Math.random()*available.length
+                )
+            ];
+
+    }
+
+    else if(difficultyKey==="easy"){
+
+        const cheapUnits=
+            available.filter(
+                obj=>obj.u.cost<=145
+            );
+
+        if(cheapUnits.length){
+
+            choice=
+                cheapUnits[
+                    Math.floor(
+                        Math.random()*cheapUnits.length
+                    )
+                ];
+
+        }
+        else{
+
+            choice=
+                available[
+                    Math.floor(
+                        Math.random()*available.length
+                    )
+                ];
+
+        }
+
+    }
+
+    else{
+
+        choice=
+            available[
+                Math.floor(
+                    Math.random()*available.length
+                )
+            ];
+
+    }
+
+    enemyGold-=choice.u.cost;
+
+    enemyUnits.push(
+        createUnit(
+            choice.u,
+            true
+        )
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update(dt){
+
+    if(!gameRunning || gameOver){
+        return;
+    }
+
+    incomeTimer+=dt;
+
+    if(incomeTimer>=1){
+
+        incomeTimer-=1;
+
+        gold+=getPlayerIncome();
+
+        enemyGold+=getEnemyIncome();
+
+    }
+
+    enemyTimer+=dt;
+
+    const ageModifier =
+        difficultyKey==="easy"
+            ?1.12
+            :difficultyKey==="medium"
+                ?1.0
+                :0.92;
+
+    const spawnInterval=
+        Math.max(
+            1.65,
+            difficulty.enemySpawn*ageModifier
+        );
+
+    if(enemyTimer>=spawnInterval){
+
+        enemyTimer=0;
+
+        enemySpawn();
+
+    }
+
+    enemyAgeTimer+=dt;
+
+    if(enemyAgeTimer>=difficulty.enemyAgeDelay){
+
+        enemyAgeTimer=0;
+
+        if(
+            enemyCurrentAge<currentAge &&
+            enemyGold>=
+            AGES[enemyCurrentAge+1].cost &&
+            Math.random()<difficulty.enemyAgeChance
+        ){
+
+            enemyAgeUp();
+
+        }
+
+        else if(
+            enemyCurrentAge<AGES.length-1 &&
+            enemyGold>=
+            AGES[enemyCurrentAge+1].cost &&
+            Math.random()<
+            difficulty.enemyAgeChance*.35
+        ){
+
+            enemyAgeUp();
+
+        }
+
+    }
+
+    updateUnits(
+        units,
+        enemyUnits,
+        dt
+    );
+
+    updateUnits(
+        enemyUnits,
+        units,
+        dt
+    );
+
+    updateProjectiles(dt);
+
+    updateEffects(dt);
+
+    checkBaseDamage();
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   EINHEITEN UPDATE
+========================================================= */
+
+function updateUnits(list,opponents,dt){
+
+    for(let i=list.length-1;i>=0;i--){
+
+        const unit=list[i];
+
+        if(unit.deathTimer>0){
+
+            unit.deathTimer-=dt;
+
+            if(unit.deathTimer<=0){
+                list.splice(i,1);
+            }
+
+            continue;
+
+        }
+
+        unit.animation+=dt*8;
+
+        unit.attackTimer-=dt;
+
+        if(unit.hitFlash>0){
+            unit.hitFlash-=dt;
+        }
+
+        let target=
+            findTarget(
+                unit,
+                opponents
+            );
+
+        if(target){
+
+            const distance=
+                Math.abs(
+                    target.x-unit.x
+                );
+
+            const attackDistance=
+                unit.range+
+                target.size*.35;
+
+            if(distance<=attackDistance){
+
+                unit.state="attack";
+
+                if(unit.attackTimer<=0){
+
+                    unit.attackTimer=
+                        unit.attackSpeed;
+
+                    attackUnit(
+                        unit,
+                        target
+                    );
+
+                }
+
+            }
+
+            else{
+
+                unit.state="walk";
+
+                moveUnit(
+                    unit,
+                    target,
+                    dt
+                );
+
+            }
+
+        }
+
+        else{
+
+            unit.state="walk";
+
+            moveForward(
+                unit,
+                dt
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ZIEL FINDEN
+========================================================= */
+
+function findTarget(unit,opponents){
+
+    let best=null;
+
+    let bestDistance=Infinity;
+
+    for(const other of opponents){
+
+        if(other.deathTimer>0){
+            continue;
+        }
+
+        const distance=
+            Math.abs(
+                other.x-unit.x
+            );
+
+        if(distance<bestDistance){
+
+            bestDistance=distance;
+
+            best=other;
+
+        }
+
+    }
+
+    return best;
+
+}
+
+
+/* =========================================================
+   BEWEGUNG
+========================================================= */
+
+function moveForward(unit,dt){
+
+    const direction=
+        unit.enemy
+        ?-1
+        :1;
+
+    unit.x+=
+        direction*
+        unit.speed*
+        dt;
+
+    unit.x=
+        clamp(
+            unit.x,
+            95,
+            W-95
+        );
+
+}
+
+function moveUnit(unit,target,dt){
+
+    const direction=
+        target.x>unit.x
+        ?1
+        :-1;
+
+    const stopDistance=
+        unit.range+
+        target.size*.35;
+
+    if(
+        Math.abs(
+            target.x-unit.x
+        )
+        >
+        stopDistance
+    ){
+
+        unit.x+=
+            direction*
+            unit.speed*
+            dt;
+
+    }
+
+    unit.x=
+        clamp(
+            unit.x,
+            95,
+            W-95
+        );
+
+}
+
+
+/* =========================================================
+   ANGRIFF
+========================================================= */
+
+function attackUnit(attacker,target){
+
+    let damage=
+        attacker.damage;
+
+    damage-=
+        target.armor*.35;
+
+    damage=
+        Math.max(
+            1,
+            damage
+        );
+
+    if(!attacker.melee){
+
+        projectiles.push({
+
+            x:attacker.x,
+
+            y:attacker.y-25,
+
+            target:target,
+
+            damage:damage,
+
+            speed:
+                attacker.weapon==="rocket"
+                ?500
+                :650,
+
+            type:attacker.weapon
+
+        });
+
+    }
+
+    else{
+
+        damageTarget(
+            target,
+            damage
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SCHADEN
+========================================================= */
+
+function damageTarget(target,damage){
+
+    if(!target){
+        return;
+    }
+
+    target.hp-=damage;
+
+    target.hitFlash=.12;
+
+    effects.push({
+
+        type:"hit",
+
+        x:target.x,
+
+        y:target.y-35,
+
+        life:.35,
+
+        maxLife:.35
+
+    });
+
+    if(target.hp<=0){
+
+        target.hp=0;
+
+        target.deathTimer=.55;
+
+        target.state="dead";
+
+        if(target.enemy){
+            playerKills++;
+        }
+        else{
+            enemyKills++;
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   PROJECTILES
+========================================================= */
+
+function updateProjectiles(dt){
+
+    for(
+        let i=projectiles.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p=projectiles[i];
+
+        if(
+            !p.target ||
+            p.target.deathTimer>0
+        ){
+
+            projectiles.splice(i,1);
+
+            continue;
+
+        }
+
+        const dx=
+            p.target.x-p.x;
+
+        const dy=
+            (p.target.y-25)-p.y;
+
+        const distance=
+            Math.sqrt(
+                dx*dx+
+                dy*dy
+            );
+
+        if(distance<15){
+
+            damageTarget(
+                p.target,
+                p.damage
+            );
+
+            effects.push({
+
+                type:"impact",
+
+                x:p.target.x,
+
+                y:p.target.y-25,
+
+                life:.25,
+
+                maxLife:.25
+
+            });
+
+            projectiles.splice(i,1);
+
+            continue;
+
+        }
+
+        p.x+=
+            (dx/distance)*
+            p.speed*
+            dt;
+
+        p.y+=
+            (dy/distance)*
+            p.speed*
+            dt;
+
+    }
+
+}
+
+
+/* =========================================================
+   BASISSCHADEN
+========================================================= */
+
+function checkBaseDamage(){
+
+    for(const unit of units){
+
+        if(unit.x>W-130){
+
+            enemyBaseHP-=
+                unit.damage*.18;
+
+            unit.deathTimer=.25;
+
+        }
+
+    }
+
+    for(const unit of enemyUnits){
+
+        if(unit.x<130){
+
+            baseHP-=
+                unit.damage*
+                .18*
+                difficulty.enemyDamage;
+
+            unit.deathTimer=.25;
+
+        }
+
+    }
+
+    if(enemyBaseHP<=0){
+
+        enemyBaseHP=0;
+
+        endGame(true);
+
+    }
+
+    else if(baseHP<=0){
+
+        baseHP=0;
+
+        endGame(false);
+
+    }
+
+}
+
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+function updateEffects(dt){
+
+    for(
+        let i=effects.length-1;
+        i>=0;
+        i--
+    ){
+
+        effects[i].life-=dt;
+
+        if(effects[i].life<=0){
+
+            effects.splice(i,1);
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   GAME ENDE
+========================================================= */
+
+function endGame(playerWon){
+
+    gameOver=true;
+
+    gameRunning=false;
+
+    document.getElementById(
+        "messageOverlay"
+    ).style.display="flex";
+
+    if(playerWon){
+
+        document.getElementById(
+            "messageTitle"
+        ).textContent="SIEG!";
+
+        document.getElementById(
+            "messageText"
+        ).textContent=
+            "Die gegnerische Festung wurde zerstört. "+
+            "Deine Zivilisation hat alle Zeitalter überlebt.";
+
+    }
+
+    else{
+
+        document.getElementById(
+            "messageTitle"
+        ).textContent="NIEDERLAGE";
+
+        document.getElementById(
+            "messageText"
+        ).textContent=
+            "Deine Festung wurde zerstört. "+
+            "Die nächste Zivilisation wartet bereits.";
+
+    }
+
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function togglePause(){
+
+    if(gameOver){
+        return;
+    }
+
+    gameRunning=!gameRunning;
+
+    document.getElementById(
+        "pauseButton"
+    ).textContent=
+        gameRunning
+        ?"PAUSE"
+        :"WEITER";
+
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    if(!difficulty){
+        return;
+    }
+
+    document.getElementById(
+        "goldDisplay"
+    ).textContent=
+        formatNumber(gold);
+
+    document.getElementById(
+        "incomeDisplay"
+    ).textContent=
+        "+"+
+        formatNumber(
+            getPlayerIncome()
+        )+
+        " / Sek.";
+
+    document.getElementById(
+        "ageDisplay"
+    ).textContent=
+        AGES[currentAge].short+
+        " · "+
+        AGES[currentAge].name;
+
+    document.getElementById(
+        "difficultyDisplay"
+    ).textContent=
+        difficulty.name;
+
+    const container=
+        document.getElementById(
+            "unitButtons"
+        );
+
+    container.innerHTML="";
+
+    AGES[currentAge].units.forEach(
+        (unit,index)=>{
+
+            const button=
+                document.createElement(
+                    "button"
+                );
+
+            button.className=
+                "unitButton";
+
+            const actualCost=
+                getUnitCost(unit);
+
+            if(
+                gold<actualCost ||
+                !gameRunning
+            ){
+
+                button.classList.add(
+                    "disabled"
+                );
+
+            }
+
+            button.innerHTML=`
+
+                <div class="unitName">
+                    ${unit.name}
+                </div>
+
+                <div class="unitInfo">
+                    💰 ${actualCost}
+                    · ❤️ ${unit.hp}
+                    · ⚔️ ${unit.damage}
+                </div>
+
+            `;
+
+            button.onclick=
+                ()=>spawnUnit(index);
+
+            container.appendChild(button);
+
+        }
+    );
+
+    const ageButton=
+        document.getElementById(
+            "ageButton"
+        );
+
+    if(
+        currentAge<
+        AGES.length-1
+    ){
+
+        const nextAge=
+            AGES[currentAge+1];
+
+        ageButton.textContent=
+            "ZEITALTER "+
+            nextAge.short+
+            " · "+
+            nextAge.name+
+            " · 💰 "+
+            nextAge.cost;
+
+        if(gold>=nextAge.cost){
+
+            ageButton.classList.add(
+                "ready"
+            );
+
+        }
+
+        else{
+
+            ageButton.classList.remove(
+                "ready"
+            );
+
+        }
+
+    }
+
+    else{
+
+        ageButton.textContent=
+            "MAXIMALES ZEITALTER ERREICHT";
+
+        ageButton.classList.remove(
+            "ready"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ZEICHNEN
+========================================================= */
+
+function draw(){
+
+    drawBackground();
+
+    drawBases();
+
+    drawUnits(enemyUnits);
+
+    drawUnits(units);
+
+    drawProjectiles();
+
+    drawEffects();
+
+    drawFrontline();
+
+}
+
+
+/* =========================================================
+   HINTERGRUND
+========================================================= */
+
+function drawBackground(){
+
+    const age=
+        AGES[currentAge];
+
+    const gradient=
+        ctx.createLinearGradient(
+            0,0,0,H
+        );
+
+    gradient.addColorStop(
+        0,
+        age.colors.sky
+    );
+
+    gradient.addColorStop(
+        1,
+        "#d6c08c"
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* Sonne */
+
+    ctx.fillStyle=
+        "rgba(255,230,170,.65)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        1130,
+        100,
+        48,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Wolken */
+
+    drawCloud(
+        180,
+        95,
+        1.1
+    );
+
+    drawCloud(
+        540,
+        125,
+        .75
+    );
+
+    drawCloud(
+        850,
+        75,
+        .9
+    );
+
+
+    /* Berge */
+
+    drawMountains();
+
+
+    /* Boden */
+
+    ctx.fillStyle=
+        age.colors.ground;
+
+    ctx.fillRect(
+        0,
+        365,
+        W,
+        H-365
+    );
+
+
+    /* Grasstreifen */
+
+    ctx.fillStyle="#456d38";
+
+    ctx.fillRect(
+        0,
+        365,
+        W,
+        13
+    );
+
+
+    /* Erde */
+
+    ctx.fillStyle="#765334";
+
+    ctx.fillRect(
+        0,
+        520,
+        W,
+        160
+    );
+
+
+    /* =====================================================
+       WICHTIGE KORREKTUR:
+       DIE ERDLINIEN SIND JETZT STATISCH.
+       
+       Früher wurde rand(-4,4) bei jedem Frame
+       verwendet. Dadurch haben sich die Linien
+       ständig verändert und sichtbar gezittert.
+    ===================================================== */
+
+    ctx.strokeStyle=
+        "rgba(48,30,19,.45)";
+
+    ctx.lineWidth=2;
+
+    const earthLines = [
+
+        {
+            y:540,
+            points:[
+                0, 44, 132, 221, 310,
+                401, 489, 583, 674,
+                760, 852, 948, 1031,
+                1124, 1216, 1304, 1400
+            ]
+        },
+
+        {
+            y:566,
+            points:[
+                0, 58, 151, 239, 329,
+                415, 508, 600, 692,
+                781, 872, 963, 1051,
+                1147, 1240, 1326, 1400
+            ]
+        },
+
+        {
+            y:592,
+            points:[
+                0, 47, 139, 229, 318,
+                410, 501, 591, 683,
+                774, 865, 955, 1047,
+                1138, 1231, 1320, 1400
+            ]
+        },
+
+        {
+            y:618,
+            points:[
+                0, 61, 153, 245, 336,
+                428, 517, 608, 699,
+                790, 879, 970, 1062,
+                1152, 1245, 1335, 1400
+            ]
+        },
+
+        {
+            y:644,
+            points:[
+                0, 50, 143, 235, 326,
+                417, 510, 601, 690,
+                782, 873, 964, 1056,
+                1147, 1238, 1329, 1400
+            ]
+        },
+
+        {
+            y:670,
+            points:[
+                0, 66, 158, 250, 341,
+                433, 525, 616, 708,
+                799, 891, 982, 1074,
+                1166, 1258, 1347, 1400
+            ]
+        }
+
+    ];
+
+
+    for(const line of earthLines){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            px(line.points[0]),
+            px(line.y)
+        );
+
+        for(let i=1;i<line.points.length;i++){
+
+            /*
+             * Die Y-Position bleibt absichtlich
+             * exakt gleich.
+             */
+
+            ctx.lineTo(
+                px(line.points[i]),
+                px(line.y)
+            );
+
+        }
+
+        ctx.stroke();
+
+    }
+
+
+    /* Steine */
+
+    drawRock(
+        350,
+        560,
+        18
+    );
+
+    drawRock(
+        690,
+        600,
+        12
+    );
+
+    drawRock(
+        1010,
+        550,
+        17
+    );
+
+    drawRock(
+        1170,
+        615,
+        10
+    );
+
+}
+
+
+/* =========================================================
+   WOLKEN
+========================================================= */
+
+function drawCloud(x,y,s){
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.62)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        24*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+28*s,
+        y-9*s,
+        30*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+62*s,
+        y,
+        22*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.rect(
+        x-20*s,
+        y,
+        110*s,
+        25*s
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   BERGE
+========================================================= */
+
+function drawMountains(){
+
+    ctx.fillStyle=
+        "rgba(68,87,76,.48)";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,340);
+
+    ctx.lineTo(150,220);
+    ctx.lineTo(260,330);
+
+    ctx.lineTo(410,185);
+    ctx.lineTo(540,330);
+
+    ctx.lineTo(690,210);
+    ctx.lineTo(820,330);
+
+    ctx.lineTo(970,170);
+    ctx.lineTo(1120,330);
+
+    ctx.lineTo(1260,220);
+    ctx.lineTo(1400,335);
+
+    ctx.lineTo(1400,370);
+    ctx.lineTo(0,370);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   ROCK
+========================================================= */
+
+function drawRock(x,y,size){
+
+    ctx.fillStyle="#574838";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        x-size,
+        y
+    );
+
+    ctx.lineTo(
+        x-size*.5,
+        y-size*.7
+    );
+
+    ctx.lineTo(
+        x+size*.6,
+        y-size*.5
+    );
+
+    ctx.lineTo(
+        x+size,
+        y
+    );
+
+    ctx.lineTo(
+        x+size*.45,
+        y+size*.55
+    );
+
+    ctx.lineTo(
+        x-size*.5,
+        y+size*.45
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   BASEN
+========================================================= */
+
+function drawBases(){
+
+    drawBase(
+        50,
+        false,
+        baseHP,
+        AGES[currentAge].colors.accent
+    );
+
+    drawBase(
+        W-150,
+        true,
+        enemyBaseHP,
+        "#8a4035"
+    );
+
+}
+
+
+function drawBase(
+    x,
+    enemy,
+    hp,
+    accent
+){
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.3)";
+
+    ctx.fillRect(
+        px(x+8),
+        500,
+        105,
+        15
+    );
+
+
+    ctx.fillStyle=
+        enemy
+        ?" #65372f".replace(" ","")
+        :"#60452e";
+
+    ctx.fillRect(
+        px(x),
+        305,
+        100,
+        195
+    );
+
+
+    ctx.fillStyle=
+        enemy
+        ?" #7a463c".replace(" ","")
+        :"#795838";
+
+    ctx.fillRect(
+        px(x-12),
+        390,
+        124,
+        110
+    );
+
+
+    ctx.fillStyle=
+        accent;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        px(x-15),
+        305
+    );
+
+    ctx.lineTo(
+        px(x+50),
+        245
+    );
+
+    ctx.lineTo(
+        px(x+115),
+        305
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.fillStyle="#20150e";
+
+    ctx.fillRect(
+        px(x+37),
+        325,
+        26,
+        35
+    );
+
+
+    ctx.fillStyle="#2a1b11";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        px(x+50),
+        480,
+        27,
+        Math.PI,
+        0
+    );
+
+    ctx.lineTo(
+        px(x+77),
+        500
+    );
+
+    ctx.lineTo(
+        px(x+23),
+        500
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    const maxHp=1000;
+
+    const ratio=
+        clamp(
+            hp/maxHp,
+            0,
+            1
+        );
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.65)";
+
+    ctx.fillRect(
+        px(x-4),
+        225,
+        108,
+        14
+    );
+
+    ctx.fillStyle=
+        ratio>.5
+        ?"#4d8f42"
+        :"#ad513b";
+
+    ctx.fillRect(
+        px(x-2),
+        227,
+        px(104*ratio),
+        10
+    );
+
+    ctx.strokeStyle="#24170e";
+
+    ctx.strokeRect(
+        px(x-4),
+        225,
+        108,
+        14
+    );
+
+    ctx.fillStyle="#f0dfbd";
+
+    ctx.font=
+        "bold 13px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.fillText(
+        enemy
+        ?"FEIND"
+        :"DEINE FESTUNG",
+        px(x+50),
+        218
+    );
+
+}
+
+
+/* =========================================================
+   EINHEITEN
+========================================================= */
+
+function drawUnits(list){
+
+    for(const unit of list){
+        drawUnit(unit);
+    }
+
+}
+
+
+/* =========================================================
+   EINZELNE EINHEIT
+========================================================= */
+
+function drawUnit(unit){
+
+    const alpha=
+        unit.deathTimer>0
+        ?unit.deathTimer/.55
+        :1;
+
+    ctx.save();
+
+    ctx.globalAlpha=alpha;
+
+    const x=unit.x;
+
+    const y=unit.y;
+
+    const bob=
+        unit.state==="walk"
+        ?Math.sin(unit.animation)*2
+        :0;
+
+
+    /* Schatten */
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.3)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        px(x),
+        px(y+19),
+        unit.size*.55,
+        7,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Körper */
+
+    let bodyColor;
+
+    if(unit.enemy){
+
+        bodyColor=
+            unit.melee
+            ?"#873e32"
+            :"#68443d";
+
+    }
+
+    else{
+
+        bodyColor=
+            unit.melee
+            ?"#4d633a"
+            :"#69563b";
+
+    }
+
+    if(unit.hitFlash>0){
+        bodyColor="#e4c1a0";
+    }
+
+
+    /* Beine */
+
+    ctx.strokeStyle="#272018";
+
+    ctx.lineWidth=5;
+
+    const legMove=
+        unit.state==="walk"
+        ?Math.sin(unit.animation)*5
+        :0;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        px(x-6),
+        px(y+5)
+    );
+
+    ctx.lineTo(
+        px(x-9+legMove),
+        px(y+23)
+    );
+
+    ctx.moveTo(
+        px(x+6),
+        px(y+5)
+    );
+
+    ctx.lineTo(
+        px(x+9-legMove),
+        px(y+23)
+    );
+
+    ctx.stroke();
+
+
+    /* Körper */
+
+    ctx.fillStyle=bodyColor;
+
+    ctx.fillRect(
+        px(x-10),
+        px(y-18+bob),
+        20,
+        27
+    );
+
+
+    /* Rüstung */
+
+    if(unit.armor>=18){
+
+        ctx.strokeStyle=
+            unit.enemy
+            ?"#a55c4d"
+            :"#a99b72";
+
+        ctx.lineWidth=3;
+
+        ctx.strokeRect(
+            px(x-10),
+            px(y-18+bob),
+            20,
+            27
+        );
+
+    }
+
+
+    /* Kopf */
+
+    ctx.fillStyle="#b88660";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        px(x),
+        px(y-28+bob),
+        10,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* Helm */
+
+    if(
+        currentAge>=1 ||
+        unit.armor>=18
+    ){
+
+        ctx.fillStyle=
+            unit.enemy
+            ?"#5c2f29"
+            :"#62543d";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            px(x),
+            px(y-30+bob),
+            11,
+            Math.PI,
+            0
+        );
+
+        ctx.fill();
+
+    }
+
+
+    drawWeapon(
+        unit,
+        px(x),
+        px(y+bob)
+    );
+
+
+    /* HP */
+
+    const hpRatio=
+        clamp(
+            unit.hp/unit.maxHp,
+            0,
+            1
+        );
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.7)";
+
+    ctx.fillRect(
+        px(x-unit.size*.5),
+        px(y-unit.size-7),
+        px(unit.size),
+        4
+    );
+
+    ctx.fillStyle=
+        unit.enemy
+        ?" #b84e42".replace(" ","")
+        :"#6c9c50";
+
+    ctx.fillRect(
+        px(x-unit.size*.5),
+        px(y-unit.size-7),
+        px(unit.size*hpRatio),
+        4
+    );
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   WAFFEN
+========================================================= */
+
+function drawWeapon(unit,x,y){
+
+    ctx.strokeStyle=
+        unit.enemy
+        ?" #d8b9a0".replace(" ","")
+        :"#d5c19a";
+
+    ctx.lineWidth=3;
+
+    if(unit.weapon==="club"){
+
+        ctx.strokeStyle="#5a351c";
+
+        ctx.lineWidth=6;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+7,
+            y-10
+        );
+
+        ctx.lineTo(
+            x+19,
+            y+8
+        );
+
+        ctx.stroke();
+
+    }
+
+    else if(
+        unit.weapon==="spear" ||
+        unit.weapon==="sword"
+    ){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+7,
+            y-5
+        );
+
+        ctx.lineTo(
+            x+25,
+            y-25
+        );
+
+        ctx.stroke();
+
+    }
+
+    else if(
+        unit.weapon==="bow" ||
+        unit.weapon==="crossbow"
+    ){
+
+        ctx.strokeStyle="#5b3d24";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x+13,
+            y-7,
+            12,
+            -1.2,
+            1.2
+        );
+
+        ctx.stroke();
+
+    }
+
+    else{
+
+        ctx.strokeStyle="#292727";
+
+        ctx.lineWidth=5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x+5,
+            y-5
+        );
+
+        ctx.lineTo(
+            x+24,
+            y-13
+        );
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+/* =========================================================
+   PROJECTILE ZEICHNEN
+========================================================= */
+
+function drawProjectiles(){
+
+    for(const p of projectiles){
+
+        if(p.type==="rocket"){
+
+            ctx.fillStyle="#4d4d4d";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px(p.x),
+                px(p.y),
+                6,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+            ctx.strokeStyle="#e28c3e";
+
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                px(p.x-8),
+                px(p.y)
+            );
+
+            ctx.lineTo(
+                px(p.x-18),
+                px(p.y)
+            );
+
+            ctx.stroke();
+
+        }
+
+        else{
+
+            ctx.strokeStyle=
+                p.type==="sniper"
+                ?"#f0e3c0"
+                :"#e7d39a";
+
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                px(p.x-5),
+                px(p.y-5)
+            );
+
+            ctx.lineTo(
+                px(p.x+5),
+                px(p.y+5)
+            );
+
+            ctx.stroke();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+function drawEffects(){
+
+    for(const e of effects){
+
+        const alpha=
+            clamp(
+                e.life/e.maxLife,
+                0,
+                1
+            );
+
+        ctx.save();
+
+        ctx.globalAlpha=alpha;
+
+        if(e.type==="hit"){
+
+            ctx.fillStyle="#e8d29e";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px(e.x),
+                px(e.y),
+                5+15*(1-alpha),
+                0,
+                Math.PI*2
+            );
+
+            ctx.fill();
+
+        }
+
+        else if(e.type==="impact"){
+
+            ctx.strokeStyle="#e9b85d";
+
+            ctx.lineWidth=3;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px(e.x),
+                px(e.y),
+                8+25*(1-alpha),
+                0,
+                Math.PI*2
+            );
+
+            ctx.stroke();
+
+        }
+
+        else if(
+            e.type==="age" ||
+            e.type==="enemyAge"
+        ){
+
+            ctx.fillStyle=
+                e.type==="age"
+                ?"#e7c477"
+                :"#d06a52";
+
+            ctx.font=
+                "bold 24px Arial";
+
+            ctx.textAlign="center";
+
+            ctx.fillText(
+                e.text,
+                px(e.x),
+                px(e.y-(1-alpha)*45)
+            );
+
+        }
+
+        ctx.restore();
+
+    }
+
+}
+
+
+/* =========================================================
+   FRONTLINIE
+========================================================= */
+
+function drawFrontline(){
+
+    let playerFront=150;
+
+    let enemyFront=W-150;
+
+    for(const unit of units){
+
+        if(unit.x>playerFront){
+            playerFront=unit.x;
+        }
+
+    }
+
+    for(const unit of enemyUnits){
+
+        if(unit.x<enemyFront){
+            enemyFront=unit.x;
+        }
+
+    }
+
+    /*
+     * Wichtig:
+     * Die Position wird auf einen ganzen Pixel gerundet.
+     * Dadurch gibt es kein Subpixel-Flimmern.
+     */
+
+    const middle=
+        px(
+            (playerFront+enemyFront)/2
+        );
+
+    ctx.save();
+
+    ctx.strokeStyle=
+        "rgba(240,218,164,.32)";
+
+    ctx.lineWidth=2;
+
+    ctx.setLineDash([
+        10,
+        8
+    ]);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        middle,
+        385
+    );
+
+    ctx.lineTo(
+        middle,
+        520
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(time){
+
+    const dt=
+        Math.min(
+            .05,
+            (time-lastTime)/1000
+        );
+
+    lastTime=time;
+
+    update(dt);
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =========================================================
+   TASTATUR
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(!gameRunning){
+            return;
+        }
+
+        if(e.key==="1"){
+            spawnUnit(0);
+        }
+
+        if(e.key==="2"){
+            spawnUnit(1);
+        }
+
+        if(e.key==="3"){
+            spawnUnit(2);
+        }
+
+        if(
+            e.key==="u" ||
+            e.key==="U"
+        ){
+            ageUp();
+        }
+
+        if(e.code==="Space"){
+
+            e.preventDefault();
+
+            togglePause();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START RENDERING
+========================================================= */
+
+draw();
+
+requestAnimationFrame(
+    gameLoop
+);
+
+</script>
+
+</body>
+</html>
