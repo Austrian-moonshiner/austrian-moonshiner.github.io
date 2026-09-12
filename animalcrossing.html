@@ -2,22 +2,25 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-<title>AnimalMania 3D</title>
+<title>AnimalMania 2.0</title>
 
 <style>
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
+    user-select:none;
+    -webkit-user-select:none;
 }
 
 html,body{
+    margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#07111b;
+    background:#07131b;
     font-family:Arial,Helvetica,sans-serif;
     color:white;
 }
@@ -28,222 +31,281 @@ canvas{
     width:100%;
     height:100%;
     display:block;
-    background:#75c9ef;
 }
 
 #hud{
     position:fixed;
-    top:12px;
-    left:12px;
-    right:12px;
+    top:14px;
+    left:14px;
     z-index:10;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    pointer-events:none;
-}
-
-.panel{
-    background:rgba(15,25,35,.82);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:14px;
-    padding:10px 14px;
-    box-shadow:0 8px 30px rgba(0,0,0,.25);
-    backdrop-filter:blur(8px);
-}
-
-#stats{
-    line-height:1.6;
-    font-size:14px;
+    min-width:250px;
+    padding:14px 16px;
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:16px;
+    background:rgba(8,17,24,.72);
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 30px rgba(0,0,0,.3);
 }
 
 #title{
     font-size:20px;
     font-weight:bold;
-    color:#ffe98a;
+    margin-bottom:8px;
 }
 
-#inventory{
-    min-width:190px;
+.stat{
+    margin:4px 0;
+    font-size:14px;
 }
 
-#inventory h3{
-    color:#ffe98a;
-    margin-bottom:5px;
+#money{
+    color:#ffe36e;
+    font-weight:bold;
 }
 
-#inventoryList{
-    font-size:13px;
-    line-height:1.5;
+#time{
+    color:#aee7ff;
 }
 
-#message{
-    position:fixed;
-    left:50%;
-    bottom:95px;
-    transform:translateX(-50%);
-    z-index:20;
-    background:rgba(10,20,28,.92);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:16px;
-    padding:12px 18px;
-    min-width:260px;
-    max-width:90%;
-    text-align:center;
-    opacity:0;
-    transition:.25s;
-    pointer-events:none;
-}
-
-#message.show{
-    opacity:1;
+#quest{
+    margin-top:9px;
+    padding-top:8px;
+    border-top:1px solid rgba(255,255,255,.14);
+    font-size:12px;
+    line-height:1.45;
 }
 
 #help{
     position:fixed;
     left:50%;
-    top:82px;
+    bottom:15px;
     transform:translateX(-50%);
     z-index:10;
-    background:rgba(10,20,28,.75);
-    padding:8px 14px;
-    border-radius:12px;
+    padding:9px 15px;
+    border-radius:13px;
+    background:rgba(5,12,17,.68);
+    border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(8px);
     font-size:12px;
     text-align:center;
+    pointer-events:none;
+}
+
+#message{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:30;
+    min-width:260px;
+    max-width:85vw;
+    padding:17px 20px;
+    border-radius:16px;
+    text-align:center;
+    background:rgba(7,16,23,.92);
+    border:1px solid rgba(255,255,255,.25);
+    box-shadow:0 15px 50px rgba(0,0,0,.45);
+    display:none;
+    font-size:15px;
+}
+
+#prompt{
+    position:fixed;
+    left:50%;
+    bottom:82px;
+    transform:translateX(-50%);
+    z-index:12;
+    padding:10px 17px;
+    border-radius:14px;
+    background:rgba(8,18,24,.82);
+    border:1px solid rgba(255,255,255,.2);
+    display:none;
+    font-weight:bold;
 }
 
 #crosshair{
     position:fixed;
     left:50%;
     top:50%;
+    width:10px;
+    height:10px;
     transform:translate(-50%,-50%);
-    width:8px;
-    height:8px;
-    border:2px solid rgba(255,255,255,.9);
+    border:1px solid rgba(255,255,255,.75);
     border-radius:50%;
-    z-index:5;
+    z-index:8;
     pointer-events:none;
 }
 
-#actions{
+#inventory{
     position:fixed;
-    bottom:15px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:30;
-    display:flex;
-    gap:8px;
-}
-
-button{
-    border:0;
-    color:white;
-    background:rgba(20,32,42,.9);
+    right:15px;
+    top:15px;
+    width:270px;
+    max-height:75vh;
+    overflow:auto;
+    z-index:20;
+    display:none;
+    padding:17px;
+    border-radius:18px;
+    background:rgba(7,16,23,.94);
     border:1px solid rgba(255,255,255,.2);
-    border-radius:12px;
-    padding:11px 15px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 5px 15px rgba(0,0,0,.25);
+    box-shadow:0 15px 45px rgba(0,0,0,.45);
 }
 
-button:hover{
-    background:#29485a;
+#inventory h2{
+    margin:0 0 12px;
+    font-size:19px;
 }
 
-#mobileControls{
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:25;
-    pointer-events:none;
+.item{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    font-size:14px;
 }
 
-.dpad{
-    position:absolute;
-    bottom:25px;
-    left:20px;
-    width:150px;
-    height:150px;
-    pointer-events:auto;
-}
-
-.moveBtn{
-    position:absolute;
-    width:52px;
-    height:52px;
-    padding:0;
-    border-radius:50%;
-    background:rgba(15,25,35,.75);
-    font-size:20px;
-}
-
-.up{left:49px;top:0}
-.left{left:0;top:49px}
-.right{right:0;top:49px}
-.down{left:49px;bottom:0}
-
-.mobileAction{
-    position:absolute;
-    right:20px;
-    bottom:38px;
-    pointer-events:auto;
-}
-
-#fishPopup{
-    display:none;
+#shop{
     position:fixed;
     left:50%;
     top:50%;
     transform:translate(-50%,-50%);
-    z-index:50;
-    width:min(360px,90%);
-    background:rgba(12,23,31,.96);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:18px;
-    padding:22px;
+    width:min(420px,90vw);
+    z-index:40;
+    display:none;
+    padding:20px;
+    border-radius:20px;
+    background:rgba(7,15,21,.97);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 20px 70px rgba(0,0,0,.6);
+}
+
+#shop h2{
+    margin:0 0 12px;
+}
+
+.shopButton,
+.actionButton{
+    width:100%;
+    padding:11px;
+    margin-top:8px;
+    border:0;
+    border-radius:11px;
+    color:white;
+    background:#1e6572;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.shopButton:hover,
+.actionButton:hover{
+    filter:brightness(1.18);
+}
+
+.closeButton{
+    background:#55343a;
+}
+
+#fishPopup{
+    position:fixed;
+    left:50%;
+    top:70%;
+    transform:translate(-50%,-50%);
+    z-index:35;
+    display:none;
+    width:min(380px,88vw);
+    padding:20px;
+    border-radius:20px;
+    background:rgba(5,14,20,.96);
+    border:1px solid rgba(255,255,255,.24);
     text-align:center;
-    box-shadow:0 15px 60px rgba(0,0,0,.5);
 }
 
-#fishPopup h2{
-    color:#ffe98a;
-    margin-bottom:10px;
+#fishBar{
+    height:18px;
+    margin:15px 0;
+    border-radius:10px;
+    overflow:hidden;
+    background:#26343b;
+    position:relative;
 }
 
-#fishPopup p{
-    margin-bottom:15px;
-    line-height:1.5;
+#fishTarget{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:28%;
+    background:#68d391;
 }
 
-#catchButton{
-    background:#36a85c;
+#fishCursor{
+    position:absolute;
+    top:-2px;
+    width:5px;
+    height:22px;
+    background:white;
 }
 
-@media(max-width:700px){
-    #inventory{
-        display:none;
-    }
+#mobile{
+    position:fixed;
+    bottom:18px;
+    left:18px;
+    z-index:25;
+    display:none;
+    width:150px;
+    height:150px;
+}
 
-    #help{
-        top:105px;
-        font-size:10px;
-    }
+.mbtn{
+    position:absolute;
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(8,18,25,.72);
+    color:white;
+    font-size:20px;
+}
 
-    #mobileControls{
+#up{left:51px;top:0}
+#left{left:0;top:51px}
+#down{left:51px;top:51px}
+#right{left:102px;top:51px}
+
+#mobileActions{
+    position:fixed;
+    right:18px;
+    bottom:22px;
+    z-index:25;
+    display:none;
+    gap:9px;
+}
+
+.roundAction{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(8,18,25,.75);
+    color:white;
+    font-weight:bold;
+}
+
+@media(max-width:800px){
+    #mobile,
+    #mobileActions{
         display:block;
     }
 
-    #actions{
-        bottom:15px;
-        left:auto;
-        right:15px;
-        transform:none;
-        flex-direction:column;
+    #help{
+        bottom:8px;
+        font-size:10px;
+        max-width:55vw;
     }
 
-    #actions button{
-        padding:9px 11px;
+    #hud{
+        transform:scale(.9);
+        transform-origin:top left;
     }
 }
 </style>
@@ -251,90 +313,153 @@ button:hover{
 
 <body>
 
-<canvas id="glcanvas"></canvas>
+<canvas id="gl"></canvas>
+
+<div id="hud">
+    <div id="title">🌿 AnimalMania 2.0</div>
+    <div class="stat">💰 Geld: <span id="money">500</span> Münzen</div>
+    <div class="stat">🕒 Zeit: <span id="time">08:00</span></div>
+    <div class="stat">📍 <span id="location">Insel</span></div>
+
+    <div id="quest">
+        <b>Aufgabe</b><br>
+        <span id="questText">Fange 3 Fische.</span>
+    </div>
+</div>
 
 <div id="crosshair"></div>
 
-<div id="hud">
-
-    <div class="panel">
-        <div id="title">🌿 AnimalMania</div>
-        <div id="stats">
-            💰 <span id="money">500</span><br>
-            🕐 <span id="time">08:00</span><br>
-            📍 <span id="location">Insel</span>
-        </div>
-    </div>
-
-    <div class="panel" id="inventory">
-        <h3>🎒 Inventar</h3>
-        <div id="inventoryList"></div>
-    </div>
-
-</div>
-
-<div id="help">
-    WASD / Pfeile = Bewegen · Maus = Kamera · E = Aktion · F = Angeln
-</div>
+<div id="prompt"></div>
 
 <div id="message"></div>
 
-<div id="actions">
-    <button onclick="saveGame()">💾 Speichern</button>
-    <button onclick="loadGame()">📂 Laden</button>
-    <button onclick="sellFish()">🐟 Fische verkaufen</button>
+<div id="inventory">
+    <h2>🎒 Inventar</h2>
+    <div id="inventoryList"></div>
+    <button class="actionButton" id="sellFish">🐟 Alle Fische verkaufen</button>
+    <button class="actionButton" id="saveGame">💾 Speichern</button>
+    <button class="actionButton" id="loadGame">📂 Laden</button>
+    <button class="actionButton closeButton" id="closeInventory">Schließen</button>
 </div>
 
-<div id="mobileControls">
+<div id="shop">
+    <h2>🏪 Insel-Laden</h2>
+    <p>Willkommen! Was darf es sein?</p>
 
-    <div class="dpad">
-        <button class="moveBtn up" data-key="w">▲</button>
-        <button class="moveBtn left" data-key="a">◀</button>
-        <button class="moveBtn right" data-key="d">▶</button>
-        <button class="moveBtn down" data-key="s">▼</button>
-    </div>
+    <button class="shopButton" id="buyBait">
+        🪱 5 Köder kaufen - 50 Münzen
+    </button>
 
-    <div class="mobileAction">
-        <button onclick="doAction()">🎣 Aktion</button>
-    </div>
+    <button class="shopButton" id="buySeed">
+        🌱 5 Samen kaufen - 75 Münzen
+    </button>
 
+    <button class="shopButton" id="sellWood">
+        🪵 Holz verkaufen
+    </button>
+
+    <button class="shopButton closeButton" id="closeShop">
+        Schließen
+    </button>
 </div>
 
 <div id="fishPopup">
     <h2>🐟 Ein Fisch beißt!</h2>
-    <p id="fishText">
-        Schnell reagieren!
-    </p>
+    <p>Drücke <b>LEERTASTE</b> oder den Fang-Knopf, wenn der weiße Balken im grünen Bereich ist.</p>
 
-    <button id="catchButton" onclick="catchFish()">
-        🎣 Fisch einholen
-    </button>
+    <div id="fishBar">
+        <div id="fishTarget"></div>
+        <div id="fishCursor"></div>
+    </div>
+
+    <button class="actionButton" id="catchButton">🎣 Fisch einholen</button>
+</div>
+
+<div id="mobile">
+    <button class="mbtn" id="up">▲</button>
+    <button class="mbtn" id="left">◀</button>
+    <button class="mbtn" id="down">▼</button>
+    <button class="mbtn" id="right">▶</button>
+</div>
+
+<div id="mobileActions">
+    <button class="roundAction" id="mobileInteract">E</button>
+    <button class="roundAction" id="mobileFish">🎣</button>
+    <button class="roundAction" id="mobileInv">🎒</button>
+</div>
+
+<div id="help">
+    WASD / Pfeile = bewegen · Maus ziehen = Kamera · E = Interaktion · F = Angeln · I = Inventar · ESC = schließen
 </div>
 
 <script>
 "use strict";
 
 /* =========================================================
-   ANIMALMANIA 3D
-   Eigene kleine WebGL-Engine
-   Keine Three.js-Abhängigkeit
-========================================================= */
+   ANIMALMANIA 2.0
+   Native WebGL
+   Keine externen Bibliotheken
+   ========================================================= */
 
-const canvas = document.getElementById("glcanvas");
+const canvas = document.getElementById("gl");
 const gl = canvas.getContext("webgl", {
     antialias:true,
-    alpha:false
+    alpha:false,
+    depth:true
 });
 
 if(!gl){
-    alert("Dein Browser unterstützt WebGL nicht.");
+    alert("Dein Browser unterstützt WebGL leider nicht.");
+    throw new Error("WebGL unavailable");
 }
 
 /* =========================================================
-   MATRIX / VECTOR
-========================================================= */
+   HILFSFUNKTIONEN
+   ========================================================= */
 
-function mat4Identity(){
+const $ = id => document.getElementById(id);
+
+function clamp(v,a,b){
+    return Math.max(a,Math.min(b,v));
+}
+
+function lerp(a,b,t){
+    return a+(b-a)*t;
+}
+
+function dist2D(a,b){
+    return Math.hypot(a.x-b.x,a.z-b.z);
+}
+
+function rand(a,b){
+    return a+Math.random()*(b-a);
+}
+
+function showMessage(text,ms=2200){
+    const box=$("message");
+    box.innerHTML=text;
+    box.style.display="block";
+
+    clearTimeout(showMessage.timer);
+
+    showMessage.timer=setTimeout(()=>{
+        box.style.display="none";
+    },ms);
+}
+
+function formatTime(total){
+    let h=Math.floor(total/60)%24;
+    let m=Math.floor(total%60);
+
+    return String(h).padStart(2,"0")+":"+
+           String(m).padStart(2,"0");
+}
+
+/* =========================================================
+   MATRIX
+   ========================================================= */
+
+function mat4(){
     return new Float32Array([
         1,0,0,0,
         0,1,0,0,
@@ -343,52 +468,100 @@ function mat4Identity(){
     ]);
 }
 
-function mat4Multiply(a,b){
-    const out = new Float32Array(16);
+function multiply(a,b){
+    const o=new Float32Array(16);
 
-    for(let row=0;row<4;row++){
-        for(let col=0;col<4;col++){
-            out[col*4+row] =
-                a[0*4+row]*b[col*4+0] +
-                a[1*4+row]*b[col*4+1] +
-                a[2*4+row]*b[col*4+2] +
-                a[3*4+row]*b[col*4+3];
+    for(let c=0;c<4;c++){
+        for(let r=0;r<4;r++){
+            o[c*4+r]=
+                a[r]*b[c*4]+
+                a[4+r]*b[c*4+1]+
+                a[8+r]*b[c*4+2]+
+                a[12+r]*b[c*4+3];
         }
     }
 
-    return out;
+    return o;
+}
+
+function translate(m,x,y,z){
+    const t=mat4();
+    t[12]=x;
+    t[13]=y;
+    t[14]=z;
+    return multiply(m,t);
+}
+
+function scale(m,x,y,z){
+    const s=mat4();
+    s[0]=x;
+    s[5]=y;
+    s[10]=z;
+    return multiply(m,s);
+}
+
+function rotateY(m,a){
+    const c=Math.cos(a);
+    const s=Math.sin(a);
+
+    const r=mat4();
+
+    r[0]=c;
+    r[2]=-s;
+    r[8]=s;
+    r[10]=c;
+
+    return multiply(m,r);
+}
+
+function rotateX(m,a){
+    const c=Math.cos(a);
+    const s=Math.sin(a);
+
+    const r=mat4();
+
+    r[5]=c;
+    r[6]=s;
+    r[9]=-s;
+    r[10]=c;
+
+    return multiply(m,r);
 }
 
 function perspective(fov,aspect,near,far){
-    const f = 1 / Math.tan(fov/2);
-    const nf = 1/(near-far);
+    const f=1/Math.tan(fov/2);
+    const nf=1/(near-far);
 
-    return new Float32Array([
-        f/aspect,0,0,0,
-        0,f,0,0,
-        0,0,(far+near)*nf,-1,
-        0,0,(2*far*near)*nf,0
-    ]);
+    const o=new Float32Array(16);
+
+    o[0]=f/aspect;
+    o[5]=f;
+    o[10]=(far+near)*nf;
+    o[11]=-1;
+    o[14]=2*far*near*nf;
+
+    return o;
 }
 
 function lookAt(eye,target,up){
-    let zx = eye[0]-target[0];
-    let zy = eye[1]-target[1];
-    let zz = eye[2]-target[2];
+    let zx=eye.x-target.x;
+    let zy=eye.y-target.y;
+    let zz=eye.z-target.z;
 
-    let len=Math.hypot(zx,zy,zz);
-    zx/=len;
-    zy/=len;
-    zz/=len;
+    let l=Math.hypot(zx,zy,zz);
+    zx/=l;
+    zy/=l;
+    zz/=l;
 
-    let xx=up[1]*zz-up[2]*zy;
-    let xy=up[2]*zx-up[0]*zz;
-    let xz=up[0]*zy-up[1]*zx;
+    let xx=up.y*zz-up.z*zy;
+    let xy=up.z*zx-up.x*zz;
+    let xz=up.x*zy-up.y*zx;
 
-    len=Math.hypot(xx,xy,xz);
-    xx/=len;
-    xy/=len;
-    xz/=len;
+    l=Math.hypot(xx,xy,xz);
+
+    xx/=l;
+    xy/=l;
+    xz/=l;
 
     const yx=zy*xz-zz*xy;
     const yy=zz*xx-zx*xz;
@@ -398,599 +571,567 @@ function lookAt(eye,target,up){
         xx,yx,zx,0,
         xy,yy,zy,0,
         xz,yz,zz,0,
-        -(xx*eye[0]+xy*eye[1]+xz*eye[2]),
-        -(yx*eye[0]+yy*eye[1]+yz*eye[2]),
-        -(zx*eye[0]+zy*eye[1]+zz*eye[2]),
+        -(xx*eye.x+xy*eye.y+xz*eye.z),
+        -(yx*eye.x+yy*eye.y+yz*eye.z),
+        -(zx*eye.x+zy*eye.y+zz*eye.z),
         1
     ]);
 }
 
-function translation(x,y,z){
-    const m=mat4Identity();
-    m[12]=x;
-    m[13]=y;
-    m[14]=z;
-    return m;
-}
-
-function scale(x,y,z){
-    const m=mat4Identity();
-    m[0]=x;
-    m[5]=y;
-    m[10]=z;
-    return m;
-}
-
-function rotationY(a){
-    const c=Math.cos(a);
-    const s=Math.sin(a);
-
-    return new Float32Array([
-        c,0,-s,0,
-        0,1,0,0,
-        s,0,c,0,
-        0,0,0,1
-    ]);
-}
-
-function transform(x,y,z,sx,sy,sz,rot=0){
-    return mat4Multiply(
-        translation(x,y,z),
-        mat4Multiply(
-            rotationY(rot),
-            scale(sx,sy,sz)
-        )
-    );
-}
-
 /* =========================================================
    SHADER
-========================================================= */
+   ========================================================= */
 
-const vertexShaderSource = `
+const vertexShaderSource=`
 attribute vec3 aPosition;
+attribute vec3 aNormal;
 attribute vec3 aColor;
 
-uniform mat4 uMatrix;
+uniform mat4 uProjection;
+uniform mat4 uView;
+uniform mat4 uModel;
 
+varying vec3 vNormal;
 varying vec3 vColor;
+varying vec3 vWorld;
 
 void main(){
-    gl_Position = uMatrix * vec4(aPosition,1.0);
-    vColor = aColor;
+
+    vec4 world=uModel*vec4(aPosition,1.0);
+
+    vWorld=world.xyz;
+    vNormal=mat3(uModel)*aNormal;
+    vColor=aColor;
+
+    gl_Position=uProjection*uView*world;
 }
 `;
 
-const fragmentShaderSource = `
+const fragmentShaderSource=`
 precision mediump float;
 
+varying vec3 vNormal;
 varying vec3 vColor;
+varying vec3 vWorld;
+
+uniform vec3 uLight;
+uniform vec3 uAmbient;
+uniform float uFog;
+uniform float uWater;
+uniform float uTime;
 
 void main(){
-    gl_FragColor = vec4(vColor,1.0);
+
+    vec3 n=normalize(vNormal);
+
+    float light=max(dot(n,normalize(uLight)),0.0);
+
+    float shade=.38+light*.72;
+
+    vec3 color=vColor*shade+uAmbient*.18;
+
+    if(uWater>0.5){
+        float wave=
+            sin(vWorld.x*1.4+uTime*2.0)*
+            sin(vWorld.z*1.1+uTime*1.4);
+
+        color+=vec3(.02,.07,.08)*wave;
+    }
+
+    float d=length(vWorld);
+
+    float fog=clamp((d-24.0)*uFog,0.0,0.82);
+
+    vec3 sky=vec3(.46,.67,.78);
+
+    color=mix(color,sky,fog);
+
+    gl_FragColor=vec4(color,1.0);
 }
 `;
 
-function createShader(type,source){
-    const shader=gl.createShader(type);
-    gl.shaderSource(shader,source);
-    gl.compileShader(shader);
+function compile(type,src){
+    const s=gl.createShader(type);
 
-    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
-        console.error(gl.getShaderInfoLog(shader));
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){
+        console.error(gl.getShaderInfoLog(s));
+        throw new Error("Shader error");
     }
 
-    return shader;
+    return s;
 }
-
-const vs=createShader(gl.VERTEX_SHADER,vertexShaderSource);
-const fs=createShader(gl.FRAGMENT_SHADER,fragmentShaderSource);
 
 const program=gl.createProgram();
 
-gl.attachShader(program,vs);
-gl.attachShader(program,fs);
+gl.attachShader(program,compile(gl.VERTEX_SHADER,vertexShaderSource));
+gl.attachShader(program,compile(gl.FRAGMENT_SHADER,fragmentShaderSource));
+
 gl.linkProgram(program);
+
+if(!gl.getProgramParameter(program,gl.LINK_STATUS)){
+    throw new Error("Program link error");
+}
 
 gl.useProgram(program);
 
-const positionLocation=gl.getAttribLocation(program,"aPosition");
-const colorLocation=gl.getAttribLocation(program,"aColor");
-const matrixLocation=gl.getUniformLocation(program,"uMatrix");
+const loc={
+    position:gl.getAttribLocation(program,"aPosition"),
+    normal:gl.getAttribLocation(program,"aNormal"),
+    color:gl.getAttribLocation(program,"aColor"),
+
+    projection:gl.getUniformLocation(program,"uProjection"),
+    view:gl.getUniformLocation(program,"uView"),
+    model:gl.getUniformLocation(program,"uModel"),
+
+    light:gl.getUniformLocation(program,"uLight"),
+    ambient:gl.getUniformLocation(program,"uAmbient"),
+    fog:gl.getUniformLocation(program,"uFog"),
+    water:gl.getUniformLocation(program,"uWater"),
+    time:gl.getUniformLocation(program,"uTime")
+};
+
+gl.enableVertexAttribArray(loc.position);
+gl.enableVertexAttribArray(loc.normal);
+gl.enableVertexAttribArray(loc.color);
+
+gl.enable(gl.DEPTH_TEST);
+gl.enable(gl.CULL_FACE);
 
 /* =========================================================
-   CUBE
-========================================================= */
+   MESH SYSTEM
+   ========================================================= */
 
-const cubePositions = [
+function createMesh(vertices,indices){
 
-    -1,-1, 1,
-     1,-1, 1,
-     1, 1, 1,
-    -1, 1, 1,
+    const vbo=gl.createBuffer();
 
-    -1,-1,-1,
-    -1, 1,-1,
-     1, 1,-1,
-     1,-1,-1,
-
-    -1, 1,-1,
-    -1, 1, 1,
-     1, 1, 1,
-     1, 1,-1,
-
-    -1,-1,-1,
-     1,-1,-1,
-     1,-1, 1,
-    -1,-1, 1,
-
-     1,-1,-1,
-     1, 1,-1,
-     1, 1, 1,
-     1,-1, 1,
-
-    -1,-1,-1,
-    -1,-1, 1,
-    -1, 1, 1,
-    -1, 1,-1
-];
-
-const cubeIndices=[
-    0,1,2, 0,2,3,
-    4,5,6, 4,6,7,
-    8,9,10, 8,10,11,
-    12,13,14, 12,14,15,
-    16,17,18, 16,18,19,
-    20,21,22, 20,22,23
-];
-
-const posBuffer=gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);
-gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(cubePositions),
-    gl.STATIC_DRAW
-);
-
-const indexBuffer=gl.createBuffer();
-gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
-gl.bufferData(
-    gl.ELEMENT_ARRAY_BUFFER,
-    new Uint16Array(cubeIndices),
-    gl.STATIC_DRAW
-);
-
-/* =========================================================
-   DRAW CUBE
-========================================================= */
-
-function drawCube(matrix,color){
-
-    gl.bindBuffer(gl.ARRAY_BUFFER,posBuffer);
-
-    gl.enableVertexAttribArray(positionLocation);
-
-    gl.vertexAttribPointer(
-        positionLocation,
-        3,
-        gl.FLOAT,
-        false,
-        0,
-        0
-    );
-
-    const colors=[];
-
-    for(let i=0;i<24;i++){
-        colors.push(color[0],color[1],color[2]);
-    }
-
-    const colorBuffer=gl.createBuffer();
-
-    gl.bindBuffer(gl.ARRAY_BUFFER,colorBuffer);
-
+    gl.bindBuffer(gl.ARRAY_BUFFER,vbo);
     gl.bufferData(
         gl.ARRAY_BUFFER,
-        new Float32Array(colors),
-        gl.STREAM_DRAW
+        new Float32Array(vertices),
+        gl.STATIC_DRAW
     );
 
-    gl.enableVertexAttribArray(colorLocation);
+    const ibo=gl.createBuffer();
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ibo);
+    gl.bufferData(
+        gl.ELEMENT_ARRAY_BUFFER,
+        new Uint16Array(indices),
+        gl.STATIC_DRAW
+    );
+
+    return {
+        vbo,
+        ibo,
+        count:indices.length
+    };
+}
+
+/*
+    Vertex:
+    x y z
+    nx ny nz
+    r g b
+*/
+
+function cubeMesh(){
+
+    const p=[
+        [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1],
+        [1,-1,-1],[-1,-1,-1],[-1,1,-1],[1,1,-1],
+        [-1,1,1],[1,1,1],[1,1,-1],[-1,1,-1],
+        [-1,-1,-1],[1,-1,-1],[1,-1,1],[-1,-1,1],
+        [1,-1,1],[1,-1,-1],[1,1,-1],[1,1,1],
+        [-1,-1,-1],[-1,-1,1],[-1,1,1],[-1,1,-1]
+    ];
+
+    const n=[
+        [0,0,1],
+        [0,0,-1],
+        [0,1,0],
+        [0,-1,0],
+        [1,0,0],
+        [-1,0,0]
+    ];
+
+    const faces=[
+        [0,1,2,3,0],
+        [4,5,6,7,1],
+        [8,9,10,11,2],
+        [12,13,14,15,3],
+        [16,17,18,19,4],
+        [20,21,22,23,5]
+    ];
+
+    const v=[];
+    const ind=[];
+    let index=0;
+
+    for(const f of faces){
+
+        for(let i=0;i<4;i++){
+
+            const q=p[f[i]];
+            const nn=n[f[4]];
+
+            v.push(
+                q[0],q[1],q[2],
+                nn[0],nn[1],nn[2],
+                1,1,1
+            );
+        }
+
+        ind.push(
+            index,index+1,index+2,
+            index,index+2,index+3
+        );
+
+        index+=4;
+    }
+
+    return createMesh(v,ind);
+}
+
+function cylinderMesh(segments=12){
+
+    const v=[];
+    const ind=[];
+
+    for(let i=0;i<segments;i++){
+
+        const a=i/segments*Math.PI*2;
+        const x=Math.cos(a);
+        const z=Math.sin(a);
+
+        v.push(
+            x,-1,z,
+            x,0,z,
+            1,1,1
+        );
+
+        v.push(
+            x,1,z,
+            x,0,z,
+            1,1,1
+        );
+    }
+
+    for(let i=0;i<segments;i++){
+
+        const a=i*2;
+        const b=((i+1)%segments)*2;
+
+        ind.push(
+            a,b,b+1,
+            a,b+1,a+1
+        );
+    }
+
+    return createMesh(v,ind);
+}
+
+function sphereMesh(){
+
+    const v=[];
+    const ind=[];
+
+    const lat=8;
+    const lon=12;
+
+    for(let y=0;y<=lat;y++){
+
+        const t=y/lat*Math.PI;
+
+        for(let x=0;x<=lon;x++){
+
+            const p=x/lon*Math.PI*2;
+
+            const sx=Math.sin(t)*Math.cos(p);
+            const sy=Math.cos(t);
+            const sz=Math.sin(t)*Math.sin(p);
+
+            v.push(
+                sx,sy,sz,
+                sx,sy,sz,
+                1,1,1
+            );
+        }
+    }
+
+    for(let y=0;y<lat;y++){
+
+        for(let x=0;x<lon;x++){
+
+            const a=y*(lon+1)+x;
+            const b=a+lon+1;
+
+            ind.push(
+                a,b,a+1,
+                a+1,b,b+1
+            );
+        }
+    }
+
+    return createMesh(v,ind);
+}
+
+function coneMesh(segments=12){
+
+    const v=[];
+    const ind=[];
+
+    v.push(
+        0,1,0,
+        0,1,0,
+        1,1,1
+    );
+
+    for(let i=0;i<segments;i++){
+
+        const a=i/segments*Math.PI*2;
+        const x=Math.cos(a);
+        const z=Math.sin(a);
+
+        v.push(
+            x,-1,z,
+            x,0,z,
+            1,1,1
+        );
+    }
+
+    for(let i=0;i<segments;i++){
+
+        const a=1+i;
+        const b=1+((i+1)%segments);
+
+        ind.push(0,a,b);
+    }
+
+    return createMesh(v,ind);
+}
+
+const meshes={
+    cube:cubeMesh(),
+    sphere:sphereMesh(),
+    cylinder:cylinderMesh(),
+    cone:coneMesh()
+};
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+let projection;
+let view;
+
+function resize(){
+
+    const dpr=Math.min(devicePixelRatio||1,2);
+
+    canvas.width=innerWidth*dpr;
+    canvas.height=innerHeight*dpr;
+
+    gl.viewport(0,0,canvas.width,canvas.height);
+
+    projection=perspective(
+        Math.PI/3,
+        canvas.width/canvas.height,
+        .1,
+        100
+    );
+}
+
+addEventListener("resize",resize);
+resize();
+
+function draw(mesh,x,y,z,sx,sy,sz,color,rotation=0,water=false){
+
+    gl.bindBuffer(gl.ARRAY_BUFFER,mesh.vbo);
+
+    const stride=9*4;
 
     gl.vertexAttribPointer(
-        colorLocation,
+        loc.position,
         3,
         gl.FLOAT,
         false,
-        0,
+        stride,
         0
     );
 
-    gl.uniformMatrix4fv(
-        matrixLocation,
+    gl.vertexAttribPointer(
+        loc.normal,
+        3,
+        gl.FLOAT,
         false,
-        matrix
+        stride,
+        3*4
+    );
+
+    gl.vertexAttribPointer(
+        loc.color,
+        3,
+        gl.FLOAT,
+        false,
+        stride,
+        6*4
+    );
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,mesh.ibo);
+
+    let model=mat4();
+
+    model=translate(model,x,y,z);
+    model=rotateY(model,rotation);
+    model=scale(model,sx,sy,sz);
+
+    gl.uniformMatrix4fv(loc.model,false,model);
+    gl.uniform1f(loc.water,water?1:0);
+
+    /*
+        Farbe wird über Attributdaten gesetzt.
+        Für jeden Draw werden die Vertexfarben mit einer
+        kleinen temporären Änderung über uniform nicht benötigt.
+        Daher wird ein farbiges Mesh über vertexAttrib constant
+        ersetzt.
+    */
+
+    gl.disableVertexAttribArray(loc.color);
+
+    gl.vertexAttrib3f(
+        loc.color,
+        color[0],
+        color[1],
+        color[2]
     );
 
     gl.drawElements(
         gl.TRIANGLES,
-        36,
+        mesh.count,
         gl.UNSIGNED_SHORT,
         0
     );
-
-    gl.deleteBuffer(colorBuffer);
 }
 
 /* =========================================================
-   WORLD
-========================================================= */
+   WELT
+   ========================================================= */
 
-const objects=[];
+const islandRadius=14;
 
-function addObject(type,x,y,z,sx,sy,sz,color,rot=0,data={}){
-    objects.push({
+function islandHeight(x,z){
+
+    const d=Math.hypot(x,z);
+
+    if(d>islandRadius) return -2;
+
+    let h=0;
+
+    h+=Math.sin(x*.32)*.18;
+    h+=Math.cos(z*.27)*.14;
+    h+=Math.sin((x+z)*.18)*.12;
+
+    const center=1-d/islandRadius;
+
+    h+=center*.25;
+
+    return Math.max(-.05,h);
+}
+
+function insideIsland(x,z){
+    return Math.hypot(x,z)<13.5;
+}
+
+const trees=[];
+const rocks=[];
+const flowers=[];
+
+function addTree(x,z,scale=1){
+    trees.push({
+        x,z,
+        scale,
+        phase:rand(0,Math.PI*2)
+    });
+}
+
+function addRock(x,z,scale=1){
+    rocks.push({
+        x,z,
+        scale,
+        rot:rand(0,Math.PI*2)
+    });
+}
+
+function addFlower(x,z,type=0){
+    flowers.push({
+        x,z,
         type,
-        x,y,z,
-        sx,sy,sz,
-        color,
-        rot,
-        data
+        phase:rand(0,Math.PI*2)
     });
 }
 
-/* =========================================================
-   ISLAND
-========================================================= */
+/* Bäume */
 
-function buildWorld(){
+[
+    [-10,-6,1.1],
+    [-8,-9,.9],
+    [-3,-10,1.15],
+    [4,-10,.95],
+    [8,-7,1.15],
+    [10,-2,.9],
+    [9,6,1.2],
+    [5,9,.95],
+    [-5,9,1.1],
+    [-9,6,.95],
+    [-11,1,.85],
+    [1,11,.9]
+].forEach(t=>addTree(...t));
 
-    /* Wasser */
+/* Steine */
 
-    addObject(
-        "water",
-        0,-1,0,
-        32,.5,32,
-        [0.08,0.48,0.72]
-    );
+[
+    [-7,-2,.8],
+    [-3,6,.65],
+    [6,4,.9],
+    [8,0,.55],
+    [-8,3,.7]
+].forEach(r=>addRock(...r));
 
-    /* Insel */
+/* Blumen */
 
-    addObject(
-        "island",
-        0,0,0,
-        20,.5,20,
-        [0.35,0.68,0.28]
-    );
+for(let i=0;i<35;i++){
 
-    /* Strand */
+    let x,z;
 
-    addObject(
-        "sand",
-        0,.55,0,
-        17,.12,17,
-        [0.82,0.68,0.42]
-    );
+    do{
+        x=rand(-11,11);
+        z=rand(-11,11);
+    }while(!insideIsland(x,z));
 
-    addObject(
-        "grass",
-        0,.68,0,
-        15.8,.18,15.8,
-        [0.27,0.60,0.25]
-    );
-
-    /* Haus */
-
-    buildHouse(-5,1,-3);
-
-    /* Bäume */
-
-    const trees=[
-        [-11,0,-10],
-        [-7,0,-11],
-        [1,0,-11],
-        [8,0,-9],
-        [12,0,-3],
-        [10,0,7],
-        [4,0,10],
-        [-4,0,11],
-        [-11,0,7],
-        [12,0,11]
-    ];
-
-    trees.forEach(p=>buildTree(p[0],p[1],p[2]));
-
-    /* Steine */
-
-    const rocks=[
-        [3,0,-4],
-        [7,0,-1],
-        [-1,0,8],
-        [-8,0,4],
-        [9,0,4]
-    ];
-
-    rocks.forEach(p=>{
-        addObject(
-            "rock",
-            p[0],.95,p[2],
-            .8,.7,.8,
-            [.38,.40,.43]
-        );
-    });
-
-    /* Blumen */
-
-    for(let i=0;i<25;i++){
-
-        const x=(Math.random()*26)-13;
-        const z=(Math.random()*26)-13;
-
-        if(Math.abs(x+5)<5 && Math.abs(z+3)<5) continue;
-
-        const colors=[
-            [1,.25,.35],
-            [1,.75,.15],
-            [.65,.25,1],
-            [.95,.4,.75],
-            [1,1,.35]
-        ];
-
-        addObject(
-            "flower",
-            x,.95,z,
-            .18,.35,.18,
-            colors[i%colors.length]
-        );
-    }
-
-    /* Tiere */
-
-    buildAnimal("🐰",-2,0,5,[.92,.92,.92]);
-    buildAnimal("🐻",6,0,4,[.45,.25,.12]);
-    buildAnimal("🦊",-8,0,8,[.9,.35,.1]);
-
-    /* Angelplatz */
-
-    addObject(
-        "dock",
-        0,.85,15,
-        4,.25,2,
-        [.50,.30,.12]
-    );
-}
-
-function buildTree(x,y,z){
-
-    addObject(
-        "trunk",
-        x,1.7,z,
-        .45,1.8,.45,
-        [.35,.18,.07]
-    );
-
-    addObject(
-        "leaves",
-        x,4,z,
-        2.1,2.1,2.1,
-        [.12,.45,.18]
-    );
-
-    addObject(
-        "leaves",
-        x-1.1,3.6,z,
-        1.3,1.4,1.3,
-        [.15,.52,.2]
-    );
-
-    addObject(
-        "leaves",
-        x+1.1,3.5,z,
-        1.25,1.35,1.25,
-        [.12,.43,.16]
-    );
+    addFlower(x,z,Math.floor(rand(0,3)));
 }
 
 /* =========================================================
-   HOUSE
-========================================================= */
-
-function buildHouse(x,y,z){
-
-    /* Boden */
-
-    addObject(
-        "housefloor",
-        x,1,z,
-        5,.2,4,
-        [.58,.38,.20]
-    );
-
-    /* Wände */
-
-    addObject(
-        "wall",
-        x-4,2,z,
-        .25,2.2,4,
-        [.86,.67,.43]
-    );
-
-    addObject(
-        "wall",
-        x+4,2,z,
-        .25,2.2,4,
-        [.86,.67,.43]
-    );
-
-    addObject(
-        "wall",
-        x,2,z-4,
-        4,.2,.25,
-        [.86,.67,.43]
-    );
-
-    addObject(
-        "wall",
-        x,2,z+4,
-        4,.2,.25,
-        [.86,.67,.43]
-    );
-
-    /* Dach */
-
-    addObject(
-        "roof",
-        x,4.8,z,
-        4.8,.8,4.8,
-        [.68,.18,.16]
-    );
-
-    /* Tür */
-
-    addObject(
-        "door",
-        x,2,z+4.25,
-        1.1,2,.18,
-        [.25,.12,.06]
-    );
-
-    /* Bett */
-
-    addObject(
-        "bed",
-        x-2.3,1.45,z-1.5,
-        1.1,.45,2,
-        [.25,.55,.88]
-    );
-
-    addObject(
-        "pillow",
-        x-2.3,1.95,z-2.9,
-        1,.25,.5,
-        [.9,.9,.9]
-    );
-
-    /* Tisch */
-
-    addObject(
-        "table",
-        x+1.5,1.5,z,
-        1.2,.65,.9,
-        [.45,.25,.10]
-    );
-
-    /* Schrank */
-
-    addObject(
-        "cabinet",
-        x+2.8,2.2,z-2.7,
-        .7,1.7,.5,
-        [.35,.18,.08]
-    );
-
-    /* Lampe */
-
-    addObject(
-        "lamp",
-        x+1.5,3,z,
-        .3,.8,.3,
-        [1,.8,.25]
-    );
-}
-
-/* =========================================================
-   TIERE
-========================================================= */
-
-function buildAnimal(name,x,y,z,color){
-
-    const id=objects.length;
-
-    addObject(
-        "animalBody",
-        x,1.5,z,
-        .9,.75,.7,
-        color,
-        0,
-        {
-            name,
-            baseX:x,
-            baseZ:z,
-            phase:Math.random()*10
-        }
-    );
-
-    addObject(
-        "animalHead",
-        x,2.35,z+.55,
-        .65,.65,.65,
-        color,
-        0,
-        {
-            animalId:id
-        }
-    );
-
-    addObject(
-        "animalEar",
-        x-.35,2.85,z+.55,
-        .18,.45,.18,
-        color
-    );
-
-    addObject(
-        "animalEar",
-        x+.35,2.85,z+.55,
-        .18,.45,.18,
-        color
-    );
-}
-
-/* =========================================================
-   PLAYER
-========================================================= */
+   SPIELER
+   ========================================================= */
 
 const player={
-    x:-1,
-    y:1.5,
-    z:3,
+    x:-2,
+    z:4,
+    y:0,
     rot:0,
-    speed:5,
-    fishing:false,
-    fishReady:false
+    speed:4.3,
+    walkTime:0,
+    fishing:false
 };
 
-/* =========================================================
-   CAMERA
-========================================================= */
-
-const camera={
-    yaw:0.4,
-    pitch:-0.55,
-    distance:11
-};
-
-let keys={};
-
-document.addEventListener("keydown",e=>{
-    keys[e.key.toLowerCase()]=true;
-
-    if(e.key.toLowerCase()==="f"){
-        startFishing();
-    }
-
-    if(e.key.toLowerCase()==="e"){
-        doAction();
-    }
-});
-
-document.addEventListener("keyup",e=>{
-    keys[e.key.toLowerCase()]=false;
-});
-
-/* =========================================================
-   MOUSE CAMERA
-========================================================= */
+let cameraYaw=.2;
+let cameraPitch=.42;
+let cameraDistance=8;
 
 let mouseDown=false;
 let lastMouseX=0;
@@ -1002,146 +1143,1402 @@ canvas.addEventListener("mousedown",e=>{
     lastMouseY=e.clientY;
 });
 
-window.addEventListener("mouseup",()=>{
+addEventListener("mouseup",()=>{
     mouseDown=false;
 });
 
-window.addEventListener("mousemove",e=>{
+addEventListener("mousemove",e=>{
 
-    if(!mouseDown) return;
+    if(!mouseDown)return;
 
     const dx=e.clientX-lastMouseX;
     const dy=e.clientY-lastMouseY;
 
-    camera.yaw-=dx*.006;
-    camera.pitch-=dy*.006;
-
-    camera.pitch=Math.max(-1.25,Math.min(-.15,camera.pitch));
-
     lastMouseX=e.clientX;
     lastMouseY=e.clientY;
+
+    cameraYaw-=dx*.006;
+    cameraPitch-=dy*.004;
+
+    cameraPitch=clamp(cameraPitch,.12,1.2);
+});
+
+canvas.addEventListener("wheel",e=>{
+    cameraDistance+=e.deltaY*.008;
+    cameraDistance=clamp(cameraDistance,4,12);
 });
 
 /* =========================================================
-   TOUCH
-========================================================= */
+   HAUS
+   ========================================================= */
 
-document.querySelectorAll(".moveBtn").forEach(btn=>{
-
-    const key=btn.dataset.key;
-
-    btn.addEventListener("touchstart",e=>{
-        e.preventDefault();
-        keys[key]=true;
-    });
-
-    btn.addEventListener("touchend",e=>{
-        e.preventDefault();
-        keys[key]=false;
-    });
-
-});
-
-/* =========================================================
-   GAME DATA
-========================================================= */
-
-let money=500;
-
-const inventory={
-    "🍎 Apfel":3,
-    "🌿 Holz":0,
-    "🐟 Fisch":0
+const house={
+    x:-5,
+    z:-2
 };
 
-const fishInventory=[];
+function drawHouse(t){
 
-const fishTypes=[
+    const x=house.x;
+    const z=house.z;
+
+    /* Boden */
+
+    draw(
+        meshes.cube,
+        x,.16,z,
+        3.4,.18,2.7,
+        [.56,.37,.22]
+    );
+
+    /* Wände */
+
+    draw(
+        meshes.cube,
+        x,.95,z-2.45,
+        3.4,1.0,.15,
+        [.77,.54,.35]
+    );
+
+    draw(
+        meshes.cube,
+        x-3.25,.95,z,
+        .15,1.0,2.55,
+        [.72,.49,.31]
+    );
+
+    draw(
+        meshes.cube,
+        x+3.25,.95,z,
+        .15,1.0,2.55,
+        [.72,.49,.31]
+    );
+
+    /* Rückwand */
+
+    draw(
+        meshes.cube,
+        x,.95,z+2.45,
+        3.4,1.0,.15,
+        [.72,.49,.31]
+    );
+
+    /* Dach */
+
+    draw(
+        meshes.cone,
+        x,2.65,z,
+        3.9,1.25,3.2,
+        [.55,.19,.18],
+        Math.PI/4
+    );
+
+    /* Tür */
+
+    draw(
+        meshes.cube,
+        x,.9,z-2.62,
+        .7,.9,.08,
+        [.24,.12,.07]
+    );
+
+    /* Fenster */
+
+    draw(
+        meshes.cube,
+        x-1.8,1.35,z-2.62,
+        .65,.48,.06,
+        [.22,.66,.78]
+    );
+
+    draw(
+        meshes.cube,
+        x+1.8,1.35,z-2.62,
+        .65,.48,.06,
+        [.22,.66,.78]
+    );
+
+    /* Bett */
+
+    draw(
+        meshes.cube,
+        x-1.65,.48,z+.8,
+        .75,.25,1.45,
+        [.54,.30,.20]
+    );
+
+    draw(
+        meshes.cube,
+        x-1.65,.78,z+.05,
+        .72,.13,.62,
+        [.36,.64,.88]
+    );
+
+    /* Kissen */
+
+    draw(
+        meshes.sphere,
+        x-1.65,.92,z-.45,
+        .45,.15,.32,
+        [.92,.92,.88]
+    );
+
+    /* Tisch */
+
+    draw(
+        meshes.cube,
+        x+1.25,.72,z+.45,
+        .9,.12,.65,
+        [.49,.27,.13]
+    );
+
+    for(const dx of [-.65,.65]){
+        for(const dz of [-.42,.42]){
+            draw(
+                meshes.cylinder,
+                x+1.25+dx*.6,.37,z+.45+dz*.6,
+                .07,.35,.07,
+                [.28,.15,.08]
+            );
+        }
+    }
+
+    /* Schrank */
+
+    draw(
+        meshes.cube,
+        x+2.1,1.0,z+1.55,
+        .55,.9,.42,
+        [.31,.19,.12]
+    );
+
+    /* Lampe */
+
+    draw(
+        meshes.cylinder,
+        x+.5,1.5,z+.6,
+        .05,.45,.05,
+        [.2,.2,.2]
+    );
+
+    draw(
+        meshes.sphere,
+        x+.5,2.0,z+.6,
+        .28,.25,.28,
+        [1.0,.72,.24]
+    );
+}
+
+/* =========================================================
+   BÄUME
+   ========================================================= */
+
+function drawTree(tree,t){
+
+    const bob=Math.sin(t*1.2+tree.phase)*.025;
+    const s=tree.scale;
+
+    const y=islandHeight(tree.x,tree.z);
+
+    draw(
+        meshes.cylinder,
+        tree.x,y+1.0,tree.z,
+        .28*s,1.0*s,.28*s,
+        [.35,.19,.08]
+    );
+
+    draw(
+        meshes.sphere,
+        tree.x,y+2.25+bob,tree.z,
+        1.25*s,1.25*s,1.25*s,
+        [.12,.48,.20]
+    );
+
+    draw(
+        meshes.sphere,
+        tree.x-.55*s,y+2.05+bob,tree.z+.2,
+        .75*s,.75*s,.75*s,
+        [.16,.55,.23]
+    );
+
+    draw(
+        meshes.sphere,
+        tree.x+.5*s,y+2.08+bob,tree.z-.15,
+        .72*s,.72*s,.72*s,
+        [.13,.51,.20]
+    );
+}
+
+/* =========================================================
+   STEINE
+   ========================================================= */
+
+function drawRock(r){
+
+    const y=islandHeight(r.x,r.z);
+
+    draw(
+        meshes.sphere,
+        r.x,y+.28*r.scale,r.z,
+        .65*r.scale,.4*r.scale,.55*r.scale,
+        [.39,.43,.44],
+        r.rot
+    );
+}
+
+/* =========================================================
+   BLUMEN
+   ========================================================= */
+
+function drawFlower(f,t){
+
+    const y=islandHeight(f.x,f.z);
+
+    draw(
+        meshes.cylinder,
+        f.x,y+.18,f.z,
+        .025,.18,.025,
+        [.12,.5,.18]
+    );
+
+    const colors=[
+        [.95,.35,.48],
+        [.95,.75,.18],
+        [.65,.42,.95]
+    ];
+
+    draw(
+        meshes.sphere,
+        f.x,y+.4+Math.sin(t*2+f.phase)*.03,f.z,
+        .16,.16,.16,
+        colors[f.type]
+    );
+}
+
+/* =========================================================
+   TIERE
+   ========================================================= */
+
+const animals=[
     {
-        name:"Rotfeder",
-        value:80,
-        rarity:"häufig"
+        name:"Milo",
+        type:"rabbit",
+        x:3,
+        z:-5,
+        targetX:3,
+        targetZ:-5,
+        timer:0,
+        color:[.82,.82,.78]
     },
     {
-        name:"Barsch",
-        value:120,
-        rarity:"häufig"
+        name:"Bruno",
+        type:"bear",
+        x:7,
+        z:2,
+        targetX:7,
+        targetZ:2,
+        timer:0,
+        color:[.40,.24,.14]
     },
     {
-        name:"Forelle",
-        value:250,
-        rarity:"selten"
-    },
-    {
-        name:"Karpfen",
-        value:350,
-        rarity:"selten"
-    },
-    {
-        name:"Goldfisch",
-        value:800,
-        rarity:"sehr selten"
+        name:"Luna",
+        type:"fox",
+        x:-1,
+        z:-7,
+        targetX:-1,
+        targetZ:-7,
+        timer:0,
+        color:[.9,.35,.08]
     }
 ];
 
+function updateAnimals(dt){
+
+    for(const a of animals){
+
+        a.timer-=dt;
+
+        if(a.timer<=0){
+
+            a.timer=rand(2,5);
+
+            a.targetX=clamp(a.x+rand(-4,4),-10,10);
+            a.targetZ=clamp(a.z+rand(-4,4),-10,10);
+        }
+
+        const dx=a.targetX-a.x;
+        const dz=a.targetZ-a.z;
+
+        const d=Math.hypot(dx,dz);
+
+        if(d>.2){
+
+            a.x+=dx/d*dt*.55;
+            a.z+=dz/d*dt*.55;
+        }
+    }
+}
+
+function drawAnimal(a,t){
+
+    const y=islandHeight(a.x,a.z);
+
+    const walking=Math.sin(t*5+a.x)>0;
+    const bob=walking?.04:0;
+
+    /* Körper */
+
+    draw(
+        meshes.sphere,
+        a.x,y+.65+bob,a.z,
+        .65,.55,.9,
+        a.color,
+        a.type==="fox" ? Math.PI/2 : 0
+    );
+
+    /* Kopf */
+
+    draw(
+        meshes.sphere,
+        a.x,y+1.15+bob,a.z-.65,
+        .48,.48,.48,
+        a.color
+    );
+
+    /* Ohren */
+
+    if(a.type==="rabbit" || a.type==="fox"){
+
+        draw(
+            meshes.cone,
+            a.x-.25,y+1.7+bob,a.z-.65,
+            .18,.4,.18,
+            a.color
+        );
+
+        draw(
+            meshes.cone,
+            a.x+.25,y+1.7+bob,a.z-.65,
+            .18,.4,.18,
+            a.color
+        );
+    }
+
+    /* Beine */
+
+    for(const dx of [-.35,.35]){
+
+        draw(
+            meshes.cylinder,
+            a.x+dx*.7,
+            y+.32+bob,
+            a.z+.2,
+            .12,.32,.12,
+            a.color
+        );
+    }
+
+    /* Augen */
+
+    draw(
+        meshes.sphere,
+        a.x-.17,y+1.23+bob,a.z-.99,
+        .055,.055,.055,
+        [.03,.03,.03]
+    );
+
+    draw(
+        meshes.sphere,
+        a.x+.17,y+1.23+bob,a.z-.99,
+        .055,.055,.055,
+        [.03,.03,.03]
+    );
+}
+
 /* =========================================================
-   MESSAGE
-========================================================= */
+   HÄNDLER
+   ========================================================= */
 
-let messageTimer;
+const merchant={
+    x:4,
+    z:7
+};
 
-function showMessage(text){
+function drawMerchant(t){
 
-    const el=document.getElementById("message");
+    const y=islandHeight(merchant.x,merchant.z);
 
-    el.textContent=text;
-    el.classList.add("show");
+    draw(
+        meshes.cylinder,
+        merchant.x,y+.65,merchant.z,
+        .35,.65,.35,
+        [.18,.35,.65]
+    );
 
-    clearTimeout(messageTimer);
+    draw(
+        meshes.sphere,
+        merchant.x,y+1.45,merchant.z,
+        .42,.42,.42,
+        [.88,.67,.48]
+    );
 
-    messageTimer=setTimeout(()=>{
-        el.classList.remove("show");
-    },3000);
+    draw(
+        meshes.cone,
+        merchant.x,y+2.0,merchant.z,
+        .55,.65,.55,
+        [.18,.20,.24]
+    );
+}
+
+/* =========================================================
+   DOCK
+   ========================================================= */
+
+function drawDock(){
+
+    for(let i=-3;i<=3;i++){
+
+        draw(
+            meshes.cube,
+            i*.65,-.02,12.7,
+            .28,.14,.9,
+            [.46,.27,.12]
+        );
+    }
+
+    draw(
+        meshes.cube,
+        0,.2,11.8,
+        2.5,.15,.25,
+        [.45,.25,.11]
+    );
+}
+
+/* =========================================================
+   SPIELER ZEICHNEN
+   ========================================================= */
+
+function drawPlayer(t){
+
+    const y=islandHeight(player.x,player.z);
+
+    const walking=
+        keys.w||keys.a||keys.s||keys.d||
+        keys.ArrowUp||keys.ArrowDown||
+        keys.ArrowLeft||keys.ArrowRight;
+
+    const step=walking?Math.sin(t*9)*.28:0;
+
+    /* Körper */
+
+    draw(
+        meshes.cube,
+        player.x,
+        y+1.0,
+        player.z,
+        .38,.58,.28,
+        [.20,.55,.78],
+        player.rot
+    );
+
+    /* Kopf */
+
+    draw(
+        meshes.sphere,
+        player.x,
+        y+1.85,
+        player.z,
+        .43,.43,.43,
+        [.88,.66,.48]
+    );
+
+    /* Haare */
+
+    draw(
+        meshes.sphere,
+        player.x,
+        y+2.15,
+        player.z+.04,
+        .44,.22,.44,
+        [.16,.09,.05]
+    );
+
+    /* Arme */
+
+    draw(
+        meshes.cylinder,
+        player.x-.48,
+        y+1.0,
+        player.z,
+        .09,.4,.09,
+        [.20,.55,.78],
+        step
+    );
+
+    draw(
+        meshes.cylinder,
+        player.x+.48,
+        y+1.0,
+        player.z,
+        .09,.4,.09,
+        -step
+    );
+
+    /* Beine */
+
+    draw(
+        meshes.cylinder,
+        player.x-.19,
+        y+.38,
+        player.z,
+        .11,.4,.11,
+        step
+    );
+
+    draw(
+        meshes.cylinder,
+        player.x+.19,
+        y+.38,
+        player.z,
+        .11,.4,.11,
+        -step
+    );
+
+    /* Angel */
+
+    if(player.fishing){
+
+        const rodX=
+            player.x+
+            Math.sin(player.rot)*.8;
+
+        const rodZ=
+            player.z+
+            Math.cos(player.rot)*.8;
+
+        draw(
+            meshes.cylinder,
+            rodX,
+            y+1.15,
+            rodZ,
+            .045,.85,.045,
+            [.24,.14,.07],
+            player.rot
+        );
+    }
+}
+
+/* =========================================================
+   WASSER
+   ========================================================= */
+
+function drawWater(t){
+
+    draw(
+        meshes.cube,
+        0,-.75,0,
+        20,.65,20,
+        [.08,.43,.55],
+        0,
+        true
+    );
+
+    /*
+       Kleine Wasserflächen als visuelle Wellen.
+    */
+
+    for(let i=0;i<12;i++){
+
+        const a=i/12*Math.PI*2;
+
+        const x=Math.cos(a)*15;
+        const z=Math.sin(a)*15;
+
+        draw(
+            meshes.cube,
+            x,
+            -.02,
+            z,
+            1.2,
+            .025,
+            .4,
+            [.12,.55,.66],
+            t*.2+a,
+            true
+        );
+    }
+}
+
+/* =========================================================
+   INSEL
+   ========================================================= */
+
+function drawIsland(){
+
+    /*
+       Statt einer einzigen riesigen Platte wird die Insel
+       aus mehreren Bereichen aufgebaut.
+    */
+
+    for(let x=-13;x<=13;x+=2){
+
+        for(let z=-13;z<=13;z+=2){
+
+            if(!insideIsland(x,z))continue;
+
+            const y=islandHeight(x,z);
+
+            let color=[.28,.64,.25];
+
+            const d=Math.hypot(x,z);
+
+            if(d>11.5){
+                color=[.79,.68,.40];
+            }
+
+            draw(
+                meshes.cube,
+                x,
+                y-.12,
+                z,
+                1.05,
+                .18,
+                1.05,
+                color
+            );
+        }
+    }
+}
+
+/* =========================================================
+   ANGELN
+   ========================================================= */
+
+const fishTypes=[
+    {name:"Rotfeder",price:80,rarity:.40},
+    {name:"Barsch",price:120,rarity:.28},
+    {name:"Forelle",price:220,rarity:.18},
+    {name:"Karpfen",price:350,rarity:.10},
+    {name:"Goldfisch",price:800,rarity:.04}
+];
+
+let fishing={
+    active:false,
+    bite:false,
+    timer:0,
+    cursor:0,
+    direction:1,
+    target:40,
+    targetWidth:28,
+    catchWindow:0
+};
+
+function canFish(){
+
+    return player.z>10.8 &&
+           Math.abs(player.x)<7;
+}
+
+function startFishing(){
+
+    if(fishing.active)return;
+
+    if(!canFish()){
+
+        showMessage("🎣 Du musst näher ans Wasser und zum Steg.");
+        return;
+    }
+
+    if(inventory.bait<=0){
+
+        showMessage("🪱 Du hast keinen Köder mehr.");
+        return;
+    }
+
+    inventory.bait--;
+
+    player.fishing=true;
+
+    fishing.active=true;
+    fishing.bite=false;
+    fishing.timer=rand(2.0,5.0);
+
+    showMessage("🎣 Du wirfst die Angel aus...");
+}
+
+function triggerFish(){
+
+    fishing.bite=true;
+    fishing.timer=0;
+    fishing.cursor=0;
+    fishing.direction=1;
+    fishing.target=rand(20,65);
+    fishing.targetWidth=rand(20,32);
+
+    $("fishPopup").style.display="block";
+}
+
+function catchFish(){
+
+    if(!fishing.bite)return;
+
+    const c=fishing.cursor;
+    const t=fishing.target;
+    const w=fishing.targetWidth;
+
+    if(c>=t && c<=t+w){
+
+        let roll=Math.random();
+
+        let sum=0;
+        let selected=fishTypes[0];
+
+        for(const fish of fishTypes){
+
+            sum+=fish.rarity;
+
+            if(roll<=sum){
+                selected=fish;
+                break;
+            }
+        }
+
+        inventory.fish.push(selected.name);
+
+        quest.fish++;
+
+        showMessage(
+            "🐟 Gefangen: <b>"+
+            selected.name+
+            "</b><br>Wert: "+selected.price+" Münzen"
+        );
+
+        finishFishing();
+
+    }else{
+
+        showMessage("🐟 Der Fisch ist entkommen!");
+
+        finishFishing();
+    }
+}
+
+function finishFishing(){
+
+    fishing.active=false;
+    fishing.bite=false;
+    player.fishing=false;
+
+    $("fishPopup").style.display="none";
+}
+
+$("catchButton").onclick=catchFish;
+
+function updateFishing(dt){
+
+    if(!fishing.active)return;
+
+    if(!fishing.bite){
+
+        fishing.timer-=dt;
+
+        if(fishing.timer<=0){
+            triggerFish();
+        }
+
+    }else{
+
+        fishing.cursor+=
+            fishing.direction*
+            dt*48;
+
+        if(fishing.cursor>95){
+            fishing.cursor=95;
+            fishing.direction=-1;
+        }
+
+        if(fishing.cursor<0){
+            fishing.cursor=0;
+            fishing.direction=1;
+        }
+    }
 }
 
 /* =========================================================
    INVENTAR
-========================================================= */
+   ========================================================= */
+
+const inventory={
+    wood:0,
+    bait:5,
+    seeds:0,
+    fish:[]
+};
 
 function updateInventory(){
 
-    let html="";
+    const list=$("inventoryList");
 
-    Object.entries(inventory).forEach(([name,count])=>{
-        html+=`${name}: ${count}<br>`;
-    });
+    const counts={};
 
-    if(fishInventory.length){
-        html+="<hr>";
-
-        fishInventory.forEach(f=>{
-            html+=`🐟 ${f.name} (${f.value} G)<br>`;
-        });
+    for(const f of inventory.fish){
+        counts[f]=(counts[f]||0)+1;
     }
 
-    document.getElementById("inventoryList").innerHTML=html;
+    let html="";
 
-    document.getElementById("money").textContent=money;
+    html+=`
+        <div class="item">
+            <span>🪵 Holz</span>
+            <b>${inventory.wood}</b>
+        </div>
+    `;
+
+    html+=`
+        <div class="item">
+            <span>🪱 Köder</span>
+            <b>${inventory.bait}</b>
+        </div>
+    `;
+
+    html+=`
+        <div class="item">
+            <span>🌱 Samen</span>
+            <b>${inventory.seeds}</b>
+        </div>
+    `;
+
+    for(const fish of fishTypes){
+
+        html+=`
+            <div class="item">
+                <span>🐟 ${fish.name}</span>
+                <b>${counts[fish.name]||0}</b>
+            </div>
+        `;
+    }
+
+    list.innerHTML=html;
 }
 
 /* =========================================================
-   MOVEMENT
-========================================================= */
+   FISCH VERKAUFEN
+   ========================================================= */
+
+$("sellFish").onclick=()=>{
+
+    if(inventory.fish.length===0){
+
+        showMessage("🐟 Du hast keine Fische.");
+        return;
+    }
+
+    let money=0;
+
+    for(const caught of inventory.fish){
+
+        const f=fishTypes.find(x=>x.name===caught);
+
+        if(f)money+=f.price;
+    }
+
+    inventory.fish=[];
+
+    game.money+=money;
+
+    showMessage(
+        "💰 Verkauft! Du bekommst <b>"+
+        money+
+        " Münzen</b>."
+    );
+
+    updateHUD();
+    updateInventory();
+    saveGame();
+};
+
+/* =========================================================
+   QUEST
+   ========================================================= */
+
+const quest={
+    fish:0,
+    completed:false
+};
+
+function updateQuest(){
+
+    if(!quest.completed && quest.fish>=3){
+
+        quest.completed=true;
+        game.money+=300;
+
+        showMessage(
+            "⭐ Aufgabe abgeschlossen!<br>"+
+            "Belohnung: <b>300 Münzen</b>"
+        );
+    }
+
+    $("questText").innerHTML=
+        quest.completed
+        ? "⭐ Aufgabe abgeschlossen!<br>Neue Aufgabe folgt bald."
+        : "Fange 3 Fische. Fortschritt: "+
+          quest.fish+"/3";
+
+    updateHUD();
+}
+
+/* =========================================================
+   HOLZ SAMMELN
+   ========================================================= */
+
+let woodCooldown=0;
+
+function collectWood(){
+
+    if(woodCooldown>0)return;
+
+    let closest=null;
+    let d=Infinity;
+
+    for(const tree of trees){
+
+        const dd=Math.hypot(
+            player.x-tree.x,
+            player.z-tree.z
+        );
+
+        if(dd<d){
+            d=dd;
+            closest=tree;
+        }
+    }
+
+    if(d<2.1){
+
+        inventory.wood+=2;
+        woodCooldown=1;
+
+        showMessage("🪵 Du hast 2 Holz gesammelt.");
+
+        updateInventory();
+        saveGame();
+    }
+}
+
+/* =========================================================
+   HÄNDLER
+   ========================================================= */
+
+function openShop(){
+
+    $("shop").style.display="block";
+}
+
+function closeShop(){
+
+    $("shop").style.display="none";
+}
+
+$("closeShop").onclick=closeShop;
+
+$("buyBait").onclick=()=>{
+
+    if(game.money<50){
+
+        showMessage("💰 Dafür hast du nicht genug Geld.");
+        return;
+    }
+
+    game.money-=50;
+    inventory.bait+=5;
+
+    showMessage("🪱 5 Köder gekauft.");
+
+    updateHUD();
+    updateInventory();
+};
+
+$("buySeed").onclick=()=>{
+
+    if(game.money<75){
+
+        showMessage("💰 Dafür hast du nicht genug Geld.");
+        return;
+    }
+
+    game.money-=75;
+    inventory.seeds+=5;
+
+    showMessage("🌱 5 Samen gekauft.");
+
+    updateHUD();
+    updateInventory();
+};
+
+$("sellWood").onclick=()=>{
+
+    if(inventory.wood<=0){
+
+        showMessage("🪵 Du hast kein Holz.");
+        return;
+    }
+
+    const money=inventory.wood*25;
+
+    inventory.wood=0;
+    game.money+=money;
+
+    showMessage(
+        "💰 Holz verkauft: +"+money+" Münzen"
+    );
+
+    updateHUD();
+    updateInventory();
+};
+
+/* =========================================================
+   SPIELDATEN
+   ========================================================= */
+
+const game={
+    money:500,
+    time:8*60,
+    lastSave:0
+};
+
+function saveGame(){
+
+    const data={
+        money:game.money,
+        time:game.time,
+
+        player:{
+            x:player.x,
+            z:player.z
+        },
+
+        inventory:{
+            wood:inventory.wood,
+            bait:inventory.bait,
+            seeds:inventory.seeds,
+            fish:inventory.fish
+        },
+
+        quest:{
+            fish:quest.fish,
+            completed:quest.completed
+        }
+    };
+
+    localStorage.setItem(
+        "animalmania2_save",
+        JSON.stringify(data)
+    );
+
+    showMessage("💾 Spiel gespeichert.");
+}
+
+function loadGame(){
+
+    const raw=localStorage.getItem("animalmania2_save");
+
+    if(!raw){
+
+        showMessage("📂 Kein Spielstand vorhanden.");
+        return;
+    }
+
+    try{
+
+        const data=JSON.parse(raw);
+
+        game.money=data.money??500;
+        game.time=data.time??480;
+
+        player.x=data.player?.x??-2;
+        player.z=data.player?.z??4;
+
+        inventory.wood=data.inventory?.wood??0;
+        inventory.bait=data.inventory?.bait??5;
+        inventory.seeds=data.inventory?.seeds??0;
+        inventory.fish=data.inventory?.fish??[];
+
+        quest.fish=data.quest?.fish??0;
+        quest.completed=data.quest?.completed??false;
+
+        updateHUD();
+        updateInventory();
+        updateQuest();
+
+        showMessage("📂 Spielstand geladen.");
+
+    }catch(e){
+
+        showMessage("❌ Spielstand konnte nicht geladen werden.");
+    }
+}
+
+$("saveGame").onclick=saveGame;
+$("loadGame").onclick=loadGame;
+
+$("closeInventory").onclick=()=>{
+    $("inventory").style.display="none";
+};
+
+/* =========================================================
+   HUD
+   ========================================================= */
+
+function updateHUD(){
+
+    $("money").textContent=game.money;
+    $("time").textContent=formatTime(game.time);
+
+    if(player.z>10){
+        $("location").textContent="Am Meer";
+    }else if(
+        Math.abs(player.x-house.x)<4 &&
+        Math.abs(player.z-house.z)<4
+    ){
+        $("location").textContent="Dein Haus";
+    }else{
+        $("location").textContent="Insel";
+    }
+}
+
+/* =========================================================
+   INTERAKTION
+   ========================================================= */
+
+function getInteraction(){
+
+    let best=null;
+    let bestD=999;
+
+    for(const a of animals){
+
+        const d=Math.hypot(
+            player.x-a.x,
+            player.z-a.z
+        );
+
+        if(d<bestD){
+            bestD=d;
+            best={
+                type:"animal",
+                obj:a
+            };
+        }
+    }
+
+    const md=Math.hypot(
+        player.x-merchant.x,
+        player.z-merchant.z
+    );
+
+    if(md<bestD){
+
+        bestD=md;
+
+        best={
+            type:"merchant"
+        };
+    }
+
+    let treeBest=Infinity;
+
+    for(const tree of trees){
+
+        const d=Math.hypot(
+            player.x-tree.x,
+            player.z-tree.z
+        );
+
+        treeBest=Math.min(treeBest,d);
+    }
+
+    if(treeBest<bestD && treeBest<2.1){
+
+        bestD=treeBest;
+
+        best={
+            type:"tree"
+        };
+    }
+
+    return bestD<2.2?best:null;
+}
+
+function interact(){
+
+    const target=getInteraction();
+
+    if(!target){
+
+        collectWood();
+
+        return;
+    }
+
+    if(target.type==="animal"){
+
+        const a=target.obj;
+
+        const texts={
+            rabbit:[
+                "Milo hüpft fröhlich herum.",
+                "Milo mag Karotten.",
+                "Milo schaut dich neugierig an."
+            ],
+            bear:[
+                "Bruno brummt zufrieden.",
+                "Bruno war heute schon angeln.",
+                "Bruno mag Honig."
+            ],
+            fox:[
+                "Luna winkt mit dem Schwanz.",
+                "Luna hat einen Fisch gerochen.",
+                "Luna findet die Insel wunderschön."
+            ]
+        };
+
+        const arr=texts[a.type];
+
+        showMessage(
+            "💬 <b>"+a.name+"</b><br>"+
+            arr[Math.floor(Math.random()*arr.length)]
+        );
+
+        return;
+    }
+
+    if(target.type==="merchant"){
+
+        openShop();
+        return;
+    }
+
+    if(target.type==="tree"){
+
+        collectWood();
+        return;
+    }
+}
+
+/* =========================================================
+   TASTATUR
+   ========================================================= */
+
+const keys={};
+
+addEventListener("keydown",e=>{
+
+    keys[e.key]=true;
+
+    if(
+        ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "]
+        .includes(e.key)
+    ){
+        e.preventDefault();
+    }
+
+    if(e.key.toLowerCase()==="e"){
+        interact();
+    }
+
+    if(e.key.toLowerCase()==="f"){
+        if(!fishing.active){
+            startFishing();
+        }else if(fishing.bite){
+            catchFish();
+        }
+    }
+
+    if(e.key.toLowerCase()==="i"){
+
+        const inv=$("inventory");
+
+        inv.style.display=
+            inv.style.display==="block"
+            ?"none"
+            :"block";
+
+        updateInventory();
+    }
+
+    if(e.key===" " && fishing.bite){
+        catchFish();
+    }
+
+    if(e.key==="Escape"){
+
+        $("inventory").style.display="none";
+        $("shop").style.display="none";
+
+        if(fishing.active){
+            finishFishing();
+        }
+    }
+});
+
+addEventListener("keyup",e=>{
+    keys[e.key]=false;
+});
+
+/* =========================================================
+   MOBILE STEUERUNG
+   ========================================================= */
+
+function bindMove(id,key){
+
+    const el=$(id);
+
+    const down=e=>{
+        e.preventDefault();
+        keys[key]=true;
+    };
+
+    const up=e=>{
+        e.preventDefault();
+        keys[key]=false;
+    };
+
+    el.addEventListener("touchstart",down,{passive:false});
+    el.addEventListener("touchend",up,{passive:false});
+    el.addEventListener("mousedown",down);
+    el.addEventListener("mouseup",up);
+}
+
+bindMove("up","w");
+bindMove("down","s");
+bindMove("left","a");
+bindMove("right","d");
+
+$("mobileInteract").onclick=interact;
+$("mobileFish").onclick=()=>{
+    if(!fishing.active)startFishing();
+    else if(fishing.bite)catchFish();
+};
+
+$("mobileInv").onclick=()=>{
+    $("inventory").style.display="block";
+    updateInventory();
+};
+
+/* =========================================================
+   SPIELER BEWEGUNG
+   ========================================================= */
 
 function updatePlayer(dt){
 
     let dx=0;
     let dz=0;
 
-    if(keys["w"]||keys["arrowup"]) dz-=1;
-    if(keys["s"]||keys["arrowdown"]) dz+=1;
-    if(keys["a"]||keys["arrowleft"]) dx-=1;
-    if(keys["d"]||keys["arrowright"]) dx+=1;
+    if(keys.w||keys.ArrowUp)dz-=1;
+    if(keys.s||keys.ArrowDown)dz+=1;
+    if(keys.a||keys.ArrowLeft)dx-=1;
+    if(keys.d||keys.ArrowRight)dx+=1;
 
     if(dx!==0||dz!==0){
 
@@ -1150,602 +2547,377 @@ function updatePlayer(dt){
         dx/=len;
         dz/=len;
 
-        player.x+=dx*player.speed*dt;
-        player.z+=dz*player.speed*dt;
-
         player.rot=Math.atan2(dx,dz);
-    }
 
-    /* Inselgrenze */
+        let speed=player.speed;
 
-    player.x=Math.max(-14,Math.min(14,player.x));
-    player.z=Math.max(-14,Math.min(14,player.z));
-}
+        if(player.fishing){
+            speed=.25;
+        }
 
-/* =========================================================
-   FISHING
-========================================================= */
+        const nx=player.x+dx*speed*dt;
+        const nz=player.z+dz*speed*dt;
 
-function isNearWater(){
+        /*
+           Inselbegrenzung
+        */
 
-    return player.z>12.5 ||
-           player.x>14 ||
-           player.x<-14 ||
-           player.z<-14;
-}
+        if(insideIsland(nx,nz)){
 
-function startFishing(){
+            /*
+               einfache Kollision mit Haus
+            */
 
-    if(player.fishing){
-        showMessage("🎣 Du angelst bereits.");
-        return;
-    }
+            const hx=Math.abs(nx-house.x);
+            const hz=Math.abs(nz-house.z);
 
-    if(player.z<11){
+            const blocked=
+                hx<3.7 &&
+                hz<2.9 &&
+                nz>house.z-2.2;
 
-        showMessage(
-            "🌊 Geh näher zum Wasser. Der Angelplatz ist im Süden."
-        );
+            if(!blocked){
 
-        return;
-    }
-
-    player.fishing=true;
-
-    showMessage(
-        "🎣 Du wirfst die Angel aus..."
-    );
-
-    const delay=1500+Math.random()*3500;
-
-    setTimeout(()=>{
-
-        if(!player.fishing) return;
-
-        player.fishReady=true;
-
-        document.getElementById("fishPopup").style.display="block";
-
-        document.getElementById("fishText").textContent=
-            "Der Schwimmer bewegt sich! Zieh die Angel schnell ein.";
-
-        showMessage("🐟 EIN FISCH BEISST!");
-
-        setTimeout(()=>{
-
-            if(player.fishReady){
-
-                player.fishing=false;
-                player.fishReady=false;
-
-                document.getElementById("fishPopup").style.display="none";
-
-                showMessage(
-                    "🐟 Der Fisch ist entkommen!"
-                );
+                player.x=nx;
+                player.z=nz;
             }
-
-        },3500);
-
-    },delay);
-}
-
-function catchFish(){
-
-    if(!player.fishReady) return;
-
-    const roll=Math.random();
-
-    let fish;
-
-    if(roll<.55){
-        fish=fishTypes[0];
-    }else if(roll<.80){
-        fish=fishTypes[1];
-    }else if(roll<.94){
-        fish=fishTypes[2];
-    }else if(roll<.99){
-        fish=fishTypes[3];
-    }else{
-        fish=fishTypes[4];
-    }
-
-    fishInventory.push({
-        name:fish.name,
-        value:fish.value
-    });
-
-    inventory["🐟 Fisch"]++;
-
-    player.fishing=false;
-    player.fishReady=false;
-
-    document.getElementById("fishPopup").style.display="none";
-
-    showMessage(
-        `🎉 Gefangen: ${fish.name} · Wert ${fish.value} G`
-    );
-
-    updateInventory();
-}
-
-/* =========================================================
-   SELL FISH
-========================================================= */
-
-function sellFish(){
-
-    if(fishInventory.length===0){
-
-        showMessage(
-            "🎒 Du hast keine Fische zu verkaufen."
-        );
-
-        return;
-    }
-
-    let total=0;
-
-    fishInventory.forEach(f=>{
-        total+=f.value;
-    });
-
-    fishInventory.length=0;
-
-    inventory["🐟 Fisch"]=0;
-
-    money+=total;
-
-    showMessage(
-        `💰 Alle Fische verkauft: +${total} G`
-    );
-
-    updateInventory();
-}
-
-/* =========================================================
-   GENERAL ACTION
-========================================================= */
-
-function doAction(){
-
-    /* Fischfang */
-
-    if(player.fishReady){
-        catchFish();
-        return;
-    }
-
-    /* Bäume */
-
-    objects.forEach(obj=>{
-
-        if(obj.type!=="trunk") return;
-
-        const d=Math.hypot(
-            player.x-obj.x,
-            player.z-obj.z
-        );
-
-        if(d<2.2){
-
-            inventory["🌿 Holz"]++;
-
-            showMessage(
-                "🌿 Du hast Holz gesammelt."
-            );
-
-            updateInventory();
-
         }
 
-    });
-
+        player.walkTime+=dt;
+    }
 }
 
 /* =========================================================
-   SAVE
-========================================================= */
+   KAMERA
+   ========================================================= */
 
-function saveGame(){
+function updateCamera(){
 
-    const data={
-        money,
-        inventory,
-        fishInventory,
-        player:{
-            x:player.x,
-            z:player.z
-        }
+    const target={
+        x:player.x,
+        y:islandHeight(player.x,player.z)+1,
+        z:player.z
     };
 
-    localStorage.setItem(
-        "animalmania_save",
-        JSON.stringify(data)
-    );
+    const cp=Math.cos(cameraPitch);
+    const sp=Math.sin(cameraPitch);
 
-    showMessage("💾 Spiel gespeichert.");
-}
+    const eye={
+        x:target.x+
+          Math.sin(cameraYaw)*cp*cameraDistance,
 
-/* =========================================================
-   LOAD
-========================================================= */
+        y:target.y+
+          sp*cameraDistance,
 
-function loadGame(){
+        z:target.z+
+          Math.cos(cameraYaw)*cp*cameraDistance
+    };
 
-    const raw=localStorage.getItem(
-        "animalmania_save"
-    );
-
-    if(!raw){
-
-        showMessage(
-            "📂 Kein Spielstand vorhanden."
-        );
-
-        return;
-    }
-
-    const data=JSON.parse(raw);
-
-    money=data.money ?? 500;
-
-    Object.keys(inventory).forEach(k=>{
-        inventory[k]=data.inventory[k] ?? 0;
-    });
-
-    fishInventory.length=0;
-
-    if(Array.isArray(data.fishInventory)){
-        data.fishInventory.forEach(f=>{
-            fishInventory.push(f);
-        });
-    }
-
-    player.x=data.player?.x ?? -1;
-    player.z=data.player?.z ?? 3;
-
-    updateInventory();
-
-    showMessage("📂 Spielstand geladen.");
-}
-
-/* =========================================================
-   DRAW WORLD
-========================================================= */
-
-function drawObject(obj,viewProjection){
-
-    let sx=obj.sx;
-    let sy=obj.sy;
-    let sz=obj.sz;
-
-    let x=obj.x;
-    let y=obj.y;
-    let z=obj.z;
-
-    /* Tiere bewegen */
-
-    if(
-        obj.type==="animalBody" ||
-        obj.type==="animalHead"
-    ){
-
-        if(obj.data){
-
-            const t=performance.now()/1000;
-
-            const offsetX=
-                Math.sin(t*.35+obj.data.phase)*.8;
-
-            const offsetZ=
-                Math.cos(t*.27+obj.data.phase)*.8;
-
-            if(obj.type==="animalBody"){
-                x=obj.data.baseX+offsetX;
-                z=obj.data.baseZ+offsetZ;
-            }
-
-            if(obj.type==="animalHead"){
-                const parent=objects[obj.data.animalId];
-
-                if(parent){
-
-                    x=parent.x;
-                    z=parent.z+.55;
-                }
-            }
-        }
-    }
-
-    const model=transform(
-        x,y,z,
-        sx,sy,sz,
-        obj.rot
-    );
-
-    const mvp=mat4Multiply(
-        viewProjection,
-        model
-    );
-
-    drawCube(
-        mvp,
-        obj.color
+    view=lookAt(
+        eye,
+        target,
+        {x:0,y:1,z:0}
     );
 }
 
 /* =========================================================
-   PLAYER MODEL
-========================================================= */
+   TAG / NACHT
+   ========================================================= */
 
-function drawPlayer(vp){
+function updateLighting(){
 
-    /* Körper */
+    const h=(game.time/60)%24;
 
-    let body=transform(
-        player.x,
-        1.6,
-        player.z,
-        .55,.85,.42,
-        player.rot
-    );
+    /*
+       Sonnenstand.
+    */
 
-    drawCube(
-        mat4Multiply(vp,body),
-        [.25,.55,.9]
-    );
+    const angle=(h-6)/24*Math.PI*2;
 
-    /* Kopf */
+    const light=[
+        Math.cos(angle)*.8,
+        Math.sin(angle),
+        .45
+    ];
 
-    let head=transform(
-        player.x,
-        2.75,
-        player.z,
-        .52,.52,.52
-    );
+    let ambient;
 
-    drawCube(
-        mat4Multiply(vp,head),
-        [1,.72,.52]
-    );
+    if(h<6 || h>20){
 
-    /* Haare */
+        ambient=[.08,.11,.20];
 
-    let hair=transform(
-        player.x,
-        3.15,
-        player.z,
-        .55,.22,.55
-    );
+    }else if(h<8){
 
-    drawCube(
-        mat4Multiply(vp,hair),
-        [.18,.10,.05]
-    );
+        ambient=[.24,.24,.28];
 
-    /* Angel */
+    }else if(h>18){
 
-    if(player.fishing){
+        ambient=[.30,.22,.18];
 
-        const rod=transform(
-            player.x+.8,
-            2.1,
-            player.z+1.2,
-            .08,
-            1.8,
-            .08,
-            player.rot
-        );
+    }else{
 
-        drawCube(
-            mat4Multiply(vp,rod),
-            [.55,.30,.10]
-        );
+        ambient=[.32,.36,.30];
     }
+
+    gl.uniform3fv(
+        loc.light,
+        new Float32Array(light)
+    );
+
+    gl.uniform3fv(
+        loc.ambient,
+        new Float32Array(ambient)
+    );
+
+    gl.uniform1f(loc.fog,.025);
 }
 
 /* =========================================================
-   DAY / NIGHT
-========================================================= */
-
-let gameTime=8*60;
+   ZEIT
+   ========================================================= */
 
 function updateTime(dt){
 
-    gameTime+=dt*2;
+    /*
+       1 reale Sekunde = 2 Spielminuten.
+    */
 
-    if(gameTime>=1440){
-        gameTime-=1440;
+    game.time+=dt*2;
+
+    if(game.time>=1440){
+        game.time-=1440;
     }
 
-    const hours=Math.floor(gameTime/60);
-    const minutes=Math.floor(gameTime%60);
-
-    document.getElementById("time").textContent=
-        String(hours).padStart(2,"0")+
-        ":"+
-        String(minutes).padStart(2,"0");
+    updateHUD();
 }
 
-function updateSky(){
+/* =========================================================
+   PROMPT
+   ========================================================= */
 
-    const hour=gameTime/60;
+function updatePrompt(){
 
-    let brightness;
+    if($("shop").style.display==="block"){
+        $("prompt").style.display="none";
+        return;
+    }
 
-    if(hour<6){
-        brightness=.25;
-    }else if(hour<9){
-        brightness=.25+(hour-6)/3*.75;
-    }else if(hour<18){
-        brightness=1;
-    }else if(hour<22){
-        brightness=1-(hour-18)/4*.7;
+    if($("inventory").style.display==="block"){
+        $("prompt").style.display="none";
+        return;
+    }
+
+    const target=getInteraction();
+
+    if(target){
+
+        if(target.type==="animal"){
+            $("prompt").textContent=
+                "E · Mit "+target.obj.name+" sprechen";
+        }
+
+        if(target.type==="merchant"){
+            $("prompt").textContent=
+                "E · Händler öffnen";
+        }
+
+        if(target.type==="tree"){
+            $("prompt").textContent=
+                "E · Holz sammeln";
+        }
+
+        $("prompt").style.display="block";
+
+    }else if(canFish() && !fishing.active){
+
+        $("prompt").textContent=
+            "F · Angel auswerfen";
+
+        $("prompt").style.display="block";
+
     }else{
-        brightness=.3;
+
+        $("prompt").style.display="none";
     }
-
-    gl.clearColor(
-        .10*brightness+.02,
-        .42*brightness+.03,
-        .65*brightness+.06,
-        1
-    );
 }
 
 /* =========================================================
-   CAMERA
-========================================================= */
-
-function getCamera(){
-
-    const horizontal=
-        Math.cos(camera.pitch)*camera.distance;
-
-    const eye=[
-        player.x+
-        Math.sin(camera.yaw)*horizontal,
-
-        player.y+
-        5+
-        Math.sin(-camera.pitch)*camera.distance,
-
-        player.z+
-        Math.cos(camera.yaw)*horizontal
-    ];
-
-    const target=[
-        player.x,
-        1.5,
-        player.z
-    ];
-
-    return lookAt(
-        eye,
-        target,
-        [0,1,0]
-    );
-}
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function resize(){
-
-    const dpr=Math.min(
-        window.devicePixelRatio||1,
-        2
-    );
-
-    canvas.width=
-        canvas.clientWidth*dpr;
-
-    canvas.height=
-        canvas.clientHeight*dpr;
-
-    gl.viewport(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-}
-
-window.addEventListener("resize",resize);
-
-resize();
-
-gl.enable(gl.DEPTH_TEST);
-gl.enable(gl.CULL_FACE);
-
-function render(){
-
-    resize();
-
-    updateSky();
-
-    gl.clear(
-        gl.COLOR_BUFFER_BIT |
-        gl.DEPTH_BUFFER_BIT
-    );
-
-    const aspect=
-        canvas.width/canvas.height;
-
-    const projection=
-        perspective(
-            Math.PI/3,
-            aspect,
-            .1,
-            100
-        );
-
-    const view=
-        getCamera();
-
-    const vp=
-        mat4Multiply(
-            projection,
-            view
-        );
-
-    objects.forEach(obj=>{
-        drawObject(obj,vp);
-    });
-
-    drawPlayer(vp);
-}
-
-/* =========================================================
-   MAIN LOOP
-========================================================= */
+   RENDER LOOP
+   ========================================================= */
 
 let lastTime=performance.now();
 
-function loop(now){
+function frame(now){
 
-    const dt=
-        Math.min(
-            (now-lastTime)/1000,
-            .05
-        );
+    const dt=Math.min(
+        (now-lastTime)/1000,
+        .05
+    );
 
     lastTime=now;
 
     updatePlayer(dt);
+    updateAnimals(dt);
+    updateFishing(dt);
+
+    woodCooldown=Math.max(
+        0,
+        woodCooldown-dt
+    );
+
     updateTime(dt);
-    updateInventory();
+    updateQuest();
+    updatePrompt();
+    updateCamera();
+    updateLighting();
 
-    render();
+    gl.clearColor(
+        .33,.52,.63,1
+    );
 
-    requestAnimationFrame(loop);
+    gl.clear(
+        gl.COLOR_BUFFER_BIT|
+        gl.DEPTH_BUFFER_BIT
+    );
+
+    gl.useProgram(program);
+
+    gl.uniformMatrix4fv(
+        loc.projection,
+        false,
+        projection
+    );
+
+    gl.uniformMatrix4fv(
+        loc.view,
+        false,
+        view
+    );
+
+    gl.uniform1f(
+        loc.time,
+        now/1000
+    );
+
+    /* Wasser */
+
+    drawWater(now/1000);
+
+    /* Insel */
+
+    drawIsland();
+
+    /* Dock */
+
+    drawDock();
+
+    /* Bäume */
+
+    for(const tree of trees){
+        drawTree(tree,now/1000);
+    }
+
+    /* Steine */
+
+    for(const rock of rocks){
+        drawRock(rock);
+    }
+
+    /* Blumen */
+
+    for(const flower of flowers){
+        drawFlower(flower,now/1000);
+    }
+
+    /* Haus */
+
+    drawHouse(now/1000);
+
+    /* Händler */
+
+    drawMerchant(now/1000);
+
+    /* Tiere */
+
+    for(const animal of animals){
+        drawAnimal(animal,now/1000);
+    }
+
+    /* Spieler */
+
+    drawPlayer(now/1000);
+
+    /*
+       Fischfang-Anzeige aktualisieren
+    */
+
+    if(fishing.bite){
+
+        $("fishCursor").style.left=
+            fishing.cursor+"%";
+
+        $("fishTarget").style.left=
+            fishing.target+"%";
+
+        $("fishTarget").style.width=
+            fishing.targetWidth+"%";
+    }
+
+    /*
+       Autosave alle 60 Sekunden.
+    */
+
+    game.lastSave+=dt;
+
+    if(game.lastSave>60){
+
+        game.lastSave=0;
+
+        const data={
+            money:game.money,
+            time:game.time,
+
+            player:{
+                x:player.x,
+                z:player.z
+            },
+
+            inventory:{
+                wood:inventory.wood,
+                bait:inventory.bait,
+                seeds:inventory.seeds,
+                fish:inventory.fish
+            },
+
+            quest:{
+                fish:quest.fish,
+                completed:quest.completed
+            }
+        };
+
+        localStorage.setItem(
+            "animalmania2_save",
+            JSON.stringify(data)
+        );
+    }
+
+    requestAnimationFrame(frame);
 }
 
-buildWorld();
-updateInventory();
-requestAnimationFrame(loop);
-
 /* =========================================================
-   INITIAL MESSAGE
-========================================================= */
+   START
+   ========================================================= */
 
-setTimeout(()=>{
+updateHUD();
+updateInventory();
+updateQuest();
 
-    showMessage(
-        "🏡 Willkommen auf deiner Insel! Dein Haus steht direkt vor dir."
-    );
+showMessage(
+    "🌿 Willkommen bei <b>AnimalMania 2.0</b>!<br>"+
+    "Dein kleines Inselabenteuer beginnt."
+);
 
-},800);
-
-setTimeout(()=>{
-
-    showMessage(
-        "🎣 Im Süden findest du den Angelplatz. Drücke F zum Angeln."
-    );
-
-},4500);
+requestAnimationFrame(frame);
 
 </script>
 
