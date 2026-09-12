@@ -2,28 +2,31 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
 
-<title>AnimalMania 3.0</title>
+<title>AnimalMania 3.1</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     user-select:none;
     -webkit-user-select:none;
 }
 
-html,body{
+html,
+body{
     margin:0;
     padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#79c9ff;
+    background:#79c9f4;
     font-family:Arial,Helvetica,sans-serif;
     touch-action:none;
 }
@@ -34,48 +37,69 @@ html,body{
     width:100%;
     height:100%;
     display:block;
+    outline:none;
 }
+
+/* =========================================================
+   HUD
+   ========================================================= */
 
 #hud{
     position:fixed;
     top:12px;
     left:12px;
     z-index:20;
+
+    min-width:205px;
+
+    padding:11px 14px;
+
     color:white;
-    background:rgba(20,25,30,.72);
-    border:2px solid rgba(255,255,255,.22);
-    border-radius:12px;
-    padding:10px 13px;
-    min-width:190px;
-    box-shadow:0 5px 20px rgba(0,0,0,.25);
+
+    background:rgba(16,22,28,.78);
+
+    border:2px solid rgba(255,255,255,.20);
+    border-radius:13px;
+
+    box-shadow:
+        0 6px 25px rgba(0,0,0,.28);
+
     pointer-events:none;
 }
 
 #title{
     font-size:20px;
     font-weight:900;
+    text-shadow:2px 2px 0 #000;
     margin-bottom:5px;
-    text-shadow:2px 2px #000;
 }
 
 #stats{
     font-size:13px;
-    line-height:1.6;
+    line-height:1.55;
 }
 
 #selected{
-    color:#ffe76b;
-    font-weight:bold;
+    color:#ffe56b;
+    font-weight:900;
 }
+
+/* =========================================================
+   CROSSHAIR
+   ========================================================= */
 
 #crosshair{
     position:fixed;
     left:50%;
     top:50%;
+
     width:18px;
     height:18px;
+
     transform:translate(-50%,-50%);
+
     z-index:15;
+
     pointer-events:none;
 }
 
@@ -84,114 +108,192 @@ html,body{
     content:"";
     position:absolute;
     background:white;
-    box-shadow:0 0 3px black;
+    box-shadow:0 0 3px #000;
 }
 
 #crosshair:before{
-    width:18px;
-    height:2px;
     left:0;
     top:8px;
+    width:18px;
+    height:2px;
 }
 
 #crosshair:after{
-    width:2px;
-    height:18px;
     left:8px;
     top:0;
+    width:2px;
+    height:18px;
 }
+
+/* =========================================================
+   PROMPT
+   ========================================================= */
 
 #prompt{
     position:fixed;
     left:50%;
-    bottom:115px;
+    bottom:105px;
+
     transform:translateX(-50%);
+
     z-index:30;
+
     padding:9px 15px;
-    background:rgba(15,20,25,.8);
+
     color:white;
+    background:rgba(10,15,20,.82);
+
     border-radius:10px;
-    font-size:14px;
+
+    font-size:13px;
     font-weight:bold;
+
     opacity:0;
     transition:.15s;
+
     pointer-events:none;
+
+    text-align:center;
 }
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
 
 #message{
     position:fixed;
+
     left:50%;
-    top:80px;
+    top:78px;
+
     transform:translateX(-50%);
-    z-index:40;
-    background:rgba(20,25,30,.9);
-    color:white;
+
+    z-index:100;
+
     padding:10px 18px;
+
+    color:white;
+    background:rgba(15,20,25,.92);
+
     border-radius:10px;
+
     opacity:0;
+
     pointer-events:none;
+
     transition:.2s;
-    box-shadow:0 4px 15px rgba(0,0,0,.25);
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.35);
+
+    text-align:center;
 }
+
+/* =========================================================
+   HOTBAR
+   ========================================================= */
 
 #hotbar{
     position:fixed;
+
     left:50%;
-    bottom:15px;
+    bottom:12px;
+
     transform:translateX(-50%);
-    z-index:30;
+
+    z-index:40;
+
     display:flex;
     gap:5px;
+
     padding:7px;
-    background:rgba(15,20,25,.78);
-    border:2px solid rgba(255,255,255,.2);
+
+    background:rgba(12,17,22,.82);
+
+    border:
+        2px solid
+        rgba(255,255,255,.18);
+
     border-radius:12px;
 }
 
 .slot{
-    width:55px;
-    height:55px;
-    border:2px solid rgba(255,255,255,.25);
-    border-radius:7px;
-    background:rgba(255,255,255,.08);
-    color:white;
     position:relative;
+
+    width:54px;
+    height:54px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:25px;
+
+    color:white;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border:
+        2px solid
+        rgba(255,255,255,.25);
+
+    border-radius:7px;
 }
 
 .slot.active{
-    border-color:#ffe66b;
-    box-shadow:0 0 0 2px rgba(255,230,107,.25);
-    background:rgba(255,230,107,.14);
+    border-color:#ffe56b;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(255,229,107,.20);
 }
 
 .slot small{
     position:absolute;
     right:4px;
     bottom:2px;
-    font-size:11px;
+
+    font-size:10px;
     color:white;
 }
 
+/* =========================================================
+   INVENTAR
+   ========================================================= */
+
 #inventory{
     position:fixed;
+
     left:50%;
     top:50%;
+
     transform:translate(-50%,-50%);
-    z-index:100;
+
+    z-index:200;
+
     width:min(520px,90vw);
     max-height:80vh;
+
     overflow:auto;
-    background:rgba(20,25,30,.96);
-    color:white;
-    border:2px solid #8bd2ff;
-    border-radius:16px;
-    padding:20px;
+
     display:none;
-    box-shadow:0 15px 50px rgba(0,0,0,.5);
+
+    padding:20px;
+
+    color:white;
+
+    background:
+        rgba(18,24,29,.97);
+
+    border:
+        2px solid
+        #77c8f2;
+
+    border-radius:16px;
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.55);
 }
 
 #inventory h2{
@@ -201,83 +303,148 @@ html,body{
 .invrow{
     display:flex;
     justify-content:space-between;
-    padding:9px;
-    border-bottom:1px solid rgba(255,255,255,.1);
+
+    padding:10px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.10);
 }
 
 .close{
-    margin-top:15px;
     width:100%;
-    border:0;
+
+    margin-top:15px;
+
     padding:12px;
+
+    border:0;
     border-radius:9px;
-    background:#4d9de0;
+
     color:white;
+
+    background:#4f9ddd;
+
     font-weight:bold;
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 #mobile{
     display:none;
+
     position:fixed;
     inset:0;
+
     z-index:50;
+
     pointer-events:none;
+}
+
+#cameraZone{
+    position:absolute;
+
+    right:0;
+    top:0;
+
+    width:55%;
+    height:70%;
+
+    pointer-events:auto;
 }
 
 #movePad{
     position:absolute;
-    left:15px;
-    bottom:95px;
-    width:150px;
-    height:150px;
+
+    left:14px;
+    bottom:92px;
+
+    width:154px;
+    height:154px;
+
     pointer-events:auto;
 }
 
 .moveBtn{
     position:absolute;
-    width:54px;
-    height:54px;
-    border:2px solid rgba(255,255,255,.35);
+
+    width:55px;
+    height:55px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.30);
+
     border-radius:12px;
-    background:rgba(20,25,30,.62);
+
+    background:
+        rgba(15,20,25,.68);
+
     color:white;
-    font-size:24px;
+
+    font-size:22px;
 }
 
-#up{left:48px;top:0}
-#down{left:48px;bottom:0}
-#left{left:0;top:48px}
-#right{right:0;top:48px}
-
-#cameraZone{
-    position:absolute;
-    right:0;
+#up{
+    left:49px;
     top:0;
-    width:52%;
-    height:68%;
-    pointer-events:auto;
+}
+
+#down{
+    left:49px;
+    bottom:0;
+}
+
+#left{
+    left:0;
+    top:49px;
+}
+
+#right{
+    right:0;
+    top:49px;
 }
 
 #actions{
     position:absolute;
-    right:16px;
-    bottom:90px;
-    width:170px;
-    height:190px;
+
+    right:12px;
+    bottom:86px;
+
+    width:175px;
+    height:205px;
+
     pointer-events:none;
 }
 
 .actionBtn{
     position:absolute;
-    width:70px;
-    height:55px;
-    border:2px solid rgba(255,255,255,.35);
+
+    width:72px;
+    height:53px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.30);
+
     border-radius:12px;
-    background:rgba(20,25,30,.72);
+
+    background:
+        rgba(15,20,25,.72);
+
     color:white;
+
     font-weight:bold;
-    font-size:12px;
+    font-size:11px;
+
     pointer-events:auto;
+}
+
+#jumpBtn{
+    left:0;
+    top:0;
 }
 
 #buildBtn{
@@ -287,17 +454,22 @@ html,body{
 
 #breakBtn{
     right:0;
-    top:62px;
+    top:61px;
 }
 
 #interactBtn{
     left:0;
-    top:62px;
+    top:61px;
 }
 
-#jumpBtn{
+#blockPrev{
     left:0;
-    top:0;
+    bottom:0;
+}
+
+#blockNext{
+    left:80px;
+    bottom:0;
 }
 
 #inventoryBtn{
@@ -305,154 +477,265 @@ html,body{
     bottom:0;
 }
 
-#blockNext{
-    left:0;
-    bottom:0;
-}
-
-#blockPrev{
-    left:80px;
-    bottom:0;
-}
+/* =========================================================
+   START SCREEN
+   ========================================================= */
 
 #start{
     position:fixed;
     inset:0;
-    z-index:200;
-    background:
-        linear-gradient(rgba(40,100,145,.25),rgba(15,35,25,.5)),
-        #6fc4f4;
+
+    z-index:300;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
+
     color:white;
+
+    background:
+        linear-gradient(
+            rgba(50,120,165,.25),
+            rgba(15,40,25,.55)
+        ),
+        #6bc2ef;
 }
 
 .startBox{
-    width:min(550px,92vw);
-    padding:28px;
-    border-radius:20px;
-    background:rgba(15,22,27,.9);
-    border:2px solid rgba(255,255,255,.2);
+    width:min(560px,92vw);
+
+    padding:30px;
+
     text-align:center;
-    box-shadow:0 20px 70px rgba(0,0,0,.35);
+
+    background:
+        rgba(15,21,26,.91);
+
+    border:
+        2px solid
+        rgba(255,255,255,.20);
+
+    border-radius:20px;
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.40);
 }
 
 .startBox h1{
+    margin:0 0 10px;
+
     font-size:42px;
-    margin:0 0 8px;
-    text-shadow:4px 4px #000;
+
+    text-shadow:
+        4px 4px 0 #000;
 }
 
 .startBox p{
-    line-height:1.6;
-    color:#dbe9ef;
+    line-height:1.65;
+    color:#dce9ef;
 }
 
 #startBtn{
-    border:0;
-    background:#58a85a;
-    color:white;
+    margin-top:10px;
+
     padding:14px 35px;
+
+    border:0;
     border-radius:10px;
+
+    color:white;
+
+    background:#57a55a;
+
     font-size:17px;
     font-weight:bold;
-    cursor:pointer;
 }
+
+/* =========================================================
+   FEHLER
+   ========================================================= */
 
 #error{
     display:none;
+
     position:fixed;
     inset:0;
-    z-index:500;
-    background:#17212a;
-    color:white;
+
+    z-index:999;
+
     padding:30px;
-    font-family:monospace;
+
     overflow:auto;
+
+    color:white;
+    background:#151e25;
+
+    font-family:monospace;
 }
 
 @media(max-width:800px){
+
     #mobile{
         display:block;
     }
 
     #hotbar{
-        bottom:7px;
-        transform:translateX(-50%) scale(.78);
-        transform-origin:center bottom;
-    }
+        bottom:5px;
 
-    .slot{
-        width:50px;
-        height:50px;
+        transform:
+            translateX(-50%)
+            scale(.76);
+
+        transform-origin:
+            center bottom;
     }
 
     #hud{
-        transform:scale(.9);
+        transform:scale(.88);
         transform-origin:top left;
     }
 
     #prompt{
-        bottom:170px;
-        max-width:80vw;
-        text-align:center;
+        bottom:164px;
+        max-width:82vw;
     }
 }
+
 </style>
 </head>
 
 <body>
 
-<canvas id="game"></canvas>
+<canvas id="game" tabindex="0"></canvas>
+
+<!-- =======================================================
+     HUD
+     ======================================================= -->
 
 <div id="hud">
-    <div id="title">🌿 AnimalMania 3.0</div>
-    <div id="stats">
-        ❤️ Leben: <span id="hp">100</span><br>
-        🪵 Holz: <span id="wood">0</span><br>
-        🪨 Stein: <span id="stone">0</span><br>
-        🌱 Samen: <span id="seeds">0</span><br>
-        🌤️ <span id="timeText">Tag</span><br>
-        🧱 Block: <span id="selected">Gras</span>
+
+    <div id="title">
+        🌿 AnimalMania 3.1
     </div>
+
+    <div id="stats">
+
+        ❤️ Leben:
+        <span id="hp">100</span>
+        <br>
+
+        🪵 Holz:
+        <span id="wood">12</span>
+        <br>
+
+        🪨 Stein:
+        <span id="stone">10</span>
+        <br>
+
+        🌱 Samen:
+        <span id="seeds">8</span>
+        <br>
+
+        🐟 Fische:
+        <span id="fish">0</span>
+        <br>
+
+        🌤️
+        <span id="timeText">
+            Tag
+        </span>
+
+        <br>
+
+        🧱 Block:
+        <span id="selected">
+            Gras
+        </span>
+
+    </div>
+
 </div>
 
 <div id="crosshair"></div>
 
 <div id="prompt"></div>
+
 <div id="message"></div>
 
+<!-- =======================================================
+     HOTBAR
+     ======================================================= -->
+
 <div id="hotbar">
-    <div class="slot active" data-slot="0">🟩<small>1</small></div>
-    <div class="slot" data-slot="1">🟫<small>2</small></div>
-    <div class="slot" data-slot="2">🪨<small>3</small></div>
-    <div class="slot" data-slot="3">🪵<small>4</small></div>
-    <div class="slot" data-slot="4">🟨<small>5</small></div>
-    <div class="slot" data-slot="5">🌸<small>6</small></div>
+
+    <div class="slot active"
+         data-slot="0">
+        🟩
+        <small>1</small>
+    </div>
+
+    <div class="slot"
+         data-slot="1">
+        🟫
+        <small>2</small>
+    </div>
+
+    <div class="slot"
+         data-slot="2">
+        🪨
+        <small>3</small>
+    </div>
+
+    <div class="slot"
+         data-slot="3">
+        🪵
+        <small>4</small>
+    </div>
+
+    <div class="slot"
+         data-slot="4">
+        🟨
+        <small>5</small>
+    </div>
+
+    <div class="slot"
+         data-slot="5">
+        🌸
+        <small>6</small>
+    </div>
+
 </div>
 
+<!-- =======================================================
+     INVENTAR
+     ======================================================= -->
+
 <div id="inventory">
-    <h2>🎒 Inventar</h2>
+
+    <h2>
+        🎒 Inventar
+    </h2>
 
     <div class="invrow">
         <span>🪵 Holz</span>
-        <strong id="invWood">0</strong>
+        <strong id="invWood">12</strong>
     </div>
 
     <div class="invrow">
         <span>🪨 Stein</span>
-        <strong id="invStone">0</strong>
+        <strong id="invStone">10</strong>
     </div>
 
     <div class="invrow">
         <span>🌱 Samen</span>
-        <strong id="invSeeds">0</strong>
+        <strong id="invSeeds">8</strong>
     </div>
 
     <div class="invrow">
-        <span>🪵 Bretter</span>
-        <strong id="invPlanks">0</strong>
+        <span>🟨 Bretter</span>
+        <strong id="invPlanks">20</strong>
     </div>
 
     <div class="invrow">
@@ -460,95 +743,164 @@ html,body{
         <strong id="invFish">0</strong>
     </div>
 
-    <button class="close" id="closeInventory">
+    <button
+        class="close"
+        id="closeInventory">
+
         Schließen
+
     </button>
+
 </div>
+
+<!-- =======================================================
+     MOBILE
+     ======================================================= -->
 
 <div id="mobile">
 
     <div id="cameraZone"></div>
 
     <div id="movePad">
-        <button class="moveBtn" id="up">▲</button>
-        <button class="moveBtn" id="down">▼</button>
-        <button class="moveBtn" id="left">◀</button>
-        <button class="moveBtn" id="right">▶</button>
+
+        <button
+            class="moveBtn"
+            id="up">
+            ▲
+        </button>
+
+        <button
+            class="moveBtn"
+            id="down">
+            ▼
+        </button>
+
+        <button
+            class="moveBtn"
+            id="left">
+            ◀
+        </button>
+
+        <button
+            class="moveBtn"
+            id="right">
+            ▶
+        </button>
+
     </div>
 
     <div id="actions">
 
-        <button class="actionBtn" id="jumpBtn">
+        <button
+            class="actionBtn"
+            id="jumpBtn">
             SPRUNG
         </button>
 
-        <button class="actionBtn" id="buildBtn">
+        <button
+            class="actionBtn"
+            id="buildBtn">
             BAUEN
         </button>
 
-        <button class="actionBtn" id="breakBtn">
-            ABBAUEN
-        </button>
-
-        <button class="actionBtn" id="interactBtn">
+        <button
+            class="actionBtn"
+            id="interactBtn">
             E
         </button>
 
-        <button class="actionBtn" id="blockNext">
+        <button
+            class="actionBtn"
+            id="breakBtn">
+            ABBAUEN
+        </button>
+
+        <button
+            class="actionBtn"
+            id="blockPrev">
+            BLOCK −
+        </button>
+
+        <button
+            class="actionBtn"
+            id="blockNext">
             BLOCK +
         </button>
 
-        <button class="actionBtn" id="blockPrev">
-            BLOCK -
-        </button>
-
-        <button class="actionBtn" id="inventoryBtn">
+        <button
+            class="actionBtn"
+            id="inventoryBtn">
             🎒
         </button>
 
     </div>
+
 </div>
 
+<!-- =======================================================
+     START
+     ======================================================= -->
+
 <div id="start">
+
     <div class="startBox">
-        <h1>🌿 AnimalMania</h1>
+
+        <h1>
+            🌿 AnimalMania
+        </h1>
 
         <p>
-            Willkommen in deiner eigenen kleinen Voxel-Welt.
-            Laufe herum, fälle Bäume, sammle Steine,
-            angle und baue dein eigenes Haus.
+            Deine eigene kleine Blockwelt.
+            Sammle Ressourcen, erkunde die Insel,
+            triff Tiere und baue dein eigenes Zuhause.
         </p>
 
         <p>
-            <b>Linksklick:</b> Abbauen<br>
-            <b>Rechtsklick:</b> Bauen<br>
-            <b>1–6:</b> Block auswählen
+            <b>WASD</b> bewegen<br>
+            <b>Maus</b> Kamera<br>
+            <b>Linksklick</b> abbauen<br>
+            <b>Rechtsklick</b> bauen<br>
+            <b>1–6</b> Block auswählen<br>
+            <b>Leertaste</b> springen<br>
+            <b>E</b> interagieren<br>
+            <b>I</b> Inventar
         </p>
 
         <button id="startBtn">
             WELT BETRETEN
         </button>
+
     </div>
+
 </div>
 
 <div id="error"></div>
 
 <script>
+
 "use strict";
 
 /* =========================================================
-   ANIMALMANIA 3.0
-   Native WebGL 1
-   Voxel-Welt + Bauen + Abbauen
+   ANIMALMANIA 3.1
+   STABILER VOXEL-RENDERER
    ========================================================= */
 
-const canvas = document.getElementById("game");
+/* =========================================================
+   CANVAS / WEBGL
+   ========================================================= */
+
+const canvas =
+    document.getElementById("game");
 
 let gl = null;
 let program = null;
 
-let running = false;
 let fatalError = false;
+let running = false;
+
+/* =========================================================
+   WELT
+   ========================================================= */
 
 const WORLD_W = 48;
 const WORLD_D = 48;
@@ -556,227 +908,259 @@ const WORLD_H = 16;
 
 const SEA_LEVEL = 2;
 
-let world = new Uint8Array(
-    WORLD_W * WORLD_H * WORLD_D
-);
+const CHUNK_X = 12;
+const CHUNK_Y = 8;
+const CHUNK_Z = 12;
 
-let mesh = null;
-let meshDirty = true;
+let world =
+    new Uint8Array(
+        WORLD_W *
+        WORLD_H *
+        WORLD_D
+    );
 
-/* ---------------------------------------------------------
-   Blocktypen
-   --------------------------------------------------------- */
+/* =========================================================
+   BLOCKTYPEN
+   ========================================================= */
 
 const BLOCK = {
+
     AIR:0,
+
     GRASS:1,
+
     DIRT:2,
+
     STONE:3,
+
     WOOD:4,
+
     LEAVES:5,
+
     SAND:6,
+
     FLOWER:7,
+
     PLANK:8,
+
     GLASS:9
 };
 
 const blockNames = {
+
     1:"Gras",
+
     2:"Erde",
+
     3:"Stein",
+
     4:"Holz",
+
     5:"Blätter",
+
     6:"Sand",
+
     7:"Blume",
+
     8:"Bretter",
+
     9:"Glas"
 };
 
 const blockColors = {
-    1:[0.28,0.68,0.20],
-    2:[0.48,0.29,0.15],
-    3:[0.43,0.45,0.46],
-    4:[0.45,0.25,0.10],
-    5:[0.15,0.52,0.14],
-    6:[0.82,0.72,0.42],
-    7:[0.90,0.25,0.55],
-    8:[0.68,0.42,0.20],
-    9:[0.45,0.80,0.90]
+
+    1:[.30,.70,.20],
+
+    2:[.48,.30,.16],
+
+    3:[.44,.45,.46],
+
+    4:[.48,.27,.11],
+
+    5:[.15,.54,.13],
+
+    6:[.84,.73,.42],
+
+    7:[.90,.25,.55],
+
+    8:[.68,.43,.21],
+
+    9:[.40,.76,.86]
 };
 
 const hotbarBlocks = [
+
     BLOCK.GRASS,
+
     BLOCK.DIRT,
+
     BLOCK.STONE,
+
     BLOCK.WOOD,
+
     BLOCK.PLANK,
+
     BLOCK.FLOWER
+
 ];
 
 let selectedSlot = 0;
 
-/* ---------------------------------------------------------
-   Spieler
-   --------------------------------------------------------- */
+/* =========================================================
+   SPIELER
+   ========================================================= */
 
 const player = {
-    x:0,
-    y:5,
-    z:0,
+
+    x:24.5,
+
+    y:6,
+
+    z:34.5,
 
     vx:0,
+
     vy:0,
+
     vz:0,
 
-    yaw:0.5,
-    pitch:-0.35,
+    yaw:0,
+
+    pitch:-.32,
 
     onGround:false,
 
-    speed:5.0,
+    speed:5,
+
     jump:8.5
+};
+
+const camera = {
+
+    distance:7
 };
 
 let keys = {};
 
-const camera = {
-    distance:8
-};
-
-/* ---------------------------------------------------------
-   Inventar
-   --------------------------------------------------------- */
+/* =========================================================
+   INVENTAR
+   ========================================================= */
 
 const inventory = {
+
     wood:12,
+
     stone:10,
+
     seeds:8,
+
     planks:20,
+
     fish:0
 };
 
-/* ---------------------------------------------------------
-   Tiere
-   --------------------------------------------------------- */
+/* =========================================================
+   TIERE
+   ========================================================= */
 
 const animals = [
+
     {
         type:"rabbit",
-        x:7,
-        z:5,
-        dir:1.2,
-        speed:.7,
-        timer:0
-    },
-    {
-        type:"rabbit",
-        x:-9,
-        z:4,
-        dir:-.4,
-        speed:.6,
-        timer:2
-    },
-    {
-        type:"bear",
-        x:11,
-        z:-9,
-        dir:2,
-        speed:.35,
+        x:31,
+        z:28,
+        dir:1,
+        speed:.65,
         timer:1
     },
+
+    {
+        type:"rabbit",
+        x:16,
+        z:28,
+        dir:-1,
+        speed:.55,
+        timer:2
+    },
+
+    {
+        type:"bear",
+        x:35,
+        z:16,
+        dir:2,
+        speed:.3,
+        timer:3
+    },
+
     {
         type:"fox",
-        x:-12,
-        z:-7,
-        dir:1,
+        x:13,
+        z:19,
+        dir:.5,
         speed:.5,
-        timer:3
+        timer:2
     }
 ];
 
-/* ---------------------------------------------------------
-   Mathe
-   --------------------------------------------------------- */
+/* =========================================================
+   MATHE
+   ========================================================= */
 
 function mat4(){
+
     return new Float32Array([
+
         1,0,0,0,
+
         0,1,0,0,
+
         0,0,1,0,
+
         0,0,0,1
+
     ]);
 }
 
 function multiply(a,b){
-    const o=new Float32Array(16);
 
-    for(let c=0;c<4;c++){
-        for(let r=0;r<4;r++){
-            o[c*4+r]=
-                a[r]*b[c*4]+
-                a[4+r]*b[c*4+1]+
-                a[8+r]*b[c*4+2]+
-                a[12+r]*b[c*4+3];
+    const o =
+        new Float32Array(16);
+
+    for(
+        let c=0;
+        c<4;
+        c++
+    ){
+
+        for(
+            let r=0;
+            r<4;
+            r++
+        ){
+
+            o[c*4+r] =
+
+                a[r] *
+                b[c*4]
+
+                +
+
+                a[4+r] *
+                b[c*4+1]
+
+                +
+
+                a[8+r] *
+                b[c*4+2]
+
+                +
+
+                a[12+r] *
+                b[c*4+3];
         }
     }
 
     return o;
-}
-
-function perspective(fov,aspect,near,far){
-
-    const f=1/Math.tan(fov/2);
-    const nf=1/(near-far);
-
-    return new Float32Array([
-        f/aspect,0,0,0,
-        0,f,0,0,
-        0,0,(far+near)*nf,-1,
-        0,0,(2*far*near)*nf,0
-    ]);
-}
-
-function lookAt(eye,target){
-
-    let zx=eye[0]-target[0];
-    let zy=eye[1]-target[1];
-    let zz=eye[2]-target[2];
-
-    let len=Math.hypot(zx,zy,zz);
-    zx/=len;
-    zy/=len;
-    zz/=len;
-
-    let xx=0*zz-1*zy;
-    let xy=1*zx-0*zz;
-    let xz=0*zy-0*zx;
-
-    len=Math.hypot(xx,xy,xz);
-
-    if(len<.0001){
-        xx=1;
-        xy=0;
-        xz=0;
-    }else{
-        xx/=len;
-        xy/=len;
-        xz/=len;
-    }
-
-    const yx=zy*xz-zz*xy;
-    const yy=zz*xx-zx*xz;
-    const yz=zx*xy-zy*xx;
-
-    return new Float32Array([
-        xx,yx,zx,0,
-        xy,yy,zy,0,
-        xz,yz,zz,0,
-
-        -(xx*eye[0]+xy*eye[1]+xz*eye[2]),
-        -(yx*eye[0]+yy*eye[1]+yz*eye[2]),
-        -(zx*eye[0]+zy*eye[1]+zz*eye[2]),
-        1
-    ]);
 }
 
 function translation(x,y,z){
@@ -807,43 +1191,176 @@ function rotationY(a){
     const s=Math.sin(a);
 
     return new Float32Array([
+
         c,0,-s,0,
+
         0,1,0,0,
+
         s,0,c,0,
+
         0,0,0,1
+
     ]);
 }
 
-function rotationX(a){
+function model(
+    x,y,z,
+    sx,sy,sz,
+    ry=0
+){
 
-    const c=Math.cos(a);
-    const s=Math.sin(a);
+    let m =
+        translation(x,y,z);
+
+    if(ry){
+
+        m =
+            multiply(
+                m,
+                rotationY(ry)
+            );
+    }
+
+    m =
+        multiply(
+            m,
+            scale(
+                sx,
+                sy,
+                sz
+            )
+        );
+
+    return m;
+}
+
+function perspective(
+    fov,
+    aspect,
+    near,
+    far
+){
+
+    const f =
+        1 /
+        Math.tan(
+            fov/2
+        );
+
+    const nf =
+        1 /
+        (near-far);
 
     return new Float32Array([
-        1,0,0,0,
-        0,c,s,0,
-        0,-s,c,0,
-        0,0,0,1
+
+        f/aspect,0,0,0,
+
+        0,f,0,0,
+
+        0,0,
+        (far+near)*nf,
+        -1,
+
+        0,0,
+        (2*far*near)*nf,
+        0
     ]);
 }
 
-function model(x,y,z,sx,sy,sz,ry=0,rx=0){
+function lookAt(
+    eye,
+    target
+){
 
-    let m=translation(x,y,z);
+    let zx =
+        eye[0]-
+        target[0];
 
-    if(ry) m=multiply(m,rotationY(ry));
-    if(rx) m=multiply(m,rotationX(rx));
+    let zy =
+        eye[1]-
+        target[1];
 
-    return multiply(m,scale(sx,sy,sz));
+    let zz =
+        eye[2]-
+        target[2];
+
+    let len =
+        Math.hypot(
+            zx,
+            zy,
+            zz
+        );
+
+    zx/=len;
+    zy/=len;
+    zz/=len;
+
+    let xx =
+        zz;
+
+    let xy =
+        0;
+
+    let xz =
+        -zx;
+
+    len =
+        Math.hypot(
+            xx,
+            xy,
+            xz
+        );
+
+    xx/=len;
+    xy/=len;
+    xz/=len;
+
+    const yx =
+        zy*xz -
+        zz*xy;
+
+    const yy =
+        zz*xx -
+        zx*xz;
+
+    const yz =
+        zx*xy -
+        zy*xx;
+
+    return new Float32Array([
+
+        xx,yx,zx,0,
+
+        xy,yy,zy,0,
+
+        xz,yz,zz,0,
+
+        -(xx*eye[0] +
+          xy*eye[1] +
+          xz*eye[2]),
+
+        -(yx*eye[0] +
+          yy*eye[1] +
+          yz*eye[2]),
+
+        -(zx*eye[0] +
+          zy*eye[1] +
+          zz*eye[2]),
+
+        1
+
+    ]);
 }
 
-/* ---------------------------------------------------------
-   WebGL Shader
-   --------------------------------------------------------- */
+/* =========================================================
+   SHADER
+   ========================================================= */
 
 const vertexShaderSource = `
+
 attribute vec3 aPosition;
 attribute vec3 aNormal;
+attribute vec3 aColor;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
@@ -851,74 +1368,133 @@ uniform mat4 uModel;
 
 varying vec3 vNormal;
 varying vec3 vWorld;
+varying vec3 vColor;
 
 void main(){
 
-    vec4 worldPos = uModel * vec4(aPosition,1.0);
+    vec4 worldPosition =
+        uModel *
+        vec4(
+            aPosition,
+            1.0
+        );
 
-    vWorld = worldPos.xyz;
-    vNormal = mat3(uModel) * aNormal;
+    vWorld =
+        worldPosition.xyz;
+
+    vNormal =
+        mat3(uModel) *
+        aNormal;
+
+    vColor =
+        aColor;
 
     gl_Position =
         uProjection *
         uView *
-        worldPos;
+        worldPosition;
 }
 `;
 
 const fragmentShaderSource = `
+
 precision mediump float;
 
-uniform vec3 uColor;
 uniform vec3 uLight;
 uniform float uAmbient;
+
 uniform vec3 uFogColor;
+
 uniform float uFogStart;
 uniform float uFogEnd;
 
 varying vec3 vNormal;
 varying vec3 vWorld;
+varying vec3 vColor;
 
 void main(){
 
-    vec3 n=normalize(vNormal);
+    vec3 normal =
+        normalize(
+            vNormal
+        );
 
-    float light=max(dot(n,normalize(uLight)),0.0);
+    float light =
+        max(
+            dot(
+                normal,
+                normalize(uLight)
+            ),
+            0.0
+        );
 
-    float brightness=
-        uAmbient+
-        light*0.72;
+    float brightness =
+        uAmbient +
+        light * .72;
 
-    vec3 color=uColor*brightness;
+    vec3 color =
+        vColor *
+        brightness;
 
-    float dist=length(vWorld);
+    float distanceToCamera =
+        length(
+            vWorld
+        );
 
-    float fog=smoothstep(
-        uFogStart,
-        uFogEnd,
-        dist
-    );
+    float fog =
+        smoothstep(
+            uFogStart,
+            uFogEnd,
+            distanceToCamera
+        );
 
-    color=mix(color,uFogColor,fog);
+    color =
+        mix(
+            color,
+            uFogColor,
+            fog
+        );
 
-    gl_FragColor=vec4(color,1.0);
+    gl_FragColor =
+        vec4(
+            color,
+            1.0
+        );
 }
 `;
 
-/* ---------------------------------------------------------
-   Shader Setup
-   --------------------------------------------------------- */
+/* =========================================================
+   SHADER SETUP
+   ========================================================= */
 
-function compileShader(type,source){
+function compileShader(
+    type,
+    source
+){
 
-    const shader=gl.createShader(type);
+    const shader =
+        gl.createShader(type);
 
-    gl.shaderSource(shader,source);
-    gl.compileShader(shader);
+    gl.shaderSource(
+        shader,
+        source
+    );
 
-    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
+    gl.compileShader(
+        shader
+    );
+
+    if(
+        !gl.getShaderParameter(
+            shader,
+            gl.COMPILE_STATUS
+        )
+    ){
+
         throw new Error(
-            gl.getShaderInfoLog(shader)
+            gl.getShaderInfoLog(
+                shader
+            )
         );
     }
 
@@ -927,206 +1503,163 @@ function compileShader(type,source){
 
 function createProgram(){
 
-    const vs=compileShader(
-        gl.VERTEX_SHADER,
-        vertexShaderSource
-    );
+    const vs =
+        compileShader(
+            gl.VERTEX_SHADER,
+            vertexShaderSource
+        );
 
-    const fs=compileShader(
-        gl.FRAGMENT_SHADER,
-        fragmentShaderSource
-    );
+    const fs =
+        compileShader(
+            gl.FRAGMENT_SHADER,
+            fragmentShaderSource
+        );
 
-    const p=gl.createProgram();
+    const p =
+        gl.createProgram();
 
-    gl.attachShader(p,vs);
-    gl.attachShader(p,fs);
-
-    gl.linkProgram(p);
-
-    if(!gl.getProgramParameter(
+    gl.attachShader(
         p,
-        gl.LINK_STATUS
-    )){
+        vs
+    );
+
+    gl.attachShader(
+        p,
+        fs
+    );
+
+    gl.linkProgram(
+        p
+    );
+
+    if(
+        !gl.getProgramParameter(
+            p,
+            gl.LINK_STATUS
+        )
+    ){
+
         throw new Error(
-            gl.getProgramInfoLog(p)
+            gl.getProgramInfoLog(
+                p
+            )
         );
     }
 
     return p;
 }
 
-/* ---------------------------------------------------------
-   GL Mesh
-   --------------------------------------------------------- */
+/* =========================================================
+   BLOCK MESH
+   ========================================================= */
 
-function createMesh(vertices,normals,indices){
+const faces = [
 
-    const m={};
+    {
+        dir:[0,1,0],
 
-    m.v=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,m.v);
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(vertices),
-        gl.STATIC_DRAW
-    );
+        corners:[
+            [-.5,.5,-.5],
+            [.5,.5,-.5],
+            [.5,.5,.5],
+            [-.5,.5,.5]
+        ]
+    },
 
-    m.n=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,m.n);
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(normals),
-        gl.STATIC_DRAW
-    );
+    {
+        dir:[0,-1,0],
 
-    m.i=gl.createBuffer();
-    gl.bindBuffer(
-        gl.ELEMENT_ARRAY_BUFFER,
-        m.i
-    );
+        corners:[
+            [-.5,-.5,.5],
+            [.5,-.5,.5],
+            [.5,-.5,-.5],
+            [-.5,-.5,-.5]
+        ]
+    },
 
-    gl.bufferData(
-        gl.ELEMENT_ARRAY_BUFFER,
-        new Uint32Array(indices),
-        gl.STATIC_DRAW
-    );
+    {
+        dir:[0,0,1],
 
-    m.count=indices.length;
+        corners:[
+            [-.5,-.5,.5],
+            [-.5,.5,.5],
+            [.5,.5,.5],
+            [.5,-.5,.5]
+        ]
+    },
 
-    return m;
-}
+    {
+        dir:[0,0,-1],
 
-/*
- WebGL1 braucht für Uint32-Indizes die Erweiterung.
- Um Probleme auf älteren Geräten zu vermeiden,
- wird hier die Welt in kleine Meshes aufgeteilt.
-*/
+        corners:[
+            [.5,-.5,-.5],
+            [.5,.5,-.5],
+            [-.5,.5,-.5],
+            [-.5,-.5,-.5]
+        ]
+    },
 
-function createMesh16(vertices,normals,indices){
+    {
+        dir:[1,0,0],
 
-    const m={};
+        corners:[
+            [.5,-.5,.5],
+            [.5,.5,.5],
+            [.5,.5,-.5],
+            [.5,-.5,-.5]
+        ]
+    },
 
-    m.v=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,m.v);
+    {
+        dir:[-1,0,0],
 
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(vertices),
-        gl.STATIC_DRAW
-    );
+        corners:[
+            [-.5,-.5,-.5],
+            [-.5,.5,-.5],
+            [-.5,.5,.5],
+            [-.5,-.5,.5]
+        ]
+    }
+];
 
-    m.n=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,m.n);
+/* =========================================================
+   CUBE
+   ========================================================= */
 
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(normals),
-        gl.STATIC_DRAW
-    );
+let cubeMesh=null;
 
-    m.i=gl.createBuffer();
-    gl.bindBuffer(
-        gl.ELEMENT_ARRAY_BUFFER,
-        m.i
-    );
+function createCubeMesh(){
 
-    gl.bufferData(
-        gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(indices),
-        gl.STATIC_DRAW
-    );
+    const vertices=[];
+    const normals=[];
+    const indices=[];
 
-    m.count=indices.length;
+    for(
+        const face of faces
+    ){
 
-    return m;
-}
+        const start =
+            vertices.length/3;
 
-/* ---------------------------------------------------------
-   Cube Mesh
-   --------------------------------------------------------- */
+        for(
+            const c of face.corners
+        ){
 
-const cubePositions=[];
-const cubeNormals=[];
-const cubeIndices=[];
-
-function buildCubeMesh(){
-
-    const faces=[
-        {
-            n:[0,1,0],
-            v:[
-                [-.5,.5,-.5],
-                [.5,.5,-.5],
-                [.5,.5,.5],
-                [-.5,.5,.5]
-            ]
-        },
-        {
-            n:[0,-1,0],
-            v:[
-                [-.5,-.5,.5],
-                [.5,-.5,.5],
-                [.5,-.5,-.5],
-                [-.5,-.5,-.5]
-            ]
-        },
-        {
-            n:[0,0,1],
-            v:[
-                [-.5,-.5,.5],
-                [-.5,.5,.5],
-                [.5,.5,.5],
-                [.5,-.5,.5]
-            ]
-        },
-        {
-            n:[0,0,-1],
-            v:[
-                [.5,-.5,-.5],
-                [.5,.5,-.5],
-                [-.5,.5,-.5],
-                [-.5,-.5,-.5]
-            ]
-        },
-        {
-            n:[1,0,0],
-            v:[
-                [.5,-.5,.5],
-                [.5,.5,.5],
-                [.5,.5,-.5],
-                [.5,-.5,-.5]
-            ]
-        },
-        {
-            n:[-1,0,0],
-            v:[
-                [-.5,-.5,-.5],
-                [-.5,.5,-.5],
-                [-.5,.5,.5],
-                [-.5,-.5,.5]
-            ]
-        }
-    ];
-
-    for(const f of faces){
-
-        const start=cubePositions.length/3;
-
-        for(const v of f.v){
-
-            cubePositions.push(
-                v[0],v[1],v[2]
+            vertices.push(
+                c[0],
+                c[1],
+                c[2]
             );
 
-            cubeNormals.push(
-                f.n[0],
-                f.n[1],
-                f.n[2]
+            normals.push(
+                face.dir[0],
+                face.dir[1],
+                face.dir[2]
             );
         }
 
-        cubeIndices.push(
+        indices.push(
+
             start,
             start+1,
             start+2,
@@ -1136,101 +1669,510 @@ function buildCubeMesh(){
             start+3
         );
     }
+
+    return createMesh(
+        vertices,
+        normals,
+        indices
+    );
 }
 
-buildCubeMesh();
+function createMesh(
+    vertices,
+    normals,
+    indices
+){
 
-let cubeMesh=null;
+    const mesh={};
 
-/* ---------------------------------------------------------
-   Welt
-   --------------------------------------------------------- */
+    mesh.v =
+        gl.createBuffer();
 
-function index(x,y,z){
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        mesh.v
+    );
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(
+            vertices
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.n =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        mesh.n
+    );
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(
+            normals
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.i =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ELEMENT_ARRAY_BUFFER,
+        mesh.i
+    );
+
+    gl.bufferData(
+        gl.ELEMENT_ARRAY_BUFFER,
+        new Uint16Array(
+            indices
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.count =
+        indices.length;
+
+    return mesh;
+}
+
+/* =========================================================
+   CHUNKS
+   ========================================================= */
+
+let chunks=[];
+
+function createChunkMesh(
+    cx,
+    cy,
+    cz
+){
+
+    const vertices=[];
+    const normals=[];
+    const colors=[];
+    const indices=[];
+
+    const xStart =
+        cx*CHUNK_X;
+
+    const yStart =
+        cy*CHUNK_Y;
+
+    const zStart =
+        cz*CHUNK_Z;
+
+    const xEnd =
+        Math.min(
+            xStart+CHUNK_X,
+            WORLD_W
+        );
+
+    const yEnd =
+        Math.min(
+            yStart+CHUNK_Y,
+            WORLD_H
+        );
+
+    const zEnd =
+        Math.min(
+            zStart+CHUNK_Z,
+            WORLD_D
+        );
+
+    for(
+        let z=zStart;
+        z<zEnd;
+        z++
+    ){
+
+        for(
+            let y=yStart;
+            y<yEnd;
+            y++
+        ){
+
+            for(
+                let x=xStart;
+                x<xEnd;
+                x++
+            ){
+
+                const type =
+                    getBlock(
+                        x,y,z
+                    );
+
+                if(
+                    type===
+                    BLOCK.AIR
+                )
+                    continue;
+
+                const color =
+                    blockColors[type] ||
+                    [1,1,1];
+
+                for(
+                    const face of faces
+                ){
+
+                    const nx =
+                        x+
+                        face.dir[0];
+
+                    const ny =
+                        y+
+                        face.dir[1];
+
+                    const nz =
+                        z+
+                        face.dir[2];
+
+                    if(
+                        getBlock(
+                            nx,
+                            ny,
+                            nz
+                        )!==BLOCK.AIR
+                    )
+                        continue;
+
+                    const start =
+                        vertices.length/3;
+
+                    for(
+                        const c of face.corners
+                    ){
+
+                        vertices.push(
+
+                            x+c[0],
+                            y+c[1],
+                            z+c[2]
+                        );
+
+                        normals.push(
+
+                            face.dir[0],
+                            face.dir[1],
+                            face.dir[2]
+                        );
+
+                        colors.push(
+
+                            color[0],
+                            color[1],
+                            color[2]
+                        );
+                    }
+
+                    indices.push(
+
+                        start,
+                        start+1,
+                        start+2,
+
+                        start,
+                        start+2,
+                        start+3
+                    );
+                }
+            }
+        }
+    }
+
+    const mesh={};
+
+    mesh.v =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        mesh.v
+    );
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(
+            vertices
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.n =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        mesh.n
+    );
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(
+            normals
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.c =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        mesh.c
+    );
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(
+            colors
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.i =
+        gl.createBuffer();
+
+    gl.bindBuffer(
+        gl.ELEMENT_ARRAY_BUFFER,
+        mesh.i
+    );
+
+    gl.bufferData(
+        gl.ELEMENT_ARRAY_BUFFER,
+        new Uint16Array(
+            indices
+        ),
+        gl.STATIC_DRAW
+    );
+
+    mesh.count =
+        indices.length;
+
+    return mesh;
+}
+
+function rebuildChunks(){
+
+    for(
+        const chunk of chunks
+    ){
+
+        if(chunk.mesh){
+
+            gl.deleteBuffer(
+                chunk.mesh.v
+            );
+
+            gl.deleteBuffer(
+                chunk.mesh.n
+            );
+
+            gl.deleteBuffer(
+                chunk.mesh.c
+            );
+
+            gl.deleteBuffer(
+                chunk.mesh.i
+            );
+        }
+    }
+
+    chunks=[];
+
+    const nx =
+        Math.ceil(
+            WORLD_W/
+            CHUNK_X
+        );
+
+    const ny =
+        Math.ceil(
+            WORLD_H/
+            CHUNK_Y
+        );
+
+    const nz =
+        Math.ceil(
+            WORLD_D/
+            CHUNK_Z
+        );
+
+    for(
+        let z=0;
+        z<nz;
+        z++
+    ){
+
+        for(
+            let y=0;
+            y<ny;
+            y++
+        ){
+
+            for(
+                let x=0;
+                x<nx;
+                x++
+            ){
+
+                chunks.push({
+
+                    x,
+                    y,
+                    z,
+
+                    mesh:
+                        createChunkMesh(
+                            x,
+                            y,
+                            z
+                        )
+                });
+            }
+        }
+    }
+}
+
+/* =========================================================
+   WELT
+   ========================================================= */
+
+function worldIndex(
+    x,y,z
+){
 
     return (
         x+
         WORLD_W*
-        (y+
-        WORLD_H*z)
+        (
+            y+
+            WORLD_H*z
+        )
     );
 }
 
-function inside(x,y,z){
+function inside(
+    x,y,z
+){
 
     return (
+
         x>=0 &&
         x<WORLD_W &&
+
         y>=0 &&
         y<WORLD_H &&
+
         z>=0 &&
         z<WORLD_D
     );
 }
 
-function getBlock(x,y,z){
+function getBlock(
+    x,y,z
+){
 
-    if(!inside(x,y,z))
+    if(
+        !inside(
+            x,y,z
+        )
+    )
         return BLOCK.AIR;
 
-    return world[index(x,y,z)];
+    return world[
+        worldIndex(
+            x,y,z
+        )
+    ];
 }
 
-function setBlock(x,y,z,type){
+function setBlock(
+    x,y,z,type
+){
 
-    if(!inside(x,y,z))
+    if(
+        !inside(
+            x,y,z
+        )
+    )
         return;
 
-    world[index(x,y,z)]=type;
-    meshDirty=true;
+    world[
+        worldIndex(
+            x,y,z
+        )
+    ]=type;
 }
 
-/* ---------------------------------------------------------
-   Terrain
-   --------------------------------------------------------- */
+function noise(
+    x,z
+){
 
-function noise(x,z){
-
-    const v=
-        Math.sin(x*12.9898+z*78.233)*
+    const n =
+        Math.sin(
+            x*12.9898+
+            z*78.233
+        )*
         43758.5453;
 
-    return v-Math.floor(v);
+    return n-
+        Math.floor(n);
 }
 
-function terrainHeight(x,z){
+function terrainHeight(
+    x,z
+){
 
-    const cx=WORLD_W/2;
-    const cz=WORLD_D/2;
+    const cx =
+        WORLD_W/2;
 
-    const dx=x-cx;
-    const dz=z-cz;
+    const cz =
+        WORLD_D/2;
 
-    const dist=Math.sqrt(
-        dx*dx+dz*dz
-    );
+    const dx =
+        x-cx;
+
+    const dz =
+        z-cz;
+
+    const dist =
+        Math.hypot(
+            dx,dz
+        );
 
     const radius=21;
 
-    if(dist>radius)
+    if(
+        dist>radius
+    )
         return -1;
 
-    const edge=1-dist/radius;
+    const edge =
+        1-dist/radius;
 
-    let h=
+    let h =
         3+
         edge*4;
 
-    h+=
-        Math.sin(x*.33)*
-        .5;
+    h +=
+        Math.sin(
+            x*.31
+        )*.5;
 
-    h+=
-        Math.cos(z*.29)*
-        .4;
+    h +=
+        Math.cos(
+            z*.27
+        )*.45;
 
-    h+=
-        (noise(x,z)-.5)*1.2;
+    h +=
+        (noise(x,z)-.5)*
+        1.1;
 
     return Math.max(
         2,
@@ -1240,138 +2182,165 @@ function terrainHeight(x,z){
 
 function generateWorld(){
 
-    world.fill(0);
+    world.fill(
+        BLOCK.AIR
+    );
 
-    for(let x=0;x<WORLD_W;x++){
+    for(
+        let x=0;
+        x<WORLD_W;
+        x++
+    ){
 
-        for(let z=0;z<WORLD_D;z++){
+        for(
+            let z=0;
+            z<WORLD_D;
+            z++
+        ){
 
-            const h=terrainHeight(x,z);
+            const h =
+                terrainHeight(
+                    x,z
+                );
 
             if(h<0)
                 continue;
 
-            for(let y=0;y<=h;y++){
+            for(
+                let y=0;
+                y<=h;
+                y++
+            ){
 
                 let type;
 
-                if(y===h){
-
-                    const edgeDist=Math.min(
-                        x,
-                        z,
-                        WORLD_W-1-x,
-                        WORLD_D-1-z
-                    );
-
-                    const centerDist=Math.hypot(
+                const dist =
+                    Math.hypot(
                         x-WORLD_W/2,
                         z-WORLD_D/2
                     );
 
-                    if(centerDist>17)
-                        type=BLOCK.SAND;
+                if(
+                    y===h
+                ){
+
+                    if(
+                        dist>17
+                    )
+                        type=
+                            BLOCK.SAND;
+
                     else
-                        type=BLOCK.GRASS;
+                        type=
+                            BLOCK.GRASS;
 
-                }else if(y>=h-2){
+                }else if(
+                    y>=h-2
+                ){
 
-                    type=BLOCK.DIRT;
+                    type=
+                        BLOCK.DIRT;
 
                 }else{
 
-                    type=BLOCK.STONE;
+                    type=
+                        BLOCK.STONE;
                 }
 
-                setBlock(x,y,z,type);
+                setBlock(
+                    x,y,z,type
+                );
             }
-        }
-    }
-
-    /* kleine Steinbereiche */
-
-    for(let i=0;i<22;i++){
-
-        const x=
-            Math.floor(
-                WORLD_W/2-17+
-                Math.random()*34
-            );
-
-        const z=
-            Math.floor(
-                WORLD_D/2-17+
-                Math.random()*34
-            );
-
-        const h=terrainHeight(x,z);
-
-        if(h>2){
-
-            setBlock(
-                x,
-                h+1,
-                z,
-                BLOCK.STONE
-            );
         }
     }
 
     /* Bäume */
 
     const treePositions=[
-        [-15,-12],
-        [-11,-15],
-        [-6,-16],
-        [5,-16],
-        [12,-13],
-        [16,-7],
-        [17,5],
-        [14,12],
-        [7,15],
-        [-5,16],
-        [-14,12],
-        [-17,5],
-        [-16,-2],
-        [18,-1],
+
+        [-16,-12],
+        [-11,-16],
+        [-6,-17],
+        [4,-16],
+        [12,-14],
+        [16,-8],
+        [18,2],
+        [15,11],
+        [8,15],
+        [-4,17],
+        [-13,13],
+        [-17,6],
+        [-17,-2],
+        [16,-2],
         [-2,-18],
         [2,18]
     ];
 
-    for(const [px,pz] of treePositions){
+    for(
+        const p of treePositions
+    ){
 
-        const x=Math.round(
-            WORLD_W/2+px
-        );
+        const x =
+            Math.round(
+                WORLD_W/2+p[0]
+            );
 
-        const z=Math.round(
-            WORLD_D/2+pz
-        );
+        const z =
+            Math.round(
+                WORLD_D/2+p[1]
+            );
 
-        const h=terrainHeight(x,z);
+        const h =
+            terrainHeight(
+                x,z
+            );
 
-        if(h>2)
-            createTree(x,h+1,z);
+        if(
+            h>2
+        ){
+
+            createTree(
+                x,
+                h+1,
+                z
+            );
+        }
     }
 
     /* Blumen */
 
-    for(let i=0;i<35;i++){
+    for(
+        let i=0;
+        i<40;
+        i++
+    ){
 
-        const x=Math.floor(
-            WORLD_W/2-15+
-            Math.random()*30
-        );
+        const x =
+            Math.floor(
+                WORLD_W/2-
+                15+
+                Math.random()*30
+            );
 
-        const z=Math.floor(
-            WORLD_D/2-15+
-            Math.random()*30
-        );
+        const z =
+            Math.floor(
+                WORLD_D/2-
+                15+
+                Math.random()*30
+            );
 
-        const h=terrainHeight(x,z);
+        const h =
+            terrainHeight(
+                x,z
+            );
 
-        if(h>3 &&
-           getBlock(x,h,z)===BLOCK.GRASS){
+        if(
+            h>3 &&
+            getBlock(
+                x,h,z
+            )===
+            BLOCK.GRASS
+        ){
 
             setBlock(
                 x,
@@ -1382,34 +2351,57 @@ function generateWorld(){
         }
     }
 
-    createStartingHouse();
+    createHouse();
 
-    meshDirty=true;
+    rebuildChunks();
 }
 
-function createTree(x,y,z){
+function createTree(
+    x,
+    y,
+    z
+){
 
-    const trunk=4+
-        Math.floor(Math.random()*2);
+    const trunk =
+        4+
+        Math.floor(
+            Math.random()*2
+        );
 
-    for(let i=0;i<trunk;i++){
+    for(
+        let i=0;
+        i<trunk;
+        i++
+    ){
 
-        if(y+i<WORLD_H)
-            setBlock(
-                x,
-                y+i,
-                z,
-                BLOCK.WOOD
-            );
+        setBlock(
+            x,
+            y+i,
+            z,
+            BLOCK.WOOD
+        );
     }
 
-    const top=y+trunk;
+    const top =
+        y+trunk;
 
-    for(let dx=-2;dx<=2;dx++){
+    for(
+        let dx=-2;
+        dx<=2;
+        dx++
+    ){
 
-        for(let dz=-2;dz<=2;dz++){
+        for(
+            let dz=-2;
+            dz<=2;
+            dz++
+        ){
 
-            for(let dy=-1;dy<=1;dy++){
+            for(
+                let dy=-1;
+                dy<=1;
+                dy++
+            ){
 
                 if(
                     Math.abs(dx)+
@@ -1417,59 +2409,91 @@ function createTree(x,y,z){
                     Math.abs(dy)<=3
                 ){
 
-                    if(
-                        inside(
-                            x+dx,
-                            top+dy,
-                            z+dz
-                        )
-                    ){
-
-                        setBlock(
-                            x+dx,
-                            top+dy,
-                            z+dz,
-                            BLOCK.LEAVES
-                        );
-                    }
+                    setBlock(
+                        x+dx,
+                        top+dy,
+                        z+dz,
+                        BLOCK.LEAVES
+                    );
                 }
             }
         }
     }
 }
 
-/* ---------------------------------------------------------
-   Haus
-   --------------------------------------------------------- */
+/* =========================================================
+   HAUS
+   ========================================================= */
 
-function createStartingHouse(){
+function createHouse(){
 
-    const cx=Math.floor(WORLD_W/2)-5;
-    const cz=Math.floor(WORLD_D/2)-8;
+    const cx=19;
+    const cz=17;
 
-    const ground=terrainHeight(
-        cx+3,
-        cz+3
-    );
+    const ground =
+        terrainHeight(
+            cx+4,
+            cz+3
+        );
 
-    for(let x=0;x<9;x++){
+    /* Boden */
 
-        for(let z=0;z<7;z++){
+    for(
+        let x=0;
+        x<9;
+        x++
+    ){
 
-            for(let y=1;y<=4;y++){
+        for(
+            let z=0;
+            z<7;
+            z++
+        ){
 
-                const wall=
+            setBlock(
+                cx+x,
+                ground+1,
+                cz+z,
+                BLOCK.PLANK
+            );
+        }
+    }
+
+    /* Wände */
+
+    for(
+        let x=0;
+        x<9;
+        x++
+    ){
+
+        for(
+            let z=0;
+            z<7;
+            z++
+        ){
+
+            for(
+                let y=2;
+                y<=5;
+                y++
+            ){
+
+                const wall =
                     x===0 ||
                     x===8 ||
                     z===0 ||
                     z===6;
 
-                const door=
-                    x===4 &&
+                const door =
                     z===0 &&
-                    y<=2;
+                    x===4 &&
+                    y<=3;
 
-                if(wall && !door){
+                if(
+                    wall &&
+                    !door
+                ){
 
                     setBlock(
                         cx+x,
@@ -1482,59 +2506,54 @@ function createStartingHouse(){
         }
     }
 
-    /* Boden */
-
-    for(let x=1;x<8;x++){
-
-        for(let z=1;z<6;z++){
-
-            setBlock(
-                cx+x,
-                ground+1,
-                cz+z,
-                BLOCK.PLANK
-            );
-        }
-    }
-
-    /* Dach */
-
-    for(let roof=0;roof<4;roof++){
-
-        const width=4-roof;
-
-        for(let x=0;x<9;x++){
-
-            for(let side=-width;side<=width;side++){
-
-                if(Math.abs(side)<=width){
-
-                    setBlock(
-                        cx+x,
-                        ground+5+roof,
-                        cz+3+side,
-                        BLOCK.WOOD
-                    );
-                }
-            }
-        }
-    }
-
     /* Fenster */
 
     setBlock(
         cx+1,
-        ground+3,
+        ground+4,
         cz,
         BLOCK.GLASS
     );
 
     setBlock(
         cx+7,
-        ground+3,
+        ground+4,
         cz,
         BLOCK.GLASS
     );
+
+    /* Dach */
+
+    for(
+        let r=0;
+        r<3;
+        r++
+    ){
+
+        const width=
+            3-r;
+
+        for(
+            let x=0;
+            x<9;
+            x++
+        ){
+
+            for(
+                let s=-width;
+                s<=width;
+                s++
+            ){
+
+                setBlock(
+                    cx+x,
+                    ground+6+r,
+                    cz+3+s,
+                    BLOCK.WOOD
+                );
+            }
+        }
+    }
 
     /* Bett */
 
@@ -1551,209 +2570,114 @@ function createStartingHouse(){
         cz+4,
         BLOCK.FLOWER
     );
+
+    /* Tisch */
+
+    setBlock(
+        cx+6,
+        ground+2,
+        cz+4,
+        BLOCK.PLANK
+    );
 }
 
-/* ---------------------------------------------------------
-   Welt-Mesh
-   --------------------------------------------------------- */
+/* =========================================================
+   SPIELER BODEN
+   ========================================================= */
 
-const faceData=[
-    {
-        dir:[0,1,0],
-        corners:[
-            [-.5,.5,-.5],
-            [.5,.5,-.5],
-            [.5,.5,.5],
-            [-.5,.5,.5]
-        ]
-    },
-    {
-        dir:[0,-1,0],
-        corners:[
-            [-.5,-.5,.5],
-            [.5,-.5,.5],
-            [.5,-.5,-.5],
-            [-.5,-.5,-.5]
-        ]
-    },
-    {
-        dir:[0,0,1],
-        corners:[
-            [-.5,-.5,.5],
-            [-.5,.5,.5],
-            [.5,.5,.5],
-            [.5,-.5,.5]
-        ]
-    },
-    {
-        dir:[0,0,-1],
-        corners:[
-            [.5,-.5,-.5],
-            [.5,.5,-.5],
-            [-.5,.5,-.5],
-            [-.5,-.5,-.5]
-        ]
-    },
-    {
-        dir:[1,0,0],
-        corners:[
-            [.5,-.5,.5],
-            [.5,.5,.5],
-            [.5,.5,-.5],
-            [.5,-.5,-.5]
-        ]
-    },
-    {
-        dir:[-1,0,0],
-        corners:[
-            [-.5,-.5,-.5],
-            [-.5,.5,-.5],
-            [-.5,.5,.5],
-            [-.5,-.5,.5]
-        ]
-    }
-];
+function playerGround(){
 
-function rebuildWorldMesh(){
+    const gx =
+        Math.floor(
+            player.x
+        );
 
-    if(!meshDirty)
-        return;
+    const gz =
+        Math.floor(
+            player.z
+        );
 
-    meshDirty=false;
+    if(
+        !inside(
+            gx,0,gz
+        )
+    )
+        return 3;
 
-    const vertices=[];
-    const normals=[];
-    const indices=[];
+    for(
+        let y=WORLD_H-1;
+        y>=0;
+        y--
+    ){
 
-    const colors=[];
+        if(
+            getBlock(
+                gx,
+                y,
+                gz
+            )!==BLOCK.AIR
+        ){
 
-    for(let z=0;z<WORLD_D;z++){
-
-        for(let y=0;y<WORLD_H;y++){
-
-            for(let x=0;x<WORLD_W;x++){
-
-                const type=getBlock(x,y,z);
-
-                if(type===BLOCK.AIR)
-                    continue;
-
-                const col=blockColors[type] ||
-                    [1,1,1];
-
-                for(const face of faceData){
-
-                    const nx=x+face.dir[0];
-                    const ny=y+face.dir[1];
-                    const nz=z+face.dir[2];
-
-                    const neighbor=
-                        getBlock(nx,ny,nz);
-
-                    if(neighbor!==BLOCK.AIR)
-                        continue;
-
-                    const start=
-                        vertices.length/3;
-
-                    for(const c of face.corners){
-
-                        vertices.push(
-                            x+c[0],
-                            y+c[1],
-                            z+c[2]
-                        );
-
-                        normals.push(
-                            face.dir[0],
-                            face.dir[1],
-                            face.dir[2]
-                        );
-
-                        colors.push(
-                            col[0],
-                            col[1],
-                            col[2]
-                        );
-                    }
-
-                    indices.push(
-                        start,
-                        start+1,
-                        start+2,
-                        start,
-                        start+2,
-                        start+3
-                    );
-                }
-            }
+            return y+1;
         }
     }
 
-    if(mesh &&
-       mesh.v){
-
-        gl.deleteBuffer(mesh.v);
-        gl.deleteBuffer(mesh.n);
-        gl.deleteBuffer(mesh.i);
-    }
-
-    mesh={
-        v:gl.createBuffer(),
-        n:gl.createBuffer(),
-        c:gl.createBuffer(),
-        i:gl.createBuffer(),
-        count:indices.length
-    };
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.v
-    );
-
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(vertices),
-        gl.STATIC_DRAW
-    );
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.n
-    );
-
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(normals),
-        gl.STATIC_DRAW
-    );
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.c
-    );
-
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(colors),
-        gl.STATIC_DRAW
-    );
-
-    gl.bindBuffer(
-        gl.ELEMENT_ARRAY_BUFFER,
-        mesh.i
-    );
-
-    gl.bufferData(
-        gl.ELEMENT_ARRAY_BUFFER,
-        new Uint16Array(indices),
-        gl.STATIC_DRAW
-    );
+    return 3;
 }
 
-/* ---------------------------------------------------------
-   Cube Rendering für Tiere / Dekoration
-   --------------------------------------------------------- */
+/* =========================================================
+   KAMERA
+   ========================================================= */
+
+function getCamera(){
+
+    const target=[
+
+        player.x,
+
+        player.y+
+        1.3,
+
+        player.z
+    ];
+
+    const cp =
+        Math.cos(
+            player.pitch
+        );
+
+    const eye=[
+
+        target[0]+
+        Math.sin(
+            player.yaw
+        )*
+        cp*
+        camera.distance,
+
+        target[1]-
+        Math.sin(
+            player.pitch
+        )*
+        camera.distance,
+
+        target[2]+
+        Math.cos(
+            player.yaw
+        )*
+        cp*
+        camera.distance
+    ];
+
+    return {
+        eye,
+        target
+    };
+}
+
+/* =========================================================
+   CUBE RENDERING
+   ========================================================= */
 
 function drawCube(
     x,y,z,
@@ -1762,27 +2686,16 @@ function drawCube(
     ry=0
 ){
 
-    const m=model(
-        x,y,z,
-        sx,sy,sz,
-        ry
-    );
-
-    drawPrimitive(
-        cubeMesh,
-        m,
-        color
-    );
-}
-
-function drawPrimitive(msh,m,color){
-
-    if(!msh)
-        return;
+    const m =
+        model(
+            x,y,z,
+            sx,sy,sz,
+            ry
+        );
 
     gl.bindBuffer(
         gl.ARRAY_BUFFER,
-        msh.v
+        cubeMesh.v
     );
 
     gl.enableVertexAttribArray(
@@ -1800,7 +2713,7 @@ function drawPrimitive(msh,m,color){
 
     gl.bindBuffer(
         gl.ARRAY_BUFFER,
-        msh.n
+        cubeMesh.n
     );
 
     gl.enableVertexAttribArray(
@@ -1816,9 +2729,20 @@ function drawPrimitive(msh,m,color){
         0
     );
 
+    gl.disableVertexAttribArray(
+        program.aColor
+    );
+
+    gl.vertexAttrib3f(
+        program.aColor,
+        color[0],
+        color[1],
+        color[2]
+    );
+
     gl.bindBuffer(
         gl.ELEMENT_ARRAY_BUFFER,
-        msh.i
+        cubeMesh.i
     );
 
     gl.uniformMatrix4fv(
@@ -1827,72 +2751,77 @@ function drawPrimitive(msh,m,color){
         m
     );
 
-    gl.uniform3f(
-        program.uColor,
-        color[0],
-        color[1],
-        color[2]
-    );
-
     gl.drawElements(
         gl.TRIANGLES,
-        msh.count,
+        cubeMesh.count,
         gl.UNSIGNED_SHORT,
         0
     );
 }
 
-/* ---------------------------------------------------------
-   Wasser
-   --------------------------------------------------------- */
+/* =========================================================
+   WASSER
+   ========================================================= */
 
 function drawWater(){
 
-    const size=65;
+    drawCube(
 
-    const m=model(
         WORLD_W/2,
-        SEA_LEVEL-.55,
-        WORLD_D/2,
-        size,
-        .15,
-        size
-    );
 
-    drawPrimitive(
-        cubeMesh,
-        m,
-        [0.08,0.42,0.68]
+        SEA_LEVEL-.7,
+
+        WORLD_D/2,
+
+        65,
+
+        .15,
+
+        65,
+
+        [
+            .07,
+            .38,
+            .66
+        ]
     );
 }
 
-/* ---------------------------------------------------------
-   Tiere
-   --------------------------------------------------------- */
+/* =========================================================
+   TIERE
+   ========================================================= */
 
 function drawRabbit(a){
 
-    const ground=
+    const h =
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
         );
 
-    if(ground<0)
+    if(h<0)
         return;
 
-    const y=ground+1.4;
+    const y=h+1.3;
 
-    const body=[.78,.70,.55];
-    const white=[.88,.88,.82];
-    const pink=[.95,.55,.62];
+    const body=[
+        .78,
+        .70,
+        .55
+    ];
+
+    const white=[
+        .90,
+        .90,
+        .84
+    ];
 
     drawCube(
         a.x,
         y,
         a.z,
         .8,
-        .6,
+        .55,
         .55,
         body,
         a.dir
@@ -1901,12 +2830,12 @@ function drawRabbit(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.42,
-        y+.3,
+        y+.28,
         a.z+
         Math.cos(a.dir)*.42,
-        .45,
-        .45,
-        .45,
+        .42,
+        .42,
+        .42,
         white,
         a.dir
     );
@@ -1914,52 +2843,60 @@ function drawRabbit(a){
     drawCube(
         a.x+
         Math.sin(a.dir)*.45,
-        y+.7,
+        y+.72,
         a.z+
         Math.cos(a.dir)*.45,
-        .12,
+        .11,
         .45,
-        .12,
+        .11,
         white,
         a.dir
     );
 
     drawCube(
-        a.x+
-        Math.sin(a.dir)*.58,
-        y+.7,
-        a.z+
-        Math.cos(a.dir)*.52,
-        .06,
+        a.x-
+        Math.sin(a.dir)*.15,
+        y+.2,
+        a.z-
+        Math.cos(a.dir)*.15,
         .20,
-        .06,
-        pink,
-        a.dir
+        .20,
+        .20,
+        white
     );
 }
 
 function drawBear(a){
 
-    const ground=
+    const h =
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
         );
 
-    if(ground<0)
+    if(h<0)
         return;
 
-    const y=ground+1.35;
+    const y=h+1.35;
 
-    const brown=[.30,.18,.10];
-    const dark=[.12,.07,.04];
+    const brown=[
+        .30,
+        .18,
+        .10
+    ];
+
+    const dark=[
+        .08,
+        .05,
+        .03
+    ];
 
     drawCube(
         a.x,
         y,
         a.z,
         1.05,
-        .95,
+        .90,
         .85,
         brown,
         a.dir
@@ -1967,26 +2904,26 @@ function drawBear(a){
 
     drawCube(
         a.x+
-        Math.sin(a.dir)*.48,
+        Math.sin(a.dir)*.5,
         y+.35,
         a.z+
-        Math.cos(a.dir)*.48,
-        .65,
-        .65,
-        .65,
+        Math.cos(a.dir)*.5,
+        .62,
+        .62,
+        .62,
         brown,
         a.dir
     );
 
     drawCube(
         a.x+
-        Math.sin(a.dir)*.73,
-        y+.38,
+        Math.sin(a.dir)*.82,
+        y+.36,
         a.z+
-        Math.cos(a.dir)*.73,
+        Math.cos(a.dir)*.82,
         .18,
         .18,
-        .12,
+        .15,
         dark,
         a.dir
     );
@@ -1994,26 +2931,35 @@ function drawBear(a){
 
 function drawFox(a){
 
-    const ground=
+    const h =
         terrainHeight(
             Math.round(a.x),
             Math.round(a.z)
         );
 
-    if(ground<0)
+    if(h<0)
         return;
 
-    const y=ground+1.15;
+    const y=h+1.15;
 
-    const orange=[.85,.30,.08];
-    const white=[.95,.90,.75];
+    const orange=[
+        .85,
+        .30,
+        .07
+    ];
+
+    const white=[
+        .95,
+        .90,
+        .75
+    ];
 
     drawCube(
         a.x,
         y,
         a.z,
         .9,
-        .65,
+        .62,
         .5,
         orange,
         a.dir
@@ -2025,8 +2971,8 @@ function drawFox(a){
         y+.25,
         a.z+
         Math.cos(a.dir)*.48,
-        .5,
-        .5,
+        .48,
+        .48,
         .45,
         orange,
         a.dir
@@ -2034,10 +2980,10 @@ function drawFox(a){
 
     drawCube(
         a.x+
-        Math.sin(a.dir)*.75,
+        Math.sin(a.dir)*.76,
         y+.25,
         a.z+
-        Math.cos(a.dir)*.75,
+        Math.cos(a.dir)*.76,
         .16,
         .16,
         .16,
@@ -2048,44 +2994,49 @@ function drawFox(a){
 
 function updateAnimals(dt){
 
-    for(const a of animals){
+    for(
+        const a of animals
+    ){
 
         a.timer-=dt;
 
-        if(a.timer<=0){
+        if(
+            a.timer<=0
+        ){
 
             a.timer=
                 2+
                 Math.random()*4;
 
-            a.dir+=
-                (Math.random()-.5)*2.5;
+            a.dir +=
+                (Math.random()-.5)
+                *2.5;
         }
 
-        const nx=
+        const nx =
             a.x+
             Math.sin(a.dir)*
-            a.speed*dt;
+            a.speed*
+            dt;
 
-        const nz=
+        const nz =
             a.z+
             Math.cos(a.dir)*
-            a.speed*dt;
+            a.speed*
+            dt;
 
-        const gx=Math.round(nx);
-        const gz=Math.round(nz);
-
-        const h=terrainHeight(
-            gx,
-            gz
-        );
+        const h =
+            terrainHeight(
+                Math.round(nx),
+                Math.round(nz)
+            );
 
         if(
             h>0 &&
             Math.hypot(
-                gx-WORLD_W/2,
-                gz-WORLD_D/2
-            )<20
+                nx-WORLD_W/2,
+                nz-WORLD_D/2
+            )<19
         ){
 
             a.x=nx;
@@ -2098,25 +3049,46 @@ function updateAnimals(dt){
     }
 }
 
-/* ---------------------------------------------------------
-   Spieler zeichnen
-   --------------------------------------------------------- */
+/* =========================================================
+   SPIELER
+   ========================================================= */
 
 function drawPlayer(time){
 
-    const walking=
+    const moving =
         Math.abs(player.vx)+
-        Math.abs(player.vz)>.1;
+        Math.abs(player.vz)>.2;
 
-    const walk=
-        walking ?
-        Math.sin(time*.012)*.12 :
-        0;
+    const walk =
+        moving
+        ? Math.sin(
+            time*.012
+        )*.12
+        : 0;
 
-    const skin=[.88,.67,.50];
-    const shirt=[.18,.45,.80];
-    const pants=[.12,.15,.20];
-    const hair=[.10,.06,.03];
+    const skin=[
+        .88,
+        .67,
+        .50
+    ];
+
+    const shirt=[
+        .15,
+        .45,
+        .80
+    ];
+
+    const pants=[
+        .10,
+        .14,
+        .20
+    ];
+
+    const hair=[
+        .08,
+        .05,
+        .025
+    ];
 
     drawCube(
         player.x,
@@ -2141,20 +3113,18 @@ function drawPlayer(time){
     );
 
     drawCube(
-        player.x+
-        Math.sin(player.yaw)*.03,
-        player.y+1.98,
-        player.z+
-        Math.cos(player.yaw)*.03,
-        .52,
-        .18,
-        .52,
+        player.x,
+        player.y+1.99,
+        player.z,
+        .53,
+        .17,
+        .53,
         hair,
         player.yaw
     );
 
     drawCube(
-        player.x-.20,
+        player.x-.19,
         player.y+.35+walk,
         player.z,
         .20,
@@ -2165,7 +3135,7 @@ function drawPlayer(time){
     );
 
     drawCube(
-        player.x+.20,
+        player.x+.19,
         player.y+.35-walk,
         player.z,
         .20,
@@ -2176,160 +3146,168 @@ function drawPlayer(time){
     );
 }
 
-/* ---------------------------------------------------------
-   Kamera
-   --------------------------------------------------------- */
-
-function getCamera(){
-
-    const target=[
-        player.x,
-        player.y+1.0,
-        player.z
-    ];
-
-    const cp=Math.cos(player.pitch);
-
-    const eye=[
-        target[0]+
-        Math.sin(player.yaw)*cp*
-        camera.distance,
-
-        target[1]-
-        Math.sin(player.pitch)*
-        camera.distance,
-
-        target[2]+
-        Math.cos(player.yaw)*cp*
-        camera.distance
-    ];
-
-    return {
-        eye,
-        target
-    };
-}
-
-/* ---------------------------------------------------------
-   Raycast
-   --------------------------------------------------------- */
+/* =========================================================
+   RAYCAST
+   ========================================================= */
 
 function raycast(){
 
-    const cam=getCamera();
+    const cam =
+        getCamera();
 
-    const dx=
+    let dx =
         cam.target[0]-
         cam.eye[0];
 
-    const dy=
+    let dy =
         cam.target[1]-
         cam.eye[1];
 
-    const dz=
+    let dz =
         cam.target[2]-
         cam.eye[2];
 
-    const len=Math.hypot(
-        dx,dy,dz
-    );
+    const len =
+        Math.hypot(
+            dx,dy,dz
+        );
 
-    const rx=dx/len;
-    const ry=dy/len;
-    const rz=dz/len;
+    dx/=len;
+    dy/=len;
+    dz/=len;
 
-    let x=Math.floor(
-        cam.eye[0]
-    );
+    let x =
+        Math.floor(
+            cam.eye[0]
+        );
 
-    let y=Math.floor(
-        cam.eye[1]
-    );
+    let y =
+        Math.floor(
+            cam.eye[1]
+        );
 
-    let z=Math.floor(
-        cam.eye[2]
-    );
+    let z =
+        Math.floor(
+            cam.eye[2]
+        );
 
-    const stepX=rx>=0?1:-1;
-    const stepY=ry>=0?1:-1;
-    const stepZ=rz>=0?1:-1;
+    const stepX =
+        dx>=0 ? 1 : -1;
 
-    const txDelta=
-        Math.abs(1/rx);
+    const stepY =
+        dy>=0 ? 1 : -1;
 
-    const tyDelta=
-        Math.abs(1/ry);
+    const stepZ =
+        dz>=0 ? 1 : -1;
 
-    const tzDelta=
-        Math.abs(1/rz);
+    let tMaxX =
+        dx>=0
+        ? (x+1-cam.eye[0])/dx
+        : (cam.eye[0]-x)/-dx;
 
-    let txMax=rx>=0 ?
-        (x+1-cam.eye[0])/rx :
-        (cam.eye[0]-x)/-rx;
+    let tMaxY =
+        dy>=0
+        ? (y+1-cam.eye[1])/dy
+        : (cam.eye[1]-y)/-dy;
 
-    let tyMax=ry>=0 ?
-        (y+1-cam.eye[1])/ry :
-        (cam.eye[1]-y)/-ry;
+    let tMaxZ =
+        dz>=0
+        ? (z+1-cam.eye[2])/dz
+        : (cam.eye[2]-z)/-dz;
 
-    let tzMax=rz>=0 ?
-        (z+1-cam.eye[2])/rz :
-        (cam.eye[2]-z)/-rz;
+    const tDeltaX =
+        Math.abs(1/dx);
 
-    if(!isFinite(txMax))
-        txMax=Infinity;
+    const tDeltaY =
+        Math.abs(1/dy);
 
-    if(!isFinite(tyMax))
-        tyMax=Infinity;
+    const tDeltaZ =
+        Math.abs(1/dz);
 
-    if(!isFinite(tzMax))
-        tzMax=Infinity;
+    if(!isFinite(tMaxX))
+        tMaxX=Infinity;
+
+    if(!isFinite(tMaxY))
+        tMaxY=Infinity;
+
+    if(!isFinite(tMaxZ))
+        tMaxZ=Infinity;
 
     let previous={
-        x,y,z
+        x,
+        y,
+        z
     };
 
-    for(let i=0;i<50;i++){
+    for(
+        let i=0;
+        i<55;
+        i++
+    ){
 
         if(
-            inside(x,y,z) &&
-            getBlock(x,y,z)!==
-            BLOCK.AIR
+            inside(
+                x,y,z
+            ) &&
+            getBlock(
+                x,y,z
+            )!==BLOCK.AIR
         ){
 
             return {
-                x,y,z,
+
+                x,
+                y,
+                z,
+
                 previous
+
             };
         }
 
         previous={
-            x,y,z
+            x,
+            y,
+            z
         };
 
-        if(txMax<tyMax){
+        if(
+            tMaxX<
+            tMaxY
+        ){
 
-            if(txMax<tzMax){
+            if(
+                tMaxX<
+                tMaxZ
+            ){
 
                 x+=stepX;
-                txMax+=txDelta;
+                tMaxX+=
+                    tDeltaX;
 
             }else{
 
                 z+=stepZ;
-                tzMax+=tzDelta;
+                tMaxZ+=
+                    tDeltaZ;
             }
 
         }else{
 
-            if(tyMax<tzMax){
+            if(
+                tMaxY<
+                tMaxZ
+            ){
 
                 y+=stepY;
-                tyMax+=tyDelta;
+                tMaxY+=
+                    tDeltaY;
 
             }else{
 
                 z+=stepZ;
-                tzMax+=tzDelta;
+                tMaxZ+=
+                    tDeltaZ;
             }
         }
     }
@@ -2337,9 +3315,9 @@ function raycast(){
     return null;
 }
 
-/* ---------------------------------------------------------
-   Bauen
-   --------------------------------------------------------- */
+/* =========================================================
+   BAUEN
+   ========================================================= */
 
 function selectedBlock(){
 
@@ -2350,16 +3328,28 @@ function selectedBlock(){
 
 function canPlace(type){
 
-    if(type===BLOCK.WOOD)
+    if(
+        type===
+        BLOCK.WOOD
+    )
         return inventory.wood>0;
 
-    if(type===BLOCK.STONE)
+    if(
+        type===
+        BLOCK.STONE
+    )
         return inventory.stone>0;
 
-    if(type===BLOCK.PLANK)
+    if(
+        type===
+        BLOCK.PLANK
+    )
         return inventory.planks>0;
 
-    if(type===BLOCK.FLOWER)
+    if(
+        type===
+        BLOCK.FLOWER
+    )
         return inventory.seeds>0;
 
     return true;
@@ -2367,98 +3357,129 @@ function canPlace(type){
 
 function consumeBlock(type){
 
-    if(type===BLOCK.WOOD)
+    if(
+        type===
+        BLOCK.WOOD
+    )
         inventory.wood--;
 
-    if(type===BLOCK.STONE)
+    if(
+        type===
+        BLOCK.STONE
+    )
         inventory.stone--;
 
-    if(type===BLOCK.PLANK)
+    if(
+        type===
+        BLOCK.PLANK
+    )
         inventory.planks--;
 
-    if(type===BLOCK.FLOWER)
+    if(
+        type===
+        BLOCK.FLOWER
+    )
         inventory.seeds--;
 }
 
 function giveBlock(type){
 
-    if(type===BLOCK.WOOD)
+    if(
+        type===
+        BLOCK.WOOD
+    )
         inventory.wood++;
 
-    if(type===BLOCK.STONE)
+    if(
+        type===
+        BLOCK.STONE
+    )
         inventory.stone++;
 
-    if(type===BLOCK.PLANK)
+    if(
+        type===
+        BLOCK.PLANK
+    )
         inventory.planks++;
 
-    if(type===BLOCK.FLOWER)
+    if(
+        type===
+        BLOCK.FLOWER
+    )
         inventory.seeds++;
 }
 
 function buildBlock(){
 
-    const hit=raycast();
+    const hit =
+        raycast();
 
     if(!hit){
 
         showMessage(
-            "Kein Block zum Bauen anvisiert"
+            "Kein Block anvisiert."
         );
 
         return;
     }
 
-    const p=hit.previous;
+    const p =
+        hit.previous;
 
-    if(!inside(
-        p.x,
-        p.y,
-        p.z
-    )){
+    if(
+        !inside(
+            p.x,
+            p.y,
+            p.z
+        )
+    ){
 
         showMessage(
-            "Hier kannst du nicht bauen"
+            "Hier kannst du nicht bauen."
         );
 
         return;
     }
 
-    if(getBlock(
-        p.x,
-        p.y,
-        p.z
-    )!==BLOCK.AIR){
-
+    if(
+        getBlock(
+            p.x,
+            p.y,
+            p.z
+        )!==BLOCK.AIR
+    )
         return;
-    }
 
-    const type=selectedBlock();
+    const type =
+        selectedBlock();
 
-    if(!canPlace(type)){
+    if(
+        !canPlace(type)
+    ){
 
         showMessage(
-            "Davon hast du nichts mehr"
+            "Davon hast du nichts mehr."
         );
 
         return;
     }
-
-    /* Spieler darf nicht im Block stehen */
 
     if(
         Math.abs(
             p.x+.5-player.x
         )<.8 &&
+
         Math.abs(
             p.z+.5-player.z
         )<.8 &&
+
         Math.abs(
             p.y-player.y
-        )<2.1
+        )<2
     ){
 
         showMessage(
-            "Du stehst dort gerade"
+            "Du stehst dort gerade."
         );
 
         return;
@@ -2471,105 +3492,129 @@ function buildBlock(){
         type
     );
 
-    consumeBlock(type);
-
-    showMessage(
-        "Block gebaut"
+    consumeBlock(
+        type
     );
 
+    rebuildChunks();
+
     updateUI();
+
+    showMessage(
+        "🧱 Block gebaut"
+    );
 }
 
-/* ---------------------------------------------------------
-   Abbauen
-   --------------------------------------------------------- */
+/* =========================================================
+   ABBAUEN
+   ========================================================= */
 
 function breakBlock(){
 
-    const hit=raycast();
+    const hit =
+        raycast();
 
     if(!hit)
         return;
 
-    const type=getBlock(
+    const type =
+        getBlock(
+            hit.x,
+            hit.y,
+            hit.z
+        );
+
+    if(
+        type===
+        BLOCK.AIR
+    )
+        return;
+
+    setBlock(
         hit.x,
         hit.y,
-        hit.z
+        hit.z,
+        BLOCK.AIR
     );
 
-    if(type===BLOCK.FLOWER){
-
-        setBlock(
-            hit.x,
-            hit.y,
-            hit.z,
-            BLOCK.AIR
-        );
-
-        inventory.seeds++;
-
-    }else if(
-        type===BLOCK.WOOD ||
-        type===BLOCK.STONE ||
-        type===BLOCK.PLANK
+    if(
+        type===
+        BLOCK.WOOD ||
+        type===
+        BLOCK.STONE ||
+        type===
+        BLOCK.PLANK
     ){
 
-        setBlock(
-            hit.x,
-            hit.y,
-            hit.z,
-            BLOCK.AIR
-        );
-
-        giveBlock(type);
-
-    }else{
-
-        setBlock(
-            hit.x,
-            hit.y,
-            hit.z,
-            BLOCK.AIR
+        giveBlock(
+            type
         );
     }
 
-    showMessage(
-        "Block abgebaut"
-    );
+    if(
+        type===
+        BLOCK.FLOWER
+    ){
+
+        inventory.seeds++;
+    }
+
+    rebuildChunks();
 
     updateUI();
+
+    showMessage(
+        "⛏️ Block abgebaut"
+    );
 }
 
-/* ---------------------------------------------------------
-   Bewegung
-   --------------------------------------------------------- */
+/* =========================================================
+   BEWEGUNG
+   ========================================================= */
 
 function getMoveInput(){
 
     let forward=0;
     let side=0;
 
-    if(keys["w"] || keys["ArrowUp"])
-        forward+=1;
+    if(
+        keys["w"] ||
+        keys["W"] ||
+        keys["ArrowUp"]
+    )
+        forward++;
 
-    if(keys["s"] || keys["ArrowDown"])
-        forward-=1;
+    if(
+        keys["s"] ||
+        keys["S"] ||
+        keys["ArrowDown"]
+    )
+        forward--;
 
-    if(keys["a"] || keys["ArrowLeft"])
-        side-=1;
+    if(
+        keys["a"] ||
+        keys["A"] ||
+        keys["ArrowLeft"]
+    )
+        side--;
 
-    if(keys["d"] || keys["ArrowRight"])
-        side+=1;
+    if(
+        keys["d"] ||
+        keys["D"] ||
+        keys["ArrowRight"]
+    )
+        side++;
 
-    const length=Math.hypot(
-        forward,
-        side
-    );
+    const len =
+        Math.hypot(
+            forward,
+            side
+        );
 
-    if(length>1){
+    if(len>1){
 
-        forward/=length;
-        side/=length;
+        forward/=len;
+        side/=len;
     }
 
     return {
@@ -2578,109 +3623,141 @@ function getMoveInput(){
     };
 }
 
-function playerGround(){
-
-    const gx=Math.floor(
-        player.x
-    );
-
-    const gz=Math.floor(
-        player.z
-    );
-
-    let h=0;
-
-    for(let y=0;y<WORLD_H;y++){
-
-        if(
-            getBlock(
-                gx,
-                y,
-                gz
-            )!==BLOCK.AIR
-        ){
-
-            h=y+1;
-        }
-    }
-
-    return h;
-}
-
 function updatePlayer(dt){
 
-    const input=getMoveInput();
+    const input =
+        getMoveInput();
 
-    const sin=Math.sin(player.yaw);
-    const cos=Math.cos(player.yaw);
+    const sin =
+        Math.sin(
+            player.yaw
+        );
 
-    const dx=
-        (-sin)*input.forward+
-        cos*input.side;
+    const cos =
+        Math.cos(
+            player.yaw
+        );
 
-    const dz=
-        (-cos)*input.forward+
-        (-sin)*input.side;
+    const dx =
+        (-sin)*
+        input.forward+
 
-    const targetSpeed=5;
+        cos*
+        input.side;
+
+    const dz =
+        (-cos)*
+        input.forward+
+
+        (-sin)*
+        input.side;
+
+    const targetSpeed =
+        player.speed;
 
     player.vx +=
-        (dx*targetSpeed-player.vx)*
-        Math.min(1,dt*10);
+        (
+            dx*
+            targetSpeed-
+            player.vx
+        )*
+        Math.min(
+            1,
+            dt*10
+        );
 
     player.vz +=
-        (dz*targetSpeed-player.vz)*
-        Math.min(1,dt*10);
+        (
+            dz*
+            targetSpeed-
+            player.vz
+        )*
+        Math.min(
+            1,
+            dt*10
+        );
 
     if(
-        Math.abs(input.forward)+
-        Math.abs(input.side)<
-        .01
+        Math.abs(
+            input.forward
+        )+
+        Math.abs(
+            input.side
+        )<.01
     ){
 
-        player.vx*=Math.pow(.001,dt);
-        player.vz*=Math.pow(.001,dt);
+        player.vx *=
+            Math.pow(
+                .001,
+                dt
+            );
+
+        player.vz *=
+            Math.pow(
+                .001,
+                dt
+            );
     }
 
-    player.x+=player.vx*dt;
-    player.z+=player.vz*dt;
+    player.x +=
+        player.vx*dt;
 
-    const radius=21;
+    player.z +=
+        player.vz*dt;
 
-    const cx=WORLD_W/2;
-    const cz=WORLD_D/2;
+    const centerX =
+        WORLD_W/2;
 
-    const dx2=player.x-cx;
-    const dz2=player.z-cz;
+    const centerZ =
+        WORLD_D/2;
 
-    const dist=Math.hypot(
-        dx2,dz2
-    );
+    const dx2 =
+        player.x-centerX;
 
-    if(dist>radius-1){
+    const dz2 =
+        player.z-centerZ;
 
-        const factor=
-            (radius-1)/dist;
+    const dist =
+        Math.hypot(
+            dx2,
+            dz2
+        );
+
+    const radius=20;
+
+    if(
+        dist>radius
+    ){
+
+        const f=
+            radius/dist;
 
         player.x=
-            cx+dx2*factor;
+            centerX+
+            dx2*f;
 
         player.z=
-            cz+dz2*factor;
+            centerZ+
+            dz2*f;
     }
 
-    player.vy-=20*dt;
+    player.vy -=
+        20*dt;
 
-    player.y+=
+    player.y +=
         player.vy*dt;
 
-    const ground=
+    const ground =
         playerGround();
 
-    if(player.y<=ground){
+    if(
+        player.y<=ground
+    ){
 
         player.y=ground;
+
         player.vy=0;
+
         player.onGround=true;
 
     }else{
@@ -2691,7 +3768,9 @@ function updatePlayer(dt){
 
 function jump(){
 
-    if(player.onGround){
+    if(
+        player.onGround
+    ){
 
         player.vy=
             player.jump;
@@ -2700,23 +3779,28 @@ function jump(){
     }
 }
 
-/* ---------------------------------------------------------
-   Interaktion
-   --------------------------------------------------------- */
+/* =========================================================
+   INTERAKTION
+   ========================================================= */
 
 function interact(){
 
-    const hit=raycast();
+    const hit =
+        raycast();
 
     if(hit){
 
-        const type=getBlock(
-            hit.x,
-            hit.y,
-            hit.z
-        );
+        const type =
+            getBlock(
+                hit.x,
+                hit.y,
+                hit.z
+            );
 
-        if(type===BLOCK.FLOWER){
+        if(
+            type===
+            BLOCK.FLOWER
+        ){
 
             setBlock(
                 hit.x,
@@ -2727,38 +3811,49 @@ function interact(){
 
             inventory.seeds++;
 
+            rebuildChunks();
+
+            updateUI();
+
             showMessage(
                 "🌱 Samen gesammelt"
             );
-
-            updateUI();
 
             return;
         }
     }
 
-    /* Tiere */
+    for(
+        const a of animals
+    ){
 
-    for(const a of animals){
+        const d =
+            Math.hypot(
+                a.x-player.x,
+                a.z-player.z
+            );
 
-        const d=Math.hypot(
-            a.x-player.x,
-            a.z-player.z
-        );
+        if(
+            d<2.5
+        ){
 
-        if(d<2.5){
-
-            if(a.type==="rabbit")
+            if(
+                a.type===
+                "rabbit"
+            )
                 showMessage(
-                    "🐰 Das Kaninchen schaut dich neugierig an."
+                    "🐰 Das Kaninchen schaut dich an."
                 );
 
-            if(a.type==="bear")
+            else if(
+                a.type===
+                "bear"
+            )
                 showMessage(
-                    "🐻 Bruno brummt zufrieden."
+                    "🐻 Der Bär brummt zufrieden."
                 );
 
-            if(a.type==="fox")
+            else
                 showMessage(
                     "🦊 Der Fuchs beobachtet dich."
                 );
@@ -2767,80 +3862,102 @@ function interact(){
         }
     }
 
-    /* Wasser / Angeln */
+    const houseDist =
+        Math.hypot(
+            player.x-23,
+            player.z-20
+        );
 
-    const distWater=Math.hypot(
-        player.x-WORLD_W/2,
-        player.z-WORLD_D/2
-    );
-
-    if(distWater>18){
+    if(
+        houseDist<5
+    ){
 
         showMessage(
-            "🎣 Hier draußen kannst du angeln."
+            "🏠 Dein Blockhaus. Das Bett steht drinnen."
         );
 
         return;
     }
 
     showMessage(
-        "Du kannst hier bauen oder abbauen."
+        "Hier gibt es nichts zu interagieren."
     );
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
    UI
-   --------------------------------------------------------- */
+   ========================================================= */
 
 function showMessage(text){
 
-    const el=document.getElementById(
-        "message"
-    );
+    const el =
+        document.getElementById(
+            "message"
+        );
 
     el.textContent=text;
+
     el.style.opacity="1";
 
-    clearTimeout(showMessage.timer);
+    clearTimeout(
+        showMessage.timer
+    );
 
-    showMessage.timer=setTimeout(()=>{
-        el.style.opacity="0";
-    },1800);
+    showMessage.timer =
+        setTimeout(
+            ()=>{
+                el.style.opacity="0";
+            },
+            1800
+        );
 }
 
 function updateUI(){
 
     document.getElementById(
         "wood"
-    ).textContent=inventory.wood;
+    ).textContent=
+        inventory.wood;
 
     document.getElementById(
         "stone"
-    ).textContent=inventory.stone;
+    ).textContent=
+        inventory.stone;
 
     document.getElementById(
         "seeds"
-    ).textContent=inventory.seeds;
+    ).textContent=
+        inventory.seeds;
+
+    document.getElementById(
+        "fish"
+    ).textContent=
+        inventory.fish;
 
     document.getElementById(
         "invWood"
-    ).textContent=inventory.wood;
+    ).textContent=
+        inventory.wood;
 
     document.getElementById(
         "invStone"
-    ).textContent=inventory.stone;
+    ).textContent=
+        inventory.stone;
 
     document.getElementById(
         "invSeeds"
-    ).textContent=inventory.seeds;
+    ).textContent=
+        inventory.seeds;
 
     document.getElementById(
         "invPlanks"
-    ).textContent=inventory.planks;
+    ).textContent=
+        inventory.planks;
 
     document.getElementById(
         "invFish"
-    ).textContent=inventory.fish;
+    ).textContent=
+        inventory.fish;
 
     document.getElementById(
         "selected"
@@ -2849,23 +3966,32 @@ function updateUI(){
             selectedBlock()
         ];
 
-    document.querySelectorAll(
-        ".slot"
-    ).forEach((el,i)=>{
+    document
+        .querySelectorAll(
+            ".slot"
+        )
+        .forEach(
+            (el,i)=>{
 
-        el.classList.toggle(
-            "active",
-            i===selectedSlot
+                el.classList.toggle(
+                    "active",
+                    i===selectedSlot
+                );
+            }
         );
-    });
 }
 
 function selectSlot(n){
 
-    if(n<0)
-        n=hotbarBlocks.length-1;
+    if(
+        n<0
+    )
+        n=
+            hotbarBlocks.length-1;
 
-    if(n>=hotbarBlocks.length)
+    if(
+        n>=hotbarBlocks.length
+    )
         n=0;
 
     selectedSlot=n;
@@ -2873,29 +3999,35 @@ function selectSlot(n){
     updateUI();
 }
 
-/* ---------------------------------------------------------
-   Prompt
-   --------------------------------------------------------- */
+/* =========================================================
+   PROMPT
+   ========================================================= */
 
 function updatePrompt(){
 
-    const hit=raycast();
+    const hit =
+        raycast();
 
-    const p=document.getElementById(
-        "prompt"
-    );
+    const p =
+        document.getElementById(
+            "prompt"
+        );
 
     if(hit){
 
-        const type=getBlock(
-            hit.x,
-            hit.y,
-            hit.z
-        );
+        const type =
+            getBlock(
+                hit.x,
+                hit.y,
+                hit.z
+            );
 
-        p.textContent=
-            "🖱 Linksklick: Abbauen   |   Rechtsklick: Bauen   |   "+
-            (blockNames[type]||"Block");
+        p.textContent =
+            "🖱 Linksklick: Abbauen   •   Rechtsklick: Bauen   •   "+
+            (
+                blockNames[type] ||
+                "Block"
+            );
 
         p.style.opacity="1";
 
@@ -2905,45 +4037,65 @@ function updatePrompt(){
     }
 }
 
-/* ---------------------------------------------------------
-   Inventar
-   --------------------------------------------------------- */
+/* =========================================================
+   INVENTAR
+   ========================================================= */
 
 function toggleInventory(){
 
-    const inv=document.getElementById(
-        "inventory"
-    );
+    const inv =
+        document.getElementById(
+            "inventory"
+        );
 
-    inv.style.display=
-        inv.style.display==="block" ?
-        "none" :
-        "block";
+    inv.style.display =
+        inv.style.display===
+        "block"
+        ? "none"
+        : "block";
 
     updateUI();
 }
 
-/* ---------------------------------------------------------
-   Speichern
-   --------------------------------------------------------- */
+/* =========================================================
+   SAVE / LOAD
+   ========================================================= */
 
-const SAVE_KEY=
-    "animalmania3_save";
+const SAVE_KEY =
+    "animalmania31_save";
 
 function saveGame(){
 
     try{
 
         const data={
-            world:Array.from(world),
+
+            world:
+                Array.from(
+                    world
+                ),
+
             player:{
+
                 x:player.x,
+
                 y:player.y,
+
                 z:player.z,
+
                 yaw:player.yaw,
+
                 pitch:player.pitch
             },
-            inventory,
+
+            inventory:{
+                wood:inventory.wood,
+                stone:inventory.stone,
+                seeds:inventory.seeds,
+                planks:inventory.planks,
+                fish:inventory.fish
+            },
+
             selectedSlot
         };
 
@@ -2955,7 +4107,7 @@ function saveGame(){
     }catch(e){
 
         console.warn(
-            "Speichern nicht möglich",
+            "Speichern fehlgeschlagen",
             e
         );
     }
@@ -2965,7 +4117,7 @@ function loadGame(){
 
     try{
 
-        const raw=
+        const raw =
             localStorage.getItem(
                 SAVE_KEY
             );
@@ -2973,7 +4125,7 @@ function loadGame(){
         if(!raw)
             return false;
 
-        const data=
+        const data =
             JSON.parse(raw);
 
         if(
@@ -2987,7 +4139,9 @@ function loadGame(){
             );
         }
 
-        if(data.player){
+        if(
+            data.player
+        ){
 
             Object.assign(
                 player,
@@ -2995,7 +4149,9 @@ function loadGame(){
             );
         }
 
-        if(data.inventory){
+        if(
+            data.inventory
+        ){
 
             Object.assign(
                 inventory,
@@ -3009,18 +4165,18 @@ function loadGame(){
             )
         ){
 
-            selectedSlot=
+            selectedSlot =
                 data.selectedSlot;
         }
 
-        meshDirty=true;
+        rebuildChunks();
 
         return true;
 
     }catch(e){
 
         console.warn(
-            "Speicherstand konnte nicht geladen werden",
+            "Speicherstand ungültig",
             e
         );
 
@@ -3028,32 +4184,42 @@ function loadGame(){
     }
 }
 
-/* ---------------------------------------------------------
-   Zeit
-   --------------------------------------------------------- */
+/* =========================================================
+   ZEIT
+   ========================================================= */
 
-let worldTime=8;
+let worldTime=9;
 
 function updateTime(dt){
 
-    worldTime+=
-        dt*.35;
+    worldTime +=
+        dt*.30;
 
-    if(worldTime>=24)
+    if(
+        worldTime>=24
+    )
         worldTime-=24;
 
     let text="Tag";
 
-    if(worldTime<6)
+    if(
+        worldTime<6
+    )
         text="Nacht";
 
-    else if(worldTime<8)
+    else if(
+        worldTime<8
+    )
         text="Morgen";
 
-    else if(worldTime<18)
+    else if(
+        worldTime<18
+    )
         text="Tag";
 
-    else if(worldTime<21)
+    else if(
+        worldTime<21
+    )
         text="Abend";
 
     else
@@ -3064,55 +4230,78 @@ function updateTime(dt){
     ).textContent=text;
 }
 
-function getSkyColor(){
+function skyColor(){
 
-    if(worldTime<6 ||
-       worldTime>21){
+    if(
+        worldTime<6 ||
+        worldTime>21
+    ){
 
-        return [0.035,0.07,0.12];
+        return [
+            .035,
+            .065,
+            .11
+        ];
     }
 
-    if(worldTime<8){
+    if(
+        worldTime<8
+    ){
 
-        return [0.35,0.52,0.65];
+        return [
+            .34,
+            .52,
+            .65
+        ];
     }
 
-    if(worldTime>18){
+    if(
+        worldTime>18
+    ){
 
-        return [0.50,0.38,0.28];
+        return [
+            .55,
+            .40,
+            .29
+        ];
     }
 
-    return [0.38,0.68,0.88];
+    return [
+        .40,
+        .70,
+        .90
+    ];
 }
 
-/* ---------------------------------------------------------
-   Rendering
-   --------------------------------------------------------- */
+/* =========================================================
+   RENDER
+   ========================================================= */
 
 function resize(){
 
-    const dpr=Math.min(
-        window.devicePixelRatio||1,
-        1.5
-    );
+    const dpr =
+        Math.min(
+            window.devicePixelRatio||1,
+            1.5
+        );
 
-    const w=
+    const width =
         Math.floor(
             innerWidth*dpr
         );
 
-    const h=
+    const height =
         Math.floor(
             innerHeight*dpr
         );
 
     if(
-        canvas.width!==w ||
-        canvas.height!==h
+        canvas.width!==width ||
+        canvas.height!==height
     ){
 
-        canvas.width=w;
-        canvas.height=h;
+        canvas.width=width;
+        canvas.height=height;
     }
 
     gl.viewport(
@@ -3123,41 +4312,12 @@ function resize(){
     );
 }
 
-function render(time){
-
-    resize();
-
-    const sky=getSkyColor();
-
-    gl.clearColor(
-        sky[0],
-        sky[1],
-        sky[2],
-        1
-    );
-
-    gl.clear(
-        gl.COLOR_BUFFER_BIT|
-        gl.DEPTH_BUFFER_BIT
-    );
-
-    const cam=getCamera();
-
-    const projection=
-        perspective(
-            Math.PI/3,
-            canvas.width/canvas.height,
-            .1,
-            100
-        );
-
-    const view=
-        lookAt(
-            cam.eye,
-            cam.target
-        );
-
-    gl.useProgram(program);
+function setCommonUniforms(
+    projection,
+    view,
+    light,
+    sky
+){
 
     gl.uniformMatrix4fv(
         program.uProjection,
@@ -3171,16 +4331,16 @@ function render(time){
         view
     );
 
-    const night=
-        worldTime<6 ||
-        worldTime>21;
-
     gl.uniform3f(
         program.uLight,
-        -.5,
-        night?.5:1,
-        -.4
+        light[0],
+        light[1],
+        light[2]
     );
+
+    const night =
+        worldTime<6 ||
+        worldTime>21;
 
     gl.uniform1f(
         program.uAmbient,
@@ -3196,27 +4356,92 @@ function render(time){
 
     gl.uniform1f(
         program.uFogStart,
-        35
+        32
     );
 
     gl.uniform1f(
         program.uFogEnd,
-        75
+        72
+    );
+}
+
+function render(time){
+
+    resize();
+
+    const sky =
+        skyColor();
+
+    gl.clearColor(
+        sky[0],
+        sky[1],
+        sky[2],
+        1
     );
 
-    /* Wasser zuerst */
+    gl.clear(
+        gl.COLOR_BUFFER_BIT|
+        gl.DEPTH_BUFFER_BIT
+    );
+
+    const cam =
+        getCamera();
+
+    const projection =
+        perspective(
+            Math.PI/3,
+            canvas.width/
+            canvas.height,
+            .1,
+            100
+        );
+
+    const view =
+        lookAt(
+            cam.eye,
+            cam.target
+        );
+
+    const night =
+        worldTime<6 ||
+        worldTime>21;
+
+    const light=[
+
+        -.5,
+
+        night?.45:1,
+
+        -.4
+    ];
+
+    gl.useProgram(
+        program
+    );
+
+    setCommonUniforms(
+        projection,
+        view,
+        light,
+        sky
+    );
+
+    /* Wasser */
 
     drawWater();
 
-    /* Welt */
+    /* Voxel-Welt */
 
-    rebuildWorldMesh();
+    for(
+        const chunk of chunks
+    ){
 
-    if(mesh && mesh.count>0){
+        const m =
+            mat4();
 
         gl.bindBuffer(
             gl.ARRAY_BUFFER,
-            mesh.v
+            chunk.mesh.v
         );
 
         gl.enableVertexAttribArray(
@@ -3234,7 +4459,7 @@ function render(time){
 
         gl.bindBuffer(
             gl.ARRAY_BUFFER,
-            mesh.n
+            chunk.mesh.n
         );
 
         gl.enableVertexAttribArray(
@@ -3252,7 +4477,7 @@ function render(time){
 
         gl.bindBuffer(
             gl.ARRAY_BUFFER,
-            mesh.c
+            chunk.mesh.c
         );
 
         gl.enableVertexAttribArray(
@@ -3268,39 +4493,20 @@ function render(time){
             0
         );
 
-        /*
-         Farbarray wird nicht vom Shader benutzt.
-         Die Welt wird deshalb nach Materialgruppen
-         separat gerendert.
-        */
-
         gl.bindBuffer(
             gl.ELEMENT_ARRAY_BUFFER,
-            mesh.i
+            chunk.mesh.i
         );
 
         gl.uniformMatrix4fv(
             program.uModel,
             false,
-            mat4()
-        );
-
-        /*
-         Die Farben der Welt werden bereits im Mesh
-         gespeichert. Deshalb nutzen wir hier einen
-         neutralen Faktor.
-        */
-
-        gl.uniform3f(
-            program.uColor,
-            1,
-            1,
-            1
+            m
         );
 
         gl.drawElements(
             gl.TRIANGLES,
-            mesh.count,
+            chunk.mesh.count,
             gl.UNSIGNED_SHORT,
             0
         );
@@ -3308,12 +4514,20 @@ function render(time){
 
     /* Tiere */
 
-    for(const a of animals){
+    for(
+        const a of animals
+    ){
 
-        if(a.type==="rabbit")
+        if(
+            a.type===
+            "rabbit"
+        )
             drawRabbit(a);
 
-        else if(a.type==="bear")
+        else if(
+            a.type===
+            "bear"
+        )
             drawBear(a);
 
         else
@@ -3325,517 +4539,166 @@ function render(time){
     drawPlayer(time);
 }
 
-/* ---------------------------------------------------------
-   WICHTIG:
-   Eigener Shader für Weltfarben
-   --------------------------------------------------------- */
+/* =========================================================
+   WEBGL INIT
+   ========================================================= */
 
-const oldFragmentShader=fragmentShaderSource;
+function initGL(){
 
-const voxelFragmentShader=`
-precision mediump float;
+    try{
 
-attribute vec3 dummy;
+        gl =
+            canvas.getContext(
+                "webgl",
+                {
+                    alpha:false,
+                    antialias:false,
+                    depth:true,
+                    powerPreference:
+                        "high-performance"
+                }
+            );
 
-uniform vec3 uColor;
-uniform vec3 uLight;
-uniform float uAmbient;
-uniform vec3 uFogColor;
-uniform float uFogStart;
-uniform float uFogEnd;
+        if(!gl){
 
-varying vec3 vNormal;
-varying vec3 vWorld;
-varying vec3 vColor;
+            throw new Error(
+                "WebGL wird von diesem Browser nicht unterstützt."
+            );
+        }
 
-void main(){
-
-    vec3 n=normalize(vNormal);
-
-    float light=max(
-        dot(n,normalize(uLight)),
-        0.0
-    );
-
-    float brightness=
-        uAmbient+
-        light*.72;
-
-    vec3 color=
-        vColor*
-        brightness;
-
-    float dist=length(vWorld);
-
-    float fog=smoothstep(
-        uFogStart,
-        uFogEnd,
-        dist
-    );
-
-    color=mix(
-        color,
-        uFogColor,
-        fog
-    );
-
-    gl_FragColor=
-        vec4(color,1.0);
-}
-`;
-
-/*
- Der Weltshader benötigt eine Farbattribute.
- Die normalen Objekte behalten ihren Farbuniform.
- Daher werden zwei Programme verwendet.
-*/
-
-const voxelVertexShader=`
-attribute vec3 aPosition;
-attribute vec3 aNormal;
-attribute vec3 aColor;
-
-uniform mat4 uProjection;
-uniform mat4 uView;
-uniform mat4 uModel;
-
-varying vec3 vNormal;
-varying vec3 vWorld;
-varying vec3 vColor;
-
-void main(){
-
-    vec4 wp=
-        uModel*
-        vec4(aPosition,1.0);
-
-    vWorld=wp.xyz;
-    vNormal=
-        mat3(uModel)*
-        aNormal;
-
-    vColor=aColor;
-
-    gl_Position=
-        uProjection*
-        uView*
-        wp;
-}
-`;
-
-let voxelProgram=null;
-
-function createVoxelProgram(){
-
-    const vs=
-        compileShader(
-            gl.VERTEX_SHADER,
-            voxelVertexShader
+        gl.enable(
+            gl.DEPTH_TEST
         );
 
-    const fs=
-        compileShader(
-            gl.FRAGMENT_SHADER,
-            voxelFragmentShader
+        gl.disable(
+            gl.CULL_FACE
         );
 
-    const p=gl.createProgram();
-
-    gl.attachShader(p,vs);
-    gl.attachShader(p,fs);
-
-    gl.linkProgram(p);
-
-    if(!gl.getProgramParameter(
-        p,
-        gl.LINK_STATUS
-    )){
-        throw new Error(
-            gl.getProgramInfoLog(p)
+        gl.depthFunc(
+            gl.LEQUAL
         );
+
+        program =
+            createProgram();
+
+        program.aPosition =
+            gl.getAttribLocation(
+                program,
+                "aPosition"
+            );
+
+        program.aNormal =
+            gl.getAttribLocation(
+                program,
+                "aNormal"
+            );
+
+        program.aColor =
+            gl.getAttribLocation(
+                program,
+                "aColor"
+            );
+
+        program.uProjection =
+            gl.getUniformLocation(
+                program,
+                "uProjection"
+            );
+
+        program.uView =
+            gl.getUniformLocation(
+                program,
+                "uView"
+            );
+
+        program.uModel =
+            gl.getUniformLocation(
+                program,
+                "uModel"
+            );
+
+        program.uLight =
+            gl.getUniformLocation(
+                program,
+                "uLight"
+            );
+
+        program.uAmbient =
+            gl.getUniformLocation(
+                program,
+                "uAmbient"
+            );
+
+        program.uFogColor =
+            gl.getUniformLocation(
+                program,
+                "uFogColor"
+            );
+
+        program.uFogStart =
+            gl.getUniformLocation(
+                program,
+                "uFogStart"
+            );
+
+        program.uFogEnd =
+            gl.getUniformLocation(
+                program,
+                "uFogEnd"
+            );
+
+        cubeMesh =
+            createCubeMesh();
+
+        generateWorld();
+
+        const loaded =
+            loadGame();
+
+        if(!loaded){
+
+            player.x=
+                WORLD_W/2;
+
+            player.z=
+                WORLD_D/2+9;
+
+            player.y=
+                playerGround();
+        }
+
+        updateUI();
+
+        resize();
+
+    }catch(err){
+
+        fatalError=true;
+
+        const error =
+            document.getElementById(
+                "error"
+            );
+
+        error.style.display="block";
+
+        error.innerHTML=
+            "<h2>AnimalMania konnte nicht gestartet werden</h2>"+
+            "<p>WebGL konnte nicht initialisiert werden.</p>"+
+            "<pre>"+
+            String(
+                err.stack||
+                err
+            )+
+            "</pre>";
+
+        console.error(err);
     }
-
-    p.aPosition=
-        gl.getAttribLocation(
-            p,
-            "aPosition"
-        );
-
-    p.aNormal=
-        gl.getAttribLocation(
-            p,
-            "aNormal"
-        );
-
-    p.aColor=
-        gl.getAttribLocation(
-            p,
-            "aColor"
-        );
-
-    p.uProjection=
-        gl.getUniformLocation(
-            p,
-            "uProjection"
-        );
-
-    p.uView=
-        gl.getUniformLocation(
-            p,
-            "uView"
-        );
-
-    p.uModel=
-        gl.getUniformLocation(
-            p,
-            "uModel"
-        );
-
-    p.uLight=
-        gl.getUniformLocation(
-            p,
-            "uLight"
-        );
-
-    p.uAmbient=
-        gl.getUniformLocation(
-            p,
-            "uAmbient"
-        );
-
-    p.uFogColor=
-        gl.getUniformLocation(
-            p,
-            "uFogColor"
-        );
-
-    p.uFogStart=
-        gl.getUniformLocation(
-            p,
-            "uFogStart"
-        );
-
-    p.uFogEnd=
-        gl.getUniformLocation(
-            p,
-            "uFogEnd"
-        );
-
-    return p;
 }
 
-/* ---------------------------------------------------------
-   Standardprogramm
-   --------------------------------------------------------- */
-
-function prepareStandardProgram(){
-
-    program=createProgram();
-
-    program.aPosition=
-        gl.getAttribLocation(
-            program,
-            "aPosition"
-        );
-
-    program.aNormal=
-        gl.getAttribLocation(
-            program,
-            "aNormal"
-        );
-
-    program.uProjection=
-        gl.getUniformLocation(
-            program,
-            "uProjection"
-        );
-
-    program.uView=
-        gl.getUniformLocation(
-            program,
-            "uView"
-        );
-
-    program.uModel=
-        gl.getUniformLocation(
-            program,
-            "uModel"
-        );
-
-    program.uColor=
-        gl.getUniformLocation(
-            program,
-            "uColor"
-        );
-
-    program.uLight=
-        gl.getUniformLocation(
-            program,
-            "uLight"
-        );
-
-    program.uAmbient=
-        gl.getUniformLocation(
-            program,
-            "uAmbient"
-        );
-
-    program.uFogColor=
-        gl.getUniformLocation(
-            program,
-            "uFogColor"
-        );
-
-    program.uFogStart=
-        gl.getUniformLocation(
-            program,
-            "uFogStart"
-        );
-
-    program.uFogEnd=
-        gl.getUniformLocation(
-            program,
-            "uFogEnd"
-        );
-}
-
-/* ---------------------------------------------------------
-   Neuer Renderablauf
-   --------------------------------------------------------- */
-
-function renderWorld(time){
-
-    resize();
-
-    const sky=getSkyColor();
-
-    gl.clearColor(
-        sky[0],
-        sky[1],
-        sky[2],
-        1
-    );
-
-    gl.clear(
-        gl.COLOR_BUFFER_BIT|
-        gl.DEPTH_BUFFER_BIT
-    );
-
-    const cam=getCamera();
-
-    const projection=
-        perspective(
-            Math.PI/3,
-            canvas.width/canvas.height,
-            .1,
-            100
-        );
-
-    const view=
-        lookAt(
-            cam.eye,
-            cam.target
-        );
-
-    const night=
-        worldTime<6 ||
-        worldTime>21;
-
-    const light=[
-        -.5,
-        night?.45:1,
-        -.4
-    ];
-
-    /*
-     Wasser und Tiere mit Standardshader
-    */
-
-    gl.useProgram(program);
-
-    setCommonUniforms(
-        program,
-        projection,
-        view,
-        light,
-        sky
-    );
-
-    drawWater();
-
-    /*
-     Voxel-Welt
-    */
-
-    rebuildWorldMesh();
-
-    gl.useProgram(voxelProgram);
-
-    setCommonUniforms(
-        voxelProgram,
-        projection,
-        view,
-        light,
-        sky
-    );
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.v
-    );
-
-    gl.enableVertexAttribArray(
-        voxelProgram.aPosition
-    );
-
-    gl.vertexAttribPointer(
-        voxelProgram.aPosition,
-        3,
-        gl.FLOAT,
-        false,
-        0,
-        0
-    );
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.n
-    );
-
-    gl.enableVertexAttribArray(
-        voxelProgram.aNormal
-    );
-
-    gl.vertexAttribPointer(
-        voxelProgram.aNormal,
-        3,
-        gl.FLOAT,
-        false,
-        0,
-        0
-    );
-
-    gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        mesh.c
-    );
-
-    gl.enableVertexAttribArray(
-        voxelProgram.aColor
-    );
-
-    gl.vertexAttribPointer(
-        voxelProgram.aColor,
-        3,
-        gl.FLOAT,
-        false,
-        0,
-        0
-    );
-
-    gl.bindBuffer(
-        gl.ELEMENT_ARRAY_BUFFER,
-        mesh.i
-    );
-
-    gl.uniformMatrix4fv(
-        voxelProgram.uModel,
-        false,
-        mat4()
-    );
-
-    gl.drawElements(
-        gl.TRIANGLES,
-        mesh.count,
-        gl.UNSIGNED_SHORT,
-        0
-    );
-
-    /*
-     Tiere und Spieler
-    */
-
-    gl.useProgram(program);
-
-    setCommonUniforms(
-        program,
-        projection,
-        view,
-        light,
-        sky
-    );
-
-    for(const a of animals){
-
-        if(a.type==="rabbit")
-            drawRabbit(a);
-
-        else if(a.type==="bear")
-            drawBear(a);
-
-        else
-            drawFox(a);
-    }
-
-    drawPlayer(time);
-}
-
-function setCommonUniforms(
-    p,
-    projection,
-    view,
-    light,
-    sky
-){
-
-    gl.uniformMatrix4fv(
-        p.uProjection,
-        false,
-        projection
-    );
-
-    gl.uniformMatrix4fv(
-        p.uView,
-        false,
-        view
-    );
-
-    gl.uniform3f(
-        p.uLight,
-        light[0],
-        light[1],
-        light[2]
-    );
-
-    gl.uniform1f(
-        p.uAmbient,
-        worldTime<6 ||
-        worldTime>21
-        ? .28
-        : .48
-    );
-
-    gl.uniform3f(
-        p.uFogColor,
-        sky[0],
-        sky[1],
-        sky[2]
-    );
-
-    gl.uniform1f(
-        p.uFogStart,
-        32
-    );
-
-    gl.uniform1f(
-        p.uFogEnd,
-        70
-    );
-}
-
-/* ---------------------------------------------------------
-   Input PC
-   --------------------------------------------------------- */
+/* =========================================================
+   PC INPUT
+   ========================================================= */
 
 window.addEventListener(
     "keydown",
@@ -3853,9 +4716,12 @@ window.addEventListener(
             );
         }
 
-        if(e.key===" "){
+        if(
+            e.key===" "
+        ){
 
             e.preventDefault();
+
             jump();
         }
 
@@ -3866,9 +4732,20 @@ window.addEventListener(
             interact();
         }
 
-        if(e.key.toLowerCase()==="i"){
+        if(
+            e.key.toLowerCase()==="i"
+        ){
 
             toggleInventory();
+        }
+
+        if(
+            e.key==="Escape"
+        ){
+
+            document.getElementById(
+                "inventory"
+            ).style.display="none";
         }
     }
 );
@@ -3881,9 +4758,12 @@ window.addEventListener(
     }
 );
 
-/* Maus */
+/* =========================================================
+   MAUS KAMERA
+   ========================================================= */
 
 let mouseDown=false;
+
 let lastMouseX=0;
 let lastMouseY=0;
 
@@ -3891,20 +4771,24 @@ canvas.addEventListener(
     "mousedown",
     e=>{
 
-        if(e.button===0){
+        if(
+            e.button===0
+        ){
 
             mouseDown=true;
 
-            lastMouseX=e.clientX;
-            lastMouseY=e.clientY;
+            lastMouseX=
+                e.clientX;
+
+            lastMouseY=
+                e.clientY;
         }
     }
 );
 
 window.addEventListener(
     "mouseup",
-    e=>{
-
+    ()=>{
         mouseDown=false;
     }
 );
@@ -3916,19 +4800,27 @@ canvas.addEventListener(
         if(!mouseDown)
             return;
 
-        const dx=
-            e.clientX-lastMouseX;
+        const dx =
+            e.clientX-
+            lastMouseX;
 
-        const dy=
-            e.clientY-lastMouseY;
+        const dy =
+            e.clientY-
+            lastMouseY;
 
-        lastMouseX=e.clientX;
-        lastMouseY=e.clientY;
+        lastMouseX=
+            e.clientX;
 
-        player.yaw-=dx*.006;
-        player.pitch-=dy*.005;
+        lastMouseY=
+            e.clientY;
 
-        player.pitch=
+        player.yaw -=
+            dx*.006;
+
+        player.pitch -=
+            dy*.005;
+
+        player.pitch =
             Math.max(
                 -.95,
                 Math.min(
@@ -3942,7 +4834,6 @@ canvas.addEventListener(
 canvas.addEventListener(
     "contextmenu",
     e=>{
-
         e.preventDefault();
     }
 );
@@ -3954,35 +4845,44 @@ canvas.addEventListener(
         if(!running)
             return;
 
-        if(e.button===0)
+        if(
+            e.button===0
+        )
             breakBlock();
 
-        if(e.button===2)
+        if(
+            e.button===2
+        )
             buildBlock();
     }
 );
 
-/* ---------------------------------------------------------
-   Mobile Kamera
-   --------------------------------------------------------- */
+/* =========================================================
+   MOBILE KAMERA
+   ========================================================= */
 
-let cameraPointer=null;
-let cameraX=0;
-let cameraY=0;
-
-const cameraZone=
+const cameraZone =
     document.getElementById(
         "cameraZone"
     );
+
+let cameraPointer=null;
+
+let cameraPX=0;
+let cameraPY=0;
 
 cameraZone.addEventListener(
     "pointerdown",
     e=>{
 
-        cameraPointer=e.pointerId;
+        cameraPointer=
+            e.pointerId;
 
-        cameraX=e.clientX;
-        cameraY=e.clientY;
+        cameraPX=
+            e.clientX;
+
+        cameraPY=
+            e.clientY;
 
         cameraZone.setPointerCapture(
             e.pointerId
@@ -3995,23 +4895,32 @@ cameraZone.addEventListener(
     e=>{
 
         if(
-            cameraPointer!==e.pointerId
+            cameraPointer!==
+            e.pointerId
         )
             return;
 
-        const dx=
-            e.clientX-cameraX;
+        const dx =
+            e.clientX-
+            cameraPX;
 
-        const dy=
-            e.clientY-cameraY;
+        const dy =
+            e.clientY-
+            cameraPY;
 
-        cameraX=e.clientX;
-        cameraY=e.clientY;
+        cameraPX=
+            e.clientX;
 
-        player.yaw-=dx*.008;
-        player.pitch-=dy*.006;
+        cameraPY=
+            e.clientY;
 
-        player.pitch=
+        player.yaw -=
+            dx*.008;
+
+        player.pitch -=
+            dy*.006;
+
+        player.pitch =
             Math.max(
                 -.95,
                 Math.min(
@@ -4024,30 +4933,43 @@ cameraZone.addEventListener(
 
 cameraZone.addEventListener(
     "pointerup",
-    e=>{
-
+    ()=>{
         cameraPointer=null;
     }
 );
 
-/* ---------------------------------------------------------
-   Mobile Bewegung
-   --------------------------------------------------------- */
+cameraZone.addEventListener(
+    "pointercancel",
+    ()=>{
+        cameraPointer=null;
+    }
+);
 
-function bindMove(id,key){
+/* =========================================================
+   MOBILE BEWEGUNG
+   ========================================================= */
 
-    const el=
-        document.getElementById(id);
+function bindMove(
+    id,
+    key
+){
+
+    const el =
+        document.getElementById(
+            id
+        );
 
     const down=e=>{
 
         e.preventDefault();
+
         keys[key]=true;
     };
 
     const up=e=>{
 
         e.preventDefault();
+
         keys[key]=false;
     };
 
@@ -4072,10 +4994,29 @@ function bindMove(id,key){
     );
 }
 
-bindMove("up","w");
-bindMove("down","s");
-bindMove("left","a");
-bindMove("right","d");
+bindMove(
+    "up",
+    "w"
+);
+
+bindMove(
+    "down",
+    "s"
+);
+
+bindMove(
+    "left",
+    "a"
+);
+
+bindMove(
+    "right",
+    "d"
+);
+
+/* =========================================================
+   MOBILE BUTTONS
+   ========================================================= */
 
 document.getElementById(
     "buildBtn"
@@ -4133,6 +5074,7 @@ document.getElementById(
     "pointerdown",
     e=>{
         e.preventDefault();
+
         selectSlot(
             selectedSlot+1
         );
@@ -4145,28 +5087,37 @@ document.getElementById(
     "pointerdown",
     e=>{
         e.preventDefault();
+
         selectSlot(
             selectedSlot-1
         );
     }
 );
 
-/* ---------------------------------------------------------
-   Hotbar
-   --------------------------------------------------------- */
+/* =========================================================
+   HOTBAR
+   ========================================================= */
 
 document.querySelectorAll(
     ".slot"
-).forEach((el,i)=>{
+).forEach(
+    (el,i)=>{
 
-    el.addEventListener(
-        "pointerdown",
-        e=>{
-            e.preventDefault();
-            selectSlot(i);
-        }
-    );
-});
+        el.addEventListener(
+            "pointerdown",
+            e=>{
+
+                e.preventDefault();
+
+                selectSlot(i);
+            }
+        );
+    }
+);
+
+/* =========================================================
+   INVENTAR
+   ========================================================= */
 
 document.getElementById(
     "closeInventory"
@@ -4175,15 +5126,16 @@ document.getElementById(
     toggleInventory
 );
 
-/* ---------------------------------------------------------
-   Start
-   --------------------------------------------------------- */
+/* =========================================================
+   START
+   ========================================================= */
 
 document.getElementById(
     "startBtn"
 ).addEventListener(
     "click",
     ()=>{
+
         document.getElementById(
             "start"
         ).style.display="none";
@@ -4198,134 +5150,52 @@ document.getElementById(
     }
 );
 
-/* ---------------------------------------------------------
-   WebGL Start
-   --------------------------------------------------------- */
+/* =========================================================
+   LOOP
+   ========================================================= */
 
-function initGL(){
-
-    try{
-
-        gl=
-            canvas.getContext(
-                "webgl",
-                {
-                    antialias:false,
-                    alpha:false,
-                    depth:true,
-                    powerPreference:"high-performance"
-                }
-            );
-
-        if(!gl){
-
-            throw new Error(
-                "WebGL wird von diesem Browser nicht unterstützt."
-            );
-        }
-
-        gl.enable(
-            gl.DEPTH_TEST
-        );
-
-        /*
-         Keine Backface-Culling-Probleme.
-        */
-
-        gl.disable(
-            gl.CULL_FACE
-        );
-
-        prepareStandardProgram();
-
-        voxelProgram=
-            createVoxelProgram();
-
-        cubeMesh=
-            createMesh16(
-                cubePositions,
-                cubeNormals,
-                cubeIndices
-            );
-
-        generateWorld();
-
-        const loaded=
-            loadGame();
-
-        if(!loaded){
-
-            player.x=
-                WORLD_W/2+.5;
-
-            player.z=
-                WORLD_D/2+10;
-
-            player.y=
-                playerGround();
-        }
-
-        updateUI();
-
-        resize();
-
-    }catch(err){
-
-        fatalError=true;
-
-        const box=
-            document.getElementById(
-                "error"
-            );
-
-        box.style.display="block";
-
-        box.innerHTML=
-            "<h2>AnimalMania konnte nicht gestartet werden</h2>"+
-            "<p>Der WebGL-Renderer konnte nicht initialisiert werden.</p>"+
-            "<pre>"+
-            String(err.stack||err)+
-            "</pre>";
-
-        console.error(err);
-    }
-}
-
-/* ---------------------------------------------------------
-   Hauptschleife
-   --------------------------------------------------------- */
-
-let lastTime=
+let lastTime =
     performance.now();
 
 let saveTimer=0;
 
 function loop(now){
 
-    if(fatalError)
+    if(
+        fatalError
+    )
         return;
 
-    const dt=
+    const dt =
         Math.min(
             .05,
-            (now-lastTime)/1000
+            (now-lastTime)/
+            1000
         );
 
     lastTime=now;
 
     if(running){
 
-        updatePlayer(dt);
+        updatePlayer(
+            dt
+        );
 
-        updateAnimals(dt);
+        updateAnimals(
+            dt
+        );
 
-        updateTime(dt);
+        updateTime(
+            dt
+        );
 
         updatePrompt();
 
         saveTimer+=dt;
 
-        if(saveTimer>30){
+        if(
+            saveTimer>30
+        ){
 
             saveTimer=0;
 
@@ -4335,16 +5205,11 @@ function loop(now){
 
     try{
 
-        renderWorld(now);
+        render(now);
 
     }catch(err){
 
         console.error(err);
-
-        /*
-         Nicht einfach einen blauen Bildschirm
-         stehen lassen.
-        */
 
         showMessage(
             "Renderer-Fehler: "+
@@ -4357,18 +5222,18 @@ function loop(now){
     );
 }
 
-/* ---------------------------------------------------------
-   Start
-   --------------------------------------------------------- */
-
-window.addEventListener(
-    "beforeunload",
-    saveGame
-);
+/* =========================================================
+   START
+   ========================================================= */
 
 window.addEventListener(
     "resize",
     resize
+);
+
+window.addEventListener(
+    "beforeunload",
+    saveGame
 );
 
 initGL();
