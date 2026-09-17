@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -12,6 +14,10 @@
 <title>Moonshiner Reels</title>
 
 <style>
+
+/* =========================================================
+   GRUNDLAYOUT
+========================================================= */
 
 *{
     box-sizing:border-box;
@@ -28,174 +34,312 @@ body{
 
 body{
     min-height:100vh;
+
     background:
-        radial-gradient(circle at 50% 20%, #24345c 0%, #101522 45%, #05070c 100%);
+        radial-gradient(
+            circle at 50% 20%,
+            #263863 0%,
+            #101522 45%,
+            #05070c 100%
+        );
+
     color:white;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     overflow-x:hidden;
 }
 
+
+/* =========================================================
+   SPIELCONTAINER
+========================================================= */
+
 .game{
+
     width:min(1100px,96vw);
+
     margin:20px auto;
+
     padding:25px;
+
     border:2px solid #00eaff;
+
     border-radius:25px;
-    background:rgba(5,10,20,.92);
+
+    background:
+        rgba(5,10,20,.94);
+
     box-shadow:
         0 0 15px #00eaff,
         0 0 45px rgba(0,234,255,.35),
         inset 0 0 30px rgba(0,234,255,.08);
+
 }
 
+
 /* =========================================================
-   HEADER
+   LOGO
 ========================================================= */
 
 .logo{
+
     text-align:center;
-    font-size:clamp(28px,6vw,58px);
+
+    font-size:
+        clamp(28px,6vw,58px);
+
     font-weight:900;
+
     letter-spacing:5px;
+
     color:#fff;
+
     text-shadow:
         0 0 5px #fff,
         0 0 12px #00eaff,
         0 0 30px #00eaff,
         0 0 55px #008cff;
+
     margin-bottom:8px;
+
 }
 
+
 .subtitle{
+
     text-align:center;
+
     color:#9befff;
+
     font-size:14px;
+
     letter-spacing:3px;
+
     margin-bottom:22px;
+
 }
+
 
 /* =========================================================
    STATUS
 ========================================================= */
 
 .status{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:12px;
+
     margin-bottom:20px;
+
 }
+
 
 .statusBox{
+
     text-align:center;
+
     padding:13px 8px;
+
     border:1px solid #394d6e;
+
     border-radius:14px;
-    background:rgba(15,25,45,.9);
+
+    background:
+        rgba(15,25,45,.9);
+
 }
+
 
 .statusLabel{
+
     font-size:11px;
+
     color:#8fa5c7;
+
     text-transform:uppercase;
+
     letter-spacing:2px;
+
 }
+
 
 .statusValue{
+
     margin-top:5px;
+
     font-size:24px;
+
     font-weight:bold;
+
     color:#fff;
-    text-shadow:0 0 10px #00eaff;
+
+    text-shadow:
+        0 0 10px #00eaff;
+
 }
 
+
 #points{
+
     color:#00ffb7;
+
     text-shadow:
         0 0 8px #00ffb7,
         0 0 20px rgba(0,255,183,.7);
+
 }
+
+
+/* =========================================================
+   SLOT MACHINE
+========================================================= */
+
+.machine{
+
+    padding:15px;
+
+    border-radius:20px;
+
+    border:2px solid #7c2cff;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(124,44,255,.16),
+            rgba(0,234,255,.06)
+        );
+
+    box-shadow:
+        inset 0 0 25px rgba(124,44,255,.18),
+        0 0 25px rgba(124,44,255,.2);
+
+}
+
 
 /* =========================================================
    REELS
 ========================================================= */
 
-.machine{
-    padding:15px;
-    border-radius:20px;
-    border:2px solid #7c2cff;
-    background:
-        linear-gradient(145deg,
-        rgba(124,44,255,.16),
-        rgba(0,234,255,.06));
-    box-shadow:
-        inset 0 0 25px rgba(124,44,255,.18),
-        0 0 25px rgba(124,44,255,.2);
+.reels{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:9px;
+
 }
 
-.reels{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:9px;
-}
 
 .reel{
+
     position:relative;
+
     height:270px;
+
     overflow:hidden;
+
     border-radius:15px;
+
     border:2px solid #40577f;
+
     background:#090d17;
+
     box-shadow:
         inset 0 0 20px rgba(0,0,0,.9),
         0 0 8px rgba(0,234,255,.15);
+
 }
+
 
 .reel::before,
 .reel::after{
+
     content:"";
+
     position:absolute;
+
     left:0;
     right:0;
+
     height:35px;
+
     z-index:5;
+
     pointer-events:none;
+
 }
+
 
 .reel::before{
+
     top:0;
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,.8),
-        transparent
-    );
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.8),
+            transparent
+        );
+
 }
+
 
 .reel::after{
+
     bottom:0;
-    background:linear-gradient(
-        to top,
-        rgba(0,0,0,.8),
-        transparent
-    );
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.8),
+            transparent
+        );
+
 }
 
+
 .reelInner{
+
     position:absolute;
+
     top:0;
     left:0;
     right:0;
-    transition:transform .55s cubic-bezier(.15,.85,.25,1);
+
+    transition:
+        transform .55s
+        cubic-bezier(.15,.85,.25,1);
+
 }
 
+
 .symbol{
+
     height:90px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
-    font-size:clamp(38px,6vw,65px);
+
+    font-size:
+        clamp(38px,6vw,65px);
+
     background:
         linear-gradient(
             90deg,
@@ -203,161 +347,286 @@ body{
             rgba(255,255,255,.07),
             rgba(255,255,255,.025)
         );
-    border-bottom:1px solid rgba(255,255,255,.05);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.05);
+
 }
 
+
 .symbol.win{
-    background:rgba(0,255,183,.18);
+
+    background:
+        rgba(0,255,183,.18);
+
     box-shadow:
         inset 0 0 20px rgba(0,255,183,.5),
         0 0 20px rgba(0,255,183,.45);
-    animation:winPulse .65s infinite alternate;
+
+    animation:
+        winPulse .65s infinite alternate;
+
 }
 
+
 @keyframes winPulse{
+
     from{
         filter:brightness(1);
     }
+
     to{
         filter:brightness(1.8);
     }
+
 }
 
+
 /* =========================================================
-   CENTER LINE
+   HAUPT-GEWINNLINIE
 ========================================================= */
 
 .payline{
+
     position:absolute;
+
     left:0;
     right:0;
+
     top:50%;
-    height:3px;
-    transform:translateY(-50%);
+
+    height:4px;
+
+    transform:
+        translateY(-50%);
+
     background:#ff00d9;
+
     box-shadow:
         0 0 7px #ff00d9,
-        0 0 18px #ff00d9;
+        0 0 18px #ff00d9,
+        0 0 35px rgba(255,0,217,.5);
+
     z-index:10;
+
     pointer-events:none;
-    opacity:.75;
+
+    opacity:.85;
+
 }
+
 
 /* =========================================================
    CONTROLS
 ========================================================= */
 
 .controls{
+
     margin-top:22px;
+
     display:grid;
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap:15px;
+
 }
+
 
 .controlBox{
+
     padding:16px;
+
     border-radius:15px;
-    background:rgba(14,22,40,.9);
-    border:1px solid #344967;
+
+    background:
+        rgba(14,22,40,.9);
+
+    border:
+        1px solid #344967;
+
 }
+
 
 .controlLabel{
+
     display:block;
+
     color:#a7b8d5;
+
     font-size:12px;
+
     letter-spacing:2px;
+
     text-transform:uppercase;
+
     margin-bottom:8px;
+
 }
+
 
 input[type="number"]{
+
     width:100%;
+
     padding:13px;
+
     border-radius:10px;
+
     border:2px solid #445b80;
+
     outline:none;
+
     background:#080d17;
+
     color:white;
+
     font-size:20px;
+
     font-weight:bold;
+
     text-align:center;
+
 }
+
 
 input[type="number"]:focus{
+
     border-color:#00eaff;
-    box-shadow:0 0 12px rgba(0,234,255,.35);
+
+    box-shadow:
+        0 0 12px
+        rgba(0,234,255,.35);
+
 }
+
 
 .quickBets{
+
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:7px;
+
     margin-top:9px;
+
 }
 
+
 .quickBets button{
+
     padding:9px 3px;
+
     font-size:12px;
+
 }
+
 
 /* =========================================================
    BUTTONS
 ========================================================= */
 
 button{
+
     border:none;
+
     border-radius:11px;
+
     padding:13px 18px;
-    background:linear-gradient(
-        135deg,
-        #00eaff,
-        #0077ff
-    );
+
+    background:
+        linear-gradient(
+            135deg,
+            #00eaff,
+            #0077ff
+        );
+
     color:white;
+
     font-weight:bold;
+
     font-size:15px;
+
     cursor:pointer;
+
     box-shadow:
-        0 0 10px rgba(0,234,255,.35);
+        0 0 10px
+        rgba(0,234,255,.35);
+
     transition:
         transform .12s,
         filter .12s,
         box-shadow .12s;
+
 }
+
 
 button:hover{
+
     filter:brightness(1.15);
+
     box-shadow:
-        0 0 15px rgba(0,234,255,.65);
+        0 0 15px
+        rgba(0,234,255,.65);
+
 }
+
 
 button:active{
+
     transform:scale(.96);
+
 }
+
 
 button:disabled{
+
     opacity:.45;
+
     cursor:not-allowed;
+
     filter:grayscale(.5);
+
 }
+
 
 .quickBets button{
+
     background:#19263e;
-    border:1px solid #3c5277;
+
+    border:
+        1px solid #3c5277;
+
     box-shadow:none;
+
 }
+
 
 .quickBets button:hover{
+
     border-color:#00eaff;
+
     color:#00eaff;
+
 }
 
+
 .spinButton{
+
     width:100%;
+
     margin-top:15px;
+
     padding:18px;
+
     font-size:23px;
+
     letter-spacing:3px;
+
     background:
         linear-gradient(
             135deg,
@@ -365,149 +634,270 @@ button:disabled{
             #7c2cff,
             #006eff
         );
+
     box-shadow:
         0 0 12px #ff00d9,
-        0 0 30px rgba(124,44,255,.6);
+        0 0 30px
+        rgba(124,44,255,.6);
+
 }
+
 
 .spinButton:hover{
+
     box-shadow:
         0 0 18px #ff00d9,
-        0 0 45px rgba(124,44,255,.8);
+        0 0 45px
+        rgba(124,44,255,.8);
+
 }
+
 
 .resetButton{
+
     width:100%;
+
     margin-top:10px;
+
     background:#202c42;
-    border:1px solid #465a7a;
+
+    border:
+        1px solid #465a7a;
+
     box-shadow:none;
+
 }
 
+
 /* =========================================================
-   RESULT
+   ERGEBNIS
 ========================================================= */
 
 .result{
+
     min-height:70px;
+
     margin-top:18px;
+
     padding:13px;
+
     border-radius:14px;
+
     text-align:center;
-    border:1px solid #314665;
-    background:rgba(8,14,27,.85);
+
+    border:
+        1px solid #314665;
+
+    background:
+        rgba(8,14,27,.85);
+
 }
+
 
 .resultTitle{
+
     font-size:20px;
+
     font-weight:bold;
+
     color:#fff;
+
 }
+
 
 .resultDetail{
+
     margin-top:5px;
+
     color:#9db1d1;
+
     font-size:13px;
+
 }
+
 
 .winText{
+
     color:#00ffb7;
-    text-shadow:0 0 12px #00ffb7;
+
+    text-shadow:
+        0 0 12px #00ffb7;
+
 }
+
 
 .lossText{
+
     color:#ff4e72;
-    text-shadow:0 0 12px #ff174f;
+
+    text-shadow:
+        0 0 12px #ff174f;
+
 }
 
+
 /* =========================================================
-   PAYTABLE
+   AUSZAHLUNGSTABELLE
 ========================================================= */
 
 .paytable{
+
     margin-top:20px;
+
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+
+    grid-template-columns:
+        repeat(5,1fr);
+
     gap:7px;
+
 }
+
 
 .pay{
+
     text-align:center;
+
     padding:9px 4px;
+
     border-radius:10px;
+
     background:#0c1424;
-    border:1px solid #263854;
+
+    border:
+        1px solid #263854;
+
     font-size:12px;
+
     color:#aabbd5;
+
 }
+
 
 .pay strong{
+
     display:block;
+
     font-size:19px;
+
     color:white;
+
     margin-bottom:3px;
+
 }
 
+
 .pay span{
+
     color:#00ffb7;
+
     font-weight:bold;
+
 }
+
 
 /* =========================================================
    JACKPOT
 ========================================================= */
 
 .jackpot{
+
     margin-top:14px;
+
     text-align:center;
+
     color:#ffd700;
+
     font-weight:bold;
+
     font-size:13px;
+
     letter-spacing:2px;
+
     text-shadow:
         0 0 8px #ffd700,
-        0 0 20px rgba(255,215,0,.5);
+        0 0 20px
+        rgba(255,215,0,.5);
+
 }
 
+
 /* =========================================================
-   MESSAGE
+   POPUP
 ========================================================= */
 
 .message{
+
     position:fixed;
+
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%) scale(.8);
-    min-width:min(420px,90vw);
+
+    transform:
+        translate(-50%,-50%)
+        scale(.8);
+
+    min-width:
+        min(420px,90vw);
+
     padding:25px;
+
     border-radius:20px;
-    background:rgba(5,8,15,.97);
-    border:2px solid #ff00d9;
+
+    background:
+        rgba(5,8,15,.97);
+
+    border:
+        2px solid #ff00d9;
+
     box-shadow:
         0 0 20px #ff00d9,
-        0 0 60px rgba(124,44,255,.7);
+        0 0 60px
+        rgba(124,44,255,.7);
+
     text-align:center;
+
     z-index:100;
+
     opacity:0;
+
     pointer-events:none;
+
     transition:.25s;
+
 }
+
 
 .message.show{
+
     opacity:1;
-    transform:translate(-50%,-50%) scale(1);
+
+    transform:
+        translate(-50%,-50%)
+        scale(1);
+
 }
+
 
 .messageTitle{
+
     font-size:30px;
+
     font-weight:900;
+
     margin-bottom:10px;
+
 }
 
+
 .messageText{
+
     color:#aabbd5;
+
     line-height:1.5;
+
 }
+
 
 /* =========================================================
    MOBILE
@@ -516,99 +906,169 @@ button:disabled{
 @media(max-width:700px){
 
     .game{
+
         padding:13px;
+
         width:97vw;
+
         margin:8px auto;
+
     }
+
 
     .logo{
+
         font-size:28px;
+
         letter-spacing:3px;
+
     }
+
 
     .subtitle{
+
         font-size:10px;
+
         margin-bottom:14px;
+
     }
+
 
     .status{
+
         gap:6px;
+
     }
+
 
     .statusBox{
+
         padding:9px 3px;
+
     }
+
 
     .statusLabel{
+
         font-size:8px;
+
         letter-spacing:1px;
+
     }
+
 
     .statusValue{
+
         font-size:18px;
+
     }
+
 
     .machine{
+
         padding:7px;
+
     }
+
 
     .reels{
+
         gap:4px;
+
     }
+
 
     .reel{
+
         height:195px;
+
         border-radius:9px;
+
     }
+
 
     .symbol{
+
         height:65px;
+
         font-size:36px;
+
     }
+
 
     .controls{
+
         grid-template-columns:1fr;
+
         gap:9px;
+
     }
+
 
     .controlBox{
+
         padding:12px;
+
     }
+
 
     .paytable{
-        grid-template-columns:repeat(3,1fr);
+
+        grid-template-columns:
+            repeat(3,1fr);
+
     }
+
 
     .pay{
+
         padding:7px 2px;
+
     }
 
+
     .pay strong{
+
         font-size:16px;
+
     }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="game">
+
+
+    <!-- =====================================================
+         TITEL
+    ====================================================== -->
 
     <div class="logo">
         MOONSHINER REELS
     </div>
 
+
     <div class="subtitle">
         AUSTRIAN MOONSHINER • NEON ARCADE
     </div>
 
-    <!-- STATUS -->
+
+    <!-- =====================================================
+         STATUS
+    ====================================================== -->
 
     <div class="status">
 
+
         <div class="statusBox">
+
             <div class="statusLabel">
                 Punkte
             </div>
@@ -616,11 +1076,16 @@ button:disabled{
             <div
                 class="statusValue"
                 id="points">
+
                 1000
+
             </div>
+
         </div>
 
+
         <div class="statusBox">
+
             <div class="statusLabel">
                 Highscore
             </div>
@@ -628,11 +1093,16 @@ button:disabled{
             <div
                 class="statusValue"
                 id="highscore">
+
                 1000
+
             </div>
+
         </div>
 
+
         <div class="statusBox">
+
             <div class="statusLabel">
                 Level
             </div>
@@ -640,60 +1110,98 @@ button:disabled{
             <div
                 class="statusValue"
                 id="level">
+
                 1
+
             </div>
+
         </div>
+
 
     </div>
 
 
-    <!-- SLOT MACHINE -->
+    <!-- =====================================================
+         REELS
+    ====================================================== -->
 
     <div class="machine">
 
-        <div class="reels" id="reels">
+
+        <div
+            class="reels"
+            id="reels">
+
 
             <div class="reel">
+
                 <div class="reelInner"></div>
+
                 <div class="payline"></div>
+
             </div>
 
-            <div class="reel">
-                <div class="reelInner"></div>
-                <div class="payline"></div>
-            </div>
 
             <div class="reel">
+
                 <div class="reelInner"></div>
+
                 <div class="payline"></div>
+
             </div>
 
-            <div class="reel">
-                <div class="reelInner"></div>
-                <div class="payline"></div>
-            </div>
 
             <div class="reel">
+
                 <div class="reelInner"></div>
+
                 <div class="payline"></div>
+
             </div>
+
+
+            <div class="reel">
+
+                <div class="reelInner"></div>
+
+                <div class="payline"></div>
+
+            </div>
+
+
+            <div class="reel">
+
+                <div class="reelInner"></div>
+
+                <div class="payline"></div>
+
+            </div>
+
 
         </div>
+
 
     </div>
 
 
-    <!-- CONTROLS -->
+    <!-- =====================================================
+         STEUERUNG
+    ====================================================== -->
 
     <div class="controls">
 
+
         <div class="controlBox">
+
 
             <label
                 class="controlLabel"
                 for="bet">
+
                 Punkteinsatz
+
             </label>
+
 
             <input
                 id="bet"
@@ -703,41 +1211,61 @@ button:disabled{
                 step="1"
                 value="25">
 
+
             <div class="quickBets">
+
 
                 <button
                     type="button"
                     onclick="setBet(10)">
+
                     10
+
                 </button>
+
 
                 <button
                     type="button"
                     onclick="setBet(25)">
+
                     25
+
                 </button>
+
 
                 <button
                     type="button"
                     onclick="setBet(50)">
+
                     50
+
                 </button>
+
 
                 <button
                     type="button"
                     onclick="setBet(100)">
+
                     100
+
                 </button>
 
+
             </div>
+
 
         </div>
 
+
         <div class="controlBox">
 
+
             <div class="controlLabel">
+
                 Gewinnsystem
+
             </div>
+
 
             <div
                 style="
@@ -746,23 +1274,32 @@ button:disabled{
                     font-size:13px;
                 ">
 
-                Der Einsatz wird vor dem Spin
-                abgezogen.
+                Nur die mittlere
+                <strong>Hauptzeile</strong>
+                zählt.
 
                 <br><br>
 
-                Gewinne werden abhängig
-                von der Anzahl gleicher
-                Symbole berechnet.
+                Zwei gleiche Symbole
+                bringen keinen Gewinn.
+
+                <br><br>
+
+                Der höchste Treffer
+                der Hauptzeile wird gewertet.
 
             </div>
 
+
         </div>
+
 
     </div>
 
 
-    <!-- SPIN -->
+    <!-- =====================================================
+         SPIN BUTTON
+    ====================================================== -->
 
     <button
         id="spinButton"
@@ -774,9 +1311,12 @@ button:disabled{
     </button>
 
 
-    <!-- RESULT -->
+    <!-- =====================================================
+         ERGEBNIS
+    ====================================================== -->
 
     <div class="result">
+
 
         <div
             id="resultTitle"
@@ -786,6 +1326,7 @@ button:disabled{
 
         </div>
 
+
         <div
             id="resultDetail"
             class="resultDetail">
@@ -794,46 +1335,75 @@ button:disabled{
 
         </div>
 
+
     </div>
 
 
-    <!-- PAYTABLE -->
+    <!-- =====================================================
+         GEWINNTABELLE
+    ====================================================== -->
 
     <div class="paytable">
 
+
         <div class="pay">
+
             <strong>2×</strong>
-            <span>×1,2</span>
+
+            <span>KEIN GEWINN</span>
+
         </div>
 
+
         <div class="pay">
+
             <strong>3×</strong>
+
             <span>×2</span>
+
         </div>
 
+
         <div class="pay">
+
             <strong>4×</strong>
-            <span>×4</span>
+
+            <span>×5</span>
+
         </div>
 
+
         <div class="pay">
+
             <strong>5×</strong>
-            <span>×10</span>
+
+            <span>×15</span>
+
         </div>
 
+
         <div class="pay">
-            <strong>💎💎💎💎💎</strong>
-            <span>×25</span>
+
+            <strong>💎×5</strong>
+
+            <span>×40</span>
+
         </div>
+
 
     </div>
+
 
     <div class="jackpot">
+
         💎 FIVE DIAMONDS = MEGA JACKPOT 💎
+
     </div>
 
 
-    <!-- RESET -->
+    <!-- =====================================================
+         RESET
+    ====================================================== -->
 
     <button
         class="resetButton"
@@ -843,24 +1413,30 @@ button:disabled{
 
     </button>
 
+
 </div>
 
 
-<!-- MESSAGE -->
+<!-- =========================================================
+     POPUP
+========================================================= -->
 
 <div
     id="message"
     class="message">
+
 
     <div
         id="messageTitle"
         class="messageTitle">
     </div>
 
+
     <div
         id="messageText"
         class="messageText">
     </div>
+
 
 </div>
 
@@ -872,11 +1448,12 @@ button:disabled{
 ========================================================= */
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SYMBOLE
---------------------------------------------------------- */
+========================================================= */
 
 const symbols = [
+
     "🍒",
     "🍋",
     "⭐",
@@ -885,107 +1462,147 @@ const symbols = [
     "🍇",
     "🍉",
     "💎"
+
 ];
 
 
-/* ---------------------------------------------------------
-   EINSTELLUNGEN
---------------------------------------------------------- */
+/* =========================================================
+   SPIELKONFIGURATION
+========================================================= */
 
 const START_POINTS = 1000;
 
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
 const STORAGE_POINTS =
-    "moonshiner_reels_points_v2";
+    "moonshiner_reels_points_v3";
 
 const STORAGE_HIGHSCORE =
-    "moonshiner_reels_highscore_v2";
+    "moonshiner_reels_highscore_v3";
 
 
-/* ---------------------------------------------------------
-   AUSZAHLUNGSMULTIPLIKATOREN
---------------------------------------------------------- */
+/* =========================================================
+   AUSZAHLUNG
+========================================================= */
 
 const MULTIPLIERS = {
 
-    2: 1.2,
-
     3: 2,
 
-    4: 4,
+    4: 5,
 
-    5: 10
+    5: 15
 
 };
 
 
-/* ---------------------------------------------------------
-   VARIABLEN
---------------------------------------------------------- */
+/* =========================================================
+   SPIELVARIABLEN
+========================================================= */
 
 let points =
     Number(
-        localStorage.getItem(STORAGE_POINTS)
+        localStorage.getItem(
+            STORAGE_POINTS
+        )
     );
+
 
 let highscore =
     Number(
-        localStorage.getItem(STORAGE_HIGHSCORE)
+        localStorage.getItem(
+            STORAGE_HIGHSCORE
+        )
     );
+
 
 let spinning = false;
 
 
-/* ---------------------------------------------------------
-   FALLS KEIN ALTER SPIELSTAND EXISTIERT
---------------------------------------------------------- */
+/* =========================================================
+   INITIALWERTE
+========================================================= */
 
-if (
+if(
     !Number.isFinite(points) ||
     points < 0
 ){
-    points = START_POINTS;
+
+    points =
+        START_POINTS;
+
 }
 
-if (
+
+if(
     !Number.isFinite(highscore) ||
     highscore < 0
 ){
-    highscore = points;
+
+    highscore =
+        START_POINTS;
+
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    ELEMENTE
---------------------------------------------------------- */
+========================================================= */
 
 const reels =
-    document.querySelectorAll(".reel");
+    document.querySelectorAll(
+        ".reel"
+    );
+
 
 const spinButton =
-    document.getElementById("spinButton");
+    document.getElementById(
+        "spinButton"
+    );
+
 
 const betInput =
-    document.getElementById("bet");
+    document.getElementById(
+        "bet"
+    );
+
 
 const pointsElement =
-    document.getElementById("points");
+    document.getElementById(
+        "points"
+    );
+
 
 const highscoreElement =
-    document.getElementById("highscore");
+    document.getElementById(
+        "highscore"
+    );
+
 
 const levelElement =
-    document.getElementById("level");
+    document.getElementById(
+        "level"
+    );
+
 
 const resultTitle =
-    document.getElementById("resultTitle");
+    document.getElementById(
+        "resultTitle"
+    );
+
 
 const resultDetail =
-    document.getElementById("resultDetail");
+    document.getElementById(
+        "resultDetail"
+    );
 
 
-/* ---------------------------------------------------------
-   SPEICHERN
---------------------------------------------------------- */
+/* =========================================================
+   SPIELSTAND SPEICHERN
+========================================================= */
 
 function saveGame(){
 
@@ -993,6 +1610,7 @@ function saveGame(){
         STORAGE_POINTS,
         String(points)
     );
+
 
     localStorage.setItem(
         STORAGE_HIGHSCORE,
@@ -1002,57 +1620,65 @@ function saveGame(){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    STATUS AKTUALISIEREN
---------------------------------------------------------- */
+========================================================= */
 
 function updateStatus(){
 
     pointsElement.textContent =
-        Math.floor(points).toLocaleString("de-DE");
+        Math.floor(points)
+        .toLocaleString("de-DE");
+
 
     highscoreElement.textContent =
-        Math.floor(highscore).toLocaleString("de-DE");
+        Math.floor(highscore)
+        .toLocaleString("de-DE");
+
 
     const level =
         Math.max(
             1,
-            Math.floor(points / 500) + 1
+            Math.floor(
+                points / 500
+            ) + 1
         );
+
 
     levelElement.textContent =
         level;
 
-    const maxBet =
+
+    betInput.max =
         Math.max(
             1,
             Math.floor(points)
         );
 
-    betInput.max = maxBet;
-
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    ZUFALLSSYMBOL
---------------------------------------------------------- */
+========================================================= */
 
 function randomSymbol(){
 
     const index =
         Math.floor(
-            Math.random() * symbols.length
+            Math.random() *
+            symbols.length
         );
+
 
     return symbols[index];
 
 }
 
 
-/* ---------------------------------------------------------
-   NEUE REIHE ERZEUGEN
---------------------------------------------------------- */
+/* =========================================================
+   ZUFÄLLIGE REIHE
+========================================================= */
 
 function randomRow(){
 
@@ -1069,9 +1695,9 @@ function randomRow(){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    REELS INITIALISIEREN
---------------------------------------------------------- */
+========================================================= */
 
 function createInitialReels(){
 
@@ -1083,7 +1709,9 @@ function createInitialReels(){
                     ".reelInner"
                 );
 
+
             inner.innerHTML = "";
+
 
             for(
                 let i = 0;
@@ -1092,15 +1720,22 @@ function createInitialReels(){
             ){
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 div.className =
                     "symbol";
 
+
                 div.textContent =
                     randomSymbol();
 
-                inner.appendChild(div);
+
+                inner.appendChild(
+                    div
+                );
 
             }
 
@@ -1110,9 +1745,9 @@ function createInitialReels(){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    EINSATZ SETZEN
---------------------------------------------------------- */
+========================================================= */
 
 function setBet(value){
 
@@ -1120,15 +1755,6 @@ function setBet(value){
         return;
     }
 
-    const numericValue =
-        Number(value);
-
-    if(
-        !Number.isFinite(numericValue) ||
-        numericValue < 1
-    ){
-        return;
-    }
 
     const maximum =
         Math.max(
@@ -1136,18 +1762,28 @@ function setBet(value){
             Math.floor(points)
         );
 
-    betInput.value =
+
+    const newBet =
         Math.min(
-            numericValue,
+            Math.max(
+                1,
+                Math.floor(
+                    Number(value)
+                )
+            ),
             maximum
         );
+
+
+    betInput.value =
+        newBet;
 
 }
 
 
-/* ---------------------------------------------------------
-   EINSATZ LESEN
---------------------------------------------------------- */
+/* =========================================================
+   EINSATZ AUSLESEN
+========================================================= */
 
 function getBet(){
 
@@ -1156,54 +1792,30 @@ function getBet(){
             betInput.value
         );
 
+
     if(
         !Number.isFinite(bet) ||
         bet < 1
     ){
+
         bet = 1;
+
     }
 
-    bet =
-        Math.floor(bet);
 
-    return bet;
+    return Math.floor(bet);
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SPIN
---------------------------------------------------------- */
+========================================================= */
 
 async function spin(){
 
     if(spinning){
         return;
-    }
-
-    let bet =
-        getBet();
-
-
-    /* Einsatz darf nicht größer
-       als vorhandene Punkte sein */
-
-    if(bet > points){
-
-        showResult(
-            "ZU WENIG PUNKTE",
-            "Der gewählte Einsatz ist höher als dein aktueller Punktestand.",
-            false
-        );
-
-        betInput.value =
-            Math.max(
-                1,
-                Math.floor(points)
-            );
-
-        return;
-
     }
 
 
@@ -1216,11 +1828,44 @@ async function spin(){
     }
 
 
+    let bet =
+        getBet();
+
+
+    if(bet > points){
+
+        showResult(
+
+            "ZU WENIG PUNKTE",
+
+            "Der gewählte Einsatz ist höher als dein Punktestand.",
+
+            false
+
+        );
+
+
+        betInput.value =
+            Math.floor(points);
+
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------------
+       SPIN START
+    ----------------------------------------------------- */
+
     spinning = true;
 
     spinButton.disabled = true;
 
     betInput.disabled = true;
+
+
+    clearHighlights();
 
 
     /* -----------------------------------------------------
@@ -1229,55 +1874,52 @@ async function spin(){
 
     points -= bet;
 
-    points =
-        Math.max(
-            0,
-            points
-        );
 
     updateStatus();
 
     saveGame();
 
 
-    clearHighlights();
-
-
     /* -----------------------------------------------------
-       NEUE SYMBOLE
+       ERGEBNIS ERZEUGEN
     ----------------------------------------------------- */
 
-    const result =
-        Array.from(
-            {length:3},
-            () => randomRow()
-        );
+    const result = [
+
+        randomRow(),
+        randomRow(),
+        randomRow()
+
+    ];
 
 
     /* -----------------------------------------------------
        ANIMATION
     ----------------------------------------------------- */
 
-    const spinPromises =
-        [];
+    const promises = [];
 
 
     reels.forEach(
         (reel, reelIndex) => {
+
 
             const inner =
                 reel.querySelector(
                     ".reelInner"
                 );
 
+
             inner.innerHTML = "";
 
 
-            /* Zufällige Symbole
-               für die Animation */
+            const animationSymbols = [];
 
-            const animationSymbols =
-                [];
+
+            /*
+               14 zufällige Symbole
+               für die Animation
+            */
 
             for(
                 let i = 0;
@@ -1292,13 +1934,19 @@ async function spin(){
             }
 
 
-            /* Am Ende die drei
-               echten Result-Symbole */
+            /*
+               Danach kommen die
+               echten drei Ergebnissymbole
+            */
 
             animationSymbols.push(
+
                 result[0][reelIndex],
+
                 result[1][reelIndex],
+
                 result[2][reelIndex]
+
             );
 
 
@@ -1310,13 +1958,18 @@ async function spin(){
                             "div"
                         );
 
+
                     div.className =
                         "symbol";
+
 
                     div.textContent =
                         symbol;
 
-                    inner.appendChild(div);
+
+                    inner.appendChild(
+                        div
+                    );
 
                 }
             );
@@ -1325,17 +1978,25 @@ async function spin(){
             inner.style.transition =
                 "none";
 
+
             inner.style.transform =
                 "translateY(0)";
 
 
-            /* Browser-Reflow */
+            /*
+               Browser-Reflow erzwingen
+            */
 
             inner.offsetHeight;
 
 
+            /*
+               14 Symbole × 90px
+               auf Desktop.
+            */
+
             const distance =
-                14 * 65;
+                14 * 90;
 
 
             const duration =
@@ -1351,16 +2012,18 @@ async function spin(){
                 `translateY(-${distance}px)`;
 
 
-            spinPromises.push(
+            promises.push(
 
-                new Promise(resolve => {
+                new Promise(
+                    resolve => {
 
-                    setTimeout(
-                        resolve,
-                        duration + 50
-                    );
+                        setTimeout(
+                            resolve,
+                            duration + 70
+                        );
 
-                })
+                    }
+                )
 
             );
 
@@ -1369,12 +2032,12 @@ async function spin(){
 
 
     await Promise.all(
-        spinPromises
+        promises
     );
 
 
     /* -----------------------------------------------------
-       GEWINN AUSWERTEN
+       AUSWERTUNG
     ----------------------------------------------------- */
 
     const outcome =
@@ -1388,7 +2051,9 @@ async function spin(){
        GEWINN GUTSCHREIBEN
     ----------------------------------------------------- */
 
-    if(outcome.totalWin > 0){
+    if(
+        outcome.totalWin > 0
+    ){
 
         points +=
             outcome.totalWin;
@@ -1407,7 +2072,9 @@ async function spin(){
        HIGHSCORE
     ----------------------------------------------------- */
 
-    if(points > highscore){
+    if(
+        points > highscore
+    ){
 
         highscore =
             points;
@@ -1421,31 +2088,46 @@ async function spin(){
 
 
     /* -----------------------------------------------------
-       ERGEBNIS
+       ERGEBNIS ANZEIGEN
     ----------------------------------------------------- */
 
-    if(outcome.totalWin > 0){
-
-        let detail =
-            outcome.messages.join(" • ");
+    if(
+        outcome.totalWin > 0
+    ){
 
         showResult(
-            `GEWINN +${formatPoints(outcome.totalWin)}`,
-            detail,
+
+            `GEWINN +${formatPoints(
+                outcome.totalWin
+            )}`,
+
+            outcome.message,
+
             true
+
         );
 
     }
     else{
 
         showResult(
-            `KEIN GEWINN −${formatPoints(bet)}`,
-            "Keine gültige Gewinnkombination. Der Einsatz ist verloren.",
+
+            `KEIN GEWINN −${formatPoints(
+                bet
+            )}`,
+
+            "In der Hauptzeile waren keine 3 gleichen Symbole.",
+
             false
+
         );
 
     }
 
+
+    /* -----------------------------------------------------
+       SPIN ENDE
+    ----------------------------------------------------- */
 
     spinning = false;
 
@@ -1458,7 +2140,7 @@ async function spin(){
 
         setTimeout(
             gameOver,
-            500
+            600
         );
 
     }
@@ -1466,163 +2148,217 @@ async function spin(){
 }
 
 
-/* ---------------------------------------------------------
-   AUSWERTUNG
---------------------------------------------------------- */
+/* =========================================================
+   HAUPTZEILE AUSWERTEN
+========================================================= */
 
 function evaluateResult(
     result,
     bet
 ){
 
-    let totalWin = 0;
+    /*
+       NUR result[1] zählt.
 
-    const messages = [];
+       result[0] = obere Reihe
+       result[1] = Hauptzeile
+       result[2] = untere Reihe
+    */
+
+    const mainRow =
+        result[1];
+
+
+    const counts = {};
+
+
+    mainRow.forEach(
+        symbol => {
+
+            counts[symbol] =
+                (counts[symbol] || 0) + 1;
+
+        }
+    );
 
 
     /*
-       Die drei horizontalen Reihen
-       werden einzeln ausgewertet.
+       Das Symbol mit den meisten
+       gleichen Exemplaren finden.
     */
 
-    for(
-        let row = 0;
-        row < 3;
-        row++
-    ){
+    let winningSymbol = null;
 
-        const rowSymbols =
-            result[row];
+    let winningCount = 0;
 
 
-        const counts = {};
+    Object.keys(counts).forEach(
+        symbol => {
 
+            if(
+                counts[symbol] >
+                winningCount
+            ){
 
-        rowSymbols.forEach(
-            symbol => {
-
-                counts[symbol] =
-                    (counts[symbol] || 0) + 1;
-
-            }
-        );
-
-
-        Object.keys(counts).forEach(
-            symbol => {
-
-                const count =
+                winningCount =
                     counts[symbol];
 
-
-                if(count < 2){
-                    return;
-                }
-
-
-                let multiplier =
-                    MULTIPLIERS[count];
-
-
-                /* Diamanten-Jackpot */
-
-                if(
-                    symbol === "💎" &&
-                    count === 5
-                ){
-
-                    multiplier =
-                        25;
-
-                }
-
-
-                const win =
-                    Math.floor(
-                        bet * multiplier
-                    );
-
-
-                totalWin +=
-                    win;
-
-
-                messages.push(
-                    `${symbol} ${count}× → +${formatPoints(win)}`
-                );
-
-
-                /*
-                   Gewinnsymbole hervorheben
-                */
-
-                highlightSymbols(
-                    row,
-                    symbol,
-                    count
-                );
+                winningSymbol =
+                    symbol;
 
             }
+
+        }
+    );
+
+
+    /*
+       Zwei gleiche bringen
+       ausdrücklich keinen Gewinn.
+    */
+
+    if(
+        winningCount < 3
+    ){
+
+        return {
+
+            totalWin:0,
+
+            message:""
+
+        };
+
+    }
+
+
+    /* -----------------------------------------------------
+       MULTIPLIKATOR
+    ----------------------------------------------------- */
+
+    let multiplier =
+        MULTIPLIERS[
+            winningCount
+        ];
+
+
+    /*
+       💎 JACKPOT
+    */
+
+    if(
+        winningSymbol === "💎" &&
+        winningCount === 5
+    ){
+
+        multiplier = 40;
+
+    }
+
+
+    /* -----------------------------------------------------
+       GEWINN
+    ----------------------------------------------------- */
+
+    const totalWin =
+        Math.floor(
+            bet * multiplier
         );
+
+
+    /* -----------------------------------------------------
+       HAUPTZEILE HIGHLIGHTEN
+    ----------------------------------------------------- */
+
+    highlightMainRow(
+        winningSymbol,
+        winningCount
+    );
+
+
+    /* -----------------------------------------------------
+       TEXT
+    ----------------------------------------------------- */
+
+    let message;
+
+
+    if(
+        winningSymbol === "💎" &&
+        winningCount === 5
+    ){
+
+        message =
+            `💎 5× DIAMANTEN → +${formatPoints(
+                totalWin
+            )} MEGA JACKPOT!`;
+
+    }
+    else{
+
+        message =
+            `${winningSymbol} ${winningCount}× → Einsatz ×${multiplier} = +${formatPoints(
+                totalWin
+            )}`;
 
     }
 
 
     return {
+
         totalWin,
-        messages
+
+        message
+
     };
 
 }
 
 
-/* ---------------------------------------------------------
-   SYMBOL HIGHLIGHTEN
---------------------------------------------------------- */
+/* =========================================================
+   HAUPTZEILE HIGHLIGHTEN
+========================================================= */
 
-function highlightSymbols(
-    row,
+function highlightMainRow(
     symbol,
     count
 ){
 
     reels.forEach(
-        (reel, column) => {
+        reel => {
 
             const inner =
                 reel.querySelector(
                     ".reelInner"
                 );
 
-            /*
-               Nach der Animation liegen
-               die sichtbaren drei Symbole
-               am Ende des Containers.
-
-               Index:
-               14 = oberes Symbol
-               15 = mittleres Symbol
-               16 = unteres Symbol
-            */
-
-            const index =
-                14 + row;
 
             const elements =
                 inner.querySelectorAll(
                     ".symbol"
                 );
 
-            const element =
-                elements[index];
+
+            /*
+               Die drei echten Ergebnis-
+               symbole beginnen bei Index 14.
+
+               14 = oben
+               15 = Hauptzeile
+               16 = unten
+            */
+
+            const mainElement =
+                elements[15];
 
 
             if(
-                element &&
-                element.textContent === symbol
+                mainElement &&
+                mainElement.textContent ===
+                    symbol
             ){
 
-                element.classList.add(
+                mainElement.classList.add(
                     "win"
                 );
 
@@ -1634,9 +2370,9 @@ function highlightSymbols(
 }
 
 
-/* ---------------------------------------------------------
-   HIGHLIGHTS ENTFERNEN
---------------------------------------------------------- */
+/* =========================================================
+   HIGHLIGHTS LÖSCHEN
+========================================================= */
 
 function clearHighlights(){
 
@@ -1657,9 +2393,9 @@ function clearHighlights(){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    ERGEBNIS ANZEIGEN
---------------------------------------------------------- */
+========================================================= */
 
 function showResult(
     title,
@@ -1670,20 +2406,25 @@ function showResult(
     resultTitle.textContent =
         title;
 
+
     resultDetail.textContent =
         detail;
 
 
     resultTitle.className =
         "resultTitle " +
-        (win ? "winText" : "lossText");
+        (
+            win
+                ? "winText"
+                : "lossText"
+        );
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    PUNKTE FORMATIEREN
---------------------------------------------------------- */
+========================================================= */
 
 function formatPoints(value){
 
@@ -1693,9 +2434,9 @@ function formatPoints(value){
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    GAME OVER
---------------------------------------------------------- */
+========================================================= */
 
 function gameOver(){
 
@@ -1707,19 +2448,23 @@ function gameOver(){
 
 
     showMessage(
+
         "GAME OVER",
+
         `Deine Punkte sind auf 0 gefallen.<br><br>
-         Highscore: <strong>
+         Highscore:
+         <strong>
          ${formatPoints(highscore)}
          </strong>`
+
     );
 
 }
 
 
-/* ---------------------------------------------------------
-   MESSAGE
---------------------------------------------------------- */
+/* =========================================================
+   POPUP
+========================================================= */
 
 function showMessage(
     title,
@@ -1731,10 +2476,12 @@ function showMessage(
             "message"
         );
 
+
     const messageTitle =
         document.getElementById(
             "messageTitle"
         );
+
 
     const messageText =
         document.getElementById(
@@ -1744,6 +2491,7 @@ function showMessage(
 
     messageTitle.innerHTML =
         title;
+
 
     messageText.innerHTML =
         text;
@@ -1762,15 +2510,15 @@ function showMessage(
             );
 
         },
-        2800
+        3000
     );
 
 }
 
 
-/* ---------------------------------------------------------
-   RESET
---------------------------------------------------------- */
+/* =========================================================
+   SPIELSTAND ZURÜCKSETZEN
+========================================================= */
 
 function resetGame(){
 
@@ -1793,6 +2541,7 @@ function resetGame(){
     points =
         START_POINTS;
 
+
     highscore =
         START_POINTS;
 
@@ -1801,6 +2550,7 @@ function resetGame(){
         STORAGE_POINTS,
         String(points)
     );
+
 
     localStorage.setItem(
         STORAGE_HIGHSCORE,
@@ -1815,6 +2565,7 @@ function resetGame(){
     spinButton.disabled =
         false;
 
+
     betInput.disabled =
         false;
 
@@ -1827,26 +2578,30 @@ function resetGame(){
 
 
     showResult(
+
         "SPIELSTAND ZURÜCKGESETZT",
+
         "Du startest wieder mit 1.000 Punkten.",
+
         true
+
     );
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    START
---------------------------------------------------------- */
+========================================================= */
 
 createInitialReels();
 
 updateStatus();
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    ENTER = SPIN
---------------------------------------------------------- */
+========================================================= */
 
 document.addEventListener(
     "keydown",
@@ -1867,4 +2622,5 @@ document.addEventListener(
 </script>
 
 </body>
+
 </html>
