@@ -33,6 +33,7 @@ body{
 }
 
 body{
+
     min-height:100vh;
 
     background:
@@ -59,7 +60,7 @@ body{
 
 
 /* =========================================================
-   SPIELCONTAINER
+   SPIEL
 ========================================================= */
 
 .game{
@@ -75,7 +76,7 @@ body{
     border-radius:25px;
 
     background:
-        rgba(5,10,20,.94);
+        rgba(5,10,20,.95);
 
     box-shadow:
         0 0 15px #00eaff,
@@ -86,7 +87,7 @@ body{
 
 
 /* =========================================================
-   LOGO
+   TITEL
 ========================================================= */
 
 .logo{
@@ -100,10 +101,10 @@ body{
 
     letter-spacing:5px;
 
-    color:#fff;
+    color:white;
 
     text-shadow:
-        0 0 5px #fff,
+        0 0 5px white,
         0 0 12px #00eaff,
         0 0 30px #00eaff,
         0 0 55px #008cff;
@@ -152,7 +153,8 @@ body{
 
     padding:13px 8px;
 
-    border:1px solid #394d6e;
+    border:
+        1px solid #394d6e;
 
     border-radius:14px;
 
@@ -183,7 +185,7 @@ body{
 
     font-weight:bold;
 
-    color:#fff;
+    color:white;
 
     text-shadow:
         0 0 10px #00eaff;
@@ -203,7 +205,7 @@ body{
 
 
 /* =========================================================
-   SLOT MACHINE
+   SLOT-MASCHINE
 ========================================================= */
 
 .machine{
@@ -212,7 +214,8 @@ body{
 
     border-radius:20px;
 
-    border:2px solid #7c2cff;
+    border:
+        2px solid #7c2cff;
 
     background:
         linear-gradient(
@@ -254,7 +257,8 @@ body{
 
     border-radius:15px;
 
-    border:2px solid #40577f;
+    border:
+        2px solid #40577f;
 
     background:#090d17;
 
@@ -264,6 +268,10 @@ body{
 
 }
 
+
+/* =========================================================
+   WALZEN VERLAUF
+========================================================= */
 
 .reel::before,
 .reel::after{
@@ -277,7 +285,7 @@ body{
 
     height:35px;
 
-    z-index:5;
+    z-index:20;
 
     pointer-events:none;
 
@@ -291,7 +299,7 @@ body{
     background:
         linear-gradient(
             to bottom,
-            rgba(0,0,0,.8),
+            rgba(0,0,0,.9),
             transparent
         );
 
@@ -305,12 +313,16 @@ body{
     background:
         linear-gradient(
             to top,
-            rgba(0,0,0,.8),
+            rgba(0,0,0,.9),
             transparent
         );
 
 }
 
+
+/* =========================================================
+   WALZEN-INHALT
+========================================================= */
 
 .reelInner{
 
@@ -320,16 +332,24 @@ body{
     left:0;
     right:0;
 
-    transition:
-        transform .55s
-        cubic-bezier(.15,.85,.25,1);
+    transform:
+        translate3d(0,0,0);
+
+    will-change:
+        transform;
 
 }
 
 
+/* =========================================================
+   SYMBOL
+========================================================= */
+
 .symbol{
 
     height:90px;
+
+    min-height:90px;
 
     display:flex;
 
@@ -355,14 +375,18 @@ body{
 }
 
 
+/* =========================================================
+   GEWINNSYMBOL
+========================================================= */
+
 .symbol.win{
 
     background:
-        rgba(0,255,183,.18);
+        rgba(0,255,183,.2);
 
     box-shadow:
         inset 0 0 20px rgba(0,255,183,.5),
-        0 0 20px rgba(0,255,183,.45);
+        0 0 25px rgba(0,255,183,.6);
 
     animation:
         winPulse .65s infinite alternate;
@@ -408,7 +432,7 @@ body{
         0 0 18px #ff00d9,
         0 0 35px rgba(255,0,217,.5);
 
-    z-index:10;
+    z-index:30;
 
     pointer-events:none;
 
@@ -418,7 +442,7 @@ body{
 
 
 /* =========================================================
-   CONTROLS
+   STEUERUNG
 ========================================================= */
 
 .controls{
@@ -475,7 +499,8 @@ input[type="number"]{
 
     border-radius:10px;
 
-    border:2px solid #445b80;
+    border:
+        2px solid #445b80;
 
     outline:none;
 
@@ -700,7 +725,7 @@ button:disabled{
 
     font-weight:bold;
 
-    color:#fff;
+    color:white;
 
 }
 
@@ -737,7 +762,7 @@ button:disabled{
 
 
 /* =========================================================
-   AUSZAHLUNGSTABELLE
+   AUSZAHLUNG
 ========================================================= */
 
 .paytable{
@@ -816,8 +841,7 @@ button:disabled{
 
     text-shadow:
         0 0 8px #ffd700,
-        0 0 20px
-        rgba(255,215,0,.5);
+        0 0 20px rgba(255,215,0,.5);
 
 }
 
@@ -852,8 +876,7 @@ button:disabled{
 
     box-shadow:
         0 0 20px #ff00d9,
-        0 0 60px
-        rgba(124,44,255,.7);
+        0 0 60px rgba(124,44,255,.7);
 
     text-align:center;
 
@@ -991,6 +1014,8 @@ button:disabled{
 
         height:65px;
 
+        min-height:65px;
+
         font-size:36px;
 
     }
@@ -1122,15 +1147,13 @@ button:disabled{
 
 
     <!-- =====================================================
-         REELS
+         WALZEN
     ====================================================== -->
 
     <div class="machine">
 
 
-        <div
-            class="reels"
-            id="reels">
+        <div class="reels">
 
 
             <div class="reel">
@@ -1261,9 +1284,7 @@ button:disabled{
 
 
             <div class="controlLabel">
-
                 Gewinnsystem
-
             </div>
 
 
@@ -1274,14 +1295,14 @@ button:disabled{
                     font-size:13px;
                 ">
 
-                Nur die mittlere
-                <strong>Hauptzeile</strong>
+                Nur die
+                <strong>mittlere Hauptzeile</strong>
                 zählt.
 
                 <br><br>
 
-                Zwei gleiche Symbole
-                bringen keinen Gewinn.
+                2 gleiche Symbole:
+                kein Gewinn.
 
                 <br><br>
 
@@ -1298,7 +1319,7 @@ button:disabled{
 
 
     <!-- =====================================================
-         SPIN BUTTON
+         SPIN
     ====================================================== -->
 
     <button
@@ -1418,7 +1439,7 @@ button:disabled{
 
 
 <!-- =========================================================
-     POPUP
+     GAME OVER POPUP
 ========================================================= -->
 
 <div
@@ -1478,23 +1499,23 @@ const START_POINTS = 1000;
 ========================================================= */
 
 const STORAGE_POINTS =
-    "moonshiner_reels_points_v3";
+    "moonshiner_reels_points_v4";
 
 const STORAGE_HIGHSCORE =
-    "moonshiner_reels_highscore_v3";
+    "moonshiner_reels_highscore_v4";
 
 
 /* =========================================================
-   AUSZAHLUNG
+   AUSZAHLUNGEN
 ========================================================= */
 
 const MULTIPLIERS = {
 
-    3: 2,
+    3:2,
 
-    4: 5,
+    4:5,
 
-    5: 15
+    5:15
 
 };
 
@@ -1523,7 +1544,7 @@ let spinning = false;
 
 
 /* =========================================================
-   INITIALWERTE
+   STANDARDWERTE
 ========================================================= */
 
 if(
@@ -1601,7 +1622,7 @@ const resultDetail =
 
 
 /* =========================================================
-   SPIELSTAND SPEICHERN
+   SPEICHERN
 ========================================================= */
 
 function saveGame(){
@@ -1610,7 +1631,6 @@ function saveGame(){
         STORAGE_POINTS,
         String(points)
     );
-
 
     localStorage.setItem(
         STORAGE_HIGHSCORE,
@@ -1621,7 +1641,7 @@ function saveGame(){
 
 
 /* =========================================================
-   STATUS AKTUALISIEREN
+   STATUS
 ========================================================= */
 
 function updateStatus(){
@@ -1696,7 +1716,7 @@ function randomRow(){
 
 
 /* =========================================================
-   REELS INITIALISIEREN
+   STARTWALZEN
 ========================================================= */
 
 function createInitialReels(){
@@ -1712,6 +1732,12 @@ function createInitialReels(){
 
             inner.innerHTML = "";
 
+            inner.style.transition =
+                "none";
+
+            inner.style.transform =
+                "translate3d(0,0,0)";
+
 
             for(
                 let i = 0;
@@ -1719,22 +1745,22 @@ function createInitialReels(){
                 i++
             ){
 
-                const div =
+                const symbol =
                     document.createElement(
                         "div"
                     );
 
 
-                div.className =
+                symbol.className =
                     "symbol";
 
 
-                div.textContent =
+                symbol.textContent =
                     randomSymbol();
 
 
                 inner.appendChild(
-                    div
+                    symbol
                 );
 
             }
@@ -1763,15 +1789,34 @@ function setBet(value){
         );
 
 
-    const newBet =
+    let newBet =
+        Number(value);
+
+
+    if(
+        !Number.isFinite(newBet)
+    ){
+
+        newBet = 1;
+
+    }
+
+
+    newBet =
+        Math.floor(newBet);
+
+
+    newBet =
+        Math.max(
+            1,
+            newBet
+        );
+
+
+    newBet =
         Math.min(
-            Math.max(
-                1,
-                Math.floor(
-                    Number(value)
-                )
-            ),
-            maximum
+            maximum,
+            newBet
         );
 
 
@@ -1828,7 +1873,7 @@ async function spin(){
     }
 
 
-    let bet =
+    const bet =
         getBet();
 
 
@@ -1838,7 +1883,7 @@ async function spin(){
 
             "ZU WENIG PUNKTE",
 
-            "Der gewählte Einsatz ist höher als dein Punktestand.",
+            "Der Einsatz ist höher als dein aktueller Punktestand.",
 
             false
 
@@ -1887,7 +1932,9 @@ async function spin(){
     const result = [
 
         randomRow(),
+
         randomRow(),
+
         randomRow()
 
     ];
@@ -1903,22 +1950,28 @@ async function spin(){
     reels.forEach(
         (reel, reelIndex) => {
 
-
             const inner =
                 reel.querySelector(
                     ".reelInner"
                 );
 
 
+            /*
+               Alte Animation komplett zurücksetzen.
+            */
+
+            inner.style.transition =
+                "none";
+
+            inner.style.transform =
+                "translate3d(0,0,0)";
+
+
             inner.innerHTML = "";
 
 
-            const animationSymbols = [];
-
-
             /*
-               14 zufällige Symbole
-               für die Animation
+               14 Zufallssymbole.
             */
 
             for(
@@ -1927,90 +1980,144 @@ async function spin(){
                 i++
             ){
 
-                animationSymbols.push(
-                    randomSymbol()
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "symbol";
+
+
+                div.textContent =
+                    randomSymbol();
+
+
+                inner.appendChild(
+                    div
                 );
 
             }
 
 
             /*
-               Danach kommen die
-               echten drei Ergebnissymbole
+               Danach exakt die drei
+               echten Ergebnissymbole.
             */
 
-            animationSymbols.push(
+            for(
+                let row = 0;
+                row < 3;
+                row++
+            ){
 
-                result[0][reelIndex],
-
-                result[1][reelIndex],
-
-                result[2][reelIndex]
-
-            );
-
-
-            animationSymbols.forEach(
-                symbol => {
-
-                    const div =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    div.className =
-                        "symbol";
-
-
-                    div.textContent =
-                        symbol;
-
-
-                    inner.appendChild(
-                        div
+                const div =
+                    document.createElement(
+                        "div"
                     );
 
-                }
-            );
+
+                div.className =
+                    "symbol";
 
 
-            inner.style.transition =
-                "none";
+                div.textContent =
+                    result[row][reelIndex];
 
 
-            inner.style.transform =
-                "translateY(0)";
+                inner.appendChild(
+                    div
+                );
+
+            }
 
 
             /*
-               Browser-Reflow erzwingen
+               Sehr wichtig:
+               Erst nachdem alle Symbole
+               vorhanden sind, wird ihre
+               tatsächliche Höhe gelesen.
             */
 
-            inner.offsetHeight;
+            const firstSymbol =
+                inner.querySelector(
+                    ".symbol"
+                );
+
+
+            let symbolHeight = 90;
+
+
+            if(firstSymbol){
+
+                symbolHeight =
+                    firstSymbol.getBoundingClientRect()
+                        .height;
+
+            }
 
 
             /*
-               14 Symbole × 90px
-               auf Desktop.
+               Falls der Browser noch keine
+               sinnvolle Größe geliefert hat,
+               wird erneut gemessen.
+            */
+
+            if(
+                !symbolHeight ||
+                symbolHeight < 1
+            ){
+
+                symbolHeight = 90;
+
+            }
+
+
+            /*
+               Wir verschieben exakt 14 Symbole.
+               Danach befinden sich die drei
+               echten Ergebnisse im sichtbaren Bereich.
             */
 
             const distance =
-                14 * 90;
+                14 * symbolHeight;
 
+
+            /*
+               Unterschiedliche Geschwindigkeit
+               für die fünf Walzen.
+            */
 
             const duration =
-                700 +
-                reelIndex * 180;
+                750 +
+                (reelIndex * 180);
 
+
+            /*
+               Kleiner Reflow:
+               Der Browser muss die Ausgangslage
+               tatsächlich übernehmen.
+            */
+
+            void inner.offsetHeight;
+
+
+            /*
+               Animation starten.
+            */
 
             inner.style.transition =
                 `transform ${duration}ms cubic-bezier(.12,.8,.2,1)`;
 
 
             inner.style.transform =
-                `translateY(-${distance}px)`;
+                `translate3d(0,-${distance}px,0)`;
 
+
+            /*
+               Promise für diese Walze.
+            */
 
             promises.push(
 
@@ -2019,7 +2126,7 @@ async function spin(){
 
                         setTimeout(
                             resolve,
-                            duration + 70
+                            duration + 100
                         );
 
                     }
@@ -2031,8 +2138,38 @@ async function spin(){
     );
 
 
+    /*
+       Warten bis wirklich alle Walzen
+       fertig sind.
+    */
+
     await Promise.all(
         promises
+    );
+
+
+    /* -----------------------------------------------------
+       ANIMATION ABSCHLIESSEN
+    ----------------------------------------------------- */
+
+    reels.forEach(
+        reel => {
+
+            const inner =
+                reel.querySelector(
+                    ".reelInner"
+                );
+
+
+            /*
+               Nach der Animation bleiben
+               die Walzen exakt stehen.
+            */
+
+            inner.style.transform =
+                inner.style.transform;
+
+        }
     );
 
 
@@ -2048,7 +2185,7 @@ async function spin(){
 
 
     /* -----------------------------------------------------
-       GEWINN GUTSCHREIBEN
+       GEWINN
     ----------------------------------------------------- */
 
     if(
@@ -2088,7 +2225,7 @@ async function spin(){
 
 
     /* -----------------------------------------------------
-       ERGEBNIS ANZEIGEN
+       ERGEBNIS
     ----------------------------------------------------- */
 
     if(
@@ -2116,7 +2253,7 @@ async function spin(){
                 bet
             )}`,
 
-            "In der Hauptzeile waren keine 3 gleichen Symbole.",
+            "Keine 3 gleichen Symbole in der Hauptzeile.",
 
             false
 
@@ -2149,7 +2286,7 @@ async function spin(){
 
 
 /* =========================================================
-   HAUPTZEILE AUSWERTEN
+   AUSWERTUNG
 ========================================================= */
 
 function evaluateResult(
@@ -2158,11 +2295,12 @@ function evaluateResult(
 ){
 
     /*
-       NUR result[1] zählt.
+       NUR DIE MITTLERE REIHE
+       WIRD AUSGEWERTET.
 
-       result[0] = obere Reihe
-       result[1] = Hauptzeile
-       result[2] = untere Reihe
+       result[0] = oben
+       result[1] = mitte
+       result[2] = unten
     */
 
     const mainRow =
@@ -2183,13 +2321,15 @@ function evaluateResult(
 
 
     /*
-       Das Symbol mit den meisten
-       gleichen Exemplaren finden.
+       Häufigstes Symbol finden.
     */
 
-    let winningSymbol = null;
+    let winningSymbol =
+        null;
 
-    let winningCount = 0;
+
+    let winningCount =
+        0;
 
 
     Object.keys(counts).forEach(
@@ -2213,8 +2353,8 @@ function evaluateResult(
 
 
     /*
-       Zwei gleiche bringen
-       ausdrücklich keinen Gewinn.
+       Zwei gleiche:
+       KEIN Gewinn.
     */
 
     if(
@@ -2243,7 +2383,7 @@ function evaluateResult(
 
 
     /*
-       💎 JACKPOT
+       DIAMANTEN-JACKPOT
     */
 
     if(
@@ -2257,7 +2397,7 @@ function evaluateResult(
 
 
     /* -----------------------------------------------------
-       GEWINN
+       GEWINN BERECHNEN
     ----------------------------------------------------- */
 
     const totalWin =
@@ -2267,17 +2407,16 @@ function evaluateResult(
 
 
     /* -----------------------------------------------------
-       HAUPTZEILE HIGHLIGHTEN
+       GEWINN HIGHLIGHTEN
     ----------------------------------------------------- */
 
     highlightMainRow(
-        winningSymbol,
-        winningCount
+        winningSymbol
     );
 
 
     /* -----------------------------------------------------
-       TEXT
+       GEWINNTEXT
     ----------------------------------------------------- */
 
     let message;
@@ -2320,8 +2459,7 @@ function evaluateResult(
 ========================================================= */
 
 function highlightMainRow(
-    symbol,
-    count
+    winningSymbol
 ){
 
     reels.forEach(
@@ -2340,25 +2478,25 @@ function highlightMainRow(
 
 
             /*
-               Die drei echten Ergebnis-
-               symbole beginnen bei Index 14.
+               Die echten Ergebnisse
+               befinden sich an:
 
                14 = oben
-               15 = Hauptzeile
+               15 = Mitte
                16 = unten
             */
 
-            const mainElement =
+            const middle =
                 elements[15];
 
 
             if(
-                mainElement &&
-                mainElement.textContent ===
-                    symbol
+                middle &&
+                middle.textContent ===
+                    winningSymbol
             ){
 
-                mainElement.classList.add(
+                middle.classList.add(
                     "win"
                 );
 
@@ -2371,7 +2509,7 @@ function highlightMainRow(
 
 
 /* =========================================================
-   HIGHLIGHTS LÖSCHEN
+   HIGHLIGHTS ENTFERNEN
 ========================================================= */
 
 function clearHighlights(){
@@ -2423,7 +2561,7 @@ function showResult(
 
 
 /* =========================================================
-   PUNKTE FORMATIEREN
+   ZAHL FORMATIEREN
 ========================================================= */
 
 function formatPoints(value){
@@ -2517,7 +2655,7 @@ function showMessage(
 
 
 /* =========================================================
-   SPIELSTAND ZURÜCKSETZEN
+   RESET
 ========================================================= */
 
 function resetGame(){
@@ -2591,7 +2729,7 @@ function resetGame(){
 
 
 /* =========================================================
-   START
+   INITIALISIERUNG
 ========================================================= */
 
 createInitialReels();
