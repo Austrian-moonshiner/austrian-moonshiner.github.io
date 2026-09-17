@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Moonshiner Reels</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    color:white;
+
+    background:
+        radial-gradient(
+            circle at 50% 10%,
+            #32105d 0%,
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 10% 90%,
+            #003e4e 0%,
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #05030d,
+            #09051a,
+            #02050b
+        );
+}
+
+/* ================================
+   HAUPTCONTAINER
+================================ */
+
+.game{
+
+    width:100%;
+    max-width:1050px;
+
+    padding:20px;
+
+    border-radius:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(28,10,50,.97),
+            rgba(5,9,25,.98)
+        );
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+        0 0 35px rgba(150,0,255,.3),
+        0 0 100px rgba(0,200,255,.08),
+        inset 0 0 40px rgba(255,255,255,.025);
+}
+
+/* ================================
+   TITEL
+================================ */
+
+.title{
+
+    margin:0;
+
+    text-align:center;
+
+    font-size:
+        clamp(30px,6vw,58px);
+
+    font-weight:900;
+
+    letter-spacing:3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff2cff,
+            #7655ff,
+            #00eaff,
+            #4dffb5,
+            #ff2cff
+        );
+
+    background-size:300% 100%;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    animation:titleMove 5s linear infinite;
+}
+
+@keyframes titleMove{
+
+    from{
+        background-position:0% 50%;
+    }
+
+    to{
+        background-position:300% 50%;
+    }
+
+}
+
+.subtitle{
+
+    margin:5px 0 20px;
+
+    text-align:center;
+
+    color:#aaa7c5;
+
+    font-size:13px;
+}
+
+/* ================================
+   INFORMATION
+================================ */
+
+.info{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:10px;
+
+    margin-bottom:18px;
+}
+
+.infoBox{
+
+    padding:12px;
+
+    text-align:center;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+}
+
+.infoLabel{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    color:#85829c;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+}
+
+.infoValue{
+
+    font-size:25px;
+
+    font-weight:900;
+}
+
+#points{
+
+    color:#45ffae;
+
+    text-shadow:
+        0 0 15px rgba(69,255,174,.5);
+}
+
+#highscore{
+
+    color:#ffd84a;
+
+    text-shadow:
+        0 0 15px rgba(255,216,74,.45);
+}
+
+#level{
+
+    color:#62caff;
+
+    text-shadow:
+        0 0 15px rgba(98,202,255,.45);
+}
+
+/* ================================
+   AUTOMAT
+================================ */
+
+.machine{
+
+    position:relative;
+
+    padding:15px;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #161329,
+            #060711
+        );
+
+    border:
+        2px solid rgba(143,55,255,.4);
+
+    box-shadow:
+        inset 0 0 35px rgba(0,0,0,.8),
+        0 0 30px rgba(100,40,255,.15);
+}
+
+/* ================================
+   WALZEN
+================================ */
+
+.reels{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:8px;
+}
+
+.reel{
+
+    padding:4px;
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #121220,
+            #05060c
+        );
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        inset 0 0 18px rgba(0,0,0,.8);
+}
+
+.symbol{
+
+    width:100%;
+
+    aspect-ratio:1 / 1;
+
+    margin:3px 0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    font-size:
+        clamp(30px,7vw,65px);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.08),
+            transparent 70%
+        );
+
+    transition:
+        .2s;
+}
+
+.symbol.win{
+
+    transform:scale(1.08);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,255,220,.25),
+            transparent 70%
+        );
+
+    box-shadow:
+        0 0 18px rgba(0,255,220,.55);
+
+    animation:
+        winner .45s infinite alternate;
+}
+
+@keyframes winner{
+
+    from{
+        filter:brightness(1);
+    }
+
+    to{
+        filter:brightness(1.7);
+    }
+
+}
+
+.reel.spinning .symbol{
+
+    filter:blur(4px);
+
+    transform:scaleY(.85);
+}
+
+/* ================================
+   ERGEBNIS
+================================ */
+
+.result{
+
+    min-height:85px;
+
+    margin-top:16px;
+
+    padding:12px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    text-align:center;
+
+    border-radius:15px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    border:
+        1px solid rgba(255,255,255,.06);
+}
+
+#resultMain{
+
+    font-size:
+        clamp(20px,4vw,30px);
+
+    font-weight:900;
+}
+
+#resultSub{
+
+    margin-top:5px;
+
+    color:#aaa7c5;
+
+    font-size:13px;
+}
+
+/* ================================
+   BUTTON
+================================ */
+
+.controls{
+
+    margin-top:17px;
+
+    display:flex;
+
+    justify-content:center;
+}
+
+#spinButton{
+
+    width:min(400px,100%);
+
+    padding:16px;
+
+    border:0;
+
+    border-radius:999px;
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff1493,
+            #7a2cff,
+            #00c8ff
+        );
+
+    background-size:200% 100%;
+
+    box-shadow:
+        0 0 25px rgba(0,200,255,.35);
+
+    transition:
+        .15s;
+}
+
+#spinButton:hover{
+
+    transform:translateY(-2px);
+
+    filter:brightness(1.15);
+
+}
+
+#spinButton:active{
+
+    transform:scale(.97);
+
+}
+
+#spinButton:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+/* ================================
+   RESET
+================================ */
+
+.resetButton{
+
+    display:block;
+
+    margin:12px auto 0;
+
+    padding:5px 10px;
+
+    border:0;
+
+    background:none;
+
+    color:#77748e;
+
+    font-size:12px;
+
+    cursor:pointer;
+}
+
+.resetButton:hover{
+
+    color:white;
+}
+
+/* ================================
+   GAME OVER
+================================ */
+
+.overlay{
+
+    position:absolute;
+
+    inset:0;
+
+    z-index:10;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    background:
+        rgba(3,3,10,.92);
+
+    backdrop-filter:blur(5px);
+
+}
+
+.overlay.show{
+
+    display:flex;
+}
+
+.gameOverTitle{
+
+    font-size:
+        clamp(38px,8vw,70px);
+
+    font-weight:900;
+
+    color:#ff3c88;
+
+    text-shadow:
+        0 0 25px rgba(255,0,100,.8);
+}
+
+.gameOverText{
+
+    margin-top:8px;
+
+    color:#aaa7c5;
+}
+
+.restartButton{
+
+    margin-top:20px;
+
+    padding:13px 30px;
+
+    border:0;
+
+    border-radius:999px;
+
+    color:white;
+
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff1493,
+            #752cff
+        );
+
+    cursor:pointer;
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:600px){
+
+    body{
+        padding:8px;
+    }
+
+    .game{
+        padding:10px;
+        border-radius:18px;
+    }
+
+    .machine{
+        padding:7px;
+    }
+
+    .reels{
+        gap:4px;
+    }
+
+    .reel{
+        padding:2px;
+    }
+
+    .symbol{
+        margin:2px 0;
+        border-radius:7px;
+    }
+
+    .info{
+        gap:5px;
+    }
+
+    .infoBox{
+        padding:8px 3px;
+    }
+
+    .infoValue{
+        font-size:19px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1 class="title">
+        MOONSHINER REELS
+    </h1>
+
+    <div class="subtitle">
+        Neon Arcade Edition
+    </div>
+
+
+    <!-- =========================
+         INFO
+    ========================== -->
+
+    <div class="info">
+
+        <div class="infoBox">
+
+            <span class="infoLabel">
+                Punkte
+            </span>
+
+            <span
+                id="points"
+                class="infoValue">
+                1000
+            </span>
+
+        </div>
+
+
+        <div class="infoBox">
+
+            <span class="infoLabel">
+                Highscore
+            </span>
+
+            <span
+                id="highscore"
+                class="infoValue">
+                1000
+            </span>
+
+        </div>
+
+
+        <div class="infoBox">
+
+            <span class="infoLabel">
+                Level
+            </span>
+
+            <span
+                id="level"
+                class="infoValue">
+                1
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MACHINE
+    ========================== -->
+
+    <div class="machine">
+
+        <div
+            id="reels"
+            class="reels">
+
+            <!-- WALZE 1 -->
+
+            <div class="reel">
+
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+
+            </div>
+
+
+            <!-- WALZE 2 -->
+
+            <div class="reel">
+
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+
+            </div>
+
+
+            <!-- WALZE 3 -->
+
+            <div class="reel">
+
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+
+            </div>
+
+
+            <!-- WALZE 4 -->
+
+            <div class="reel">
+
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+
+            </div>
+
+
+            <!-- WALZE 5 -->
+
+            <div class="reel">
+
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+                <div class="symbol"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ERGEBNIS
+        ========================== -->
+
+        <div class="result">
+
+            <div id="resultMain">
+                Bereit?
+            </div>
+
+            <div id="resultSub">
+                Drehe die Walzen!
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             BUTTON
+        ========================== -->
+
+        <div class="controls">
+
+            <button
+                id="spinButton">
+
+                🎰 DREHEN
+
+            </button>
+
+        </div>
+
+
+        <button
+            id="resetButton"
+            class="resetButton">
+
+            Spielstand zurücksetzen
+
+        </button>
+
+
+        <!-- =========================
+             GAME OVER
+        ========================== -->
+
+        <div
+            id="gameOver"
+            class="overlay">
+
+            <div class="gameOverTitle">
+                GAME OVER
+            </div>
+
+            <div class="gameOverText">
+                Keine Punkte mehr
+            </div>
+
+            <button
+                id="restartButton"
+                class="restartButton">
+
+                NEUSTART
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SYMBOLE
+========================================= */
+
+const SYMBOLS = [
+    "🍒",
+    "🍋",
+    "⭐",
+    "🍀",
+    "🔔",
+    "💎",
+    "🍇",
+    "🍉"
+];
+
+
+/* =========================================
+   PUNKTE PRO SYMBOL
+========================================= */
+
+const REWARDS = {
+
+    "🍒": {
+        2:10,
+        3:30,
+        4:75,
+        5:200
+    },
+
+    "🍋": {
+        2:10,
+        3:30,
+        4:75,
+        5:200
+    },
+
+    "⭐": {
+        2:12,
+        3:35,
+        4:85,
+        5:225
+    },
+
+    "🍀": {
+        2:12,
+        3:35,
+        4:85,
+        5:225
+    },
+
+    "🔔": {
+        2:15,
+        3:40,
+        4:100,
+        5:250
+    },
+
+    "🍇": {
+        2:15,
+        3:40,
+        4:100,
+        5:250
+    },
+
+    "🍉": {
+        2:18,
+        3:45,
+        4:110,
+        5:275
+    },
+
+    "💎": {
+        2:25,
+        3:60,
+        4:150,
+        5:500
+    }
+
+};
+
+
+/* =========================================
+   SPIELVARIABLEN
+========================================= */
+
+let points =
+    Number(
+        localStorage.getItem(
+            "moonshiner_points"
+        )
+    );
+
+if(!Number.isFinite(points)){
+    points = 1000;
+}
+
+
+let highscore =
+    Number(
+        localStorage.getItem(
+            "moonshiner_highscore"
+        )
+    );
+
+if(!Number.isFinite(highscore)){
+    highscore = 1000;
+}
+
+
+let level = 1;
+
+let spinning = false;
+
+
+/* =========================================
+   ELEMENTE
+========================================= */
+
+const reelElements =
+    Array.from(
+        document.querySelectorAll(".reel")
+    );
+
+const pointsElement =
+    document.getElementById("points");
+
+const highscoreElement =
+    document.getElementById("highscore");
+
+const levelElement =
+    document.getElementById("level");
+
+const resultMain =
+    document.getElementById("resultMain");
+
+const resultSub =
+    document.getElementById("resultSub");
+
+const spinButton =
+    document.getElementById("spinButton");
+
+const resetButton =
+    document.getElementById("resetButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const gameOver =
+    document.getElementById("gameOver");
+
+
+/* =========================================
+   ZUFALLSSYMBOL
+========================================= */
+
+function randomSymbol(){
+
+    const index =
+        Math.floor(
+            Math.random() *
+            SYMBOLS.length
+        );
+
+    return SYMBOLS[index];
+
+}
+
+
+/* =========================================
+   WALZEN SETZEN
+========================================= */
+
+function setRandomReels(){
+
+    reelElements.forEach(
+        reel => {
+
+            const cells =
+                reel.querySelectorAll(
+                    ".symbol"
+                );
+
+            cells.forEach(
+                cell => {
+
+                    cell.textContent =
+                        randomSymbol();
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   PUNKTE AKTUALISIEREN
+========================================= */
+
+function updateDisplay(){
+
+    pointsElement.textContent =
+        Math.max(
+            0,
+            Math.floor(points)
+        );
+
+    highscoreElement.textContent =
+        Math.floor(highscore);
+
+    level =
+        Math.max(
+            1,
+            Math.floor(
+                points / 500
+            ) + 1
+        );
+
+    levelElement.textContent =
+        level;
+
+    localStorage.setItem(
+        "moonshiner_points",
+        points
+    );
+
+    localStorage.setItem(
+        "moonshiner_highscore",
+        highscore
+    );
+
+}
+
+
+/* =========================================
+   WARTEFUNKTION
+========================================= */
+
+function wait(ms){
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+/* =========================================
+   GEWINNZÄHLUNG
+========================================= */
+
+function calculateLine(line){
+
+    const counts = {};
+
+    for(
+        let i = 0;
+        i < line.length;
+        i++
+    ){
+
+        const symbol =
+            line[i];
+
+        if(
+            counts[symbol] === undefined
+        ){
+
+            counts[symbol] = 0;
+
+        }
+
+        counts[symbol]++;
+
+    }
+
+
+    let reward = 0;
+
+    let descriptions = [];
+
+
+    for(
+        const symbol in counts
+    ){
+
+        const count =
+            counts[symbol];
+
+
+        if(
+            count >= 2
+        ){
+
+            const symbolReward =
+                REWARDS[symbol][count];
+
+
+            if(symbolReward){
+
+                reward +=
+                    symbolReward;
+
+
+                descriptions.push(
+                    count +
+                    "× " +
+                    symbol +
+                    " +" +
+                    symbolReward
+                );
+
+            }
+
+        }
+
+    }
+
+
+    return {
+        reward,
+        descriptions
+    };
+
+}
+
+
+/* =========================================
+   HAUPTAUSWERTUNG
+========================================= */
+
+function evaluateResult(){
+
+    /*
+       Alle 3 Reihen werden ausgewertet.
+    */
+
+    let totalReward = 0;
+
+    let allDescriptions = [];
+
+
+    for(
+        let row = 0;
+        row < 3;
+        row++
+    ){
+
+        const line = [];
+
+
+        for(
+            let reel = 0;
+            reel < 5;
+            reel++
+        ){
+
+            const cell =
+                reelElements[reel]
+                .querySelectorAll(
+                    ".symbol"
+                )[row];
+
+            line.push(
+                cell.textContent
+            );
+
+        }
+
+
+        const result =
+            calculateLine(line);
+
+
+        totalReward +=
+            result.reward;
+
+
+        allDescriptions =
+            allDescriptions.concat(
+                result.descriptions
+            );
+
+    }
+
+
+    /*
+       Keine Kombination
+    */
+
+    if(totalReward === 0){
+
+        points -= 25;
+
+        if(points < 0){
+            points = 0;
+        }
+
+
+        resultMain.textContent =
+            "💥 KEINE KOMBINATION";
+
+        resultSub.textContent =
+            "−25 Punkte";
+
+
+        updateDisplay();
+
+
+        if(points <= 0){
+
+            showGameOver();
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*
+       Gewinn
+    */
+
+    points +=
+        totalReward;
+
+
+    if(points > highscore){
+
+        highscore =
+            points;
+
+    }
+
+
+    /*
+       Gewinn-Symbole markieren
+    */
+
+    highlightWinningSymbols();
+
+
+    /*
+       Anzeige
+    */
+
+    resultMain.textContent =
+        "✨ GEWINN! +" +
+        totalReward;
+
+
+    resultSub.textContent =
+        allDescriptions.join(
+            "   •   "
+        );
+
+
+    if(
+        totalReward >= 500
+    ){
+
+        resultMain.textContent =
+            "💎💎💎 JACKPOT! +" +
+            totalReward;
+
+        createParticles();
+
+    }
+    else if(
+        totalReward >= 200
+    ){
+
+        resultMain.textContent =
+            "🔥 GROSSER TREFFER! +" +
+            totalReward;
+
+        createParticles();
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* =========================================
+   GEWINNE MARKIEREN
+========================================= */
+
+function highlightWinningSymbols(){
+
+    /*
+       Für jede Reihe werden die Symbole
+       mit mindestens 2 Vorkommen markiert.
+    */
+
+    for(
+        let row = 0;
+        row < 3;
+        row++
+    ){
+
+        const cells = [];
+
+
+        for(
+            let reel = 0;
+            reel < 5;
+            reel++
+        ){
+
+            cells.push(
+                reelElements[reel]
+                .querySelectorAll(
+                    ".symbol"
+                )[row]
+            );
+
+        }
+
+
+        const counts = {};
+
+
+        cells.forEach(
+            cell => {
+
+                const symbol =
+                    cell.textContent;
+
+                counts[symbol] =
+                    (counts[symbol] || 0) + 1;
+
+            }
+        );
+
+
+        cells.forEach(
+            cell => {
+
+                if(
+                    counts[
+                        cell.textContent
+                    ] >= 2
+                ){
+
+                    cell.classList.add(
+                        "win"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   DREHEN
+========================================= */
+
+async function spin(){
+
+    if(spinning)
+        return;
+
+
+    if(points <= 0){
+
+        showGameOver();
+
+        return;
+
+    }
+
+
+    spinning = true;
+
+    spinButton.disabled = true;
+
+
+    /*
+       Alte Gewinnanimation entfernen
+    */
+
+    document
+        .querySelectorAll(
+            ".symbol.win"
+        )
+        .forEach(
+            cell =>
+                cell.classList.remove(
+                    "win"
+                )
+        );
+
+
+    resultMain.textContent =
+        "🎰 DREHT...";
+
+    resultSub.textContent =
+        "";
+
+
+    /*
+       Walzen starten
+    */
+
+    reelElements.forEach(
+        reel =>
+            reel.classList.add(
+                "spinning"
+            )
+    );
+
+
+    /*
+       Kleine Animation
+    */
+
+    const intervals = [];
+
+
+    reelElements.forEach(
+        (reel,index) => {
+
+            intervals[index] =
+                setInterval(
+                    () => {
+
+                        const cells =
+                            reel.querySelectorAll(
+                                ".symbol"
+                            );
+
+                        cells.forEach(
+                            cell => {
+
+                                cell.textContent =
+                                    randomSymbol();
+
+                            }
+                        );
+
+                    },
+                    80
+                );
+
+        }
+    );
+
+
+    /*
+       Walzen nacheinander stoppen
+    */
+
+    for(
+        let i = 0;
+        i < reelElements.length;
+        i++
+    ){
+
+        await wait(
+            350 + i * 180
+        );
+
+
+        clearInterval(
+            intervals[i]
+        );
+
+
+        const cells =
+            reelElements[i]
+            .querySelectorAll(
+                ".symbol"
+            );
+
+
+        cells.forEach(
+            cell => {
+
+                cell.textContent =
+                    randomSymbol();
+
+            }
+        );
+
+
+        reelElements[i]
+            .classList.remove(
+                "spinning"
+            );
+
+    }
+
+
+    await wait(250);
+
+
+    evaluateResult();
+
+
+    spinning = false;
+
+
+    if(points > 0){
+
+        spinButton.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================
+   GAME OVER
+========================================= */
+
+function showGameOver(){
+
+    gameOver.classList.add(
+        "show"
+    );
+
+    spinButton.disabled = true;
+
+}
+
+
+/* =========================================
+   NEUSTART
+========================================= */
+
+function restartGame(){
+
+    points = 1000;
+
+    updateDisplay();
+
+    gameOver.classList.remove(
+        "show"
+    );
+
+    resultMain.textContent =
+        "Bereit?";
+
+    resultSub.textContent =
+        "Drehe die Walzen!";
+
+    setRandomReels();
+
+    spinButton.disabled = false;
+
+}
+
+
+/* =========================================
+   KOMPLETTER RESET
+========================================= */
+
+resetButton.addEventListener(
+    "click",
+    () => {
+
+        const confirmed =
+            confirm(
+                "Möchtest du den gesamten Spielstand zurücksetzen?"
+            );
+
+
+        if(!confirmed)
+            return;
+
+
+        localStorage.removeItem(
+            "moonshiner_points"
+        );
+
+        localStorage.removeItem(
+            "moonshiner_highscore"
+        );
+
+
+        points = 1000;
+
+        highscore = 1000;
+
+
+        updateDisplay();
+
+        setRandomReels();
+
+
+        resultMain.textContent =
+            "NEUER START";
+
+        resultSub.textContent =
+            "1000 Punkte";
+
+
+        gameOver.classList.remove(
+            "show"
+        );
+
+
+        spinButton.disabled = false;
+
+    }
+);
+
+
+/* =========================================
+   RESTART BUTTON
+========================================= */
+
+restartButton.addEventListener(
+    "click",
+    restartGame
+);
+
+
+/* =========================================
+   SPIN BUTTON
+========================================= */
+
+spinButton.addEventListener(
+    "click",
+    spin
+);
+
+
+/* =========================================
+   LEERTASTE
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.code === "Space"
+        ){
+
+            event.preventDefault();
+
+            spin();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   PARTICLES
+========================================= */
+
+function createParticles(){
+
+    for(
+        let i = 0;
+        i < 35;
+        i++
+    ){
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+
+        particle.style.position =
+            "fixed";
+
+        particle.style.left =
+            "50%";
+
+        particle.style.top =
+            "45%";
+
+        particle.style.width =
+            "7px";
+
+        particle.style.height =
+            "7px";
+
+        particle.style.borderRadius =
+            "50%";
+
+        particle.style.background =
+            [
+                "#ff2cff",
+                "#00eaff",
+                "#44ffb0",
+                "#ffd84a",
+                "#ffffff"
+            ][
+                Math.floor(
+                    Math.random() * 5
+                )
+            ];
+
+        particle.style.zIndex =
+            "9999";
+
+        particle.style.pointerEvents =
+            "none";
+
+
+        document.body.appendChild(
+            particle
+        );
+
+
+        const x =
+            (Math.random() - .5) *
+            500;
+
+        const y =
+            (Math.random() - .5) *
+            400;
+
+
+        particle.animate(
+            [
+                {
+                    transform:
+                        "translate(0,0) scale(1)",
+                    opacity:1
+                },
+                {
+                    transform:
+                        "translate(" +
+                        x +
+                        "px," +
+                        y +
+                        "px) scale(.1)",
+                    opacity:0
+                }
+            ],
+            {
+                duration:
+                    1000 +
+                    Math.random() * 700,
+
+                easing:
+                    "ease-out"
+            }
+        ).onfinish =
+            () => particle.remove();
+
+    }
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+setRandomReels();
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
