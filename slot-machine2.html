@@ -1,431 +1,1588 @@
-```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>Moonshiner Reels</title>
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
 }
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
+html{
+    min-height:100%;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    font-family:Arial,Helvetica,sans-serif;
+
     background:
-        radial-gradient(circle at top, #3b145f, #13051f 55%, #07030c);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+        radial-gradient(
+            circle at 50% -10%,
+            #7025a0 0%,
+            #351052 25%,
+            #16071f 55%,
+            #07020b 100%
+        );
+
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:18px;
+
+    overflow-x:hidden;
 }
 
-.game {
-    width: 100%;
-    max-width: 900px;
-    text-align: center;
+
+/* =========================================================
+   HINTERGRUND-EFFEKTE
+========================================================= */
+
+body::before{
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at 20% 30%,
+            rgba(255,70,190,.08),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 80% 70%,
+            rgba(80,180,255,.08),
+            transparent 25%
+        );
+
+    animation:
+        backgroundPulse 6s ease-in-out infinite alternate;
 }
 
-h1 {
-    margin: 0 0 5px;
-    font-size: 42px;
-    color: #ffd84d;
-    text-shadow: 0 0 15px #ff9d00;
+@keyframes backgroundPulse{
+
+    from{
+        opacity:.55;
+    }
+
+    to{
+        opacity:1;
+    }
+
 }
 
-.subtitle {
-    margin-bottom: 20px;
-    color: #d8c9e8;
+
+/* =========================================================
+   HAUPTCONTAINER
+========================================================= */
+
+.game{
+
+    width:100%;
+    max-width:950px;
+
+    text-align:center;
+
+    position:relative;
+    z-index:1;
 }
 
-.info {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 15px;
+
+/* =========================================================
+   TITEL
+========================================================= */
+
+h1{
+
+    margin:0;
+
+    font-size:46px;
+    font-weight:900;
+    letter-spacing:2px;
+
+    color:#ffe45e;
+
+    text-shadow:
+        0 0 5px #fff,
+        0 0 15px #ffd000,
+        0 0 30px #ff9500,
+        0 0 60px rgba(255,120,0,.6);
+
+    animation:titleGlow 2.5s ease-in-out infinite alternate;
 }
 
-.infoBox {
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 12px;
-    padding: 10px;
+@keyframes titleGlow{
+
+    from{
+        text-shadow:
+            0 0 5px #fff,
+            0 0 15px #ffd000,
+            0 0 30px #ff9500;
+    }
+
+    to{
+        text-shadow:
+            0 0 8px #fff,
+            0 0 25px #ffd000,
+            0 0 50px #ff7200;
+    }
+
 }
 
-.infoBox span {
-    display: block;
-    font-size: 13px;
-    color: #cbbbd9;
+.subtitle{
+
+    margin-top:5px;
+    margin-bottom:20px;
+
+    color:#d9c9e8;
+
+    font-size:15px;
+    letter-spacing:1px;
 }
 
-.infoBox strong {
-    font-size: 21px;
-    color: #ffd84d;
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+
+    margin-bottom:15px;
 }
 
-.machine {
-    background: linear-gradient(145deg, #33104d, #170820);
-    border: 4px solid #ffd84d;
-    border-radius: 25px;
-    padding: 20px;
+.infoBox{
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.11),
+            rgba(255,255,255,.035)
+        );
+
+    border:1px solid rgba(255,255,255,.16);
+
+    border-radius:15px;
+
+    padding:11px;
+
     box-shadow:
-        0 0 25px rgba(255,190,50,.35),
-        inset 0 0 30px rgba(0,0,0,.6);
+        inset 0 1px rgba(255,255,255,.08),
+        0 5px 20px rgba(0,0,0,.25);
+
+    backdrop-filter:blur(8px);
+
+    transition:.25s;
 }
 
-.reels {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    background: #08030d;
-    padding: 10px;
-    border-radius: 15px;
-    overflow: hidden;
+.infoBox:hover{
+
+    transform:translateY(-2px);
+
+    border-color:rgba(255,216,77,.5);
+
 }
 
-.reel {
-    background: linear-gradient(#f8f4ff, #d9d0e5);
-    border-radius: 10px;
-    min-height: 270px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 4px;
+.infoBox span{
+
+    display:block;
+
+    color:#bca9cb;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+.infoBox strong{
+
+    display:block;
+
+    margin-top:3px;
+
+    font-size:23px;
+
+    color:#ffe05a;
+
+    text-shadow:
+        0 0 10px rgba(255,190,0,.55);
+}
+
+
+/* =========================================================
+   MASCHINE
+========================================================= */
+
+.machine{
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #42135e,
+            #220a31 45%,
+            #100514
+        );
+
+    border:3px solid #e8b93e;
+
+    border-radius:28px;
+
+    padding:20px;
+
     box-shadow:
-        inset 0 0 12px rgba(0,0,0,.5),
-        0 0 5px rgba(255,255,255,.15);
+
+        0 0 10px rgba(255,205,70,.45),
+        0 0 35px rgba(255,140,0,.25),
+
+        inset 0 0 25px rgba(0,0,0,.75),
+        inset 0 0 70px rgba(0,0,0,.3);
 }
 
-.symbol {
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 48px;
-    border-radius: 8px;
-    color: #181020;
+
+/* obere Dekorationslinie */
+
+.machine::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:12%;
+    right:12%;
+    top:7px;
+
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ffe56a,
+            transparent
+        );
+
+    box-shadow:
+        0 0 10px #ffd000;
+
 }
 
-.symbol.middle {
-    background: rgba(255,216,77,.35);
-    box-shadow: inset 0 0 10px rgba(255,180,0,.3);
+
+/* =========================================================
+   REELS
+========================================================= */
+
+.reels{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap:9px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #050207,
+            #12091a
+        );
+
+    padding:11px;
+
+    border-radius:18px;
+
+    border:2px solid #2d1638;
+
+    box-shadow:
+        inset 0 0 25px rgba(0,0,0,.9),
+        0 5px 20px rgba(0,0,0,.5);
+
 }
 
-.spinning .symbol {
-    animation: blur .12s linear infinite;
+
+/* =========================================================
+   WALZE
+========================================================= */
+
+.reel{
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff,
+            #eee8f3 45%,
+            #cbc2d2
+        );
+
+    border-radius:12px;
+
+    min-height:280px;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:space-around;
+
+    padding:5px;
+
+    overflow:hidden;
+
+    box-shadow:
+
+        inset 0 0 15px rgba(0,0,0,.55),
+
+        0 0 7px rgba(255,255,255,.2);
+
 }
 
-@keyframes blur {
-    0% {
-        transform: translateY(-8px);
-        opacity: .5;
+
+/* Glanz auf Walzen */
+
+.reel::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    top:0;
+
+    height:35%;
+
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.35),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   SYMBOLE
+========================================================= */
+
+.symbol{
+
+    height:82px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:49px;
+
+    border-radius:9px;
+
+    color:#17101c;
+
+    position:relative;
+
+    z-index:2;
+
+    transition:
+        transform .25s,
+        filter .25s;
+}
+
+.symbol.middle{
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,221,70,.5),
+            rgba(255,150,0,.18)
+        );
+
+    box-shadow:
+
+        inset 0 0 14px rgba(255,190,0,.35),
+
+        0 0 8px rgba(255,210,70,.15);
+
+}
+
+
+/* =========================================================
+   SPIN ANIMATION
+========================================================= */
+
+.spinning .symbol{
+
+    animation:
+        reelBlur .11s linear infinite;
+
+    filter:
+        blur(1px);
+
+}
+
+@keyframes reelBlur{
+
+    0%{
+        transform:
+            translateY(-10px)
+            scale(.97);
+
+        opacity:.55;
     }
-    50% {
-        transform: translateY(8px);
-        opacity: .8;
-    }
-    100% {
-        transform: translateY(-8px);
-        opacity: .5;
-    }
-}
 
-.win {
-    animation: winPulse .6s ease-in-out infinite alternate;
-}
+    50%{
+        transform:
+            translateY(10px)
+            scale(1.03);
 
-@keyframes winPulse {
-    from {
-        transform: scale(1);
-        box-shadow: 0 0 5px #ffd84d;
-    }
-    to {
-        transform: scale(1.08);
-        box-shadow: 0 0 25px #ffd84d;
-    }
-}
-
-.controls {
-    margin-top: 20px;
-}
-
-button {
-    border: none;
-    border-radius: 12px;
-    padding: 14px 28px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.spin {
-    background: linear-gradient(180deg,#ffe96b,#ffae00);
-    color: #281200;
-    box-shadow: 0 5px 0 #a55d00;
-    min-width: 220px;
-}
-
-.spin:hover {
-    transform: translateY(-2px);
-}
-
-.spin:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #a55d00;
-}
-
-.spin:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.reset {
-    margin-left: 10px;
-    background: #442052;
-    color: white;
-}
-
-.message {
-    min-height: 32px;
-    margin-top: 15px;
-    font-size: 21px;
-    font-weight: bold;
-    color: #ffd84d;
-}
-
-.progress {
-    margin-top: 15px;
-}
-
-.progressBar {
-    height: 12px;
-    background: #211329;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-.progressFill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg,#ff8a00,#ffe45e);
-    transition: width .4s;
-}
-
-.paytable {
-    margin-top: 20px;
-    background: rgba(255,255,255,.06);
-    border-radius: 15px;
-    padding: 15px;
-}
-
-.paytable h2 {
-    margin-top: 0;
-    color: #ffd84d;
-}
-
-.paytableGrid {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 8px;
-}
-
-.pay {
-    background: rgba(0,0,0,.2);
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.pay span {
-    font-size: 30px;
-}
-
-.pay strong {
-    display: block;
-    color: #ffd84d;
-}
-
-.bonus {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 10px;
-    background: rgba(255,216,77,.1);
-    color: #ffeeb0;
-}
-
-@media(max-width:700px) {
-    h1 {
-        font-size: 30px;
+        opacity:.8;
     }
 
-    .info {
-        grid-template-columns: repeat(2,1fr);
+    100%{
+        transform:
+            translateY(-10px)
+            scale(.97);
+
+        opacity:.55;
     }
 
-    .reels {
-        gap: 4px;
-        padding: 5px;
-    }
-
-    .reel {
-        min-height: 210px;
-    }
-
-    .symbol {
-        height: 63px;
-        font-size: 35px;
-    }
-
-    .paytableGrid {
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    button {
-        width: 100%;
-        margin: 5px 0 !important;
-    }
 }
+
+
+/* =========================================================
+   GEWINN
+========================================================= */
+
+.win{
+
+    animation:
+        winningSymbol .55s ease-in-out infinite alternate;
+
+    z-index:5;
+
+}
+
+@keyframes winningSymbol{
+
+    from{
+
+        transform:scale(1);
+
+        filter:
+            brightness(1.1);
+
+        box-shadow:
+            0 0 8px #ffe45c;
+    }
+
+    to{
+
+        transform:scale(1.1);
+
+        filter:
+            brightness(1.5);
+
+        box-shadow:
+            0 0 15px #fff,
+            0 0 35px #ffd000,
+            0 0 60px #ff8a00;
+    }
+
+}
+
+
+/* =========================================================
+   GEWINN-MODUS DER MASCHINE
+========================================================= */
+
+.machine.jackpot{
+
+    animation:
+        jackpotMachine .7s ease-in-out infinite alternate;
+
+}
+
+@keyframes jackpotMachine{
+
+    from{
+
+        box-shadow:
+            0 0 15px #ffd000,
+            0 0 40px rgba(255,130,0,.35),
+            inset 0 0 35px rgba(0,0,0,.7);
+
+    }
+
+    to{
+
+        box-shadow:
+            0 0 30px #fff,
+            0 0 70px #ffd000,
+            0 0 120px rgba(255,100,0,.55),
+            inset 0 0 35px rgba(0,0,0,.7);
+
+    }
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+
+    min-height:38px;
+
+    margin-top:17px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:21px;
+
+    font-weight:900;
+
+    color:#ffe15a;
+
+    text-shadow:
+        0 0 10px rgba(255,200,0,.55);
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.controls{
+
+    margin-top:12px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+button{
+
+    border:none;
+
+    border-radius:13px;
+
+    padding:15px 28px;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:
+        transform .15s,
+        box-shadow .15s,
+        filter .15s;
+
+}
+
+.spin{
+
+    min-width:235px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff078,
+            #ffc21b,
+            #e89000
+        );
+
+    color:#291400;
+
+    box-shadow:
+        0 5px 0 #9a5700,
+        0 0 20px rgba(255,190,0,.25);
+
+}
+
+.spin:hover{
+
+    transform:translateY(-3px);
+
+    filter:brightness(1.08);
+
+    box-shadow:
+        0 7px 0 #9a5700,
+        0 0 30px rgba(255,190,0,.5);
+
+}
+
+.spin:active{
+
+    transform:translateY(3px);
+
+    box-shadow:
+        0 2px 0 #9a5700;
+
+}
+
+.spin:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+.reset{
+
+    background:
+        linear-gradient(
+            180deg,
+            #65327b,
+            #3c1b4c
+        );
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,.15);
+
+}
+
+.reset:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(180,80,255,.25);
+
+}
+
+
+/* =========================================================
+   LEVEL FORTSCHRITT
+========================================================= */
+
+.progress{
+
+    margin-top:18px;
+
+    color:#d9c9e7;
+
+    font-size:14px;
+}
+
+.progressTop{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:6px;
+
+}
+
+.progressBar{
+
+    height:14px;
+
+    background:#1c1025;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        inset 0 2px 5px rgba(0,0,0,.6);
+
+}
+
+.progressFill{
+
+    height:100%;
+
+    width:0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff6a00,
+            #ffd83d,
+            #fff49a
+        );
+
+    border-radius:30px;
+
+    transition:
+        width .45s ease;
+
+    box-shadow:
+        0 0 12px #ffae00;
+
+}
+
+
+/* =========================================================
+   HINWEIS
+========================================================= */
+
+.bonus{
+
+    margin-top:15px;
+
+    padding:12px 15px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,216,77,.08),
+            rgba(180,80,255,.08)
+        );
+
+    border:1px solid rgba(255,216,77,.12);
+
+    color:#ffeeb0;
+
+    font-size:14px;
+
+}
+
+
+/* =========================================================
+   PAYTABLE
+========================================================= */
+
+.paytable{
+
+    margin-top:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.025)
+        );
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:18px;
+
+    padding:18px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.25);
+
+}
+
+.paytable h2{
+
+    margin:0 0 15px;
+
+    color:#ffe05a;
+
+    text-shadow:
+        0 0 10px rgba(255,190,0,.45);
+
+}
+
+.paytableGrid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:9px;
+
+}
+
+.pay{
+
+    background:
+        rgba(0,0,0,.22);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    padding:11px;
+
+    border-radius:12px;
+
+    transition:.2s;
+}
+
+.pay:hover{
+
+    transform:translateY(-3px);
+
+    border-color:
+        rgba(255,216,77,.3);
+
+}
+
+.pay span{
+
+    display:block;
+
+    font-size:34px;
+
+    margin-bottom:4px;
+
+}
+
+.pay strong{
+
+    display:block;
+
+    color:#ffe05a;
+
+    font-size:14px;
+
+}
+
+.pay small{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:#d8c9df;
+
+}
+
+
+/* =========================================================
+   5ER JACKPOT
+========================================================= */
+
+.jackpotText{
+
+    position:fixed;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%)
+        scale(.5);
+
+    z-index:100;
+
+    pointer-events:none;
+
+    opacity:0;
+
+    font-size:clamp(42px,10vw,100px);
+
+    font-weight:1000;
+
+    color:#fff;
+
+    text-align:center;
+
+    text-shadow:
+        0 0 10px #fff,
+        0 0 30px #ffd000,
+        0 0 60px #ff8500,
+        0 0 100px #ff4500;
+
+}
+
+.jackpotText.show{
+
+    animation:
+        jackpotTextAnimation 1.6s ease-out forwards;
+
+}
+
+@keyframes jackpotTextAnimation{
+
+    0%{
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.3)
+            rotate(-5deg);
+
+    }
+
+    20%{
+
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.15)
+            rotate(3deg);
+
+    }
+
+    40%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(1)
+            rotate(0);
+
+    }
+
+    80%{
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.2);
+
+    }
+
+}
+
+
+/* =========================================================
+   KONFETTI
+========================================================= */
+
+.confetti{
+
+    position:fixed;
+
+    top:-20px;
+
+    width:9px;
+    height:15px;
+
+    z-index:90;
+
+    pointer-events:none;
+
+    animation:
+        confettiFall 1.7s linear forwards;
+
+}
+
+@keyframes confettiFall{
+
+    0%{
+
+        transform:
+            translateY(-20px)
+            rotate(0);
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+
+        opacity:0;
+
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:700px){
+
+    body{
+
+        padding:10px;
+
+        align-items:flex-start;
+
+    }
+
+    .game{
+
+        margin-top:10px;
+
+    }
+
+    h1{
+
+        font-size:31px;
+
+        letter-spacing:1px;
+
+    }
+
+    .subtitle{
+
+        font-size:12px;
+
+        margin-bottom:13px;
+
+    }
+
+    .info{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:7px;
+
+    }
+
+    .infoBox{
+
+        padding:9px;
+
+    }
+
+    .infoBox strong{
+
+        font-size:20px;
+
+    }
+
+    .machine{
+
+        padding:10px;
+
+        border-radius:20px;
+
+    }
+
+    .reels{
+
+        gap:3px;
+
+        padding:5px;
+
+        border-radius:13px;
+
+    }
+
+    .reel{
+
+        min-height:205px;
+
+        padding:3px;
+
+        border-radius:8px;
+
+    }
+
+    .symbol{
+
+        height:59px;
+
+        font-size:32px;
+
+    }
+
+    .message{
+
+        font-size:17px;
+
+        min-height:42px;
+
+    }
+
+    .controls{
+
+        gap:5px;
+
+    }
+
+    button{
+
+        width:100%;
+
+        margin:2px 0;
+
+    }
+
+    .paytableGrid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .pay{
+
+        padding:9px;
+
+    }
+
+}
+
+
+/* sehr kleine Displays */
+
+@media(max-width:390px){
+
+    .reel{
+
+        min-height:175px;
+
+    }
+
+    .symbol{
+
+        height:51px;
+
+        font-size:27px;
+
+    }
+
+    .machine{
+
+        padding:7px;
+
+    }
+
+    .reels{
+
+        padding:4px;
+
+    }
+
+}
+
 </style>
 </head>
 
+
 <body>
+
 
 <div class="game">
 
+
     <h1>🎰 Moonshiner Reels</h1>
+
     <div class="subtitle">
-        Arcade-Reels • Punkte sammeln • Level aufsteigen
+        NEON ARCADE • 5 WALZEN • 5 GLEICHE FÜR DEN TREFFER
     </div>
+
+
+    <!-- =====================================================
+         INFO
+    ====================================================== -->
 
     <div class="info">
 
         <div class="infoBox">
-            <span>Punkte</span>
-            <strong id="score">0</strong>
+
+            <span>Arcade-Punkte</span>
+
+            <strong id="score">
+                1000
+            </strong>
+
         </div>
 
+
         <div class="infoBox">
+
             <span>Level</span>
-            <strong id="level">1</strong>
+
+            <strong id="level">
+                1
+            </strong>
+
         </div>
 
+
         <div class="infoBox">
+
             <span>Combo</span>
-            <strong id="combo">0</strong>
+
+            <strong id="combo">
+                0
+            </strong>
+
         </div>
 
+
         <div class="infoBox">
+
             <span>Highscore</span>
-            <strong id="highscore">0</strong>
+
+            <strong id="highscore">
+                1000
+            </strong>
+
         </div>
 
     </div>
 
-    <div class="machine">
+
+    <!-- =====================================================
+         MASCHINE
+    ====================================================== -->
+
+    <div class="machine" id="machine">
+
 
         <div class="reels" id="reels">
 
-            <div class="reel">
-                <div class="symbol">🍒</div>
-                <div class="symbol middle">🍋</div>
-                <div class="symbol">⭐</div>
-            </div>
 
             <div class="reel">
-                <div class="symbol">🍋</div>
-                <div class="symbol middle">💎</div>
-                <div class="symbol">🍀</div>
+
+                <div class="symbol">
+                    🍒
+                </div>
+
+                <div class="symbol middle">
+                    🍋
+                </div>
+
+                <div class="symbol">
+                    ⭐
+                </div>
+
             </div>
 
-            <div class="reel">
-                <div class="symbol">⭐</div>
-                <div class="symbol middle">🍒</div>
-                <div class="symbol">🔔</div>
-            </div>
 
             <div class="reel">
-                <div class="symbol">🍀</div>
-                <div class="symbol middle">🔔</div>
-                <div class="symbol">💎</div>
+
+                <div class="symbol">
+                    🍋
+                </div>
+
+                <div class="symbol middle">
+                    💎
+                </div>
+
+                <div class="symbol">
+                    🍀
+                </div>
+
             </div>
 
+
             <div class="reel">
-                <div class="symbol">🔔</div>
-                <div class="symbol middle">⭐</div>
-                <div class="symbol">🍒</div>
+
+                <div class="symbol">
+                    ⭐
+                </div>
+
+                <div class="symbol middle">
+                    🍒
+                </div>
+
+                <div class="symbol">
+                    🔔
+                </div>
+
             </div>
+
+
+            <div class="reel">
+
+                <div class="symbol">
+                    🍀
+                </div>
+
+                <div class="symbol middle">
+                    🔔
+                </div>
+
+                <div class="symbol">
+                    💎
+                </div>
+
+            </div>
+
+
+            <div class="reel">
+
+                <div class="symbol">
+                    🔔
+                </div>
+
+                <div class="symbol middle">
+                    ⭐
+                </div>
+
+                <div class="symbol">
+                    🍒
+                </div>
+
+            </div>
+
 
         </div>
+
 
         <div class="message" id="message">
-            Sammle Punkte durch Kombinationen!
+
+            Sammle 5 gleiche Symbole!
+
         </div>
+
+
+        <!-- =================================================
+             BUTTONS
+        ================================================== -->
 
         <div class="controls">
 
-            <button class="spin" id="spinButton" onclick="spin()">
+            <button
+                class="spin"
+                id="spinButton"
+                onclick="spin()">
+
                 🎰 DREHEN
+
             </button>
 
-            <button class="reset" onclick="resetGame()">
+
+            <button
+                class="reset"
+                onclick="resetGame()">
+
                 ↻ Neustart
+
             </button>
 
         </div>
+
+
+        <!-- =================================================
+             LEVEL
+        ================================================== -->
 
         <div class="progress">
 
-            <div>
-                Nächstes Level:
-                <span id="levelProgress">0 / 500</span>
+            <div class="progressTop">
+
+                <span>
+                    Nächstes Level
+                </span>
+
+                <span id="levelProgress">
+                    0 / 500
+                </span>
+
             </div>
+
 
             <div class="progressBar">
-                <div class="progressFill" id="progressFill"></div>
+
+                <div
+                    class="progressFill"
+                    id="progressFill">
+                </div>
+
             </div>
 
         </div>
 
+
         <div class="bonus">
-            ⭐ 3 gleiche Symbole = Bonus • 💎 Wild • 🍀 Combo-Bonus
+
+            ⭐ <b>Nur 5 gleiche Symbole zählen!</b>
+            &nbsp; • &nbsp;
+            💎 Diamant = Wild
+            &nbsp; • &nbsp;
+            🔥 Treffer hintereinander = Combo-Bonus
+
         </div>
+
 
     </div>
 
+
+    <!-- =====================================================
+         PUNKTE-TABELLE
+    ====================================================== -->
+
     <div class="paytable">
 
-        <h2>⭐ Punkte-Kombinationen</h2>
+        <h2>
+            ⭐ 5er-Kombinationen
+        </h2>
+
 
         <div class="paytableGrid">
 
+
             <div class="pay">
+
                 <span>🍒</span>
-                <strong>3 × Kirsche</strong>
-                +100 Punkte
+
+                <strong>
+                    5 × Kirsche
+                </strong>
+
+                <small>
+                    +250 Punkte
+                </small>
+
             </div>
 
+
             <div class="pay">
+
+                <span>🍋</span>
+
+                <strong>
+                    5 × Zitrone
+                </strong>
+
+                <small>
+                    +300 Punkte
+                </small>
+
+            </div>
+
+
+            <div class="pay">
+
                 <span>⭐</span>
-                <strong>3 × Stern</strong>
-                +150 Punkte
+
+                <strong>
+                    5 × Stern
+                </strong>
+
+                <small>
+                    +450 Punkte
+                </small>
+
             </div>
 
-            <div class="pay">
-                <span>💎</span>
-                <strong>3 × Diamant</strong>
-                +250 Punkte
-            </div>
 
             <div class="pay">
+
+                <span>🍀</span>
+
+                <strong>
+                    5 × Kleeblatt
+                </strong>
+
+                <small>
+                    +500 Punkte
+                </small>
+
+            </div>
+
+
+            <div class="pay">
+
                 <span>🔔</span>
-                <strong>3 × Glocke</strong>
-                +200 Punkte
+
+                <strong>
+                    5 × Glocke
+                </strong>
+
+                <small>
+                    +550 Punkte
+                </small>
+
             </div>
+
+
+            <div class="pay">
+
+                <span>💎</span>
+
+                <strong>
+                    5 × Diamant
+                </strong>
+
+                <small>
+                    +750 Punkte
+                </small>
+
+            </div>
+
+
+            <div class="pay">
+
+                <span>🍇</span>
+
+                <strong>
+                    5 × Trauben
+                </strong>
+
+                <small>
+                    +350 Punkte
+                </small>
+
+            </div>
+
+
+            <div class="pay">
+
+                <span>🍉</span>
+
+                <strong>
+                    5 × Melone
+                </strong>
+
+                <small>
+                    +400 Punkte
+                </small>
+
+            </div>
+
 
         </div>
 
@@ -433,9 +1590,27 @@ button {
 
 </div>
 
+
+<!-- Jackpot-Text -->
+
+<div
+    class="jackpotText"
+    id="jackpotText">
+
+    ⭐ 5 GLEICHE! ⭐
+
+</div>
+
+
 <script>
 
+
+/* =========================================================
+   SYMBOLE
+========================================================= */
+
 const symbols = [
+
     "🍒",
     "🍋",
     "⭐",
@@ -444,99 +1619,246 @@ const symbols = [
     "💎",
     "🍇",
     "🍉"
+
 ];
 
-const reels = document.querySelectorAll(".reel");
 
-let score = 0;
-let level = 1;
-let combo = 0;
-let spinning = false;
+/* =========================================================
+   PUNKTWERTE
+========================================================= */
+
+const payouts = {
+
+    "🍒":250,
+    "🍋":300,
+    "⭐":450,
+    "🍀":500,
+    "🔔":550,
+    "💎":750,
+    "🍇":350,
+    "🍉":400
+
+};
+
+
+/* =========================================================
+   ELEMENTE
+========================================================= */
+
+const reels =
+    document.querySelectorAll(".reel");
+
+const machine =
+    document.getElementById("machine");
+
+const spinButton =
+    document.getElementById("spinButton");
+
+const message =
+    document.getElementById("message");
+
+const jackpotText =
+    document.getElementById("jackpotText");
+
+
+/* =========================================================
+   SPIELDATEN
+========================================================= */
+
+let score =
+    Number(
+        localStorage.getItem(
+            "moonshinerScore"
+        )
+    );
+
+if (!Number.isFinite(score) || score < 1000){
+
+    score = 1000;
+
+}
+
+
+let level =
+    Number(
+        localStorage.getItem(
+            "moonshinerLevel"
+        )
+    );
+
+if (!Number.isFinite(level) || level < 1){
+
+    level = 1;
+
+}
+
+
+let combo =
+    Number(
+        localStorage.getItem(
+            "moonshinerCombo"
+        )
+    );
+
+if (!Number.isFinite(combo) || combo < 0){
+
+    combo = 0;
+
+}
+
 
 let highscore =
-    Number(localStorage.getItem("moonshinerHighscore")) || 0;
+    Number(
+        localStorage.getItem(
+            "moonshinerHighscore"
+        )
+    );
 
-document.getElementById("highscore").textContent = highscore;
+if (!Number.isFinite(highscore)){
+
+    highscore = 1000;
+
+}
 
 
-/* --------------------------------
-   ZUFALLSSYMBOL
--------------------------------- */
+let spinning = false;
 
-function randomSymbol() {
+
+/* =========================================================
+   ZUFALL
+========================================================= */
+
+function randomSymbol(){
+
     return symbols[
-        Math.floor(Math.random() * symbols.length)
+        Math.floor(
+            Math.random() *
+            symbols.length
+        )
     ];
+
 }
 
 
-/* --------------------------------
+/* =========================================================
    LEVELZIEL
--------------------------------- */
+========================================================= */
 
-function levelTarget() {
+function levelTarget(){
 
-    return 500 + ((level - 1) * 400);
+    return 500 +
+        ((level - 1) * 500);
 
 }
 
 
-/* --------------------------------
-   WALZEN DREHEN
--------------------------------- */
+/* =========================================================
+   NÄCHSTES LEVEL
+========================================================= */
 
-function spin() {
+function previousLevelTarget(){
 
-    if (spinning) return;
+    if(level === 1){
+
+        return 0;
+
+    }
+
+    return 500 +
+        ((level - 2) * 500);
+
+}
+
+
+/* =========================================================
+   SPIN
+========================================================= */
+
+function spin(){
+
+    if(spinning){
+
+        return;
+
+    }
+
 
     spinning = true;
 
-    const button =
-        document.getElementById("spinButton");
+    spinButton.disabled = true;
 
-    button.disabled = true;
 
-    document.getElementById("message").textContent =
+    message.textContent =
         "🎰 Die Walzen drehen...";
+
+
+    machine.classList.remove(
+        "jackpot"
+    );
+
+
+    /* alte Gewinnmarkierungen entfernen */
 
     reels.forEach(reel => {
 
-        reel.classList.add("spinning");
+        reel.classList.add(
+            "spinning"
+        );
 
-        reel.querySelectorAll(".symbol")
-            .forEach(symbol => {
-                symbol.classList.remove("win");
-            });
+
+        reel.querySelectorAll(
+            ".symbol"
+        ).forEach(cell => {
+
+            cell.classList.remove(
+                "win"
+            );
+
+        });
 
     });
 
 
     /*
-       Unterschiedliche Stopzeiten,
-       damit die Walzen nacheinander
-       stehen bleiben.
+       Jede Walze bekommt ihre eigene
+       Stopzeit.
     */
 
-    reels.forEach((reel, index) => {
+    reels.forEach(
+        (reel,index) => {
 
-        setTimeout(() => {
+            setTimeout(() => {
 
-            reel.classList.remove("spinning");
 
-            const cells =
-                reel.querySelectorAll(".symbol");
+                reel.classList.remove(
+                    "spinning"
+                );
 
-            cells.forEach(cell => {
 
-                cell.textContent =
-                    randomSymbol();
+                const cells =
+                    reel.querySelectorAll(
+                        ".symbol"
+                    );
 
-            });
 
-        }, 900 + index * 350);
+                cells.forEach(cell => {
 
-    });
+                    cell.textContent =
+                        randomSymbol();
 
+                });
+
+
+            },900 + index * 350);
+
+        }
+    );
+
+
+    /*
+       Nach dem letzten Reel
+       Ergebnis prüfen.
+    */
 
     setTimeout(() => {
 
@@ -544,56 +1866,92 @@ function spin() {
 
         spinning = false;
 
-        button.disabled = false;
+        spinButton.disabled = false;
 
-    }, 900 + reels.length * 350 + 100);
+    },
+    900 +
+    reels.length * 350 +
+    150);
 
 }
 
 
-/* --------------------------------
-   ERGEBNIS AUSWERTEN
--------------------------------- */
+/* =========================================================
+   ERGEBNIS
+========================================================= */
 
-function evaluate() {
+function evaluate(){
 
     const grid = [];
+
 
     reels.forEach(reel => {
 
         grid.push(
-            [...reel.querySelectorAll(".symbol")]
-            .map(x => x.textContent)
+
+            [
+                ...reel.querySelectorAll(
+                    ".symbol"
+                )
+            ].map(
+                cell => cell.textContent
+            )
+
         );
 
     });
 
 
-    let gained = 0;
+    let totalPoints = 0;
+
+    let totalWins = 0;
+
     let winningCells = [];
 
 
     /*
-       5 horizontale Linien
+       Die drei horizontalen Linien
+       werden geprüft.
+
+       Wichtig:
+       Es gibt NUR einen Treffer,
+       wenn 5 Symbole zusammenpassen.
     */
 
-    for (let row = 0; row < 3; row++) {
+    for(let row = 0; row < 3; row++){
 
-        const line =
-            grid.map(column => column[row]);
+        const line = [
+
+            grid[0][row],
+            grid[1][row],
+            grid[2][row],
+            grid[3][row],
+            grid[4][row]
+
+        ];
+
 
         const result =
             evaluateLine(line);
 
-        gained += result.points;
 
-        if (result.count >= 3) {
+        if(result.win){
 
-            for (let col = 0; col < 5; col++) {
+            totalWins++;
+
+            totalPoints +=
+                result.points;
+
+
+            for(let col = 0; col < 5; col++){
 
                 winningCells.push(
+
                     reels[col]
-                    .querySelectorAll(".symbol")[row]
+                    .querySelectorAll(
+                        ".symbol"
+                    )[row]
+
                 );
 
             }
@@ -604,227 +1962,462 @@ function evaluate() {
 
 
     /*
-       Mittlere Diagonalen
+       Diagonale 1
     */
 
     const diagonal1 = [
+
         grid[0][0],
         grid[1][1],
         grid[2][2],
         grid[3][1],
         grid[4][0]
+
     ];
 
+
+    const d1 =
+        evaluateLine(
+            diagonal1
+        );
+
+
+    /*
+       Diagonale 2
+    */
+
     const diagonal2 = [
+
         grid[0][2],
         grid[1][1],
         grid[2][0],
         grid[3][1],
         grid[4][2]
+
     ];
 
 
-    const d1 = evaluateLine(diagonal1);
-    const d2 = evaluateLine(diagonal2);
-
-    gained += d1.points + d2.points;
-
-
-    /*
-       Combo-System
-    */
-
-    if (gained > 0) {
-
-        combo++;
-
-        const comboBonus =
-            Math.min(combo * 25, 300);
-
-        gained += comboBonus;
-
-    } else {
-
-        combo = 0;
-
-    }
+    const d2 =
+        evaluateLine(
+            diagonal2
+        );
 
 
-    /*
-       Punkte vergeben
-    */
+    if(d1.win){
 
-    score += gained;
+        totalWins++;
+
+        totalPoints +=
+            d1.points;
 
 
-    if (score > highscore) {
+        winningCells.push(
 
-        highscore = score;
+            reels[0]
+            .querySelectorAll(".symbol")[0],
 
-        localStorage.setItem(
-            "moonshinerHighscore",
-            highscore
+            reels[1]
+            .querySelectorAll(".symbol")[1],
+
+            reels[2]
+            .querySelectorAll(".symbol")[2],
+
+            reels[3]
+            .querySelectorAll(".symbol")[1],
+
+            reels[4]
+            .querySelectorAll(".symbol")[0]
+
         );
 
     }
 
 
-    /*
-       Gewinner hervorheben
-    */
+    if(d2.win){
 
-    winningCells.forEach(cell => {
+        totalWins++;
 
-        cell.classList.add("win");
-
-    });
+        totalPoints +=
+            d2.points;
 
 
-    /*
-       Anzeige
-    */
+        winningCells.push(
 
-    if (gained > 0) {
+            reels[0]
+            .querySelectorAll(".symbol")[2],
 
-        document.getElementById("message").textContent =
-            "🎉 +" + gained +
-            " Punkte! Combo x" + combo;
+            reels[1]
+            .querySelectorAll(".symbol")[1],
 
-    } else {
+            reels[2]
+            .querySelectorAll(".symbol")[0],
 
-        document.getElementById("message").textContent =
-            "Kein Treffer – nächste Runde!";
+            reels[3]
+            .querySelectorAll(".symbol")[1],
+
+            reels[4]
+            .querySelectorAll(".symbol")[2]
+
+        );
 
     }
 
 
-    checkLevel();
+    /* =====================================================
+       TREFFER
+    ====================================================== */
+
+    if(totalWins > 0){
+
+        combo++;
+
+
+        /*
+           Combo-Bonus
+        */
+
+        const comboBonus =
+            Math.min(
+                combo * 25,
+                300
+            );
+
+
+        totalPoints +=
+            comboBonus;
+
+
+        score +=
+            totalPoints;
+
+
+        if(score > highscore){
+
+            highscore =
+                score;
+
+        }
+
+
+        /*
+           Gewinnzellen markieren
+        */
+
+        winningCells.forEach(
+            cell => {
+
+                cell.classList.add(
+                    "win"
+                );
+
+            }
+        );
+
+
+        /*
+           Große Animation
+        */
+
+        machine.classList.add(
+            "jackpot"
+        );
+
+
+        showJackpot();
+
+
+        createConfetti();
+
+
+        message.textContent =
+            "🎉 +" +
+            totalPoints +
+            " Punkte • " +
+            "Combo x" +
+            combo;
+
+
+        /*
+           Level prüfen
+        */
+
+        checkLevel();
+
+
+    }else{
+
+
+        /*
+           Kein Treffer:
+           Combo zurücksetzen.
+        */
+
+        combo = 0;
+
+
+        message.textContent =
+            "😐 Kein 5er-Treffer – weiter geht's!";
+
+    }
+
+
+    saveGame();
 
     updateUI();
 
 }
 
 
-/* --------------------------------
-   LINIE AUSWERTEN
--------------------------------- */
+/* =========================================================
+   LINIE PRÜFEN
+========================================================= */
 
-function evaluateLine(line) {
-
-    let best = 0;
+function evaluateLine(line){
 
     /*
-       Für jedes Symbol prüfen,
-       wie viele davon vorkommen.
+       Wir suchen ein Symbol,
+       das auf allen 5 Positionen
+       vorhanden ist.
+
+       💎 funktioniert als Wild.
     */
 
-    symbols.forEach(symbol => {
+    for(
+        const symbol of symbols
+    ){
 
-        let count = 0;
+        let match = true;
 
-        line.forEach(x => {
 
-            if (x === symbol || x === "💎") {
+        for(
+            const current of line
+        ){
 
-                count++;
+            if(
+                current !== symbol &&
+                current !== "💎"
+            ){
+
+                match = false;
+
+                break;
 
             }
 
-        });
-
-        best = Math.max(best, count);
-
-    });
+        }
 
 
-    /*
-       Punkte abhängig von
-       der Anzahl
-    */
+        if(match){
 
-    let points = 0;
+            return {
 
-    if (best === 3)
-        points = 100;
+                win:true,
 
-    if (best === 4)
-        points = 250;
+                points:
+                    payouts[symbol]
 
-    if (best === 5)
-        points = 600;
+            };
+
+        }
+
+    }
 
 
     return {
-        count: best,
-        points: points
+
+        win:false,
+
+        points:0
+
     };
 
 }
 
 
-/* --------------------------------
+/* =========================================================
    LEVELSYSTEM
--------------------------------- */
+========================================================= */
 
-function checkLevel() {
+function checkLevel(){
 
-    const target = levelTarget();
+    let leveledUp = false;
 
-    if (score >= target) {
+
+    while(
+        score >= levelTarget()
+    ){
 
         level++;
 
-        document.getElementById("message").textContent =
-            "🚀 LEVEL " + level +
-            " erreicht! Bonus aktiviert!";
+        score +=
+            level * 100;
 
-        /*
-           Levelbonus als reine
-           Arcade-Punkte
-        */
+        leveledUp = true;
 
-        score += level * 100;
+    }
+
+
+    if(leveledUp){
+
+        message.textContent =
+            "🚀 LEVEL " +
+            level +
+            " erreicht! +" +
+            (level * 100) +
+            " Level-Bonus!";
 
     }
 
 }
 
 
-/* --------------------------------
-   UI AKTUALISIEREN
--------------------------------- */
+/* =========================================================
+   JACKPOT-ANIMATION
+========================================================= */
 
-function updateUI() {
+function showJackpot(){
 
-    document.getElementById("score")
-        .textContent = score;
-
-    document.getElementById("level")
-        .textContent = level;
-
-    document.getElementById("combo")
-        .textContent = combo;
-
-    document.getElementById("highscore")
-        .textContent = highscore;
+    jackpotText.classList.remove(
+        "show"
+    );
 
 
-    const previousTarget =
-        level === 1
-        ? 0
-        : levelTarget() - 400;
+    /*
+       Browser-Reflow erzwingen,
+       damit die Animation erneut läuft.
+    */
+
+    void jackpotText.offsetWidth;
+
+
+    jackpotText.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   KONFETTI
+========================================================= */
+
+function createConfetti(){
+
+    const amount = 55;
+
+
+    for(
+        let i = 0;
+        i < amount;
+        i++
+    ){
+
+        const piece =
+            document.createElement(
+                "div"
+            );
+
+
+        piece.className =
+            "confetti";
+
+
+        piece.style.left =
+            Math.random() * 100 +
+            "vw";
+
+
+        piece.style.width =
+            (5 + Math.random() * 7) +
+            "px";
+
+
+        piece.style.height =
+            (8 + Math.random() * 10) +
+            "px";
+
+
+        piece.style.animationDelay =
+            Math.random() * .5 +
+            "s";
+
+
+        piece.style.transform =
+            "rotate(" +
+            Math.random() * 360 +
+            "deg)";
+
+
+        document.body.appendChild(
+            piece
+        );
+
+
+        setTimeout(() => {
+
+            piece.remove();
+
+        },2300);
+
+    }
+
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    document.getElementById(
+        "score"
+    ).textContent =
+        score.toLocaleString("de-DE");
+
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        level;
+
+
+    document.getElementById(
+        "combo"
+    ).textContent =
+        combo;
+
+
+    document.getElementById(
+        "highscore"
+    ).textContent =
+        highscore.toLocaleString(
+            "de-DE"
+        );
+
+
+    /*
+       Level-Fortschritt
+    */
+
+    const previous =
+        previousLevelTarget();
+
 
     const target =
         levelTarget();
 
+
     const progress =
         Math.max(
             0,
-            score - previousTarget
+            score - previous
         );
 
+
     const needed =
-        target - previousTarget;
+        target - previous;
+
 
     const percentage =
         Math.min(
@@ -833,48 +2426,120 @@ function updateUI() {
         );
 
 
-    document.getElementById("levelProgress")
-        .textContent =
-        progress + " / " + needed;
+    document.getElementById(
+        "levelProgress"
+    ).textContent =
+        progress.toLocaleString(
+            "de-DE"
+        ) +
+        " / " +
+        needed.toLocaleString(
+            "de-DE"
+        );
 
-    document.getElementById("progressFill")
-        .style.width =
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
         percentage + "%";
 
 }
 
 
-/* --------------------------------
+/* =========================================================
+   SPIEL SPEICHERN
+========================================================= */
+
+function saveGame(){
+
+    localStorage.setItem(
+        "moonshinerScore",
+        score
+    );
+
+
+    localStorage.setItem(
+        "moonshinerLevel",
+        level
+    );
+
+
+    localStorage.setItem(
+        "moonshinerCombo",
+        combo
+    );
+
+
+    localStorage.setItem(
+        "moonshinerHighscore",
+        highscore
+    );
+
+}
+
+
+/* =========================================================
    NEUSTART
--------------------------------- */
+========================================================= */
 
-function resetGame() {
+function resetGame(){
 
-    score = 0;
+    if(spinning){
+
+        return;
+
+    }
+
+
+    score = 1000;
+
     level = 1;
+
     combo = 0;
 
-    document.getElementById("message").textContent =
-        "Spiel zurückgesetzt! Viel Erfolg.";
+
+    /*
+       Highscore bleibt erhalten.
+    */
+
 
     reels.forEach(reel => {
 
-        reel.querySelectorAll(".symbol")
-            .forEach(cell => {
+        reel.querySelectorAll(
+            ".symbol"
+        ).forEach(cell => {
 
-                cell.classList.remove("win");
+            cell.classList.remove(
+                "win"
+            );
 
-                cell.textContent =
-                    randomSymbol();
+            cell.textContent =
+                randomSymbol();
 
-            });
+        });
 
     });
+
+
+    machine.classList.remove(
+        "jackpot"
+    );
+
+
+    message.textContent =
+        "Neustart! Du beginnst wieder mit 1000 Punkten.";
+
+
+    saveGame();
 
     updateUI();
 
 }
 
+
+/* =========================================================
+   START
+========================================================= */
 
 updateUI();
 
@@ -882,4 +2547,3 @@ updateUI();
 
 </body>
 </html>
-```
