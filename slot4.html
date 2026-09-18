@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Moonshiner Reels</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% 0%, #29104d 0%, #090b16 42%, #030409 100%);
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    display:flex;
+    justify-content:center;
+    overflow-x:hidden;
+}
+
+.game{
+    width:100%;
+    max-width:1100px;
+    padding:18px 12px 40px;
+}
+
+/* =========================================================
+   TITEL
+========================================================= */
+
+.logo{
+    text-align:center;
+    margin-bottom:18px;
+}
+
+.logo h1{
+    margin:0;
+    font-size:clamp(30px,7vw,62px);
+    letter-spacing:4px;
+
+    text-shadow:
+        0 0 5px #00eaff,
+        0 0 15px #00eaff,
+        0 0 30px #b000ff,
+        0 0 50px #ff00aa;
+}
+
+.logo p{
+    margin:6px 0 0;
+    color:#aaa;
+    font-size:13px;
+    letter-spacing:3px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:13px;
+}
+
+.statusBox{
+    background:rgba(10,15,30,.9);
+    border:1px solid #293354;
+    border-radius:12px;
+    padding:10px 6px;
+    text-align:center;
+}
+
+.statusLabel{
+    color:#888;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.statusValue{
+    margin-top:4px;
+    color:#00eaff;
+    font-size:23px;
+    font-weight:bold;
+    text-shadow:0 0 10px #00eaff;
+}
+
+/* =========================================================
+   MODUS
+========================================================= */
+
+.modeDisplay{
+    text-align:center;
+    margin-bottom:12px;
+}
+
+.modeBadge{
+    display:inline-block;
+    padding:7px 18px;
+    border-radius:30px;
+    background:#10162a;
+    border:1px solid #39415e;
+    color:#aaa;
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.modeEasy{
+    color:#39ff88;
+    border-color:#39ff88;
+    box-shadow:0 0 15px rgba(57,255,136,.25);
+}
+
+.modeNormal{
+    color:#b96cff;
+    border-color:#b96cff;
+    box-shadow:0 0 15px rgba(185,108,255,.25);
+}
+
+/* =========================================================
+   AUTOMAT
+========================================================= */
+
+.machine{
+    position:relative;
+    padding:11px;
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,234,255,.12),
+            rgba(180,0,255,.12),
+            rgba(255,0,170,.12)
+        );
+
+    border:2px solid #252d55;
+
+    box-shadow:
+        0 0 20px rgba(0,234,255,.15),
+        0 0 40px rgba(180,0,255,.1),
+        inset 0 0 30px rgba(0,0,0,.6);
+}
+
+.reels{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+}
+
+.reel{
+    position:relative;
+    height:270px;
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #060810,
+            #11172a 50%,
+            #060810
+        );
+
+    border:2px solid #30395e;
+    border-radius:13px;
+
+    box-shadow:
+        inset 0 0 20px #000,
+        0 0 12px rgba(0,234,255,.08);
+}
+
+.reel::before,
+.reel::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    height:35%;
+    z-index:5;
+    pointer-events:none;
+}
+
+.reel::before{
+    top:0;
+    background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,.7),
+        rgba(0,0,0,0)
+    );
+}
+
+.reel::after{
+    bottom:0;
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,.7),
+        rgba(0,0,0,0)
+    );
+}
+
+.reelInner{
+    width:100%;
+    transform:translate3d(0,0,0);
+    will-change:transform;
+}
+
+.symbol{
+    height:90px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:52px;
+    line-height:1;
+
+    filter:drop-shadow(0 0 4px rgba(255,255,255,.35));
+}
+
+.payline{
+    position:absolute;
+    z-index:10;
+
+    left:0;
+    right:0;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    height:90px;
+
+    border-top:2px solid rgba(0,234,255,.7);
+    border-bottom:2px solid rgba(0,234,255,.7);
+
+    box-shadow:
+        0 0 8px rgba(0,234,255,.5),
+        inset 0 0 15px rgba(0,234,255,.05);
+
+    pointer-events:none;
+}
+
+.winHighlight{
+    animation:winPulse .45s ease-in-out infinite alternate;
+}
+
+@keyframes winPulse{
+
+    from{
+        transform:scale(1);
+        filter:drop-shadow(0 0 4px #fff);
+    }
+
+    to{
+        transform:scale(1.15);
+        filter:
+            drop-shadow(0 0 8px #fff)
+            drop-shadow(0 0 18px #00eaff);
+    }
+
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.controls{
+    margin-top:16px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+
+.spinButton{
+    width:min(420px,90%);
+
+    padding:17px 30px;
+
+    border:0;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00cfff,
+            #8d32ff,
+            #ff00a8
+        );
+
+    color:white;
+
+    font-size:20px;
+    font-weight:bold;
+    letter-spacing:2px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 0 15px rgba(0,234,255,.35),
+        0 0 30px rgba(180,0,255,.2);
+
+    transition:.15s;
+}
+
+.spinButton:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(0,234,255,.6),
+        0 0 40px rgba(180,0,255,.35);
+}
+
+.spinButton:active{
+    transform:scale(.97);
+}
+
+.spinButton:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.secondaryButtons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+}
+
+.smallButton{
+    background:#10172a;
+    color:#bbb;
+
+    border:1px solid #30395e;
+    border-radius:9px;
+
+    padding:9px 15px;
+
+    cursor:pointer;
+}
+
+.smallButton:hover{
+    color:white;
+    border-color:#00eaff;
+}
+
+/* =========================================================
+   ERGEBNIS
+========================================================= */
+
+.result{
+    min-height:55px;
+
+    margin-top:15px;
+    padding:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    background:rgba(10,15,30,.85);
+
+    border:1px solid #242d50;
+    border-radius:12px;
+
+    color:#aaa;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.result.win{
+    color:#39ff88;
+    border-color:#39ff88;
+
+    text-shadow:0 0 12px #39ff88;
+}
+
+.result.bigWin{
+    color:#ffd84d;
+    border-color:#ffd84d;
+
+    text-shadow:
+        0 0 10px #ffd84d,
+        0 0 25px #ff9900;
+}
+
+/* =========================================================
+   INFOS
+========================================================= */
+
+.info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+
+    margin-top:18px;
+}
+
+.panel{
+    background:rgba(10,15,30,.8);
+
+    border:1px solid #242d50;
+    border-radius:12px;
+
+    padding:15px;
+}
+
+.panel h3{
+    margin:0 0 10px;
+
+    color:#00eaff;
+    font-size:15px;
+}
+
+.paytable{
+    width:100%;
+    border-collapse:collapse;
+
+    font-size:13px;
+}
+
+.paytable td{
+    padding:6px 3px;
+    border-bottom:1px solid #1d243c;
+}
+
+.paytable td:last-child{
+    text-align:right;
+    color:#39ff88;
+    font-weight:bold;
+}
+
+.help{
+    color:#999;
+    line-height:1.6;
+    font-size:13px;
+}
+
+/* =========================================================
+   MODUS-AUSWAHL
+========================================================= */
+
+.modeOverlay{
+    position:fixed;
+    inset:0;
+
+    z-index:1000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:18px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(40,15,80,.93),
+            rgba(2,3,8,.98) 72%
+        );
+
+    backdrop-filter:blur(8px);
+}
+
+.modeBox{
+    width:min(700px,100%);
+
+    padding:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13,20,42,.98),
+            rgba(10,8,25,.98)
+        );
+
+    border:2px solid #30395e;
+    border-radius:22px;
+
+    box-shadow:
+        0 0 25px rgba(0,234,255,.15),
+        0 0 60px rgba(180,0,255,.15);
+}
+
+.modeBox h2{
+    margin:0;
+
+    text-align:center;
+
+    font-size:clamp(28px,7vw,46px);
+
+    text-shadow:
+        0 0 10px #00eaff,
+        0 0 25px #b000ff;
+}
+
+.modeBox > p{
+    margin:8px 0 22px;
+
+    text-align:center;
+    color:#999;
+}
+
+.modeChoices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.modeButton{
+    min-height:215px;
+
+    padding:20px;
+
+    border-radius:17px;
+
+    background:#0c1222;
+
+    cursor:pointer;
+
+    transition:.18s;
+
+    text-align:center;
+}
+
+.modeButton:hover{
+    transform:translateY(-4px);
+}
+
+.easyButton{
+    border:2px solid #39ff88;
+
+    box-shadow:
+        0 0 15px rgba(57,255,136,.12);
+}
+
+.easyButton:hover{
+    box-shadow:
+        0 0 30px rgba(57,255,136,.35);
+}
+
+.normalButton{
+    border:2px solid #b96cff;
+
+    box-shadow:
+        0 0 15px rgba(185,108,255,.12);
+}
+
+.normalButton:hover{
+    box-shadow:
+        0 0 30px rgba(185,108,255,.35);
+}
+
+.modeIcon{
+    font-size:50px;
+    margin-bottom:8px;
+}
+
+.modeButton h3{
+    margin:4px 0 8px;
+    font-size:23px;
+}
+
+.easyButton h3{
+    color:#39ff88;
+}
+
+.normalButton h3{
+    color:#b96cff;
+}
+
+.modeButton p{
+    margin:0;
+
+    color:#999;
+
+    font-size:13px;
+    line-height:1.6;
+}
+
+.modeValues{
+    margin-top:13px;
+
+    color:#ddd;
+
+    font-size:12px;
+    line-height:1.7;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:650px){
+
+    .game{
+        padding:12px 7px 25px;
+    }
+
+    .logo{
+        margin-bottom:12px;
+    }
+
+    .logo h1{
+        letter-spacing:2px;
+    }
+
+    .status{
+        gap:6px;
+    }
+
+    .statusBox{
+        padding:9px 4px;
+    }
+
+    .statusValue{
+        font-size:19px;
+    }
+
+    .machine{
+        padding:7px;
+        border-radius:15px;
+    }
+
+    .reels{
+        gap:4px;
+    }
+
+    .reel{
+        height:195px;
+        border-radius:8px;
+    }
+
+    .symbol{
+        height:65px;
+        font-size:37px;
+    }
+
+    .payline{
+        height:65px;
+    }
+
+    .info{
+        grid-template-columns:1fr;
+    }
+
+    .modeChoices{
+        grid-template-columns:1fr;
+    }
+
+    .modeBox{
+        padding:17px;
+        max-height:94vh;
+        overflow:auto;
+    }
+
+    .modeButton{
+        min-height:auto;
+        padding:15px;
+    }
+
+    .modeIcon{
+        font-size:40px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <div class="logo">
+        <h1>MOONSHINER REELS</h1>
+        <p>NEON ARCADE</p>
+    </div>
+
+
+    <!-- MODUS -->
+
+    <div class="modeDisplay">
+
+        <span id="modeBadge" class="modeBadge">
+            MODUS WÄHLEN
+        </span>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="status">
+
+        <div class="statusBox">
+
+            <div class="statusLabel">
+                Punkte
+            </div>
+
+            <div id="points"
+                 class="statusValue">
+                1000
+            </div>
+
+        </div>
+
+
+        <div class="statusBox">
+
+            <div class="statusLabel">
+                Highscore
+            </div>
+
+            <div id="highscore"
+                 class="statusValue">
+                1000
+            </div>
+
+        </div>
+
+
+        <div class="statusBox">
+
+            <div class="statusLabel">
+                Level
+            </div>
+
+            <div id="level"
+                 class="statusValue">
+                1
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- AUTOMAT -->
+
+    <div class="machine">
+
+        <div id="reels"
+             class="reels">
+
+            <div class="reel">
+                <div class="reelInner"></div>
+            </div>
+
+            <div class="reel">
+                <div class="reelInner"></div>
+            </div>
+
+            <div class="reel">
+                <div class="reelInner"></div>
+            </div>
+
+            <div class="reel">
+                <div class="reelInner"></div>
+            </div>
+
+            <div class="reel">
+                <div class="reelInner"></div>
+            </div>
+
+        </div>
+
+        <div class="payline"></div>
+
+    </div>
+
+
+    <!-- STEUERUNG -->
+
+    <div class="controls">
+
+        <button id="spinButton"
+                class="spinButton"
+                onclick="spin()">
+
+            🎰 DREHEN
+
+        </button>
+
+
+        <div class="secondaryButtons">
+
+            <button class="smallButton"
+                    onclick="chooseMode()">
+
+                🎮 Modus wechseln
+
+            </button>
+
+
+            <button class="smallButton"
+                    onclick="resetGame()">
+
+                ↻ Neues Spiel
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ERGEBNIS -->
+
+    <div id="result"
+         class="result">
+
+        Wähle einen Modus und starte das Spiel.
+
+    </div>
+
+
+    <!-- INFOS -->
+
+    <div class="info">
+
+        <div class="panel">
+
+            <h3>🏆 Gewinnübersicht</h3>
+
+            <table class="paytable">
+
+                <tr>
+                    <td>2 gleiche</td>
+                    <td>Kein Gewinn</td>
+                </tr>
+
+                <tr>
+                    <td>3 gleiche</td>
+                    <td>Gewinn</td>
+                </tr>
+
+                <tr>
+                    <td>4 gleiche</td>
+                    <td>Großer Gewinn</td>
+                </tr>
+
+                <tr>
+                    <td>5 gleiche</td>
+                    <td>Sehr großer Gewinn</td>
+                </tr>
+
+                <tr>
+                    <td>💎 ×5</td>
+                    <td>Jackpot</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h3>ℹ️ Spielinfo</h3>
+
+            <div class="help">
+
+                Es zählt ausschließlich die mittlere
+                Hauptzeile.
+
+                <br><br>
+
+                <b>Leicht</b> erzeugt häufiger
+                Gewinnkombinationen und gibt höhere
+                Punktgewinne.
+
+                <br><br>
+
+                <b>Normal</b> verwendet die normale
+                Spielbalance.
+
+                <br><br>
+
+                Die Punkte sind Arcade-Punkte.
+                Es gibt keinen Punkteabzug pro Dreh.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MODUS-AUSWAHL
+========================================================= -->
+
+<div id="modeOverlay"
+     class="modeOverlay">
+
+    <div class="modeBox">
+
+        <h2>🎰 MOONSHINER REELS</h2>
+
+        <p>
+            Wähle deinen Spielmodus
+        </p>
+
+
+        <div class="modeChoices">
+
+
+            <!-- LEICHT -->
+
+            <button class="modeButton easyButton"
+                    onclick="selectMode('easy')">
+
+                <div class="modeIcon">
+                    🟢
+                </div>
+
+                <h3>
+                    LEICHT
+                </h3>
+
+                <p>
+                    Häufigere Gewinne und
+                    höhere Punktgewinne.
+                </p>
+
+                <div class="modeValues">
+
+                    3 gleiche: +30 Punkte<br>
+                    4 gleiche: +80 Punkte<br>
+                    5 gleiche: +200 Punkte<br>
+                    💎 ×5: +500 Punkte
+
+                </div>
+
+            </button>
+
+
+            <!-- NORMAL -->
+
+            <button class="modeButton normalButton"
+                    onclick="selectMode('normal')">
+
+                <div class="modeIcon">
+                    🟣
+                </div>
+
+                <h3>
+                    NORMAL
+                </h3>
+
+                <p>
+                    Die normale Spielbalance
+                    für etwas mehr Herausforderung.
+                </p>
+
+                <div class="modeValues">
+
+                    3 gleiche: +20 Punkte<br>
+                    4 gleiche: +50 Punkte<br>
+                    5 gleiche: +150 Punkte<br>
+                    💎 ×5: +400 Punkte
+
+                </div>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   GRUNDDATEN
+========================================================= */
+
+const symbols = [
+    "🍒",
+    "🍋",
+    "⭐",
+    "🍀",
+    "🔔",
+    "💎",
+    "🍇",
+    "🍉"
+];
+
+const SAVE_KEY =
+    "moonshiner_reels_arcade_v6";
+
+const HIGH_KEY =
+    "moonshiner_reels_highscore_v6";
+
+
+let points = 1000;
+let highscore = 1000;
+let level = 1;
+
+let mode = null;
+let spinning = false;
+
+
+/* =========================================================
+   MODI
+========================================================= */
+
+const modes = {
+
+    easy:{
+
+        name:"LEICHT",
+        className:"modeEasy",
+
+        three:30,
+        four:80,
+        five:200,
+        diamond:500,
+
+        /*
+         * Höhere Gewinnchance
+         */
+        winChance:0.34
+
+    },
+
+
+    normal:{
+
+        name:"NORMAL",
+        className:"modeNormal",
+
+        three:20,
+        four:50,
+        five:150,
+        diamond:400,
+
+        /*
+         * Normale Gewinnchance
+         */
+        winChance:0.18
+
+    }
+
+};
+
+
+/* =========================================================
+   ELEMENTE
+========================================================= */
+
+const reels =
+    [...document.querySelectorAll(".reelInner")];
+
+const pointsEl =
+    document.getElementById("points");
+
+const highscoreEl =
+    document.getElementById("highscore");
+
+const levelEl =
+    document.getElementById("level");
+
+const resultEl =
+    document.getElementById("result");
+
+const spinButton =
+    document.getElementById("spinButton");
+
+const modeOverlay =
+    document.getElementById("modeOverlay");
+
+const modeBadge =
+    document.getElementById("modeBadge");
+
+
+/* =========================================================
+   SPEICHERN
+========================================================= */
+
+function saveGame(){
+
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify({
+            points:points,
+            level:level,
+            mode:mode
+        })
+    );
+
+    localStorage.setItem(
+        HIGH_KEY,
+        highscore
+    );
+
+}
+
+
+/* =========================================================
+   LADEN
+========================================================= */
+
+function loadGame(){
+
+    try{
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(SAVE_KEY)
+            );
+
+        const savedHigh =
+            Number(
+                localStorage.getItem(HIGH_KEY)
+            );
+
+
+        if(saved){
+
+            if(Number.isFinite(saved.points)){
+                points = saved.points;
+            }
+
+            if(Number.isFinite(saved.level)){
+                level = saved.level;
+            }
+
+            if(
+                saved.mode === "easy" ||
+                saved.mode === "normal"
+            ){
+                mode = saved.mode;
+            }
+
+        }
+
+
+        if(Number.isFinite(savedHigh)){
+
+            highscore =
+                Math.max(
+                    1000,
+                    savedHigh
+                );
+
+        }
+
+    }catch(error){
+
+        points = 1000;
+        highscore = 1000;
+        level = 1;
+        mode = null;
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* =========================================================
+   ANZEIGE
+========================================================= */
+
+function updateDisplay(){
+
+    pointsEl.textContent =
+        Math.floor(points)
+            .toLocaleString("de-DE");
+
+
+    highscoreEl.textContent =
+        Math.floor(highscore)
+            .toLocaleString("de-DE");
+
+
+    levelEl.textContent =
+        level;
+
+
+    if(mode){
+
+        modeBadge.textContent =
+            "MODUS: " +
+            modes[mode].name;
+
+        modeBadge.className =
+            "modeBadge " +
+            modes[mode].className;
+
+    }else{
+
+        modeBadge.textContent =
+            "MODUS WÄHLEN";
+
+        modeBadge.className =
+            "modeBadge";
+
+    }
+
+}
+
+
+/* =========================================================
+   MODUS AUSWÄHLEN
+========================================================= */
+
+function chooseMode(){
+
+    if(spinning){
+        return;
+    }
+
+    modeOverlay.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   MODUS STARTEN
+========================================================= */
+
+function selectMode(selectedMode){
+
+    if(spinning){
+        return;
+    }
+
+    mode = selectedMode;
+
+    points = 1000;
+    level = 1;
+
+    resultEl.className =
+        "result";
+
+    resultEl.textContent =
+        mode === "easy"
+            ? "🟢 Leicht aktiviert!"
+            : "🟣 Normal aktiviert!";
+
+
+    modeOverlay.style.display =
+        "none";
+
+
+    updateDisplay();
+    saveGame();
+
+    createIdleReels();
+
+}
+
+
+/* =========================================================
+   ZUFALLSSYMBOL
+========================================================= */
+
+function randomSymbol(){
+
+    return symbols[
+        Math.floor(
+            Math.random() *
+            symbols.length
+        )
+    ];
+
+}
+
+
+/* =========================================================
+   GEWINN-ERGEBNIS ERZEUGEN
+========================================================= */
+
+function createResult(){
+
+    const settings =
+        modes[mode];
+
+
+    /*
+     * Wird überhaupt eine
+     * Gewinnkombination erzeugt?
+     */
+
+    if(Math.random() < settings.winChance){
+
+        const roll =
+            Math.random();
+
+        let count;
+
+
+        if(mode === "easy"){
+
+            if(roll < 0.06){
+
+                count = 5;
+
+            }else if(roll < 0.25){
+
+                count = 4;
+
+            }else{
+
+                count = 3;
+
+            }
+
+        }else{
+
+            if(roll < 0.025){
+
+                count = 5;
+
+            }else if(roll < 0.14){
+
+                count = 4;
+
+            }else{
+
+                count = 3;
+
+            }
+
+        }
+
+
+        /*
+         * Diamonds sind selten,
+         * können aber den Jackpot bilden.
+         */
+
+        const symbol =
+            Math.random() < 0.08
+                ? "💎"
+                : randomSymbol();
+
+
+        const result =
+            Array(5).fill(null);
+
+
+        /*
+         * Gleiche Symbole erzeugen
+         */
+
+        for(let i=0;i<count;i++){
+
+            result[i] =
+                symbol;
+
+        }
+
+
+        /*
+         * Restliche Walzen auffüllen
+         */
+
+        for(let i=count;i<5;i++){
+
+            let s;
+
+            do{
+
+                s = randomSymbol();
+
+            }while(s === symbol);
+
+            result[i] = s;
+
+        }
+
+
+        return result;
+
+    }
+
+
+    /* =====================================================
+       KEIN GEWINN
+    ===================================================== */
+
+    const result =
+        Array.from(
+            {length:5},
+            () => randomSymbol()
+        );
+
+
+    /*
+     * Verhindert zufällige 3er,
+     * 4er oder 5er Kombinationen.
+     */
+
+    const counts = {};
+
+
+    result.forEach(symbol=>{
+
+        counts[symbol] =
+            (counts[symbol] || 0) + 1;
+
+    });
+
+
+    for(const symbol in counts){
+
+        if(counts[symbol] >= 3){
+
+            for(let i=0;i<5;i++){
+
+                if(result[i] === symbol){
+
+                    let replacement;
+
+                    do{
+
+                        replacement =
+                            randomSymbol();
+
+                    }while(
+                        replacement === symbol
+                    );
+
+
+                    result[i] =
+                        replacement;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   LEERE WALZEN
+========================================================= */
+
+function createIdleReels(){
+
+    reels.forEach(inner=>{
+
+        inner.innerHTML = "";
+
+        for(let i=0;i<3;i++){
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "symbol";
+
+            div.textContent =
+                randomSymbol();
+
+            inner.appendChild(div);
+
+        }
+
+
+        inner.style.transform =
+            "translate3d(0,0,0)";
+
+    });
+
+}
+
+
+/* =========================================================
+   WALZE AUFBAUEN
+========================================================= */
+
+function buildReel(inner, finalSymbol){
+
+    inner.innerHTML = "";
+
+
+    /*
+     * Viele Zufallssymbole für die Animation
+     */
+
+    for(let i=0;i<14;i++){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "symbol";
+
+        div.textContent =
+            randomSymbol();
+
+        inner.appendChild(div);
+
+    }
+
+
+    /*
+     * Die tatsächlichen drei
+     * Endsymbole kommen ganz ans Ende.
+     */
+
+    for(let i=0;i<3;i++){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "symbol";
+
+        div.textContent =
+            finalSymbol[i];
+
+        inner.appendChild(div);
+
+    }
+
+}
+
+
+/* =========================================================
+   DREHEN
+========================================================= */
+
+async function spin(){
+
+    if(spinning || !mode){
+        return;
+    }
+
+
+    spinning = true;
+
+    spinButton.disabled = true;
+
+
+    resultEl.className =
+        "result";
+
+    resultEl.textContent =
+        "🎰 Die Walzen drehen...";
+
+
+    /*
+     * Gewinnkombination erzeugen
+     */
+
+    const result =
+        createResult();
+
+
+    /*
+     * Alle Walzen vorbereiten
+     */
+
+    reels.forEach(
+        (inner,index)=>{
+
+            buildReel(
+                inner,
+                [
+                    result[index],
+                    result[index],
+                    result[index]
+                ]
+            );
+
+
+            /*
+             * Sicherer Ausgangspunkt
+             */
+
+            inner.style.transition =
+                "none";
+
+            inner.style.transform =
+                "translate3d(0,0,0)";
+
+        }
+    );
+
+
+    /*
+     * Browser zwingt zur Neuberechnung
+     * des Layouts.
+     */
+
+    void document.body.offsetHeight;
+
+
+    /*
+     * Tatsächliche Symbolhöhe auslesen.
+     * Dadurch funktioniert es auf Desktop
+     * und Mobile mit unterschiedlichen Höhen.
+     */
+
+    const firstSymbol =
+        reels[0].querySelector(".symbol");
+
+
+    let symbolHeight =
+        firstSymbol
+            ? firstSymbol.getBoundingClientRect().height
+            : 90;
+
+
+    if(!symbolHeight || symbolHeight <= 0){
+
+        symbolHeight = 90;
+
+    }
+
+
+    /*
+     * Wir springen zu den drei Endsymbolen.
+     * 14 Zufallssymbole liegen davor.
+     */
+
+    const target =
+        -(14 * symbolHeight);
+
+
+    const animations = [];
+
+
+    reels.forEach(
+        (inner,index)=>{
+
+            const duration =
+                1050 +
+                index * 170;
+
+
+            const easing =
+                "cubic-bezier(.12,.72,.15,1)";
+
+
+            /*
+             * Kleine Verzögerung zwischen
+             * den einzelnen Walzen.
+             */
+
+            const delay =
+                index * 100;
+
+
+            inner.style.transition =
+                "transform " +
+                duration +
+                "ms " +
+                easing +
+                " " +
+                delay +
+                "ms";
+
+
+            inner.style.transform =
+                "translate3d(0," +
+                target +
+                "px,0)";
+
+
+            animations.push(
+                new Promise(resolve=>{
+
+                    setTimeout(
+                        resolve,
+                        duration + delay + 50
+                    );
+
+                })
+            );
+
+        }
+    );
+
+
+    await Promise.all(animations);
+
+
+    /*
+     * Ergebnis anzeigen
+     */
+
+    showResult(result);
+
+
+    spinning = false;
+
+    spinButton.disabled = false;
+
+    saveGame();
+
+}
+
+
+/* =========================================================
+   ERGEBNIS AUSWERTEN
+========================================================= */
+
+function showResult(result){
+
+    /*
+     * Nur Hauptzeile wird ausgewertet.
+     */
+
+    const counts = {};
+
+
+    result.forEach(symbol=>{
+
+        counts[symbol] =
+            (counts[symbol] || 0) + 1;
+
+    });
+
+
+    let winningSymbol = null;
+    let count = 0;
+
+
+    for(const symbol in counts){
+
+        if(counts[symbol] > count){
+
+            count =
+                counts[symbol];
+
+            winningSymbol =
+                symbol;
+
+        }
+
+    }
+
+
+    /*
+     * 2 gleiche bringen nichts.
+     */
+
+    if(count < 3){
+
+        resultEl.className =
+            "result noWin";
+
+        resultEl.textContent =
+            "😐 Keine Gewinnkombination";
+
+        return;
+
+    }
+
+
+    let reward = 0;
+
+
+    /*
+     * Diamond-Jackpot
+     */
+
+    if(
+        winningSymbol === "💎" &&
+        count === 5
+    ){
+
+        reward =
+            modes[mode].diamond;
+
+        resultEl.className =
+            "result bigWin";
+
+        resultEl.textContent =
+            "💎💎💎💎💎 JACKPOT! +" +
+            reward +
+            " Punkte!";
+
+    }
+
+
+    /*
+     * 5 gleiche
+     */
+
+    else if(count === 5){
+
+        reward =
+            modes[mode].five;
+
+        resultEl.className =
+            "result bigWin";
+
+        resultEl.textContent =
+            "🔥 5 GLEICHE! +" +
+            reward +
+            " Punkte!";
+
+    }
+
+
+    /*
+     * 4 gleiche
+     */
+
+    else if(count === 4){
+
+        reward =
+            modes[mode].four;
+
+        resultEl.className =
+            "result win";
+
+        resultEl.textContent =
+            "⭐ 4 GLEICHE! +" +
+            reward +
+            " Punkte!";
+
+    }
+
+
+    /*
+     * 3 gleiche
+     */
+
+    else if(count === 3){
+
+        reward =
+            modes[mode].three;
+
+        resultEl.className =
+            "result win";
+
+        resultEl.textContent =
+            "🎉 3 GLEICHE! +" +
+            reward +
+            " Punkte!";
+
+    }
+
+
+    /*
+     * Punkte gutschreiben
+     */
+
+    points += reward;
+
+
+    /*
+     * Level alle 500 Punkte
+     */
+
+    level =
+        Math.max(
+            1,
+            Math.floor(points / 500) + 1
+        );
+
+
+    /*
+     * Highscore aktualisieren
+     */
+
+    if(points > highscore){
+
+        highscore =
+            points;
+
+    }
+
+
+    updateDisplay();
+
+
+    /*
+     * Gewinnsymbole in der
+     * Hauptzeile hervorheben.
+     */
+
+    highlightWinningSymbols(
+        winningSymbol,
+        count
+    );
+
+}
+
+
+/* =========================================================
+   GEWINN HERVORHEBEN
+========================================================= */
+
+function highlightWinningSymbols(
+    symbol,
+    count
+){
+
+    reels.forEach(
+        (inner,index)=>{
+
+            /*
+             * Endposition ist immer
+             * das 15. Symbol, also Index 14
+             * innerhalb der tatsächlichen
+             * Endreihe.
+             */
+
+            const all =
+                inner.querySelectorAll(".symbol");
+
+
+            const finalRow =
+                [
+                    all[14],
+                    all[15],
+                    all[16]
+                ];
+
+
+            /*
+             * Hauptzeile = mittleres Symbol
+             */
+
+            const main =
+                finalRow[1];
+
+
+            if(
+                index < count &&
+                main &&
+                main.textContent === symbol
+            ){
+
+                main.classList.add(
+                    "winHighlight"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NEUES SPIEL
+========================================================= */
+
+function resetGame(){
+
+    if(spinning){
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Neues Spiel starten?\n\n" +
+            "Die aktuellen Punkte werden " +
+            "auf 1000 zurückgesetzt."
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    points = 1000;
+    level = 1;
+
+
+    updateDisplay();
+
+    saveGame();
+
+    createIdleReels();
+
+
+    resultEl.className =
+        "result";
+
+    resultEl.textContent =
+        "Neues Spiel gestartet.";
+
+
+    /*
+     * Modusauswahl wieder anzeigen.
+     */
+
+    mode = null;
+
+    updateDisplay();
+
+    modeOverlay.style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   ENTER = DREHEN
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(
+            event.key === "Enter" &&
+            !spinning &&
+            mode
+        ){
+
+            spin();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadGame();
+
+
+if(mode){
+
+    modeOverlay.style.display =
+        "none";
+
+    createIdleReels();
+
+}else{
+
+    modeOverlay.style.display =
+        "flex";
+
+    createIdleReels();
+
+}
+
+</script>
+
+</body>
+</html>
