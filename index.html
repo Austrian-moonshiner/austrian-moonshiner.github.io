@@ -1,6 +1,19 @@
-<!DOCTYPE html><html lang="de"><head>
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Austrian Moonshiner</title><style>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Austrian Moonshiner</title>
+
+
+<style>
 
 /* =========================================================
    GRUNDLAYOUT
@@ -823,6 +836,63 @@ p{
 
 
 /* =========================================================
+   PASSWORTGENERATOR
+========================================================= */
+
+.passwort-button{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:92%;
+    max-width:720px;
+
+    min-height:70px;
+
+    margin:20px auto;
+
+    padding:15px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:22px;
+    font-weight:bold;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #182d5a,
+            #263b82,
+            #25134f
+        );
+
+    border:1px solid rgba(120,150,255,.65);
+
+    box-shadow:
+        0 0 18px rgba(80,120,255,.14);
+
+    transition:.25s;
+}
+
+.passwort-button:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#8ca8ff;
+
+    box-shadow:
+        0 0 25px rgba(100,130,255,.3),
+        0 8px 20px rgba(0,0,0,.35);
+}
+
+
+/* =========================================================
    FOOTER
 ========================================================= */
 
@@ -912,7 +982,8 @@ p{
 
     .tool-button,
     .wav-mp3-button,
-    .qr-button{
+    .qr-button,
+    .passwort-button{
 
         font-size:19px;
 
@@ -927,7 +998,18 @@ p{
     }
 }
 
-</style></head><body><div class="container"><!-- =====================================================
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- =====================================================
      LOGO
 ====================================================== -->
 
@@ -967,19 +1049,23 @@ p{
     AUSTRIAN MOONSHINER
 </h1>
 
+
 <p>
     🎮 Online Arcade Spielhalle &amp; nützliche Tools
 </p>
+
 
 <p>
     Meine neue Projekt-Webseite mit selbst programmierten
     Browser-Spielen und praktischen Tools.
 </p>
 
+
 <p>
     Alle Spiele und Tools sind selbst programmiert
     und werden laufend weiterentwickelt.
 </p>
+
 
 <p>
     Neue Spiele und Tools werden regelmäßig hinzugefügt.
@@ -1369,6 +1455,20 @@ p{
 
 
 <!-- =====================================================
+     PASSWORTGENERATOR
+====================================================== -->
+
+<a
+    href="passwortgenerator.html"
+    class="passwort-button"
+>
+
+    🔐 Passwortgenerator
+
+</a>
+
+
+<!-- =====================================================
      FOOTER
 ====================================================== -->
 
@@ -1383,4 +1483,10 @@ p{
 
 </div>
 
-</div></body></html>
+
+</div>
+
+
+</body>
+
+</html>
