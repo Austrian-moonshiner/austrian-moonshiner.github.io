@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Iron Front - RTS</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head><body><!-- =========================
+     STARTMENÜ
+========================== -->
+
+<div id="startScreen" class="screen">
+
+    <div class="titleBox">
+
+        <div class="smallTitle">AUSTRIAN MOONSHINER PRESENTS</div>
+
+        <h1>IRON FRONT</h1>
+
+        <div class="subtitle">
+            TACTICAL COMMAND SYSTEM
+        </div>
+
+        <div class="menuPanel">
+
+            <h2>Schwierigkeitsgrad</h2>
+
+            <button class="difficultyButton easy" data-difficulty="easy">
+                <strong>LEICHT</strong>
+                <span>Mehr Ressourcen · Schwächere Gegner</span>
+            </button>
+
+            <button class="difficultyButton normal" data-difficulty="normal">
+                <strong>NORMAL</strong>
+                <span>Ausgewogene Herausforderung</span>
+            </button>
+
+            <button class="difficultyButton hard" data-difficulty="hard">
+                <strong>SCHWER</strong>
+                <span>Aggressive Gegner · Weniger Ressourcen</span>
+            </button>
+
+        </div>
+
+        <div class="controlsInfo">
+            <p>WASD / Pfeiltasten – Kamera bewegen</p>
+            <p>Linksklick – Einheit auswählen</p>
+            <p>Rechtsklick – Bewegung / Angriff</p>
+            <p>ESC – Auswahl aufheben</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SPIEL
+========================== -->
+
+<div id="gameScreen" class="gameScreen hidden">
+
+    <canvas id="gameCanvas"></canvas>
+
+
+    <!-- =========================
+         TOP HUD
+    ========================== -->
+
+    <div id="topHud">
+
+        <div class="resourceBox">
+            <span class="resourceIcon">◆</span>
+            <span>METALL</span>
+            <strong id="metalValue">2500</strong>
+        </div>
+
+        <div class="resourceBox">
+            <span class="resourceIcon energy">⚡</span>
+            <span>ENERGIE</span>
+            <strong id="energyValue">1000</strong>
+        </div>
+
+        <div class="missionBox">
+            <span>MISSION 01</span>
+            <strong id="missionStatus">ZERSTÖRE DIE FEINDLICHE BASIS</strong>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MINIMAP
+    ========================== -->
+
+    <div id="minimapContainer">
+
+        <canvas id="minimap"></canvas>
+
+        <div class="miniLabel">
+            TACTICAL MAP
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         UNIT INFO
+    ========================== -->
+
+    <div id="unitPanel">
+
+        <div id="unitName">Keine Einheit ausgewählt</div>
+
+        <div class="healthBar">
+            <div id="unitHealth"></div>
+        </div>
+
+        <div id="unitStats">
+            <span id="unitAttack">ATK --</span>
+            <span id="unitSpeed">SPD --</span>
+            <span id="unitRange">RNG --</span>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         BUILD PANEL
+    ========================== -->
+
+    <div id="buildPanel">
+
+        <div class="buildTitle">
+            PRODUKTION
+        </div>
+
+        <button id="buildTank" class="buildButton">
+            <span class="buildIcon">▣</span>
+            <span>
+                <strong>SCOUT</strong>
+                <small>500 Metall</small>
+            </span>
+        </button>
+
+        <button id="buildHeavy" class="buildButton">
+            <span class="buildIcon">▦</span>
+            <span>
+                <strong>HEAVY TANK</strong>
+                <small>900 Metall</small>
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         MISSION INFO
+    ========================== -->
+
+    <div id="missionPanel">
+
+        <div class="missionHeader">
+            MISSION 01
+        </div>
+
+        <div id="missionText">
+            Zerstöre das feindliche Hauptquartier.
+        </div>
+
+        <div class="missionProgress">
+            <div id="missionProgressBar"></div>
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         PAUSE
+    ========================== -->
+
+    <div id="pauseScreen" class="overlay hidden">
+
+        <div class="overlayBox">
+
+            <h2>SPIEL PAUSIERT</h2>
+
+            <button id="resumeButton">
+                WEITERSPIELEN
+            </button>
+
+            <button id="restartButton">
+                MISSION NEUSTARTEN
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         GAME OVER
+    ========================== -->
+
+    <div id="gameOverScreen" class="overlay hidden">
+
+        <div class="overlayBox">
+
+            <h2 id="gameOverTitle">
+                MISSION GESCHEITERT
+            </h2>
+
+            <p id="gameOverText">
+                Deine Basis wurde zerstört.
+            </p>
+
+            <button id="retryButton">
+                ERNEUT VERSUCHEN
+            </button>
+
+            <button id="menuButton">
+                HAUPTMENÜ
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="game.js"></script>
+
+</body>
+</html>
