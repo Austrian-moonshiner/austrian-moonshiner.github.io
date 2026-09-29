@@ -4,82 +4,272 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Impressum - Austrian Moonshiner</title>
+    <title>Impressum | Austrian Moonshiner</title>
+
+    <meta name="description" content="Impressum von Austrian Moonshiner">
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            color: #222;
-            text-align: center;
+        * {
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 80px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, #24104a 0%, #090914 45%, #050509 100%);
+            color: #f2f2f2;
+            line-height: 1.7;
+        }
+
+        header {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.25);
         }
 
         .logo {
-            max-width: 250px;
+            max-width: 180px;
+            width: 60%;
             height: auto;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
+            margin: 5px 0;
+            font-size: 32px;
+            color: #ffffff;
+            text-shadow:
+                0 0 8px #ff00cc,
+                0 0 18px #00eaff;
+        }
+
+        main {
+            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .box {
+            background: rgba(20, 20, 35, 0.88);
+            border: 1px solid rgba(0, 234, 255, 0.35);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow:
+                0 0 20px rgba(0, 234, 255, 0.08),
+                0 0 35px rgba(255, 0, 204, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #00eaff;
+            text-shadow: 0 0 8px rgba(0,234,255,0.5);
         }
 
         p {
-            font-size: 18px;
-            line-height: 1.6;
+            margin: 10px 0;
         }
 
-        nav {
-            margin-bottom: 30px;
-        }
-
-        nav a {
-            margin: 0 10px;
+        a {
+            color: #00eaff;
             text-decoration: none;
-            color: #222;
-            font-weight: bold;
         }
 
-        nav a:hover {
+        a:hover {
+            color: #ff4fd8;
             text-decoration: underline;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 18px;
+            border: 1px solid #00eaff;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .back:hover {
+            background: rgba(0,234,255,0.12);
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            color: #999;
+            font-size: 14px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            .box {
+                padding: 22px;
+            }
+
+            main {
+                margin-top: 25px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+<header>
 
-        <!-- Logo -->
-        <img src="logo.png" alt="Austrian Moonshiner Logo" class="logo">
+    <!-- Falls deine Logo-Datei anders heißt, hier den Dateinamen ändern -->
+    <img src="logo.png" alt="Austrian Moonshiner Logo" class="logo">
 
-        <!-- Navigation -->
-        <nav>
-            <a href="index.html">Startseite</a>
-            <a href="ueber-uns.html">Über uns</a>
-            <a href="produkte.html">Produkte</a>
-            <a href="galerie.html">Galerie</a>
-            <a href="impressum.html">Impressum</a>
-            <a href="kontakt.html">Kontakt</a>
-        </nav>
+    <h1>Impressum</h1>
 
-        <h1>Impressum</h1>
+</header>
+
+<main>
+
+    <section class="box">
+
+        <h2>Angaben gemäß § 5 ECG</h2>
 
         <p>
-            Impressum 
+            <strong>Betreiber dieser Website:</strong>
         </p>
 
-    </div>
+        <p>
+            Vorname Nachname<br>
+            Straße Hausnummer<br>
+            PLZ Ort<br>
+            Österreich
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Kontakt</h2>
+
+        <p>
+            E-Mail:
+            <a href="mailto:DEINE-EMAIL@BEISPIEL.AT">
+                DEINE-EMAIL@BEISPIEL.AT
+            </a>
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Art und Zweck der Website</h2>
+
+        <p>
+            Austrian Moonshiner ist eine private Website mit verschiedenen
+            browserbasierten Spielen, Tools und sonstigen privaten Projekten.
+        </p>
+
+        <p>
+            Die angebotenen Inhalte werden grundsätzlich kostenlos zur Verfügung
+            gestellt.
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Haftung für Inhalte</h2>
+
+        <p>
+            Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt.
+            Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann
+            jedoch keine Gewähr übernommen werden.
+        </p>
+
+        <p>
+            Als Betreiber dieser Website bin ich für eigene Inhalte auf diesen
+            Seiten nach den allgemeinen gesetzlichen Vorschriften verantwortlich.
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Haftung für Links</h2>
+
+        <p>
+            Diese Website kann Links zu externen Websites Dritter enthalten.
+            Auf deren Inhalte besteht kein Einfluss.
+        </p>
+
+        <p>
+            Für die Inhalte verlinkter externer Websites ist grundsätzlich der
+            jeweilige Betreiber verantwortlich.
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Urheberrecht</h2>
+
+        <p>
+            Die auf dieser Website erstellten Inhalte und Werke unterliegen dem
+            österreichischen Urheberrecht, soweit gesetzlich geschützt.
+        </p>
+
+        <p>
+            Eine Verwendung, Vervielfältigung oder Weiterverbreitung von Inhalten
+            dieser Website außerhalb der gesetzlichen Grenzen bedarf der vorherigen
+            Zustimmung des jeweiligen Rechteinhabers.
+        </p>
+
+    </section>
+
+
+    <section class="box">
+
+        <h2>Hinweis zu den Spielen und Tools</h2>
+
+        <p>
+            Die auf dieser Website angebotenen Spiele und Tools dienen der privaten
+            Unterhaltung und Nutzung.
+        </p>
+
+        <p>
+            Bei browserbasierten Anwendungen können technische Fehler,
+            Darstellungsfehler oder Datenverluste nicht vollständig ausgeschlossen
+            werden.
+        </p>
+
+    </section>
+
+
+    <a href="index.html" class="back">
+        ← Zurück zur Startseite
+    </a>
+
+</main>
+
+
+<footer>
+    © 2026 Austrian Moonshiner
+</footer>
 
 </body>
 </html>
