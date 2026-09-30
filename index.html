@@ -593,6 +593,109 @@ p{
 
 
 /* =========================================================
+   DROHNEN SIMULATOR
+========================================================= */
+
+.drone-button{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100px;
+
+    padding:20px;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:27px;
+    font-weight:900;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #101c2c,
+            #153d52,
+            #12647a,
+            #101827
+        );
+
+    border:2px solid rgba(90,225,255,.72);
+
+    box-shadow:
+        0 0 18px rgba(0,190,255,.18),
+        inset 0 0 24px rgba(90,220,255,.05);
+
+    transition:.25s;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.drone-button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-120%;
+    left:-35%;
+
+    width:35%;
+    height:340%;
+
+    transform:rotate(25deg);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.12),
+            transparent
+        );
+
+    transition:.5s;
+}
+
+.drone-button:hover::before{
+
+    left:120%;
+}
+
+.drone-button span{
+
+    margin-top:7px;
+
+    font-size:14px;
+    font-weight:normal;
+
+    color:#bdefff;
+}
+
+.drone-button:hover{
+
+    transform:
+        translateY(-4px)
+        scale(1.01);
+
+    border-color:#7cecff;
+
+    box-shadow:
+        0 0 32px rgba(0,200,255,.34),
+        0 14px 30px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
    SPEZIAL BUTTONS
 ========================================================= */
 
@@ -1117,6 +1220,18 @@ p{
         min-height:85px;
     }
 
+    .drone-button{
+
+        font-size:22px;
+
+        min-height:88px;
+    }
+
+    .drone-button span{
+
+        font-size:13px;
+    }
+
     .dorf-button{
 
         font-size:21px;
@@ -1322,6 +1437,24 @@ p{
 
         <span>
             Erkunde deine Insel, sammle Ressourcen und gestalte dein Zuhause
+        </span>
+
+    </a>
+
+
+    <!-- =====================================================
+         DROHNEN SIMULATOR
+    ====================================================== -->
+
+    <a
+        href="drone.html"
+        class="drone-button"
+    >
+
+        🚁 DROHNEN SIMULATOR
+
+        <span>
+            Fliege eine realistische Drohne durch eine große 3D-Welt
         </span>
 
     </a>
