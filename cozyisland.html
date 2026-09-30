@@ -1,0 +1,6229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>Island Life – Cozy Village</title>
+
+<style>
+:root{
+  --panel: rgba(20,32,38,.92);
+  --panel2: rgba(34,54,62,.95);
+  --text: #f7fbff;
+  --muted:#b7c9d1;
+  --accent:#ffd76a;
+  --good:#8ee7a4;
+  --danger:#ff8e8e;
+  --blue:#7fd7ff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#172126;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial,
+    sans-serif;
+  color:var(--text);
+}
+
+button,
+input{
+  font:inherit;
+}
+
+#gameWrap{
+  position:fixed;
+  inset:0;
+  background:#152228;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  image-rendering:auto;
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+#topHud{
+  position:absolute;
+  top:14px;
+  left:14px;
+  right:14px;
+
+  display:flex;
+  justify-content:space-between;
+
+  gap:12px;
+
+  pointer-events:none;
+
+  z-index:4;
+}
+
+.hudBox{
+  background:rgba(11,20,24,.78);
+
+  border:1px solid rgba(255,255,255,.14);
+
+  border-radius:16px;
+
+  padding:10px 14px;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.2);
+
+  backdrop-filter:blur(8px);
+
+  min-width:170px;
+}
+
+.hudTitle{
+  font-size:12px;
+
+  color:#b7c9d1;
+
+  text-transform:uppercase;
+
+  letter-spacing:.08em;
+}
+
+.hudMain{
+  font-weight:800;
+
+  font-size:18px;
+
+  margin-top:2px;
+}
+
+/* =========================================================
+   HILFE
+========================================================= */
+
+#help{
+  position:absolute;
+
+  left:14px;
+  bottom:14px;
+
+  background:rgba(11,20,24,.72);
+
+  padding:10px 12px;
+
+  border-radius:14px;
+
+  border:1px solid rgba(255,255,255,.12);
+
+  font-size:13px;
+
+  color:#d6e4ea;
+
+  z-index:4;
+
+  max-width:min(
+    560px,
+    calc(100vw - 28px)
+  );
+
+  pointer-events:none;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+#toast{
+  position:absolute;
+
+  left:50%;
+  bottom:86px;
+
+  transform:
+    translateX(-50%)
+    translateY(20px);
+
+  opacity:0;
+
+  transition:.25s;
+
+  z-index:20;
+
+  background:
+    rgba(12,20,24,.92);
+
+  border:
+    1px solid
+    rgba(255,255,255,.14);
+
+  padding:12px 16px;
+
+  border-radius:14px;
+
+  box-shadow:
+    0 12px 30px
+    rgba(0,0,0,.28);
+
+  font-weight:700;
+
+  pointer-events:none;
+
+  text-align:center;
+
+  max-width:min(
+    520px,
+    90vw
+  );
+}
+
+#toast.show{
+  opacity:1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+
+/* =========================================================
+   INTERAKTIONSANZEIGE
+========================================================= */
+
+#contextHint{
+  position:absolute;
+
+  left:50%;
+  bottom:38px;
+
+  transform:
+    translateX(-50%);
+
+  background:
+    rgba(18,30,35,.86);
+
+  border:
+    1px solid
+    rgba(255,255,255,.13);
+
+  padding:8px 12px;
+
+  border-radius:14px;
+
+  z-index:5;
+
+  font-weight:700;
+
+  display:none;
+
+  pointer-events:none;
+}
+
+/* =========================================================
+   MENÜS
+========================================================= */
+
+.overlay{
+  position:absolute;
+
+  inset:0;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  background:
+    rgba(8,14,17,.68);
+
+  backdrop-filter:
+    blur(6px);
+
+  z-index:30;
+
+  padding:18px;
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.panel{
+  width:min(
+    880px,
+    96vw
+  );
+
+  max-height:88vh;
+
+  overflow:auto;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(35,58,65,.98),
+      rgba(18,32,38,.98)
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,.14);
+
+  border-radius:24px;
+
+  box-shadow:
+    0 24px 70px
+    rgba(0,0,0,.4);
+
+  padding:22px;
+}
+
+.panel h2,
+.panel h1{
+  margin:0 0 10px;
+}
+
+.panel p{
+  color:var(--muted);
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px,1fr)
+    );
+
+  gap:12px;
+}
+
+.card{
+  background:
+    rgba(255,255,255,.055);
+
+  border:
+    1px solid
+    rgba(255,255,255,.1);
+
+  border-radius:16px;
+
+  padding:14px;
+}
+
+.card strong{
+  display:block;
+
+  margin-bottom:6px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btnRow{
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  margin-top:16px;
+}
+
+button{
+  border:0;
+
+  border-radius:13px;
+
+  padding:11px 14px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  background:#f0f6f8;
+
+  color:#1b2a30;
+
+  box-shadow:
+    0 6px 16px
+    rgba(0,0,0,.18);
+}
+
+button:hover{
+  transform:
+    translateY(-1px);
+}
+
+button.secondary{
+  background:#29434e;
+
+  color:white;
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+}
+
+button.good{
+  background:#9be9ae;
+}
+
+button.warn{
+  background:#ffd989;
+}
+
+button.danger{
+  background:#ff9c9c;
+}
+
+button:disabled{
+  opacity:.45;
+
+  cursor:not-allowed;
+
+  transform:none;
+}
+
+/* =========================================================
+   SHOP
+========================================================= */
+
+.itemRow{
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  gap:12px;
+
+  align-items:center;
+
+  border-bottom:
+    1px solid
+    rgba(255,255,255,.08);
+
+  padding:10px 0;
+}
+
+.itemRow:last-child{
+  border-bottom:0;
+}
+
+.itemMeta{
+  color:#bdd0d7;
+
+  font-size:13px;
+}
+
+.price{
+  color:#ffe08a;
+
+  font-weight:800;
+}
+
+/* =========================================================
+   STARTBILDSCHIRM
+========================================================= */
+
+#startScreen{
+  display:flex;
+
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(128,215,255,.35),
+      transparent 40%
+    ),
+    linear-gradient(
+      #8bd0f4,
+      #79c894 65%,
+      #4a9b69
+    );
+}
+
+#startScreen .panel{
+  max-width:760px;
+
+  text-align:center;
+
+  background:
+    rgba(18,44,52,.89);
+}
+
+.logo{
+  font-size:
+    clamp(
+      36px,
+      7vw,
+      72px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:-.04em;
+
+  text-shadow:
+    0 7px 0
+    rgba(0,0,0,.14);
+
+  margin-bottom:2px;
+}
+
+.subtitle{
+  font-size:18px;
+
+  color:#dbf3ff;
+
+  margin-bottom:18px;
+}
+
+.badge{
+  display:inline-flex;
+
+  gap:8px;
+
+  align-items:center;
+
+  background:
+    rgba(255,255,255,.1);
+
+  border:
+    1px solid
+    rgba(255,255,255,.14);
+
+  padding:8px 11px;
+
+  border-radius:999px;
+
+  margin:4px;
+
+  font-size:13px;
+}
+
+/* =========================================================
+   INVENTAR
+========================================================= */
+
+#inventoryList{
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(160px,1fr)
+    );
+
+  gap:10px;
+}
+
+.invItem{
+  background:
+    rgba(255,255,255,.055);
+
+  border:
+    1px solid
+    rgba(255,255,255,.1);
+
+  border-radius:15px;
+
+  padding:13px;
+
+  min-height:90px;
+}
+
+.invCount{
+  font-size:24px;
+
+  font-weight:900;
+
+  color:#ffe08a;
+}
+
+/* =========================================================
+   MOBILE STEUERUNG
+========================================================= */
+
+#mobileControls{
+  display:none;
+
+  position:absolute;
+
+  inset:0;
+
+  z-index:7;
+
+  pointer-events:none;
+}
+
+#stickBase{
+  position:absolute;
+
+  left:20px;
+  bottom:24px;
+
+  width:120px;
+  height:120px;
+
+  border-radius:50%;
+
+  background:
+    rgba(12,22,26,.28);
+
+  border:
+    2px solid
+    rgba(255,255,255,.18);
+
+  pointer-events:auto;
+
+  touch-action:none;
+}
+
+#stickKnob{
+  position:absolute;
+
+  left:35px;
+  top:35px;
+
+  width:50px;
+  height:50px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.78);
+
+  box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.25);
+}
+
+.mobileBtns{
+  position:absolute;
+
+  right:18px;
+  bottom:22px;
+
+  display:grid;
+
+  grid-template-columns:
+    70px 70px;
+
+  gap:10px;
+
+  pointer-events:auto;
+}
+
+.mobileBtn{
+  width:70px;
+  height:70px;
+
+  border-radius:50%;
+
+  padding:0;
+
+  background:
+    rgba(18,31,36,.78);
+
+  color:white;
+
+  border:
+    2px solid
+    rgba(255,255,255,.2);
+
+  font-size:13px;
+
+  box-shadow:
+    0 7px 18px
+    rgba(0,0,0,.2);
+
+  touch-action:manipulation;
+}
+
+.mobileBtn.big{
+  grid-row:span 2;
+
+  height:150px;
+
+  border-radius:30px;
+}
+
+/* =========================================================
+   MOBILE ANPASSUNG
+========================================================= */
+
+@media
+(pointer:coarse),
+(max-width:800px){
+
+  #mobileControls{
+    display:block;
+  }
+
+  #help{
+    display:none;
+  }
+
+  .hudBox{
+    min-width:0;
+
+    padding:8px 10px;
+  }
+
+  .hudMain{
+    font-size:14px;
+  }
+
+  .hudTitle{
+    font-size:10px;
+  }
+
+  #topHud{
+    top:8px;
+    left:8px;
+    right:8px;
+  }
+
+  .panel{
+    padding:16px;
+
+    border-radius:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameWrap">
+
+<canvas id="game"></canvas>
+
+<!-- ======================================================
+     HUD
+====================================================== -->
+
+<div id="topHud">
+
+  <div class="hudBox">
+
+    <div class="hudTitle">
+      Dorfleben
+    </div>
+
+    <div
+      class="hudMain"
+      id="timeText"
+    >
+      Tag 1 · 08:00
+    </div>
+
+    <div
+      id="weatherText"
+      style="
+        color:#cce8f4;
+        font-size:13px;
+        margin-top:2px;
+      "
+    >
+      ☀️ Sonnig
+    </div>
+
+  </div>
+
+  <div
+    class="hudBox"
+    style="text-align:right"
+  >
+
+    <div class="hudTitle">
+      Geld / Energie
+    </div>
+
+    <div class="hudMain">
+
+      <span id="moneyText">
+        750
+      </span>
+
+      🪙
+
+    </div>
+
+    <div
+      id="energyText"
+      style="
+        color:#a8f0b6;
+        font-size:13px;
+        margin-top:2px;
+      "
+    >
+      ⚡ 100 / 100
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     HILFE
+====================================================== -->
+
+<div id="help">
+
+WASD/Pfeile: Laufen ·
+E: Interagieren ·
+F: Werkzeug ·
+I: Inventar ·
+M: Karte ·
+ESC: Menü ·
+Automatisches Speichern alle 20 Sekunden
+
+</div>
+
+<div id="contextHint"></div>
+
+<div id="toast"></div>
+
+<!-- ======================================================
+     MOBILE STEUERUNG
+====================================================== -->
+
+<div id="mobileControls">
+
+  <div id="stickBase">
+
+    <div id="stickKnob"></div>
+
+  </div>
+
+  <div class="mobileBtns">
+
+    <button
+      class="mobileBtn big"
+      id="mobileInteract"
+    >
+      E
+      <br>
+      Aktion
+    </button>
+
+    <button
+      class="mobileBtn"
+      id="mobileTool"
+    >
+      F
+      <br>
+      Werkzeug
+    </button>
+
+    <button
+      class="mobileBtn"
+      id="mobileInv"
+    >
+      I
+      <br>
+      Inventar
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     START
+====================================================== -->
+
+<div
+  id="startScreen"
+  class="overlay show"
+>
+
+  <div class="panel">
+
+    <div class="logo">
+      Island Life
+    </div>
+
+    <div class="subtitle">
+      Dein kleines Dorf,
+      nur ohne Konzernanwälte
+      im Gebüsch.
+    </div>
+
+    <div
+      style="
+        margin:
+          10px
+          0
+          18px;
+      "
+    >
+
+      <span class="badge">
+        🌳 Sammeln & Ernten
+      </span>
+
+      <span class="badge">
+        🏠 Eigenes Haus
+      </span>
+
+      <span class="badge">
+        🏪 Laden
+      </span>
+
+      <span class="badge">
+        🌦️ Wetter
+      </span>
+
+      <span class="badge">
+        💾 Speichern
+      </span>
+
+    </div>
+
+    <p>
+
+      Erkunde die Insel,
+      sammle Obst und Holz,
+      verkaufe Waren im Laden,
+      kaufe Werkzeuge und
+      verbessere deinen Alltag.
+
+    </p>
+
+    <div
+      class="btnRow"
+      style="
+        justify-content:center
+      "
+    >
+
+      <button
+        class="good"
+        id="newGameBtn"
+      >
+        Neues Spiel
+      </button>
+
+      <button
+        class="warn"
+        id="continueBtn"
+      >
+        Spielstand laden
+      </button>
+
+    </div>
+
+    <p
+      style="
+        font-size:12px;
+        margin-top:14px;
+      "
+    >
+
+      Speicherung erfolgt lokal
+      im Browser.
+
+      Keine externen Dateien
+      oder Bibliotheken nötig.
+
+    </p>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     INVENTAR
+====================================================== -->
+
+<div
+  id="inventoryOverlay"
+  class="overlay"
+>
+
+  <div class="panel">
+
+    <h2>
+      🎒 Inventar
+    </h2>
+
+    <p>
+
+      Deine gesammelten
+      Gegenstände und Werkzeuge.
+
+    </p>
+
+    <div id="inventoryList"></div>
+
+    <div class="btnRow">
+
+      <button
+        class="secondary"
+        data-close="inventoryOverlay"
+      >
+        Schließen
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     SHOP
+====================================================== -->
+
+<div
+  id="shopOverlay"
+  class="overlay"
+>
+
+  <div class="panel">
+
+    <h2>
+      🏪 Mikas Markt
+    </h2>
+
+    <p id="shopGreeting">
+
+      Willkommen!
+
+      Kaufen, verkaufen,
+      reich werden.
+
+      Der ganz normale
+      menschliche Kreislauf.
+
+    </p>
+
+    <div
+      class="grid"
+      style="
+        grid-template-columns:
+          1fr
+          1fr
+      "
+    >
+
+      <div class="card">
+
+        <strong>
+          Kaufen
+        </strong>
+
+        <div id="shopBuy"></div>
+
+      </div>
+
+      <div class="card">
+
+        <strong>
+          Verkaufen
+        </strong>
+
+        <div id="shopSell"></div>
+
+      </div>
+
+    </div>
+
+    <div class="btnRow">
+
+      <button
+        class="secondary"
+        data-close="shopOverlay"
+      >
+        Laden verlassen
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     HAUS
+====================================================== -->
+
+<div
+  id="houseOverlay"
+  class="overlay"
+>
+
+  <div class="panel">
+
+    <h2>
+      🏠 Dein Haus
+    </h2>
+
+    <p>
+
+      Ein erstaunlich friedlicher Ort.
+
+      Kein Unkraut,
+      keine Steuerpost.
+
+    </p>
+
+    <div class="grid">
+
+      <div class="card">
+
+        <strong>
+          🛏️ Schlafen
+        </strong>
+
+        <p>
+
+          Beendet den Tag,
+          füllt Energie und
+          lässt Früchte nachwachsen.
+
+        </p>
+
+        <button
+          id="sleepBtn"
+          class="good"
+        >
+          Bis morgen schlafen
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <strong>
+          📦 Lager
+        </strong>
+
+        <p>
+
+          In dieser ersten Version
+          dient dein Haus als
+          sicherer Ruhepunkt.
+
+        </p>
+
+        <div class="itemMeta">
+
+          Hausstufe:
+
+          <span id="houseLevelText">
+            1
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <strong>
+          🔨 Ausbau
+        </strong>
+
+        <p>
+
+          Nächste Hausstufe kostet
+
+          2.500 Münzen
+          +
+          20 Holz.
+
+        </p>
+
+        <button
+          id="upgradeHouseBtn"
+          class="warn"
+        >
+          Haus ausbauen
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="btnRow">
+
+      <button
+        class="secondary"
+        data-close="houseOverlay"
+      >
+        Haus verlassen
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     PAUSE
+====================================================== -->
+
+<div
+  id="pauseOverlay"
+  class="overlay"
+>
+
+  <div
+    class="panel"
+    style="
+      max-width:520px
+    "
+  >
+
+    <h2>
+      ⏸️ Pause
+    </h2>
+
+    <p>
+
+      Die Insel wartet geduldig.
+
+      Die Bäume haben ohnehin
+      nichts Besseres vor.
+
+    </p>
+
+    <div class="btnRow">
+
+      <button id="resumeBtn">
+        Weiter
+      </button>
+
+      <button
+        id="saveBtn"
+        class="good"
+      >
+        Speichern
+      </button>
+
+      <button
+        id="resetBtn"
+        class="danger"
+      >
+        Spielstand löschen
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+     KARTE
+====================================================== -->
+
+<div
+  id="mapOverlay"
+  class="overlay"
+>
+
+  <div class="panel">
+
+    <h2>
+      🗺️ Inselkarte
+    </h2>
+
+    <canvas
+      id="mapCanvas"
+      width="760"
+      height="440"
+      style="
+        position:relative;
+        width:100%;
+        height:auto;
+        border-radius:16px;
+        background:#7bc6dc;
+        border:
+          1px solid
+          rgba(255,255,255,.12);
+      "
+    ></canvas>
+
+    <div class="btnRow">
+
+      <button
+        class="secondary"
+        data-close="mapOverlay"
+      >
+        Schließen
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<script>
+
+(() => {
+
+'use strict';
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+const canvas =
+  document.getElementById(
+    'game'
+  );
+
+const ctx =
+  canvas.getContext(
+    '2d'
+  );
+
+const DPR =
+  Math.min(
+    2,
+    window.devicePixelRatio || 1
+  );
+
+/* =========================================================
+   UI
+========================================================= */
+
+const UI = {
+
+  timeText:
+    document.getElementById(
+      'timeText'
+    ),
+
+  weatherText:
+    document.getElementById(
+      'weatherText'
+    ),
+
+  moneyText:
+    document.getElementById(
+      'moneyText'
+    ),
+
+  energyText:
+    document.getElementById(
+      'energyText'
+    ),
+
+  contextHint:
+    document.getElementById(
+      'contextHint'
+    ),
+
+  toast:
+    document.getElementById(
+      'toast'
+    ),
+
+  startScreen:
+    document.getElementById(
+      'startScreen'
+    ),
+
+  inventoryOverlay:
+    document.getElementById(
+      'inventoryOverlay'
+    ),
+
+  shopOverlay:
+    document.getElementById(
+      'shopOverlay'
+    ),
+
+  houseOverlay:
+    document.getElementById(
+      'houseOverlay'
+    ),
+
+  pauseOverlay:
+    document.getElementById(
+      'pauseOverlay'
+    ),
+
+  mapOverlay:
+    document.getElementById(
+      'mapOverlay'
+    ),
+
+  inventoryList:
+    document.getElementById(
+      'inventoryList'
+    ),
+
+  shopBuy:
+    document.getElementById(
+      'shopBuy'
+    ),
+
+  shopSell:
+    document.getElementById(
+      'shopSell'
+    ),
+
+  houseLevelText:
+    document.getElementById(
+      'houseLevelText'
+    )
+
+};
+
+/* =========================================================
+   SPIEL KONSTANTEN
+========================================================= */
+
+const SAVE_KEY =
+  'islandLifeSingleFileSave_v1';
+
+const WORLD = {
+
+  w:2400,
+
+  h:1800
+
+};
+
+const keys =
+  new Set();
+
+let lastTime =
+  performance.now();
+
+let gameStarted =
+  false;
+
+let pausedByOverlay =
+  false;
+
+let autosaveAccumulator =
+  0;
+
+let toastTimer =
+  null;
+
+let weatherChangeAccumulator =
+  0;
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+const ITEMS = {
+
+  apple:{
+
+    name:'Apfel',
+
+    icon:'🍎',
+
+    sell:35
+
+  },
+
+  orange:{
+
+    name:'Orange',
+
+    icon:'🍊',
+
+    sell:40
+
+  },
+
+  cherry:{
+
+    name:'Kirsche',
+
+    icon:'🍒',
+
+    sell:45
+
+  },
+
+  wood:{
+
+    name:'Holz',
+
+    icon:'🪵',
+
+    sell:25
+
+  },
+
+  stone:{
+
+    name:'Stein',
+
+    icon:'🪨',
+
+    sell:20
+
+  },
+
+  flower:{
+
+    name:'Wildblume',
+
+    icon:'🌼',
+
+    sell:15
+
+  },
+
+  axe:{
+
+    name:'Axt',
+
+    icon:'🪓',
+
+    buy:420
+
+  },
+
+  pickaxe:{
+
+    name:'Spitzhacke',
+
+    icon:'⛏️',
+
+    buy:500
+
+  },
+
+  sapling:{
+
+    name:'Baumsetzling',
+
+    icon:'🌱',
+
+    buy:90
+
+  },
+
+  energyDrink:{
+
+    name:'Beerenlimonade',
+
+    icon:'🥤',
+
+    buy:130
+
+  }
+
+};
+
+/* =========================================================
+   SPIELSTAND
+========================================================= */
+
+const state = {
+
+  day:1,
+
+  minutes:
+    8 * 60,
+
+  weather:
+    'sunny',
+
+  money:
+    750,
+
+  energy:
+    100,
+
+  maxEnergy:
+    100,
+
+  houseLevel:
+    1,
+
+  inventory:{
+
+    apple:0,
+
+    orange:0,
+
+    cherry:0,
+
+    wood:0,
+
+    stone:0,
+
+    flower:0,
+
+    axe:0,
+
+    pickaxe:0,
+
+    sapling:0,
+
+    energyDrink:0
+
+  },
+
+  player:{
+
+    x:1230,
+
+    y:960,
+
+    r:16,
+
+    speed:210,
+
+    dirX:0,
+
+    dirY:1,
+
+    walkT:0
+
+  },
+
+  trees:[],
+
+  rocks:[],
+
+  flowers:[]
+
+};
+
+/* =========================================================
+   GEBÄUDE
+========================================================= */
+
+const buildings = [
+
+  {
+
+    id:'house',
+
+    x:1050,
+
+    y:650,
+
+    w:250,
+
+    h:190,
+
+    label:'Dein Haus',
+
+    roof:'#e87566',
+
+    wall:'#f6d9a0',
+
+    door:'#6f4c35'
+
+  },
+
+  {
+
+    id:'shop',
+
+    x:1540,
+
+    y:710,
+
+    w:300,
+
+    h:220,
+
+    label:'Mikas Markt',
+
+    roof:'#4aa3bc',
+
+    wall:'#f1e2b3',
+
+    door:'#624637'
+
+  }
+
+];
+
+/* =========================================================
+   TEICHE
+========================================================= */
+
+const ponds = [
+
+  {
+
+    x:260,
+
+    y:260,
+
+    w:490,
+
+    h:300
+
+  },
+
+  {
+
+    x:1730,
+
+    y:1220,
+
+    w:420,
+
+    h:290
+
+  }
+
+];
+
+/* =========================================================
+   WEGE
+========================================================= */
+
+const paths = [
+
+  {
+
+    x:900,
+
+    y:900,
+
+    w:1050,
+
+    h:110
+
+  },
+
+  {
+
+    x:1165,
+
+    y:750,
+
+    w:100,
+
+    h:520
+
+  },
+
+  {
+
+    x:1640,
+
+    y:820,
+
+    w:100,
+
+    h:450
+
+  }
+
+];
+
+/* =========================================================
+   HILFSFUNKTIONEN
+========================================================= */
+
+function rand(
+  min,
+  max
+){
+
+  return (
+    Math.random() *
+    (max-min)
+    +
+    min
+  );
+
+}
+
+function clamp(
+  v,
+  min,
+  max
+){
+
+  return Math.max(
+    min,
+    Math.min(
+      max,
+      v
+    )
+  );
+
+}
+
+function dist(
+  ax,
+  ay,
+  bx,
+  by
+){
+
+  return Math.hypot(
+    ax-bx,
+    ay-by
+  );
+
+}
+
+function rectContains(
+  r,
+  x,
+  y,
+  pad=0
+){
+
+  return (
+    x >
+      r.x-pad
+    &&
+    x <
+      r.x+r.w+pad
+    &&
+    y >
+      r.y-pad
+    &&
+    y <
+      r.y+r.h+pad
+  );
+
+}
+
+/* =========================================================
+   WELT ERSTELLEN
+========================================================= */
+
+function seededObjectPositions(){
+
+  state.trees = [
+
+    tree(
+      360,
+      760,
+      'apple'
+    ),
+
+    tree(
+      480,
+      850,
+      'apple'
+    ),
+
+    tree(
+      610,
+      700,
+      'cherry'
+    ),
+
+    tree(
+      730,
+      820,
+      'orange'
+    ),
+
+    tree(
+      340,
+      1110,
+      'orange'
+    ),
+
+    tree(
+      520,
+      1240,
+      'apple'
+    ),
+
+    tree(
+      690,
+      1140,
+      'cherry'
+    ),
+
+    tree(
+      820,
+      1320,
+      'apple'
+    ),
+
+    tree(
+      1940,
+      430,
+      'orange'
+    ),
+
+    tree(
+      2070,
+      560,
+      'cherry'
+    ),
+
+    tree(
+      2130,
+      760,
+      'apple'
+    ),
+
+    tree(
+      1940,
+      880,
+      'apple'
+    ),
+
+    tree(
+      330,
+      1510,
+      'cherry'
+    ),
+
+    tree(
+      550,
+      1530,
+      'orange'
+    ),
+
+    tree(
+      780,
+      1520,
+      'apple'
+    ),
+
+    tree(
+      2050,
+      1530,
+      'orange'
+    ),
+
+    tree(
+      2200,
+      1080,
+      'cherry'
+    ),
+
+    tree(
+      1900,
+      1090,
+      'apple'
+    ),
+
+    tree(
+      880,
+      360,
+      'apple'
+    ),
+
+    tree(
+      1060,
+      330,
+      'orange'
+    )
+
+  ];
+
+  state.rocks = [
+
+    rock(
+      900,
+      1380
+    ),
+
+    rock(
+      1030,
+      1440
+    ),
+
+    rock(
+      1160,
+      1360
+    ),
+
+    rock(
+      2220,
+      380
+    ),
+
+    rock(
+      1990,
+      320
+    ),
+
+    rock(
+      1420,
+      1500
+    ),
+
+    rock(
+      1530,
+      1430
+    )
+
+  ];
+
+  state.flowers = [
+
+    flower(
+      900,
+      520
+    ),
+
+    flower(
+      970,
+      540
+    ),
+
+    flower(
+      1370,
+      520
+    ),
+
+    flower(
+      1440,
+      560
+    ),
+
+    flower(
+      1480,
+      1250
+    ),
+
+    flower(
+      1540,
+      1300
+    ),
+
+    flower(
+      860,
+      1040
+    ),
+
+    flower(
+      800,
+      1015
+    )
+
+  ];
+
+}
+
+/* =========================================================
+   OBJEKT ERZEUGER
+========================================================= */
+
+function tree(
+  x,
+  y,
+  fruit
+){
+
+  return {
+
+    x,
+
+    y,
+
+    r:34,
+
+    fruit,
+
+    fruitCount:3,
+
+    stump:false,
+
+    hp:3,
+
+    regrowDay:0
+
+  };
+
+}
+
+function rock(
+  x,
+  y
+){
+
+  return {
+
+    x,
+
+    y,
+
+    r:27,
+
+    hp:3,
+
+    broken:false,
+
+    respawnDay:0
+
+  };
+
+}
+
+function flower(
+  x,
+  y
+){
+
+  return {
+
+    x,
+
+    y,
+
+    picked:false,
+
+    respawnDay:0
+
+  };
+
+}
+
+/* =========================================================
+   CANVAS GRÖSSE
+========================================================= */
+
+function resize(){
+
+  const w =
+    window.innerWidth;
+
+  const h =
+    window.innerHeight;
+
+  canvas.width =
+    Math.floor(
+      w * DPR
+    );
+
+  canvas.height =
+    Math.floor(
+      h * DPR
+    );
+
+  canvas.style.width =
+    w+'px';
+
+  canvas.style.height =
+    h+'px';
+
+  ctx.setTransform(
+    DPR,
+    0,
+    0,
+    DPR,
+    0,
+    0
+  );
+
+}
+
+window.addEventListener(
+  'resize',
+  resize
+);
+
+resize();
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+function hasOpenOverlay(){
+
+  return !!document.querySelector(
+    '.overlay.show:not(#startScreen)'
+  );
+
+}
+
+function setOverlay(
+  id,
+  show
+){
+
+  const el =
+    document.getElementById(
+      id
+    );
+
+  if(!el){
+    return;
+  }
+
+  el.classList.toggle(
+    'show',
+    show
+  );
+
+  pausedByOverlay =
+    hasOpenOverlay();
+
+  if(
+    show
+    &&
+    id === 'inventoryOverlay'
+  ){
+
+    renderInventory();
+
+  }
+
+  if(
+    show
+    &&
+    id === 'shopOverlay'
+  ){
+
+    renderShop();
+
+  }
+
+  if(
+    show
+    &&
+    id === 'houseOverlay'
+  ){
+
+    UI.houseLevelText.textContent =
+      state.houseLevel;
+
+  }
+
+  if(
+    show
+    &&
+    id === 'mapOverlay'
+  ){
+
+    drawMap();
+
+  }
+
+}
+
+document
+.querySelectorAll(
+  '[data-close]'
+)
+.forEach(
+  btn =>
+    btn.addEventListener(
+      'click',
+      () =>
+        setOverlay(
+          btn.dataset.close,
+          false
+        )
+    )
+);
+
+/* =========================================================
+   NEUES SPIEL
+========================================================= */
+
+document
+.getElementById(
+  'newGameBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    localStorage.removeItem(
+      SAVE_KEY
+    );
+
+    resetState();
+
+    UI.startScreen
+    .classList
+    .remove(
+      'show'
+    );
+
+    gameStarted =
+      true;
+
+    toast(
+      'Willkommen auf deiner Insel! Sammle zuerst etwas Obst.'
+    );
+
+  }
+);
+
+/* =========================================================
+   SPIEL LADEN
+========================================================= */
+
+document
+.getElementById(
+  'continueBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    if(
+      loadGame()
+    ){
+
+      UI.startScreen
+      .classList
+      .remove(
+        'show'
+      );
+
+      gameStarted =
+        true;
+
+      toast(
+        'Spielstand geladen. Willkommen zurück!'
+      );
+
+    }
+    else{
+
+      toast(
+        'Noch kein Spielstand vorhanden.'
+      );
+
+    }
+
+  }
+);
+
+/* =========================================================
+   PAUSE BUTTONS
+========================================================= */
+
+document
+.getElementById(
+  'resumeBtn'
+)
+.addEventListener(
+  'click',
+  () =>
+    setOverlay(
+      'pauseOverlay',
+      false
+    )
+);
+
+document
+.getElementById(
+  'saveBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    saveGame();
+
+    toast(
+      'Spiel gespeichert.'
+    );
+
+  }
+);
+
+document
+.getElementById(
+  'resetBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    localStorage.removeItem(
+      SAVE_KEY
+    );
+
+    resetState();
+
+    setOverlay(
+      'pauseOverlay',
+      false
+    );
+
+    toast(
+      'Spielstand zurückgesetzt.'
+    );
+
+  }
+);
+
+/* =========================================================
+   SCHLAFEN
+========================================================= */
+
+document
+.getElementById(
+  'sleepBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    state.day++;
+
+    state.minutes =
+      7*60+30;
+
+    state.energy =
+      state.maxEnergy;
+
+    refreshDailyObjects();
+
+    state.weather =
+      randomWeather();
+
+    setOverlay(
+      'houseOverlay',
+      false
+    );
+
+    saveGame();
+
+    toast(
+      `Guten Morgen! Tag ${state.day} beginnt.`
+    );
+
+  }
+);
+
+/* =========================================================
+   HAUSAUSBAU
+========================================================= */
+
+document
+.getElementById(
+  'upgradeHouseBtn'
+)
+.addEventListener(
+  'click',
+  () => {
+
+    if(
+      state.houseLevel >= 3
+    ){
+
+      toast(
+        'Dein Haus ist in dieser Version bereits maximal ausgebaut.'
+      );
+
+      return;
+
+    }
+
+    if(
+      state.money < 2500
+      ||
+      state.inventory.wood < 20
+    ){
+
+      toast(
+        'Du brauchst 2.500 Münzen und 20 Holz.'
+      );
+
+      return;
+
+    }
+
+    state.money -=
+      2500;
+
+    state.inventory.wood -=
+      20;
+
+    state.houseLevel++;
+
+    UI.houseLevelText
+    .textContent =
+      state.houseLevel;
+
+    toast(
+      `Haus auf Stufe ${state.houseLevel} ausgebaut!`
+    );
+
+    updateHud();
+
+  }
+);
+
+/* =========================================================
+   TASTATUR
+========================================================= */
+
+window.addEventListener(
+  'keydown',
+  e => {
+
+    const k =
+      e.key.toLowerCase();
+
+    if(
+      [
+        'arrowup',
+        'arrowdown',
+        'arrowleft',
+        'arrowright',
+        ' '
+      ]
+      .includes(
+        k
+      )
+    ){
+
+      e.preventDefault();
+
+    }
+
+    keys.add(
+      k
+    );
+
+    if(
+      !gameStarted
+    ){
+
+      return;
+
+    }
+
+    if(
+      k === 'e'
+    ){
+
+      interact();
+
+    }
+
+    if(
+      k === 'f'
+    ){
+
+      useTool();
+
+    }
+
+    if(
+      k === 'i'
+    ){
+
+      setOverlay(
+        'inventoryOverlay',
+        !UI.inventoryOverlay
+          .classList
+          .contains(
+            'show'
+          )
+      );
+
+    }
+
+    if(
+      k === 'm'
+    ){
+
+      setOverlay(
+        'mapOverlay',
+        !UI.mapOverlay
+          .classList
+          .contains(
+            'show'
+          )
+      );
+
+    }
+
+    if(
+      k === 'escape'
+    ){
+
+      if(
+        hasOpenOverlay()
+      ){
+
+        document
+        .querySelectorAll(
+          '.overlay.show:not(#startScreen)'
+        )
+        .forEach(
+          el =>
+            el.classList.remove(
+              'show'
+            )
+        );
+
+      }
+      else{
+
+        setOverlay(
+          'pauseOverlay',
+          true
+        );
+
+      }
+
+      pausedByOverlay =
+        hasOpenOverlay();
+
+    }
+
+  }
+);
+
+window.addEventListener(
+  'keyup',
+  e =>
+    keys.delete(
+      e.key.toLowerCase()
+    )
+);
+
+/* =========================================================
+   SPIEL RESETTEN
+========================================================= */
+
+function resetState(){
+
+  state.day =
+    1;
+
+  state.minutes =
+    8*60;
+
+  state.weather =
+    'sunny';
+
+  state.money =
+    750;
+
+  state.energy =
+    100;
+
+  state.maxEnergy =
+    100;
+
+  state.houseLevel =
+    1;
+
+  state.inventory = {
+
+    apple:0,
+
+    orange:0,
+
+    cherry:0,
+
+    wood:0,
+
+    stone:0,
+
+    flower:0,
+
+    axe:0,
+
+    pickaxe:0,
+
+    sapling:0,
+
+    energyDrink:0
+
+  };
+
+  state.player = {
+
+    x:1230,
+
+    y:960,
+
+    r:16,
+
+    speed:210,
+
+    dirX:0,
+
+    dirY:1,
+
+    walkT:0
+
+  };
+
+  seededObjectPositions();
+
+  updateHud();
+
+}
+
+seededObjectPositions();
+
+/* =========================================================
+   TOAST MELDUNG
+========================================================= */
+
+function toast(
+  msg
+){
+
+  UI.toast.textContent =
+    msg;
+
+  UI.toast
+  .classList
+  .add(
+    'show'
+  );
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(
+      () =>
+        UI.toast
+        .classList
+        .remove(
+          'show'
+        ),
+      2600
+    );
+
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHud(){
+
+  const h =
+    Math.floor(
+      state.minutes / 60
+    )
+    %
+    24;
+
+  const m =
+    Math.floor(
+      state.minutes % 60
+    );
+
+  UI.timeText.textContent =
+    `Tag ${state.day} · ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+
+  const weatherLabels = {
+
+    sunny:
+      '☀️ Sonnig',
+
+    cloudy:
+      '☁️ Bewölkt',
+
+    rain:
+      '🌧️ Regen',
+
+    storm:
+      '⛈️ Gewitter'
+
+  };
+
+  UI.weatherText.textContent =
+    weatherLabels[
+      state.weather
+    ]
+    ||
+    state.weather;
+
+  UI.moneyText.textContent =
+    Math.floor(
+      state.money
+    )
+    .toLocaleString(
+      'de-DE'
+    );
+
+  UI.energyText.textContent =
+    `⚡ ${Math.ceil(state.energy)} / ${state.maxEnergy}`;
+
+  UI.energyText.style.color =
+    state.energy < 25
+    ?
+    '#ff9e9e'
+    :
+    '#a8f0b6';
+
+}
+
+/* =========================================================
+   ITEM HINZUFÜGEN
+========================================================= */
+
+function addItem(
+  id,
+  n=1
+){
+
+  state.inventory[id] =
+    (
+      state.inventory[id]
+      ||
+      0
+    )
+    +
+    n;
+
+  renderInventory();
+
+}
+
+/* =========================================================
+   ENERGIE
+========================================================= */
+
+function spendEnergy(
+  amount
+){
+
+  if(
+    state.energy < amount
+  ){
+
+    toast(
+      'Du bist zu müde. Schlaf eine Runde in deinem Haus.'
+    );
+
+    return false;
+
+  }
+
+  state.energy -=
+    amount;
+
+  return true;
+
+}
+
+/* =========================================================
+   KAMERA
+========================================================= */
+
+function getCamera(){
+
+  const sw =
+    window.innerWidth;
+
+  const sh =
+    window.innerHeight;
+
+  return {
+
+    x:
+      clamp(
+        state.player.x-sw/2,
+        0,
+        WORLD.w-sw
+      ),
+
+    y:
+      clamp(
+        state.player.y-sh/2,
+        0,
+        WORLD.h-sh
+      )
+
+  };
+
+}
+
+/* =========================================================
+   KOLLISION
+========================================================= */
+
+function collideWorld(
+  nx,
+  ny
+){
+
+  if(
+    nx < 35
+    ||
+    ny < 35
+    ||
+    nx > WORLD.w-35
+    ||
+    ny > WORLD.h-35
+  ){
+
+    return true;
+
+  }
+
+  for(
+    const b
+    of buildings
+  ){
+
+    if(
+      rectContains(
+        b,
+        nx,
+        ny,
+        15
+      )
+    ){
+
+      return true;
+
+    }
+
+  }
+
+  for(
+    const p
+    of ponds
+  ){
+
+    if(
+      rectContains(
+        p,
+        nx,
+        ny,
+        6
+      )
+    ){
+
+      return true;
+
+    }
+
+  }
+
+  for(
+    const t
+    of state.trees
+  ){
+
+    if(
+      !t.stump
+      &&
+      dist(
+        nx,
+        ny,
+        t.x,
+        t.y
+      )
+      <
+      t.r+18
+    ){
+
+      return true;
+
+    }
+
+  }
+
+  for(
+    const r
+    of state.rocks
+  ){
+
+    if(
+      !r.broken
+      &&
+      dist(
+        nx,
+        ny,
+        r.x,
+        r.y
+      )
+      <
+      r.r+16
+    ){
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+}
+
+/* =========================================================
+   SPIEL UPDATE
+========================================================= */
+
+function update(
+  dt
+){
+
+  if(
+    !gameStarted
+    ||
+    pausedByOverlay
+  ){
+
+    return;
+
+  }
+
+  let dx =
+    0;
+
+  let dy =
+    0;
+
+  if(
+    keys.has('w')
+    ||
+    keys.has('arrowup')
+  ){
+
+    dy -= 1;
+
+  }
+
+  if(
+    keys.has('s')
+    ||
+    keys.has('arrowdown')
+  ){
+
+    dy += 1;
+
+  }
+
+  if(
+    keys.has('a')
+    ||
+    keys.has('arrowleft')
+  ){
+
+    dx -= 1;
+
+  }
+
+  if(
+    keys.has('d')
+    ||
+    keys.has('arrowright')
+  ){
+
+    dx += 1;
+
+  }
+
+  if(
+    mobileVector.x
+    ||
+    mobileVector.y
+  ){
+
+    dx +=
+      mobileVector.x;
+
+    dy +=
+      mobileVector.y;
+
+  }
+
+  const len =
+    Math.hypot(
+      dx,
+      dy
+    );
+
+  if(
+    len > 0
+  ){
+
+    dx /=
+      len;
+
+    dy /=
+      len;
+
+    state.player.dirX =
+      dx;
+
+    state.player.dirY =
+      dy;
+
+    state.player.walkT +=
+      dt * 10;
+
+    const nx =
+      state.player.x
+      +
+      dx
+      *
+      state.player.speed
+      *
+      dt;
+
+    const ny =
+      state.player.y
+      +
+      dy
+      *
+      state.player.speed
+      *
+      dt;
+
+    if(
+      !collideWorld(
+        nx,
+        state.player.y
+      )
+    ){
+
+      state.player.x =
+        nx;
+
+    }
+
+    if(
+      !collideWorld(
+        state.player.x,
+        ny
+      )
+    ){
+
+      state.player.y =
+        ny;
+
+    }
+
+  }
+
+  /* Spielzeit */
+
+  state.minutes +=
+    dt * 3.1;
+
+  if(
+    state.minutes >= 1440
+  ){
+
+    state.day++;
+
+    state.minutes -=
+      1440;
+
+    state.energy =
+      state.maxEnergy;
+
+    refreshDailyObjects();
+
+    state.weather =
+      randomWeather();
+
+    toast(
+      `Tag ${state.day} beginnt.`
+    );
+
+  }
+
+  /* Wetter */
+
+  weatherChangeAccumulator +=
+    dt;
+
+  if(
+    weatherChangeAccumulator > 110
+  ){
+
+    weatherChangeAccumulator =
+      0;
+
+    if(
+      Math.random() < .55
+    ){
+
+      state.weather =
+        randomWeather();
+
+    }
+
+  }
+
+  /* Autosave */
+
+  autosaveAccumulator +=
+    dt;
+
+  if(
+    autosaveAccumulator > 20
+  ){
+
+    autosaveAccumulator =
+      0;
+
+    saveGame();
+
+  }
+
+  updateHud();
+
+  updateContextHint();
+
+}
+
+/* =========================================================
+   WETTER
+========================================================= */
+
+function randomWeather(){
+
+  const r =
+    Math.random();
+
+  if(
+    r < .52
+  ){
+
+    return 'sunny';
+
+  }
+
+  if(
+    r < .78
+  ){
+
+    return 'cloudy';
+
+  }
+
+  if(
+    r < .95
+  ){
+
+    return 'rain';
+
+  }
+
+  return 'storm';
+
+}
+
+/* =========================================================
+   NEUER TAG
+========================================================= */
+
+function refreshDailyObjects(){
+
+  for(
+    const t
+    of state.trees
+  ){
+
+    if(
+      t.stump
+      &&
+      state.day >=
+      t.regrowDay
+    ){
+
+      t.stump =
+        false;
+
+      t.hp =
+        3;
+
+      t.fruitCount =
+        0;
+
+      t.regrowDay =
+        state.day+2;
+
+    }
+    else if(
+      !t.stump
+      &&
+      t.fruitCount === 0
+      &&
+      state.day >=
+      t.regrowDay
+    ){
+
+      t.fruitCount =
+        3;
+
+    }
+
+  }
+
+  for(
+    const r
+    of state.rocks
+  ){
+
+    if(
+      r.broken
+      &&
+      state.day >=
+      r.respawnDay
+    ){
+
+      r.broken =
+        false;
+
+      r.hp =
+        3;
+
+    }
+
+  }
+
+  for(
+    const f
+    of state.flowers
+  ){
+
+    if(
+      f.picked
+      &&
+      state.day >=
+      f.respawnDay
+    ){
+
+      f.picked =
+        false;
+
+    }
+
+  }
+
+}
+
+/* =========================================================
+   NÄCHSTES INTERAKTIONSOBJEKT
+========================================================= */
+
+function nearestInteractable(){
+
+  const p =
+    state.player;
+
+  let best =
+    null;
+
+  let bestD =
+    9999;
+
+  /* Gebäude */
+
+  for(
+    const b
+    of buildings
+  ){
+
+    const cx =
+      clamp(
+        p.x,
+        b.x,
+        b.x+b.w
+      );
+
+    const cy =
+      clamp(
+        p.y,
+        b.y,
+        b.y+b.h
+      );
+
+    const d =
+      dist(
+        p.x,
+        p.y,
+        cx,
+        cy
+      );
+
+    if(
+      d < 90
+      &&
+      d < bestD
+    ){
+
+      best = {
+
+        type:b.id,
+
+        obj:b,
+
+        d
+
+      };
+
+      bestD =
+        d;
+
+    }
+
+  }
+
+  /* Bäume */
+
+  for(
+    const t
+    of state.trees
+  ){
+
+    const d =
+      dist(
+        p.x,
+        p.y,
+        t.x,
+        t.y
+      );
+
+    if(
+      d < 85
+      &&
+      d < bestD
+    ){
+
+      best = {
+
+        type:'tree',
+
+        obj:t,
+
+        d
+
+      };
+
+      bestD =
+        d;
+
+    }
+
+  }
+
+  /* Steine */
+
+  for(
+    const r
+    of state.rocks
+  ){
+
+    const d =
+      dist(
+        p.x,
+        p.y,
+        r.x,
+        r.y
+      );
+
+    if(
+      d < 80
+      &&
+      d < bestD
+    ){
+
+      best = {
+
+        type:'rock',
+
+        obj:r,
+
+        d
+
+      };
+
+      bestD =
+        d;
+
+    }
+
+  }
+
+  /* Blumen */
+
+  for(
+    const f
+    of state.flowers
+  ){
+
+    const d =
+      dist(
+        p.x,
+        p.y,
+        f.x,
+        f.y
+      );
+
+    if(
+      !f.picked
+      &&
+      d < 65
+      &&
+      d < bestD
+    ){
+
+      best = {
+
+        type:'flower',
+
+        obj:f,
+
+        d
+
+      };
+
+      bestD =
+        d;
+
+    }
+
+  }
+
+  return best;
+
+}
+
+/* =========================================================
+   INTERAKTIONS TEXT
+========================================================= */
+
+function updateContextHint(){
+
+  if(
+    pausedByOverlay
+  ){
+
+    UI.contextHint.style.display =
+      'none';
+
+    return;
+
+  }
+
+  const n =
+    nearestInteractable();
+
+  if(
+    !n
+  ){
+
+    UI.contextHint.style.display =
+      'none';
+
+    return;
+
+  }
+
+  let text =
+    '';
+
+  if(
+    n.type === 'house'
+  ){
+
+    text =
+      'E · Haus betreten';
+
+  }
+  else if(
+    n.type === 'shop'
+  ){
+
+    text =
+      'E · Laden betreten';
+
+  }
+  else if(
+    n.type === 'tree'
+  ){
+
+    text =
+      n.obj.stump
+      ?
+      'F · Setzling pflegen'
+      :
+      (
+        n.obj.fruitCount > 0
+        ?
+        'E · Obst ernten | F · Axt'
+        :
+        'F · Axt benutzen'
+      );
+
+  }
+  else if(
+    n.type === 'rock'
+  ){
+
+    text =
+      n.obj.broken
+      ?
+      'Der Stein kommt später zurück'
+      :
+      'F · Spitzhacke benutzen';
+
+  }
+  else if(
+    n.type === 'flower'
+  ){
+
+    text =
+      'E · Blume pflücken';
+
+  }
+
+  UI.contextHint.textContent =
+    text;
+
+  UI.contextHint.style.display =
+    'block';
+
+}
+
+/* =========================================================
+   INTERAKTION
+========================================================= */
+
+function interact(){
+
+  if(
+    pausedByOverlay
+  ){
+
+    return;
+
+  }
+
+  const n =
+    nearestInteractable();
+
+  if(
+    !n
+  ){
+
+    toast(
+      'Hier gibt es gerade nichts zu tun.'
+    );
+
+    return;
+
+  }
+
+  /* Haus */
+
+  if(
+    n.type === 'house'
+  ){
+
+    setOverlay(
+      'houseOverlay',
+      true
+    );
+
+    return;
+
+  }
+
+  /* Laden */
+
+  if(
+    n.type === 'shop'
+  ){
+
+    setOverlay(
+      'shopOverlay',
+      true
+    );
+
+    return;
+
+  }
+
+  /* Baum */
+
+  if(
+    n.type === 'tree'
+  ){
+
+    const t =
+      n.obj;
+
+    if(
+      t.stump
+    ){
+
+      toast(
+        'Der Baum wächst noch nach.'
+      );
+
+      return;
+
+    }
+
+    if(
+      t.fruitCount > 0
+    ){
+
+      const fruit =
+        t.fruit;
+
+      addItem(
+        fruit,
+        t.fruitCount
+      );
+
+      toast(
+        `+${t.fruitCount} ${ITEMS[fruit].name}`
+      );
+
+      t.fruitCount =
+        0;
+
+      t.regrowDay =
+        state.day+2;
+
+      return;
+
+    }
+
+    toast(
+      'Keine Früchte. Vielleicht in ein paar Tagen.'
+    );
+
+  }
+
+  /* Blume */
+
+  if(
+    n.type === 'flower'
+  ){
+
+    n.obj.picked =
+      true;
+
+    n.obj.respawnDay =
+      state.day+2;
+
+    addItem(
+      'flower',
+      1
+    );
+
+    toast(
+      '+1 Wildblume'
+    );
+
+  }
+
+}
+
+/* =========================================================
+   WERKZEUGE
+========================================================= */
+
+function useTool(){
+
+  if(
+    pausedByOverlay
+  ){
+
+    return;
+
+  }
+
+  const n =
+    nearestInteractable();
+
+  if(
+    !n
+  ){
+
+    toast(
+      'Hier bringt dein Werkzeug nichts.'
+    );
+
+    return;
+
+  }
+
+  /* BAUM */
+
+  if(
+    n.type === 'tree'
+  ){
+
+    if(
+      state.inventory.axe < 1
+    ){
+
+      toast(
+        'Du brauchst eine Axt aus dem Laden.'
+      );
+
+      return;
+
+    }
+
+    if(
+      n.obj.stump
+    ){
+
+      toast(
+        'Der Baum ist bereits gefällt.'
+      );
+
+      return;
+
+    }
+
+    if(
+      !spendEnergy(
+        6
+      )
+    ){
+
+      return;
+
+    }
+
+    n.obj.hp--;
+
+    toast(
+      `🪓 Schlag! Noch ${Math.max(0,n.obj.hp)} Treffer.`
+    );
+
+    if(
+      n.obj.hp <= 0
+    ){
+
+      n.obj.stump =
+        true;
+
+      n.obj.regrowDay =
+        state.day+3;
+
+      addItem(
+        'wood',
+        randInt(
+          3,
+          5
+        )
+      );
+
+      toast(
+        'Baum gefällt! Holz gesammelt.'
+      );
+
+    }
+
+  }
+
+  /* STEIN */
+
+  else if(
+    n.type === 'rock'
+  ){
+
+    if(
+      state.inventory.pickaxe < 1
+    ){
+
+      toast(
+        'Du brauchst eine Spitzhacke aus dem Laden.'
+      );
+
+      return;
+
+    }
+
+    if(
+      n.obj.broken
+    ){
+
+      toast(
+        'Hier liegt nur noch Geröll.'
+      );
+
+      return;
+
+    }
+
+    if(
+      !spendEnergy(
+        5
+      )
+    ){
+
+      return;
+
+    }
+
+    n.obj.hp--;
+
+    toast(
+      `⛏️ Klonk! Noch ${Math.max(0,n.obj.hp)} Treffer.`
+    );
+
+    if(
+      n.obj.hp <= 0
+    ){
+
+      n.obj.broken =
+        true;
+
+      n.obj.respawnDay =
+        state.day+2;
+
+      addItem(
+        'stone',
+        randInt(
+          2,
+          4
+        )
+      );
+
+      toast(
+        'Stein abgebaut!'
+      );
+
+    }
+
+  }
+
+  else{
+
+    toast(
+      'Dieses Werkzeug passt hier nicht.'
+    );
+
+  }
+
+  updateHud();
+
+}
+
+function randInt(
+  a,
+  b
+){
+
+  return Math.floor(
+    rand(
+      a,
+      b+1
+    )
+  );
+
+}
+
+/* =========================================================
+   INVENTAR
+========================================================= */
+
+function renderInventory(){
+
+  UI.inventoryList.innerHTML =
+    '';
+
+  for(
+    const [
+      id,
+      item
+    ]
+    of Object.entries(
+      ITEMS
+    )
+  ){
+
+    const count =
+      state.inventory[id]
+      ||
+      0;
+
+    const el =
+      document.createElement(
+        'div'
+      );
+
+    el.className =
+      'invItem';
+
+    el.innerHTML = `
+
+      <div style="font-size:24px">
+        ${item.icon}
+      </div>
+
+      <strong>
+        ${item.name}
+      </strong>
+
+      <div class="invCount">
+        ${count}
+      </div>
+
+    `;
+
+    if(
+      id === 'energyDrink'
+      &&
+      count > 0
+    ){
+
+      const b =
+        document.createElement(
+          'button'
+        );
+
+      b.textContent =
+        'Trinken';
+
+      b.style.marginTop =
+        '8px';
+
+      b.onclick =
+        () => {
+
+          state.inventory.energyDrink--;
+
+          state.energy =
+            Math.min(
+              state.maxEnergy,
+              state.energy+35
+            );
+
+          renderInventory();
+
+          updateHud();
+
+          toast(
+            '+35 Energie'
+          );
+
+        };
+
+      el.appendChild(
+        b
+      );
+
+    }
+
+    UI.inventoryList
+    .appendChild(
+      el
+    );
+
+  }
+
+}
+
+/* =========================================================
+   SHOP
+========================================================= */
+
+function renderShop(){
+
+  UI.shopBuy.innerHTML =
+    '';
+
+  UI.shopSell.innerHTML =
+    '';
+
+  const buyIds = [
+
+    'axe',
+
+    'pickaxe',
+
+    'sapling',
+
+    'energyDrink'
+
+  ];
+
+  /* Kaufen */
+
+  for(
+    const id
+    of buyIds
+  ){
+
+    const item =
+      ITEMS[id];
+
+    const row =
+      document.createElement(
+        'div'
+      );
+
+    row.className =
+      'itemRow';
+
+    const owned =
+      state.inventory[id]
+      ||
+      0;
+
+    row.innerHTML = `
+
+      <div>
+
+        <div>
+
+          ${item.icon}
+
+          <strong style="display:inline">
+            ${item.name}
+          </strong>
+
+        </div>
+
+        <div class="itemMeta">
+          Besitz: ${owned}
+        </div>
+
+      </div>
+
+      <div>
+
+        <div class="price">
+          ${item.buy} 🪙
+        </div>
+
+      </div>
+
+    `;
+
+    const btn =
+      document.createElement(
+        'button'
+      );
+
+    btn.textContent =
+      'Kaufen';
+
+    btn.style.marginLeft =
+      '8px';
+
+    btn.onclick =
+      () =>
+        buyItem(
+          id
+        );
+
+    row.lastElementChild
+    .appendChild(
+      btn
+    );
+
+    UI.shopBuy
+    .appendChild(
+      row
+    );
+
+  }
+
+  /* Verkaufen */
+
+  const sellIds = [
+
+    'apple',
+
+    'orange',
+
+    'cherry',
+
+    'wood',
+
+    'stone',
+
+    'flower'
+
+  ];
+
+  for(
+    const id
+    of sellIds
+  ){
+
+    const item =
+      ITEMS[id];
+
+    const count =
+      state.inventory[id]
+      ||
+      0;
+
+    const row =
+      document.createElement(
+        'div'
+      );
+
+    row.className =
+      'itemRow';
+
+    row.innerHTML = `
+
+      <div>
+
+        <div>
+
+          ${item.icon}
+
+          <strong style="display:inline">
+            ${item.name}
+          </strong>
+
+        </div>
+
+        <div class="itemMeta">
+          Im Inventar:
+          ${count}
+        </div>
+
+      </div>
+
+      <div>
+
+        <div class="price">
+          ${item.sell} 🪙
+        </div>
+
+      </div>
+
+    `;
+
+    const btn =
+      document.createElement(
+        'button'
+      );
+
+    btn.textContent =
+      '1 verkaufen';
+
+    btn.disabled =
+      count < 1;
+
+    btn.onclick =
+      () =>
+        sellItem(
+          id,
+          1
+        );
+
+    row.lastElementChild
+    .appendChild(
+      btn
+    );
+
+    const all =
+      document.createElement(
+        'button'
+      );
+
+    all.textContent =
+      'Alle';
+
+    all.className =
+      'secondary';
+
+    all.style.marginLeft =
+      '6px';
+
+    all.disabled =
+      count < 1;
+
+    all.onclick =
+      () =>
+        sellItem(
+          id,
+          state.inventory[id]
+        );
+
+    row.lastElementChild
+    .appendChild(
+      all
+    );
+
+    UI.shopSell
+    .appendChild(
+      row
+    );
+
+  }
+
+}
+
+/* =========================================================
+   KAUFEN
+========================================================= */
+
+function buyItem(
+  id
+){
+
+  const item =
+    ITEMS[id];
+
+  if(
+    state.money <
+    item.buy
+  ){
+
+    toast(
+      'Nicht genug Münzen.'
+    );
+
+    return;
+
+  }
+
+  state.money -=
+    item.buy;
+
+  addItem(
+    id,
+    1
+  );
+
+  renderShop();
+
+  updateHud();
+
+  toast(
+    `${item.name} gekauft.`
+  );
+
+}
+
+/* =========================================================
+   VERKAUFEN
+========================================================= */
+
+function sellItem(
+  id,
+  n
+){
+
+  n =
+    Math.min(
+      n,
+      state.inventory[id] || 0
+    );
+
+  if(
+    n <= 0
+  ){
+
+    return;
+
+  }
+
+  state.inventory[id] -=
+    n;
+
+  state.money +=
+    ITEMS[id].sell*n;
+
+  renderShop();
+
+  updateHud();
+
+  toast(
+    `${n}× ${ITEMS[id].name} verkauft.`
+  );
+
+}
+
+/* =========================================================
+   SPEICHERN
+========================================================= */
+
+function saveGame(){
+
+  if(
+    !gameStarted
+  ){
+
+    return;
+
+  }
+
+  const data =
+    JSON.stringify(
+      state
+    );
+
+  localStorage.setItem(
+    SAVE_KEY,
+    data
+  );
+
+}
+
+/* =========================================================
+   LADEN
+========================================================= */
+
+function loadGame(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        SAVE_KEY
+      );
+
+    if(
+      !raw
+    ){
+
+      return false;
+
+    }
+
+    const data =
+      JSON.parse(
+        raw
+      );
+
+    Object.assign(
+      state,
+      data
+    );
+
+    state.inventory =
+      Object.assign(
+        {
+
+          apple:0,
+
+          orange:0,
+
+          cherry:0,
+
+          wood:0,
+
+          stone:0,
+
+          flower:0,
+
+          axe:0,
+
+          pickaxe:0,
+
+          sapling:0,
+
+          energyDrink:0
+
+        },
+
+        state.inventory || {}
+
+      );
+
+    updateHud();
+
+    return true;
+
+  }
+  catch(
+    e
+  ){
+
+    console.error(
+      e
+    );
+
+    return false;
+
+  }
+
+}
+
+window.addEventListener(
+  'beforeunload',
+  saveGame
+);
+
+/* =========================================================
+   ZEICHNEN
+========================================================= */
+
+function draw(){
+
+  const sw =
+    window.innerWidth;
+
+  const sh =
+    window.innerHeight;
+
+  ctx.clearRect(
+    0,
+    0,
+    sw,
+    sh
+  );
+
+  const cam =
+    getCamera();
+
+  ctx.save();
+
+  ctx.translate(
+    -cam.x,
+    -cam.y
+  );
+
+  drawGround();
+
+  drawWater();
+
+  drawPaths();
+
+  drawDecor();
+
+  drawBuildings();
+
+  drawTrees();
+
+  drawRocks();
+
+  drawFlowers();
+
+  drawPlayer();
+
+  drawWorldBorder();
+
+  ctx.restore();
+
+  drawWeatherFx();
+
+  drawDayNightOverlay();
+
+}
+
+/* =========================================================
+   BODEN
+========================================================= */
+
+function drawGround(){
+
+  ctx.fillStyle =
+    '#6fbd73';
+
+  ctx.fillRect(
+    0,
+    0,
+    WORLD.w,
+    WORLD.h
+  );
+
+  /* Kleine Grasdetails */
+
+  ctx.fillStyle =
+    'rgba(255,255,255,.055)';
+
+  for(
+    let y=40;
+    y<WORLD.h;
+    y+=60
+  ){
+
+    for(
+      let x=
+        (y/60%2)*30;
+      x<WORLD.w;
+      x+=60
+    ){
+
+      ctx.beginPath();
+
+      ctx.arc(
+        x,
+        y,
+        2.4,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fill();
+
+    }
+
+  }
+
+  /* Strand */
+
+  ctx.fillStyle =
+    '#e8d091';
+
+  ctx.fillRect(
+    0,
+    WORLD.h-170,
+    WORLD.w,
+    170
+  );
+
+}
+
+/* =========================================================
+   WASSER
+========================================================= */
+
+function drawWater(){
+
+  for(
+    const p
+    of ponds
+  ){
+
+    ctx.fillStyle =
+      '#65c4dc';
+
+    roundRect(
+      ctx,
+      p.x,
+      p.y,
+      p.w,
+      p.h,
+      55,
+      true,
+      false
+    );
+
+    ctx.strokeStyle =
+      'rgba(255,255,255,.35)';
+
+    ctx.lineWidth =
+      3;
+
+    for(
+      let yy=
+        p.y+45;
+      yy<
+        p.y+p.h-20;
+      yy+=55
+    ){
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        p.x+40,
+        yy
+      );
+
+      ctx.quadraticCurveTo(
+        p.x+p.w/2,
+        yy+15,
+        p.x+p.w-40,
+        yy
+      );
+
+      ctx.stroke();
+
+    }
+
+  }
+
+  /* Meer */
+
+  ctx.fillStyle =
+    '#63c4dd';
+
+  ctx.fillRect(
+    0,
+    WORLD.h-95,
+    WORLD.w,
+    95
+  );
+
+}
+
+/* =========================================================
+   WEGE
+========================================================= */
+
+function drawPaths(){
+
+  ctx.fillStyle =
+    '#cdbb8f';
+
+  for(
+    const p
+    of paths
+  ){
+
+    roundRect(
+      ctx,
+      p.x,
+      p.y,
+      p.w,
+      p.h,
+      30,
+      true,
+      false
+    );
+
+  }
+
+}
+
+/* =========================================================
+   DEKORATION
+========================================================= */
+
+function drawDecor(){
+
+  ctx.fillStyle =
+    'rgba(45,112,54,.24)';
+
+  for(
+    let i=0;
+    i<90;
+    i++
+  ){
+
+    const x =
+      (i*197)
+      %
+      WORLD.w;
+
+    const y =
+      (i*317)
+      %
+      WORLD.h;
+
+    if(
+      !ponds.some(
+        p =>
+          rectContains(
+            p,
+            x,
+            y,
+            20
+          )
+      )
+    ){
+
+      ctx.beginPath();
+
+      ctx.ellipse(
+        x,
+        y,
+        10,
+        3,
+        (i%7)*.3,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fill();
+
+    }
+
+  }
+
+}
+
+/* =========================================================
+   GEBÄUDE
+========================================================= */
+
+function drawBuildings(){
+
+  for(
+    const b
+    of buildings
+  ){
+
+    drawBuilding(
+      b
+    );
+
+  }
+
+}
+
+function drawBuilding(
+  b
+){
+
+  ctx.save();
+
+  /* Schatten */
+
+  ctx.fillStyle =
+    'rgba(0,0,0,.18)';
+
+  roundRect(
+    ctx,
+    b.x+12,
+    b.y+18,
+    b.w,
+    b.h,
+    16,
+    true,
+    false
+  );
+
+  /* Wand */
+
+  ctx.fillStyle =
+    b.wall;
+
+  roundRect(
+    ctx,
+    b.x,
+    b.y+50,
+    b.w,
+    b.h-50,
+    14,
+    true,
+    false
+  );
+
+  /* Dach */
+
+  ctx.fillStyle =
+    b.roof;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    b.x-18,
+    b.y+72
+  );
+
+  ctx.lineTo(
+    b.x+b.w/2,
+    b.y-28
+  );
+
+  ctx.lineTo(
+    b.x+b.w+18,
+    b.y+72
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+  /* Fenster */
+
+  ctx.fillStyle =
+    '#bfe6f3';
+
+  ctx.fillRect(
+    b.x+35,
+    b.y+95,
+    54,
+    44
+  );
+
+  ctx.fillRect(
+    b.x+b.w-90,
+    b.y+95,
+    54,
+    44
+  );
+
+  ctx.strokeStyle =
+    '#6b8a91';
+
+  ctx.lineWidth =
+    3;
+
+  ctx.strokeRect(
+    b.x+35,
+    b.y+95,
+    54,
+    44
+  );
+
+  ctx.strokeRect(
+    b.x+b.w-90,
+    b.y+95,
+    54,
+    44
+  );
+
+  /* Tür */
+
+  ctx.fillStyle =
+    b.door;
+
+  roundRect(
+    ctx,
+    b.x+b.w/2-34,
+    b.y+b.h-72,
+    68,
+    72,
+    8,
+    true,
+    false
+  );
+
+  /* Schild */
+
+  ctx.fillStyle =
+    'rgba(14,25,28,.72)';
+
+  roundRect(
+    ctx,
+    b.x+b.w/2-72,
+    b.y+34,
+    144,
+    34,
+    11,
+    true,
+    false
+  );
+
+  ctx.fillStyle =
+    'white';
+
+  ctx.font =
+    '700 15px system-ui';
+
+  ctx.textAlign =
+    'center';
+
+  ctx.fillText(
+    b.label,
+    b.x+b.w/2,
+    b.y+57
+  );
+
+  ctx.restore();
+
+}
+
+/* =========================================================
+   BÄUME
+========================================================= */
+
+function drawTrees(){
+
+  for(
+    const t
+    of state.trees
+  ){
+
+    drawTree(
+      t
+    );
+
+  }
+
+}
+
+function drawTree(
+  t
+){
+
+  ctx.save();
+
+  /* Baumstumpf */
+
+  if(
+    t.stump
+  ){
+
+    ctx.fillStyle =
+      '#8a5a32';
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      t.x,
+      t.y+20,
+      25,
+      14,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      '#b27b4c';
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      t.x,
+      t.y+16,
+      17,
+      8,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.restore();
+
+    return;
+
+  }
+
+  /* Schatten */
+
+  ctx.fillStyle =
+    'rgba(0,0,0,.17)';
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    t.x+10,
+    t.y+34,
+    42,
+    15,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* Stamm */
+
+  ctx.fillStyle =
+    '#7d4f2a';
+
+  roundRect(
+    ctx,
+    t.x-9,
+    t.y-5,
+    18,
+    54,
+    6,
+    true,
+    false
+  );
+
+  /* leichte Bewegung */
+
+  const sway =
+    Math.sin(
+      performance.now()/900
+      +
+      t.x
+    )
+    *
+    2;
+
+  ctx.fillStyle =
+    '#3b9b58';
+
+  for(
+    const [
+      ox,
+      oy,
+      r
+    ]
+    of [
+
+      [-22,-18,30],
+
+      [15,-20,34],
+
+      [-3,-43,36]
+
+    ]
+  ){
+
+    ctx.beginPath();
+
+    ctx.arc(
+      t.x+ox+sway,
+      t.y+oy,
+      r,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+  ctx.fillStyle =
+    '#5dbd6d';
+
+  ctx.beginPath();
+
+  ctx.arc(
+    t.x-4+sway,
+    t.y-35,
+    25,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* Früchte */
+
+  const fruitColors = {
+
+    apple:
+      '#e84e4e',
+
+    orange:
+      '#f39a36',
+
+    cherry:
+      '#bc244c'
+
+  };
+
+  ctx.fillStyle =
+    fruitColors[
+      t.fruit
+    ]
+    ||
+    '#e84e4e';
+
+  const spots = [
+
+    [-20,-28],
+
+    [18,-18],
+
+    [0,-52]
+
+  ];
+
+  for(
+    let i=0;
+    i<
+    Math.min(
+      t.fruitCount,
+      3
+    );
+    i++
+  ){
+
+    const s =
+      spots[i];
+
+    ctx.beginPath();
+
+    ctx.arc(
+      t.x+s[0],
+      t.y+s[1],
+      7,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+  ctx.restore();
+
+}
+
+/* =========================================================
+   STEINE
+========================================================= */
+
+function drawRocks(){
+
+  for(
+    const r
+    of state.rocks
+  ){
+
+    if(
+      r.broken
+    ){
+
+      continue;
+
+    }
+
+    ctx.fillStyle =
+      'rgba(0,0,0,.15)';
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      r.x+7,
+      r.y+17,
+      30,
+      10,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      '#87939a';
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      r.x-24,
+      r.y+15
+    );
+
+    ctx.lineTo(
+      r.x-15,
+      r.y-16
+    );
+
+    ctx.lineTo(
+      r.x+9,
+      r.y-27
+    );
+
+    ctx.lineTo(
+      r.x+27,
+      r.y-7
+    );
+
+    ctx.lineTo(
+      r.x+19,
+      r.y+21
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.fillStyle =
+      '#aab4b8';
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      r.x-10,
+      r.y-10
+    );
+
+    ctx.lineTo(
+      r.x+8,
+      r.y-18
+    );
+
+    ctx.lineTo(
+      r.x+15,
+      r.y-7
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+  }
+
+}
+
+/* =========================================================
+   BLUMEN
+========================================================= */
+
+function drawFlowers(){
+
+  for(
+    const f
+    of state.flowers
+  ){
+
+    if(
+      f.picked
+    ){
+
+      continue;
+
+    }
+
+    ctx.strokeStyle =
+      '#3f7f48';
+
+    ctx.lineWidth =
+      3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      f.x,
+      f.y+12
+    );
+
+    ctx.lineTo(
+      f.x,
+      f.y-5
+    );
+
+    ctx.stroke();
+
+    const colors = [
+
+      '#ffdb63',
+
+      '#ff8eb2',
+
+      '#fff6ff',
+
+      '#8dd9ff'
+
+    ];
+
+    ctx.fillStyle =
+      colors[
+        Math.floor(
+          (f.x+f.y)
+          %
+          colors.length
+        )
+      ];
+
+    for(
+      let a=0;
+      a<5;
+      a++
+    ){
+
+      const ang =
+        a*Math.PI*2/5;
+
+      ctx.beginPath();
+
+      ctx.arc(
+        f.x
+        +
+        Math.cos(ang)*7,
+
+        f.y-8
+        +
+        Math.sin(ang)*7,
+
+        5,
+
+        0,
+
+        Math.PI*2
+      );
+
+      ctx.fill();
+
+    }
+
+    ctx.fillStyle =
+      '#f0b03b';
+
+    ctx.beginPath();
+
+    ctx.arc(
+      f.x,
+      f.y-8,
+      4,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }
+
+}
+
+/* =========================================================
+   SPIELER
+========================================================= */
+
+function drawPlayer(){
+
+  const p =
+    state.player;
+
+  const bob =
+    (
+      Math.sin(
+        p.walkT
+      )
+      *
+      2
+    );
+
+  ctx.save();
+
+  ctx.translate(
+    p.x,
+    p.y+bob
+  );
+
+  /* Schatten */
+
+  ctx.fillStyle =
+    'rgba(0,0,0,.2)';
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    5,
+    22,
+    18,
+    7,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* Beine */
+
+  ctx.strokeStyle =
+    '#314652';
+
+  ctx.lineWidth =
+    7;
+
+  ctx.lineCap =
+    'round';
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    -6,
+    10
+  );
+
+  ctx.lineTo(
+    -8,
+    24
+  );
+
+  ctx.moveTo(
+    6,
+    10
+  );
+
+  ctx.lineTo(
+    8,
+    24
+  );
+
+  ctx.stroke();
+
+  /* Kopf */
+
+  ctx.fillStyle =
+    '#f2b89e';
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -13,
+    13,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* Haare */
+
+  ctx.fillStyle =
+    '#273e50';
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -17,
+    13,
+    Math.PI,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  /* Körper */
+
+  ctx.fillStyle =
+    '#ffd45b';
+
+  roundRect(
+    ctx,
+    -14,
+    0,
+    28,
+    23,
+    8,
+    true,
+    false
+  );
+
+  /* Augen */
+
+  ctx.fillStyle =
+    '#273e50';
+
+  ctx.beginPath();
+
+  ctx.arc(
+    -4,
+    -14,
+    1.8,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    4,
+    -14,
+    1.8,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+}
+
+/* =========================================================
+   WELTRAND
+========================================================= */
+
+function drawWorldBorder(){
+
+  ctx.strokeStyle =
+    'rgba(255,255,255,.15)';
+
+  ctx.lineWidth =
+    8;
+
+  ctx.strokeRect(
+    4,
+    4,
+    WORLD.w-8,
+    WORLD.h-8
+  );
+
+}
+
+/* =========================================================
+   WETTER EFFEKTE
+========================================================= */
+
+function drawWeatherFx(){
+
+  const sw =
+    window.innerWidth;
+
+  const sh =
+    window.innerHeight;
+
+  const now =
+    performance.now()/1000;
+
+  if(
+    state.weather === 'cloudy'
+    ||
+    state.weather === 'rain'
+    ||
+    state.weather === 'storm'
+  ){
+
+    ctx.fillStyle =
+      'rgba(20,32,40,.12)';
+
+    ctx.fillRect(
+      0,
+      0,
+      sw,
+      sh
+    );
+
+  }
+
+  if(
+    state.weather === 'rain'
+    ||
+    state.weather === 'storm'
+  ){
+
+    ctx.strokeStyle =
+      state.weather === 'storm'
+      ?
+      'rgba(190,220,255,.65)'
+      :
+      'rgba(190,220,255,.45)';
+
+    ctx.lineWidth =
+      2;
+
+    for(
+      let i=0;
+      i<85;
+      i++
+    ){
+
+      const x =
+        (
+          i*83
+          +
+          now*240
+        )
+        %
+        (
+          sw+120
+        )
+        -
+        60;
+
+      const y =
+        (
+          i*137
+          +
+          now*520
+        )
+        %
+        (
+          sh+80
+        )
+        -
+        40;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x,
+        y
+      );
+
+      ctx.lineTo(
+        x-8,
+        y+18
+      );
+
+      ctx.stroke();
+
+    }
+
+  }
+
+  /* Blitz */
+
+  if(
+    state.weather === 'storm'
+    &&
+    Math.sin(
+      now*1.7
+    )
+    >
+    0.985
+  ){
+
+    ctx.fillStyle =
+      'rgba(255,255,255,.32)';
+
+    ctx.fillRect(
+      0,
+      0,
+      sw,
+      sh
+    );
+
+  }
+
+}
+
+/* =========================================================
+   TAG / NACHT
+========================================================= */
+
+function drawDayNightOverlay(){
+
+  const h =
+    state.minutes/60;
+
+  let alpha =
+    0;
+
+  if(
+    h < 6
+  ){
+
+    alpha =
+      .48;
+
+  }
+  else if(
+    h < 8
+  ){
+
+    alpha =
+      (
+        (8-h)/2
+        *
+        .25
+      );
+
+  }
+  else if(
+    h > 18
+  ){
+
+    alpha =
+      Math.min(
+        .48,
+        (h-18)/6*.48
+      );
+
+  }
+
+  if(
+    alpha > 0
+  ){
+
+    ctx.fillStyle =
+      `rgba(20,34,68,${alpha})`;
+
+    ctx.fillRect(
+      0,
+      0,
+      window.innerWidth,
+      window.innerHeight
+    );
+
+  }
+
+}
+
+/* =========================================================
+   RUNDES RECHTECK
+========================================================= */
+
+function roundRect(
+  c,
+  x,
+  y,
+  w,
+  h,
+  r,
+  fill,
+  stroke
+){
+
+  r =
+    Math.min(
+      r,
+      w/2,
+      h/2
+    );
+
+  c.beginPath();
+
+  c.moveTo(
+    x+r,
+    y
+  );
+
+  c.arcTo(
+    x+w,
+    y,
+    x+w,
+    y+h,
+    r
+  );
+
+  c.arcTo(
+    x+w,
+    y+h,
+    x,
+    y+h,
+    r
+  );
+
+  c.arcTo(
+    x,
+    y+h,
+    x,
+    y,
+    r
+  );
+
+  c.arcTo(
+    x,
+    y,
+    x+w,
+    y,
+    r
+  );
+
+  if(
+    fill
+  ){
+
+    c.fill();
+
+  }
+
+  if(
+    stroke
+  ){
+
+    c.stroke();
+
+  }
+
+}
+
+/* =========================================================
+   KARTE
+========================================================= */
+
+function drawMap(){
+
+  const mc =
+    document.getElementById(
+      'mapCanvas'
+    );
+
+  const m =
+    mc.getContext(
+      '2d'
+    );
+
+  const sx =
+    mc.width /
+    WORLD.w;
+
+  const sy =
+    mc.height /
+    WORLD.h;
+
+  m.clearRect(
+    0,
+    0,
+    mc.width,
+    mc.height
+  );
+
+  m.fillStyle =
+    '#72bd73';
+
+  m.fillRect(
+    0,
+    0,
+    mc.width,
+    mc.height
+  );
+
+  /* Wasser */
+
+  m.fillStyle =
+    '#62c4dc';
+
+  for(
+    const p
+    of ponds
+  ){
+
+    m.fillRect(
+      p.x*sx,
+      p.y*sy,
+      p.w*sx,
+      p.h*sy
+    );
+
+  }
+
+  m.fillRect(
+    0,
+    (WORLD.h-95)*sy,
+    mc.width,
+    95*sy
+  );
+
+  /* Wege */
+
+  m.fillStyle =
+    '#cdbb8f';
+
+  for(
+    const p
+    of paths
+  ){
+
+    m.fillRect(
+      p.x*sx,
+      p.y*sy,
+      p.w*sx,
+      p.h*sy
+    );
+
+  }
+
+  /* Gebäude */
+
+  for(
+    const b
+    of buildings
+  ){
+
+    m.fillStyle =
+      b.id === 'house'
+      ?
+      '#e87566'
+      :
+      '#4aa3bc';
+
+    m.fillRect(
+      b.x*sx,
+      b.y*sy,
+      b.w*sx,
+      b.h*sy
+    );
+
+  }
+
+  /* Bäume */
+
+  m.fillStyle =
+    '#2f8f4f';
+
+  for(
+    const t
+    of state.trees
+  ){
+
+    if(
+      !t.stump
+    ){
+
+      m.beginPath();
+
+      m.arc(
+        t.x*sx,
+        t.y*sy,
+        5,
+        0,
+        Math.PI*2
+      );
+
+      m.fill();
+
+    }
+
+  }
+
+  /* Spieler */
+
+  m.fillStyle =
+    '#fff';
+
+  m.beginPath();
+
+  m.arc(
+    state.player.x*sx,
+    state.player.y*sy,
+    7,
+    0,
+    Math.PI*2
+  );
+
+  m.fill();
+
+  m.strokeStyle =
+    '#20333b';
+
+  m.lineWidth =
+    2;
+
+  m.stroke();
+
+}
+
+/* =========================================================
+   MOBILE JOYSTICK
+========================================================= */
+
+let mobileVector = {
+
+  x:0,
+
+  y:0
+
+};
+
+const stickBase =
+  document.getElementById(
+    'stickBase'
+  );
+
+const stickKnob =
+  document.getElementById(
+    'stickKnob'
+  );
+
+let stickActive =
+  false;
+
+let stickId =
+  null;
+
+function updateStick(
+  clientX,
+  clientY
+){
+
+  const r =
+    stickBase.getBoundingClientRect();
+
+  const cx =
+    r.left
+    +
+    r.width/2;
+
+  const cy =
+    r.top
+    +
+    r.height/2;
+
+  let dx =
+    clientX-cx;
+
+  let dy =
+    clientY-cy;
+
+  const max =
+    40;
+
+  const len =
+    Math.hypot(
+      dx,
+      dy
+    )
+    ||
+    1;
+
+  if(
+    len > max
+  ){
+
+    dx =
+      dx/len*max;
+
+    dy =
+      dy/len*max;
+
+  }
+
+  stickKnob.style.transform =
+    `translate(${dx}px,${dy}px)`;
+
+  mobileVector = {
+
+    x:
+      dx/max,
+
+    y:
+      dy/max
+
+  };
+
+}
+
+stickBase.addEventListener(
+  'pointerdown',
+  e => {
+
+    stickActive =
+      true;
+
+    stickId =
+      e.pointerId;
+
+    stickBase.setPointerCapture(
+      e.pointerId
+    );
+
+    updateStick(
+      e.clientX,
+      e.clientY
+    );
+
+  }
+);
+
+stickBase.addEventListener(
+  'pointermove',
+  e => {
+
+    if(
+      stickActive
+      &&
+      e.pointerId ===
+      stickId
+    ){
+
+      updateStick(
+        e.clientX,
+        e.clientY
+      );
+
+    }
+
+  }
+);
+
+function endStick(){
+
+  stickActive =
+    false;
+
+  stickId =
+    null;
+
+  mobileVector = {
+
+    x:0,
+
+    y:0
+
+  };
+
+  stickKnob.style.transform =
+    'translate(0px,0px)';
+
+}
+
+stickBase.addEventListener(
+  'pointerup',
+  endStick
+);
+
+stickBase.addEventListener(
+  'pointercancel',
+  endStick
+);
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+document
+.getElementById(
+  'mobileInteract'
+)
+.addEventListener(
+  'click',
+  interact
+);
+
+document
+.getElementById(
+  'mobileTool'
+)
+.addEventListener(
+  'click',
+  useTool
+);
+
+document
+.getElementById(
+  'mobileInv'
+)
+.addEventListener(
+  'click',
+  () =>
+    setOverlay(
+      'inventoryOverlay',
+      true
+    )
+);
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function loop(
+  now
+){
+
+  const dt =
+    Math.min(
+      .033,
+      (now-lastTime)/1000
+    );
+
+  lastTime =
+    now;
+
+  update(
+    dt
+  );
+
+  draw();
+
+  requestAnimationFrame(
+    loop
+  );
+
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+updateHud();
+
+requestAnimationFrame(
+  loop
+);
+
+})();
+
+</script>
+
+</body>
+</html>
