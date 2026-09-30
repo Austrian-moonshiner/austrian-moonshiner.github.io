@@ -12,7 +12,6 @@
 
 <title>Austrian Moonshiner</title>
 
-
 <style>
 
 /* =========================================================
@@ -456,6 +455,73 @@ p{
     box-shadow:
         0 0 28px rgba(255,170,50,.3),
         0 12px 25px rgba(0,0,0,.4);
+}
+
+
+/* =========================================================
+   INSELWACHT
+========================================================= */
+
+.inselwacht-button{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:95px;
+
+    padding:20px;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:27px;
+    font-weight:900;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #083b4c,
+            #0d6670,
+            #123d35,
+            #071f2b
+        );
+
+    border:2px solid rgba(80,230,255,.65);
+
+    box-shadow:
+        0 0 18px rgba(0,220,255,.16),
+        inset 0 0 20px rgba(60,255,190,.05);
+
+    transition:.25s;
+}
+
+.inselwacht-button span{
+
+    margin-top:7px;
+
+    font-size:14px;
+    font-weight:normal;
+
+    color:#bdfcff;
+}
+
+.inselwacht-button:hover{
+
+    transform:translateY(-4px) scale(1.01);
+
+    border-color:#67f5ff;
+
+    box-shadow:
+        0 0 28px rgba(0,220,255,.30),
+        0 12px 28px rgba(0,0,0,.4);
 }
 
 
@@ -970,6 +1036,13 @@ p{
         font-size:21px;
     }
 
+    .inselwacht-button{
+
+        font-size:22px;
+
+        min-height:85px;
+    }
+
     .dorf-button{
 
         font-size:21px;
@@ -1142,6 +1215,24 @@ p{
         </span>
 
     </button>
+
+
+    <!-- =====================================================
+         INSELWACHT
+    ====================================================== -->
+
+    <a
+        href="inselwacht.html"
+        class="inselwacht-button"
+    >
+
+        🌊 INSELWACHT
+
+        <span>
+            Schütze deine Insel vor Sturm, Flut und Untergang
+        </span>
+
+    </a>
 
 
     <!-- TOWER DEFENSE -->
