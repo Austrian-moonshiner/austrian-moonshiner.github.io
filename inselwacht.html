@@ -1,0 +1,4408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Inselwacht – Die versinkende Insel</title>
+
+<style>
+
+:root{
+    --bg:#07131c;
+    --panel:#0e202c;
+    --panel2:#132b39;
+    --line:#315769;
+    --text:#edf8fc;
+    --muted:#9db8c4;
+    --accent:#56d7ff;
+    --good:#65df8b;
+    --danger:#ff6875;
+    --gold:#ffd166;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+button{
+    font:inherit;
+    color:inherit;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:100%;
+    touch-action:none;
+    cursor:crosshair;
+}
+
+
+/* =========================================================
+   STARTMENÜ
+========================================================= */
+
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 30%,#16445a 0%,#071923 45%,#030b10 100%);
+    padding:20px;
+}
+
+.startBox{
+    width:min(850px,95vw);
+    max-height:94vh;
+    overflow:auto;
+    background:rgba(9,27,38,.96);
+    border:1px solid #396579;
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 30px 100px #000b;
+    text-align:center;
+}
+
+.startBox h1{
+    font-size:clamp(34px,7vw,65px);
+    margin:0;
+    color:#e9fbff;
+    text-shadow:0 0 25px #49cfff66;
+}
+
+.subtitle{
+    color:#9fc3d0;
+    font-size:17px;
+    margin:8px 0 25px;
+}
+
+.startStory{
+    max-width:680px;
+    margin:0 auto 25px;
+    color:#c1d4db;
+    line-height:1.55;
+}
+
+.difficultyGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:20px 0;
+}
+
+.difficulty{
+    border:1px solid #31596a;
+    background:#102a38;
+    border-radius:14px;
+    padding:17px 10px;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.difficulty:hover{
+    background:#173d4d;
+    transform:translateY(-2px);
+}
+
+.difficulty.selected{
+    border:2px solid var(--accent);
+    background:#164051;
+    box-shadow:0 0 20px #4bd8ff22;
+}
+
+.difficulty .emoji{
+    font-size:30px;
+    display:block;
+    margin-bottom:6px;
+}
+
+.difficulty strong{
+    display:block;
+    font-size:17px;
+}
+
+.difficulty small{
+    display:block;
+    color:#9fb9c4;
+    line-height:1.4;
+    margin-top:6px;
+}
+
+.startStats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:18px auto;
+    max-width:650px;
+}
+
+.startStat{
+    background:#0d222e;
+    border:1px solid #264b5c;
+    border-radius:10px;
+    padding:10px;
+}
+
+.startStat b{
+    display:block;
+    color:#fff;
+    font-size:17px;
+}
+
+.startStat span{
+    color:#91afba;
+    font-size:11px;
+}
+
+.startButton{
+    margin-top:15px;
+    border:0;
+    border-radius:12px;
+    padding:14px 35px;
+    background:linear-gradient(135deg,#159dcc,#45d8ff);
+    color:#02131a;
+    font-weight:800;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 8px 25px #27caff33;
+}
+
+.startButton:hover{
+    filter:brightness(1.1);
+}
+
+.startNote{
+    color:#718d99;
+    font-size:11px;
+    margin-top:16px;
+}
+
+
+/* =========================================================
+   SPIEL UI
+========================================================= */
+
+#game{
+    position:fixed;
+    inset:0;
+    background:#07131c;
+}
+
+#topbar{
+    position:absolute;
+    left:10px;
+    right:10px;
+    top:10px;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    pointer-events:none;
+    z-index:5;
+    flex-wrap:wrap;
+}
+
+.stat{
+    background:rgba(7,19,28,.9);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:7px 11px;
+    min-width:92px;
+    backdrop-filter:blur(5px);
+    box-shadow:0 5px 20px #0005;
+}
+
+.stat b{
+    display:block;
+    font-size:15px;
+}
+
+.stat span{
+    font-size:11px;
+    color:var(--muted);
+}
+
+#waterBox{
+    min-width:145px;
+}
+
+.bar{
+    height:6px;
+    background:#173847;
+    border-radius:9px;
+    overflow:hidden;
+    margin-top:4px;
+}
+
+#waterBar{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#35bce8,#6ce8ff);
+}
+
+#buttons{
+    position:absolute;
+    right:10px;
+    top:100px;
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    z-index:6;
+}
+
+.uiBtn,
+.buildBtn,
+.modalBtn{
+    border:1px solid var(--line);
+    background:rgba(14,32,44,.95);
+    border-radius:10px;
+    padding:9px 12px;
+    cursor:pointer;
+    box-shadow:0 4px 14px #0005;
+    transition:.12s;
+    touch-action:manipulation;
+}
+
+.uiBtn:hover,
+.buildBtn:hover,
+.modalBtn:hover{
+    background:#193b4b;
+    border-color:#4d8296;
+}
+
+.uiBtn:active,
+.buildBtn:active,
+.modalBtn:active{
+    transform:translateY(1px);
+}
+
+#buildPanel{
+    position:absolute;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    z-index:6;
+    display:flex;
+    gap:7px;
+    align-items:stretch;
+    overflow-x:auto;
+    padding:4px 2px 6px;
+}
+
+.buildBtn{
+    min-width:115px;
+    text-align:left;
+}
+
+.buildBtn strong{
+    display:block;
+    font-size:13px;
+}
+
+.buildBtn small{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    margin-top:2px;
+}
+
+.buildBtn.selected{
+    outline:2px solid var(--accent);
+    background:#173d4c;
+}
+
+#info{
+    position:absolute;
+    left:10px;
+    top:100px;
+    width:min(310px,calc(100vw - 75px));
+    z-index:5;
+    background:rgba(7,19,28,.9);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 6px 24px #0006;
+    pointer-events:none;
+}
+
+#info h3{
+    margin:0 0 4px;
+    font-size:15px;
+}
+
+.hint{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.35;
+}
+
+#toast{
+    position:absolute;
+    left:50%;
+    top:78px;
+    transform:translateX(-50%);
+    z-index:20;
+    pointer-events:none;
+    background:#091a24ee;
+    border:1px solid #4b7282;
+    border-radius:10px;
+    padding:9px 14px;
+    opacity:0;
+    transition:opacity .2s;
+    max-width:min(90vw,500px);
+    text-align:center;
+}
+
+#miniMap{
+    position:absolute;
+    right:10px;
+    bottom:92px;
+    width:150px;
+    height:105px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#07131cdd;
+    z-index:5;
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+#help,
+#gameover{
+    position:absolute;
+    inset:0;
+    z-index:30;
+    display:none;
+    place-items:center;
+    background:#031019b8;
+    padding:20px;
+}
+
+.modal{
+    width:min(720px,96vw);
+    max-height:90vh;
+    overflow:auto;
+    background:#0d222e;
+    border:1px solid #396174;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 20px 70px #000b;
+}
+
+.modal h1{
+    margin-top:0;
+}
+
+.modal h2{
+    font-size:17px;
+}
+
+.modal p,
+.modal li{
+    color:#b9cdd5;
+    line-height:1.5;
+}
+
+.modalGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+}
+
+.card{
+    background:#102a38;
+    border:1px solid #285064;
+    border-radius:10px;
+    padding:10px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:750px){
+
+    .difficultyGrid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .startBox{
+        padding:20px;
+    }
+
+    .startStats{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+
+    #info{
+        top:76px;
+        font-size:11px;
+        width:220px;
+    }
+
+    .stat{
+        min-width:74px;
+        padding:5px 8px;
+    }
+
+    .stat b{
+        font-size:12px;
+    }
+
+    .stat span{
+        font-size:9px;
+    }
+
+    #buttons{
+        top:76px;
+    }
+
+    .uiBtn{
+        padding:7px 9px;
+        font-size:12px;
+    }
+
+    #miniMap{
+        display:none;
+    }
+
+    .buildBtn{
+        min-width:105px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =======================================================
+     STARTMENÜ
+======================================================= -->
+
+<div id="startScreen">
+
+    <div class="startBox">
+
+        <h1>🌊 INSELWACHT</h1>
+
+        <div class="subtitle">
+            Die Insel sinkt. Das Meer steigt. Du hast 60 Tage.
+        </div>
+
+        <div class="startStory">
+            Deine kleine Inselgemeinschaft steht vor einem ziemlich
+            unangenehmen Problem: Der Meeresspiegel steigt.
+            Baue Häuser, Farmen, Energieanlagen und vor allem
+            Schutzmauern und Dämme.
+            Sammle Ressourcen, halte deine Bevölkerung am Leben
+            und verhindere, dass deine Insel zu Atlantis 2.0 wird.
+        </div>
+
+
+        <h2>Schwierigkeitsgrad wählen</h2>
+
+        <div class="difficultyGrid">
+
+            <div class="difficulty selected" data-difficulty="easy">
+
+                <span class="emoji">🟢</span>
+
+                <strong>Leicht</strong>
+
+                <small>
+                    Langsamer Wasseranstieg,
+                    viele Ressourcen und schwache
+                    Sturmfluten.
+                </small>
+
+            </div>
+
+
+            <div class="difficulty" data-difficulty="normal">
+
+                <span class="emoji">🟡</span>
+
+                <strong>Normal</strong>
+
+                <small>
+                    Ausgewogene Herausforderung.
+                    Genug Zeit zum Aufbau,
+                    aber das Meer wartet nicht.
+                </small>
+
+            </div>
+
+
+            <div class="difficulty" data-difficulty="hard">
+
+                <span class="emoji">🔴</span>
+
+                <strong>Schwer</strong>
+
+                <small>
+                    Schnelleres Wasser,
+                    weniger Ressourcen und
+                    stärkere Stürme.
+                </small>
+
+            </div>
+
+
+            <div class="difficulty" data-difficulty="extreme">
+
+                <span class="emoji">☠️</span>
+
+                <strong>Extrem</strong>
+
+                <small>
+                    Sehr wenig Spielraum.
+                    Für Menschen, die mit
+                    dem Meer verhandeln wollen.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="startStats">
+
+            <div class="startStat">
+                <b id="previewWater">0,008 m/s</b>
+                <span>Wasseranstieg</span>
+            </div>
+
+            <div class="startStat">
+                <b id="previewWood">120</b>
+                <span>Start-Holz</span>
+            </div>
+
+            <div class="startStat">
+                <b id="previewStorm">Normal</b>
+                <span>Sturmfluten</span>
+            </div>
+
+        </div>
+
+
+        <button class="startButton" id="startButton">
+            🏝️ Insel betreten
+        </button>
+
+        <div class="startNote">
+            Eine einzelne HTML-Datei · funktioniert auf GitHub Pages
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =======================================================
+     SPIEL
+======================================================= -->
+
+<div id="game">
+
+<canvas id="canvas"></canvas>
+
+
+<div id="topbar">
+
+    <div class="stat">
+        <b id="day">Tag 1</b>
+        <span>Überleben</span>
+    </div>
+
+    <div class="stat">
+        <b id="difficultyLabel">Normal</b>
+        <span>Schwierigkeit</span>
+    </div>
+
+    <div class="stat">
+        <b id="population">12 / 20</b>
+        <span>Bevölkerung</span>
+    </div>
+
+    <div class="stat">
+        <b id="food">80</b>
+        <span>Nahrung</span>
+    </div>
+
+    <div class="stat">
+        <b id="wood">120</b>
+        <span>Holz</span>
+    </div>
+
+    <div class="stat">
+        <b id="stone">90</b>
+        <span>Stein</span>
+    </div>
+
+    <div class="stat">
+        <b id="metal">35</b>
+        <span>Metall</span>
+    </div>
+
+    <div class="stat" id="waterBox">
+
+        <b id="waterText">
+            Wasser 12.0 m
+        </b>
+
+        <div class="bar">
+            <div id="waterBar"></div>
+        </div>
+
+        <span>Meeresspiegel</span>
+
+    </div>
+
+    <div class="stat">
+
+        <b id="energy">
+            35 / 35
+        </b>
+
+        <span>Energie</span>
+
+    </div>
+
+</div>
+
+
+
+<div id="info">
+
+    <h3 id="infoTitle">
+        Inselwacht
+    </h3>
+
+    <div id="infoText" class="hint">
+        Baue Gebäude und Mauern.
+    </div>
+
+</div>
+
+
+
+<div id="buttons">
+
+    <button class="uiBtn" id="pauseBtn">
+        ⏸ Pause
+    </button>
+
+    <button class="uiBtn" id="speedBtn">
+        ▶ 1x
+    </button>
+
+    <button class="uiBtn" id="saveBtn">
+        💾 Speichern
+    </button>
+
+    <button class="uiBtn" id="loadBtn">
+        ↻ Laden
+    </button>
+
+    <button class="uiBtn" id="helpBtn">
+        ❔ Hilfe
+    </button>
+
+    <button class="uiBtn" id="resetBtn">
+        ↻ Neustart
+    </button>
+
+</div>
+
+
+
+<div id="miniMap">
+
+    <canvas id="mini"></canvas>
+
+</div>
+
+
+
+<!-- =======================================================
+     BAUMENÜ
+======================================================= -->
+
+<div id="buildPanel">
+
+    <button class="buildBtn selected" data-type="wall">
+        <strong>🧱 Schutzmauer</strong>
+        <small>20 Holz · 10 Stein</small>
+    </button>
+
+    <button class="buildBtn" data-type="house">
+        <strong>🏠 Wohnhaus</strong>
+        <small>35 Holz · 15 Stein</small>
+    </button>
+
+    <button class="buildBtn" data-type="farm">
+        <strong>🌾 Farm</strong>
+        <small>25 Holz · 20 Stein</small>
+    </button>
+
+    <button class="buildBtn" data-type="lumber">
+        <strong>🌲 Holzfäller</strong>
+        <small>25 Holz · 10 Stein</small>
+    </button>
+
+    <button class="buildBtn" data-type="quarry">
+        <strong>⛏ Steinbruch</strong>
+        <small>30 Holz · 25 Stein</small>
+    </button>
+
+    <button class="buildBtn" data-type="mine">
+        <strong>⚙ Metallmine</strong>
+        <small>45 Holz · 30 Stein · 10 Metall</small>
+    </button>
+
+    <button class="buildBtn" data-type="pump">
+        <strong>💧 Wasserpumpe</strong>
+        <small>40 Holz · 30 Stein · 10 Metall</small>
+    </button>
+
+    <button class="buildBtn" data-type="reservoir">
+        <strong>🛢 Wasserspeicher</strong>
+        <small>35 Holz · 35 Stein · 10 Metall</small>
+    </button>
+
+    <button class="buildBtn" data-type="wind">
+        <strong>🌬 Windrad</strong>
+        <small>30 Holz · 20 Stein · 15 Metall</small>
+    </button>
+
+    <button class="buildBtn" data-type="workshop">
+        <strong>🔧 Werkstatt</strong>
+        <small>50 Holz · 40 Stein · 20 Metall</small>
+    </button>
+
+    <button class="buildBtn" data-type="dike">
+        <strong>🏗 Großdamm</strong>
+        <small>50 Holz · 60 Stein · 15 Metall</small>
+    </button>
+
+</div>
+
+
+
+<div id="toast"></div>
+
+
+
+<!-- =======================================================
+     HILFE
+======================================================= -->
+
+<div id="help">
+
+    <div class="modal">
+
+        <h1>🌊 Inselwacht</h1>
+
+        <p>
+            Deine Insel sinkt. Das Meer steigt.
+            Deine Aufgabe ist es, eine funktionierende
+            Gemeinschaft aufzubauen und gleichzeitig
+            das Wasser fernzuhalten.
+        </p>
+
+
+        <div class="modalGrid">
+
+            <div class="card">
+                <b>🖱 Bauen</b>
+                <br>
+                Gebäude auswählen und anschließend
+                auf ein freies Feld klicken.
+            </div>
+
+            <div class="card">
+                <b>📱 Touch</b>
+                <br>
+                Tippen zum Bauen.
+                Ziehen zum Verschieben.
+                Zwei Finger zum Zoomen.
+            </div>
+
+            <div class="card">
+                <b>🧭 Kamera</b>
+                <br>
+                WASD oder Pfeiltasten verschieben
+                die Karte.
+            </div>
+
+            <div class="card">
+                <b>🌊 Wasser</b>
+                <br>
+                Der Meeresspiegel steigt.
+                Mauern und Dämme schützen
+                die Insel.
+            </div>
+
+            <div class="card">
+                <b>📈 Wirtschaft</b>
+                <br>
+                Farmen erzeugen Nahrung.
+                Holzfäller, Steinbrüche und Minen
+                liefern Rohstoffe.
+            </div>
+
+            <div class="card">
+                <b>⚡ Energie</b>
+                <br>
+                Windräder liefern Energie.
+                Pumpen benötigen Energie.
+            </div>
+
+        </div>
+
+
+        <h2>Überleben</h2>
+
+        <ul>
+
+            <li>
+                Nahrung wird von der Bevölkerung verbraucht.
+            </li>
+
+            <li>
+                Überflutete Gebäude produzieren nicht mehr.
+            </li>
+
+            <li>
+                Sturmfluten lassen das Meer vorübergehend
+                schneller steigen.
+            </li>
+
+            <li>
+                Pumpen können den lokalen Wasserstand beeinflussen.
+            </li>
+
+            <li>
+                Nach 60 Tagen kannst du gewinnen,
+                wenn mindestens 10 Menschen leben und
+                mindestens 70 % der Kerninsel trocken sind.
+            </li>
+
+        </ul>
+
+
+        <button class="modalBtn" id="closeHelp">
+            Schließen
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =======================================================
+     GAME OVER
+======================================================= -->
+
+<div id="gameover">
+
+    <div class="modal">
+
+        <h1 id="gameoverTitle">
+            Die Insel ist gefallen
+        </h1>
+
+        <p id="gameoverText"></p>
+
+        <button class="modalBtn" id="restartGame">
+            Neue Insel
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+"use strict";
+
+
+/* =========================================================
+   GRUNDKONFIGURATION
+========================================================= */
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const mini =
+    document.getElementById("mini");
+
+const mctx =
+    mini.getContext("2d");
+
+
+const W = 46;
+const H = 34;
+const TILE = 44;
+
+let DPR =
+    Math.max(
+        1,
+        Math.min(
+            2,
+            devicePixelRatio || 1
+        )
+    );
+
+
+let view = {
+    x:0,
+    y:0,
+    zoom:1
+};
+
+
+let selected = "wall";
+
+let paused = false;
+
+let speed = 1;
+
+let lastTime =
+    performance.now();
+
+let elapsed = 0;
+
+let toastTimer = 0;
+
+let gameEnded = false;
+
+let stormTimer = 0;
+
+let stormActive = false;
+
+let nextEvent = 45;
+
+
+/* =========================================================
+   SCHWIERIGKEITEN
+========================================================= */
+
+const DIFFICULTIES = {
+
+    easy:{
+        name:"Leicht",
+        waterRise:0.004,
+        startWood:180,
+        startStone:140,
+        startMetal:50,
+        startFood:120,
+        stormIntervalMin:75,
+        stormIntervalMax:105,
+        stormStrength:0.020,
+        production:1.25,
+        populationLoss:.04
+    },
+
+    normal:{
+        name:"Normal",
+        waterRise:0.008,
+        startWood:120,
+        startStone:90,
+        startMetal:35,
+        startFood:80,
+        stormIntervalMin:55,
+        stormIntervalMax:85,
+        stormStrength:0.030,
+        production:1,
+        populationLoss:.06
+    },
+
+    hard:{
+        name:"Schwer",
+        waterRise:0.013,
+        startWood:90,
+        startStone:70,
+        startMetal:25,
+        startFood:65,
+        stormIntervalMin:40,
+        stormIntervalMax:65,
+        stormStrength:0.045,
+        production:.90,
+        populationLoss:.09
+    },
+
+    extreme:{
+        name:"Extrem",
+        waterRise:0.020,
+        startWood:70,
+        startStone:50,
+        startMetal:15,
+        startFood:50,
+        stormIntervalMin:28,
+        stormIntervalMax:48,
+        stormStrength:0.065,
+        production:.75,
+        populationLoss:.13
+    }
+
+};
+
+
+let difficulty = "normal";
+
+
+/* =========================================================
+   GEBÄUDEKOSTEN
+========================================================= */
+
+const COSTS = {
+
+    wall:{
+        wood:20,
+        stone:10
+    },
+
+    house:{
+        wood:35,
+        stone:15
+    },
+
+    farm:{
+        wood:25,
+        stone:20
+    },
+
+    lumber:{
+        wood:25,
+        stone:10
+    },
+
+    quarry:{
+        wood:30,
+        stone:25
+    },
+
+    mine:{
+        wood:45,
+        stone:30,
+        metal:10
+    },
+
+    pump:{
+        wood:40,
+        stone:30,
+        metal:10
+    },
+
+    reservoir:{
+        wood:35,
+        stone:35,
+        metal:10
+    },
+
+    wind:{
+        wood:30,
+        stone:20,
+        metal:15
+    },
+
+    workshop:{
+        wood:50,
+        stone:40,
+        metal:20
+    },
+
+    dike:{
+        wood:50,
+        stone:60,
+        metal:15
+    }
+
+};
+
+
+/* =========================================================
+   GEBÄUDEDATEN
+========================================================= */
+
+const BUILDINGS = {
+
+    wall:{
+        name:"Schutzmauer",
+        symbol:"",
+        hp:100,
+        solid:true,
+        defense:2
+    },
+
+    house:{
+        name:"Wohnhaus",
+        symbol:"⌂",
+        hp:120,
+        capacity:8
+    },
+
+    farm:{
+        name:"Farm",
+        symbol:"♣",
+        hp:90,
+        food:4
+    },
+
+    lumber:{
+        name:"Holzfäller",
+        symbol:"♠",
+        hp:100,
+        wood:4
+    },
+
+    quarry:{
+        name:"Steinbruch",
+        symbol:"◆",
+        hp:110,
+        stone:3
+    },
+
+    mine:{
+        name:"Metallmine",
+        symbol:"M",
+        hp:120,
+        metal:2,
+        energy:-1
+    },
+
+    pump:{
+        name:"Wasserpumpe",
+        symbol:"P",
+        hp:100,
+        pump:.22,
+        energy:-4
+    },
+
+    reservoir:{
+        name:"Wasserspeicher",
+        symbol:"R",
+        hp:120,
+        storage:1,
+        energy:-1
+    },
+
+    wind:{
+        name:"Windrad",
+        symbol:"W",
+        hp:80,
+        power:7
+    },
+
+    workshop:{
+        name:"Werkstatt",
+        symbol:"⚒",
+        hp:150,
+        workshop:1,
+        energy:-2
+    },
+
+    dike:{
+        name:"Großdamm",
+        symbol:"",
+        hp:240,
+        solid:true,
+        defense:5
+    }
+
+};
+
+
+/* =========================================================
+   NEUEN SPIELSTAND ERZEUGEN
+========================================================= */
+
+function freshState(){
+
+    const diff =
+        DIFFICULTIES[difficulty];
+
+
+    const terrain = [];
+
+
+    for(let y=0;y<H;y++){
+
+        terrain[y] = [];
+
+
+        for(let x=0;x<W;x++){
+
+            const dx =
+                x-W/2;
+
+            const dy =
+                y-H/2;
+
+
+            const d =
+                Math.sqrt(
+                    (dx*1.02)**2 +
+                    (dy*1.05)**2
+                );
+
+
+            let height = 0;
+
+
+            if(d < 16)
+                height =
+                    2 + (16-d)*.55;
+
+
+            if(d < 11)
+                height += 2.5;
+
+
+            if(d < 6)
+                height += 2.5;
+
+
+            height +=
+                Math.sin(x*.55)*.35 +
+                Math.cos(y*.42)*.3;
+
+
+            height =
+                Math.max(
+                    .3,
+                    Math.min(
+                        12.5,
+                        height
+                    )
+                );
+
+
+            terrain[y][x] =
+                height;
+
+        }
+
+    }
+
+
+    const buildings = [];
+
+
+    const starts = [
+
+        ["house",22,16],
+        ["house",24,16],
+        ["farm",21,19],
+        ["lumber",26,18],
+        ["quarry",18,18],
+        ["wind",25,14],
+        ["reservoir",23,19]
+
+    ];
+
+
+    for(const [type,x,y] of starts){
+
+        buildings.push(
+            makeBuilding(
+                type,
+                x,
+                y
+            )
+        );
+
+    }
+
+
+    return {
+
+        day:1,
+
+        water:12,
+
+        food:diff.startFood,
+
+        wood:diff.startWood,
+
+        stone:diff.startStone,
+
+        metal:diff.startMetal,
+
+        population:12,
+
+        capacity:20,
+
+        energy:35,
+
+        maxEnergy:35,
+
+        terrain,
+
+        buildings,
+
+        happiness:70,
+
+        coreDry:1,
+
+        survived:0,
+
+        eventText:""
+
+    };
+
+}
+
+
+let state = null;
+
+
+/* =========================================================
+   BUILDING ERZEUGEN
+========================================================= */
+
+function makeBuilding(type,x,y){
+
+    const b =
+        BUILDINGS[type];
+
+
+    return {
+
+        id:
+            Math.random()
+            .toString(36)
+            .slice(2),
+
+        type,
+        x,
+        y,
+
+        hp:b.hp,
+
+        age:0,
+
+        active:true
+
+    };
+
+}
+
+
+/* =========================================================
+   SPIEL START
+========================================================= */
+
+function startGame(){
+
+    state =
+        freshState();
+
+
+    elapsed = 0;
+
+    speed = 1;
+
+    paused = false;
+
+    gameEnded = false;
+
+    stormActive = false;
+
+    stormTimer = 0;
+
+
+    const diff =
+        DIFFICULTIES[difficulty];
+
+
+    nextEvent =
+        45 +
+        Math.random() *
+        (
+            diff.stormIntervalMin
+        );
+
+
+    document
+        .getElementById("startScreen")
+        .style.display = "none";
+
+
+    document
+        .getElementById("game")
+        .style.display = "block";
+
+
+    view.zoom = 1;
+
+    view.x =
+        (innerWidth-W*TILE)/2;
+
+    view.y =
+        (innerHeight-H*TILE)/2;
+
+
+    updateUI();
+
+    toast(
+        "Die Insel muss gerettet werden!"
+    );
+
+}
+
+
+/* =========================================================
+   STARTMENÜ SCHWIERIGKEIT
+========================================================= */
+
+function updateDifficultyPreview(){
+
+    const d =
+        DIFFICULTIES[difficulty];
+
+
+    document
+        .getElementById("previewWater")
+        .textContent =
+        d.waterRise.toFixed(3)
+        + " m/s";
+
+
+    document
+        .getElementById("previewWood")
+        .textContent =
+        d.startWood;
+
+
+    let stormText =
+        "Normal";
+
+
+    if(difficulty==="easy")
+        stormText="Selten";
+
+    if(difficulty==="hard")
+        stormText="Häufig";
+
+    if(difficulty==="extreme")
+        stormText="Sehr häufig";
+
+
+    document
+        .getElementById("previewStorm")
+        .textContent =
+        stormText;
+
+}
+
+
+document
+    .querySelectorAll(".difficulty")
+    .forEach(card=>{
+
+        card.addEventListener(
+            "click",
+            ()=>{
+
+                document
+                    .querySelectorAll(".difficulty")
+                    .forEach(c=>
+                        c.classList.remove(
+                            "selected"
+                        )
+                    );
+
+
+                card.classList.add(
+                    "selected"
+                );
+
+
+                difficulty =
+                    card.dataset.difficulty;
+
+
+                updateDifficultyPreview();
+
+            }
+        );
+
+    });
+
+
+document
+    .getElementById("startButton")
+    .onclick =
+    startGame;
+
+
+updateDifficultyPreview();
+
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+function resize(){
+
+    DPR =
+        Math.max(
+            1,
+            Math.min(
+                2,
+                devicePixelRatio || 1
+            )
+        );
+
+
+    canvas.width =
+        Math.floor(
+            innerWidth*DPR
+        );
+
+
+    canvas.height =
+        Math.floor(
+            innerHeight*DPR
+        );
+
+
+    ctx.setTransform(
+        DPR,
+        0,
+        0,
+        DPR,
+        0,
+        0
+    );
+
+
+    mini.width = 300;
+    mini.height = 210;
+
+}
+
+
+addEventListener(
+    "resize",
+    resize
+);
+
+
+resize();
+
+
+/* =========================================================
+   KOORDINATEN
+========================================================= */
+
+function worldToScreen(x,y){
+
+    return {
+
+        x:
+            view.x +
+            x*TILE*view.zoom,
+
+        y:
+            view.y +
+            y*TILE*view.zoom
+
+    };
+
+}
+
+
+function screenToWorld(sx,sy){
+
+    return {
+
+        x:
+            (sx-view.x) /
+            (TILE*view.zoom),
+
+        y:
+            (sy-view.y) /
+            (TILE*view.zoom)
+
+    };
+
+}
+
+
+function clamp(v,a,b){
+
+    return Math.max(
+        a,
+        Math.min(
+            b,
+            v
+        )
+    );
+
+}
+
+
+function dist(a,b,c,d){
+
+    return Math.hypot(
+        a-c,
+        b-d
+    );
+
+}
+
+
+function tileAt(wx,wy){
+
+    const x =
+        Math.floor(wx);
+
+    const y =
+        Math.floor(wy);
+
+
+    if(
+        x<0 ||
+        y<0 ||
+        x>=W ||
+        y>=H
+    )
+        return null;
+
+
+    return {
+        x,
+        y
+    };
+
+}
+
+
+/* =========================================================
+   GEBÄUDE FINDEN
+========================================================= */
+
+function buildingAt(x,y){
+
+    return state.buildings.find(
+        b =>
+            b.x===x &&
+            b.y===y
+    );
+
+}
+
+
+/* =========================================================
+   ÜBERFLUTUNG
+========================================================= */
+
+function isFlooded(x,y){
+
+    const h =
+        state.terrain[y][x];
+
+
+    let protection = 0;
+
+
+    for(const b of state.buildings){
+
+        if(
+            dist(
+                x,
+                y,
+                b.x,
+                b.y
+            ) <= 1.3 &&
+            (
+                b.type==="wall" ||
+                b.type==="dike"
+            )
+        ){
+
+            protection +=
+                b.type==="dike"
+                ? 1.8
+                : .65;
+
+        }
+
+
+        if(
+            b.type==="pump" &&
+            dist(
+                x,
+                y,
+                b.x,
+                b.y
+            ) <= 3.1 &&
+            b.active &&
+            state.energy>0
+        ){
+
+            protection += .35;
+
+        }
+
+    }
+
+
+    return (
+        state.water -
+        h -
+        protection
+    ) > 0;
+
+}
+
+
+function floodDepth(x,y){
+
+    return Math.max(
+        0,
+        state.water -
+        state.terrain[y][x]
+    );
+
+}
+
+
+/* =========================================================
+   RESSOURCEN
+========================================================= */
+
+function canAfford(type){
+
+    const c =
+        COSTS[type];
+
+
+    return (
+
+        (!c.wood ||
+         state.wood>=c.wood)
+
+        &&
+
+        (!c.stone ||
+         state.stone>=c.stone)
+
+        &&
+
+        (!c.metal ||
+         state.metal>=c.metal)
+
+    );
+
+}
+
+
+function spend(type){
+
+    const c =
+        COSTS[type];
+
+
+    if(c.wood)
+        state.wood-=c.wood;
+
+    if(c.stone)
+        state.stone-=c.stone;
+
+    if(c.metal)
+        state.metal-=c.metal;
+
+}
+
+
+/* =========================================================
+   BAUEN
+========================================================= */
+
+function place(type,x,y){
+
+    if(
+        gameEnded ||
+        paused
+    )
+        return;
+
+
+    if(
+        x<0 ||
+        y<0 ||
+        x>=W ||
+        y>=H
+    ){
+
+        toast(
+            "Außerhalb der Insel."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        buildingAt(x,y)
+    ){
+
+        toast(
+            "Dieses Feld ist bereits bebaut."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        state.terrain[y][x] <
+        state.water-.3 &&
+        type!=="wall" &&
+        type!=="dike"
+    ){
+
+        toast(
+            "Zu tief! Suche höheres Gelände."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !canAfford(type)
+    ){
+
+        toast(
+            "Nicht genug Ressourcen."
+        );
+
+        return;
+
+    }
+
+
+    spend(type);
+
+
+    state.buildings.push(
+        makeBuilding(
+            type,
+            x,
+            y
+        )
+    );
+
+
+    updateCapacity();
+
+
+    toast(
+        BUILDINGS[type].name +
+        " gebaut."
+    );
+
+}
+
+
+/* =========================================================
+   ABREISSEN
+========================================================= */
+
+function removeBuilding(x,y){
+
+    const b =
+        buildingAt(x,y);
+
+
+    if(!b)
+        return;
+
+
+    const refund =
+        COSTS[b.type];
+
+
+    state.wood +=
+        Math.floor(
+            (refund.wood||0)*.45
+        );
+
+
+    state.stone +=
+        Math.floor(
+            (refund.stone||0)*.45
+        );
+
+
+    state.metal +=
+        Math.floor(
+            (refund.metal||0)*.45
+        );
+
+
+    state.buildings =
+        state.buildings.filter(
+            q=>q.id!==b.id
+        );
+
+
+    updateCapacity();
+
+
+    toast(
+        BUILDINGS[b.type].name +
+        " abgerissen."
+    );
+
+}
+
+
+/* =========================================================
+   BEVÖLKERUNG
+========================================================= */
+
+function updateCapacity(){
+
+    state.capacity = 20;
+
+
+    for(
+        const b of state.buildings
+    ){
+
+        if(
+            b.type==="house" &&
+            !isFlooded(b.x,b.y)
+        ){
+
+            state.capacity += 8;
+
+        }
+
+    }
+
+
+    state.population =
+        Math.min(
+            state.population,
+            state.capacity
+        );
+
+}
+
+
+/* =========================================================
+   PRODUKTION
+========================================================= */
+
+function production(dt){
+
+    const diff =
+        DIFFICULTIES[difficulty];
+
+
+    let food=0;
+    let wood=0;
+    let stone=0;
+    let metal=0;
+    let power=0;
+    let pumps=0;
+
+
+    for(
+        const b of state.buildings
+    ){
+
+        b.age += dt;
+
+
+        b.active =
+            !isFlooded(
+                b.x,
+                b.y
+            );
+
+
+        if(!b.active)
+            continue;
+
+
+        const data =
+            BUILDINGS[b.type];
+
+
+        if(data.food)
+            food+=data.food;
+
+
+        if(data.wood)
+            wood+=data.wood;
+
+
+        if(data.stone)
+            stone+=data.stone;
+
+
+        if(data.metal)
+            metal+=data.metal;
+
+
+        if(data.power)
+            power+=data.power;
+
+
+        if(data.pump)
+            pumps++;
+
+    }
+
+
+    const dayFactor =
+        dt/10;
+
+
+    const multiplier =
+        diff.production;
+
+
+    state.food +=
+        food*
+        dayFactor*
+        multiplier;
+
+
+    state.wood +=
+        wood*
+        dayFactor*
+        multiplier;
+
+
+    state.stone +=
+        stone*
+        dayFactor*
+        multiplier;
+
+
+    state.metal +=
+        metal*
+        dayFactor*
+        multiplier;
+
+
+    state.energy =
+        clamp(
+            state.energy +
+            power*
+            dayFactor,
+            0,
+            80
+        );
+
+
+    state.maxEnergy =
+        35+
+        power;
+
+
+    return {
+
+        food,
+        wood,
+        stone,
+        metal,
+        pumps,
+        power
+
+    };
+
+}
+
+
+/* =========================================================
+   VERBRAUCH
+========================================================= */
+
+function consume(dt){
+
+    const need =
+        state.population *
+        .75 *
+        (dt/10);
+
+
+    state.food -=
+        need;
+
+
+    if(
+        state.food<=0
+    ){
+
+        state.food=0;
+
+
+        const diff =
+            DIFFICULTIES[difficulty];
+
+
+        if(
+            Math.random() <
+            dt*diff.populationLoss &&
+            state.population>2
+        ){
+
+            state.population--;
+
+            toast(
+                "Nahrungsmangel! Die Bevölkerung schrumpft."
+            );
+
+        }
+
+    }
+
+
+    else if(
+        state.food>120 &&
+        state.population<
+        state.capacity &&
+        Math.random()<dt*.018
+    ){
+
+        state.population++;
+
+    }
+
+
+    state.food =
+        clamp(
+            state.food,
+            0,
+            999
+        );
+
+}
+
+
+/* =========================================================
+   WASSER
+========================================================= */
+
+function updateWater(dt,prod){
+
+    const diff =
+        DIFFICULTIES[difficulty];
+
+
+    let rise =
+        diff.waterRise*
+        dt;
+
+
+    if(stormActive)
+        rise +=
+            diff.stormStrength*
+            dt;
+
+
+    rise -=
+        prod.pumps*
+        .0015*
+        dt;
+
+
+    state.water +=
+        Math.max(
+            .0005,
+            rise
+        );
+
+
+    const pumpCost =
+        prod.pumps *
+        1.5 *
+        dt;
+
+
+    if(
+        state.energy>=pumpCost
+    ){
+
+        state.energy -=
+            pumpCost;
+
+
+        state.water -=
+            prod.pumps*
+            .012*
+            dt;
+
+    }
+
+    else if(
+        prod.pumps>0
+    ){
+
+        state.water -=
+            Math.max(
+                0,
+                state.energy
+            )*
+            .004*
+            dt;
+
+
+        state.energy=0;
+
+    }
+
+
+    state.water =
+        Math.max(
+            8,
+            state.water
+        );
+
+}
+
+
+/* =========================================================
+   GEBÄUDESCHÄDEN
+========================================================= */
+
+function damageFlooded(dt){
+
+    const lost=[];
+
+
+    for(
+        const b of state.buildings
+    ){
+
+        const d =
+            floodDepth(
+                b.x,
+                b.y
+            );
+
+
+        if(d>.1){
+
+            const protection =
+                (
+                    b.type==="wall" ||
+                    b.type==="dike"
+                )
+                ? .25
+                : 1;
+
+
+            b.hp -=
+                d*
+                .75*
+                protection*
+                dt;
+
+
+            if(
+                b.hp<=0
+            ){
+
+                lost.push(b);
+
+            }
+
+        }
+
+    }
+
+
+    for(
+        const b of lost
+    ){
+
+        state.buildings =
+            state.buildings.filter(
+                q=>q.id!==b.id
+            );
+
+
+        toast(
+            BUILDINGS[b.type].name +
+            " wurde vom Meer zerstört."
+        );
+
+    }
+
+
+    updateCapacity();
+
+}
+
+
+/* =========================================================
+   TROCKENE KERNINSEL
+========================================================= */
+
+function calculateDry(){
+
+    let dry=0;
+    let total=0;
+
+
+    for(
+        let y=4;
+        y<H-4;
+        y++
+    ){
+
+        for(
+            let x=4;
+            x<W-4;
+            x++
+        ){
+
+            const d =
+                Math.sqrt(
+                    (x-W/2)**2 +
+                    (y-H/2)**2
+                );
+
+
+            if(d<13){
+
+                total++;
+
+
+                if(
+                    !isFlooded(x,y)
+                )
+                    dry++;
+
+            }
+
+        }
+
+    }
+
+
+    return total
+        ? dry/total
+        : 0;
+
+}
+
+
+/* =========================================================
+   EREIGNISSE
+========================================================= */
+
+function triggerEvents(){
+
+    if(
+        state.day <
+        nextEvent
+    )
+        return;
+
+
+    const diff =
+        DIFFICULTIES[difficulty];
+
+
+    nextEvent =
+        state.day +
+        diff.stormIntervalMin +
+        Math.random() *
+        (
+            diff.stormIntervalMax -
+            diff.stormIntervalMin
+        );
+
+
+    const r =
+        Math.random();
+
+
+    if(
+        r<.60
+    ){
+
+        stormActive=true;
+
+        stormTimer =
+            difficulty==="extreme"
+            ? 20
+            : 16;
+
+
+        toast(
+            "⚠️ STURMFLUT! Das Meer steigt schneller."
+        );
+
+    }
+
+    else if(
+        r<.80
+    ){
+
+        state.wood =
+            Math.max(
+                0,
+                state.wood-10
+            );
+
+
+        state.stone =
+            Math.max(
+                0,
+                state.stone-5
+            );
+
+
+        toast(
+            "Ein Sturm beschädigt Lagerbestände."
+        );
+
+    }
+
+    else{
+
+        state.food += 30;
+
+        toast(
+            "🌾 Gute Ernte! Nahrung +30."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SPIELENDE
+========================================================= */
+
+function endChecks(){
+
+    state.coreDry =
+        calculateDry();
+
+
+    if(
+        state.population<=0
+    ){
+
+        endGame(
+            false,
+            "Niemand lebt mehr auf der Insel."
+        );
+
+    }
+
+    else if(
+        state.coreDry<.08
+    ){
+
+        endGame(
+            false,
+            "Fast die gesamte Kerninsel ist überflutet."
+        );
+
+    }
+
+    else if(
+        state.day>=60 &&
+        state.population>=10 &&
+        state.coreDry>=.70
+    ){
+
+        endGame(
+            true,
+            "Du hast 60 Tage überstanden und mindestens 70 % der Kerninsel trocken gehalten."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function endGame(win,text){
+
+    if(gameEnded)
+        return;
+
+
+    gameEnded=true;
+
+
+    document
+        .getElementById(
+            "gameoverTitle"
+        )
+        .textContent =
+        win
+        ? "🏝️ Insel gerettet!"
+        : "🌊 Die Insel ist gefallen";
+
+
+    document
+        .getElementById(
+            "gameoverText"
+        )
+        .textContent =
+        text+
+        " Überlebenszeit: Tag "+
+        Math.floor(state.day)+
+        " · Bevölkerung: "+
+        state.population+
+        " · trockene Kerninsel: "+
+        Math.round(
+            state.coreDry*100
+        )+
+        " %.";
+
+
+    document
+        .getElementById(
+            "gameover"
+        )
+        .style.display =
+        "grid";
+
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update(dt){
+
+    if(
+        paused ||
+        gameEnded ||
+        !state
+    )
+        return;
+
+
+    dt =
+        Math.min(
+            dt,
+            .1
+        )*
+        speed;
+
+
+    elapsed += dt;
+
+
+    state.day =
+        1+
+        elapsed/10;
+
+
+    if(stormActive){
+
+        stormTimer -= dt;
+
+
+        if(
+            stormTimer<=0
+        ){
+
+            stormActive=false;
+
+
+            toast(
+                "Die Sturmflut ist vorbei."
+            );
+
+        }
+
+    }
+
+
+    const prod =
+        production(dt);
+
+
+    consume(dt);
+
+
+    updateWater(
+        dt,
+        prod
+    );
+
+
+    damageFlooded(dt);
+
+
+    triggerEvents();
+
+
+    endChecks();
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    if(!state)
+        return;
+
+
+    const d =
+        DIFFICULTIES[difficulty];
+
+
+    document
+        .getElementById("day")
+        .textContent =
+        "Tag "+
+        Math.floor(state.day);
+
+
+    document
+        .getElementById(
+            "difficultyLabel"
+        )
+        .textContent =
+        d.name;
+
+
+    document
+        .getElementById(
+            "population"
+        )
+        .textContent =
+        state.population+
+        " / "+
+        state.capacity;
+
+
+    document
+        .getElementById("food")
+        .textContent =
+        Math.floor(
+            state.food
+        );
+
+
+    document
+        .getElementById("wood")
+        .textContent =
+        Math.floor(
+            state.wood
+        );
+
+
+    document
+        .getElementById("stone")
+        .textContent =
+        Math.floor(
+            state.stone
+        );
+
+
+    document
+        .getElementById("metal")
+        .textContent =
+        Math.floor(
+            state.metal
+        );
+
+
+    document
+        .getElementById("waterText")
+        .textContent =
+        "Wasser "+
+        state.water.toFixed(1)+
+        " m";
+
+
+    document
+        .getElementById("waterBar")
+        .style.width =
+        clamp(
+            (state.water-8)/
+            12*
+            100,
+            0,
+            100
+        )+
+        "%";
+
+
+    document
+        .getElementById("energy")
+        .textContent =
+        Math.floor(
+            state.energy
+        )+
+        " / "+
+        Math.floor(
+            state.maxEnergy
+        );
+
+
+    document
+        .getElementById(
+            "infoText"
+        )
+        .innerHTML =
+
+        "Trockene Kerninsel: <b>"+
+        Math.round(
+            state.coreDry*100
+        )+
+        " %</b><br>"+
+
+        (
+            stormActive
+            ? "⚠️ <b>Sturmflut aktiv</b><br>"
+            : ""
+        )+
+
+        "Ausgewählt: <b>"+
+        BUILDINGS[selected].name+
+        "</b>.<br>"+
+
+        "<span class='hint'>"+
+        "Klicken = bauen · Rechtsklick = abreißen · "+
+        "WASD/Pfeile = Kamera"
+        +"</span>";
+
+
+    document
+        .getElementById("pauseBtn")
+        .textContent =
+        paused
+        ? "▶ Fortsetzen"
+        : "⏸ Pause";
+
+
+    document
+        .getElementById("speedBtn")
+        .textContent =
+        "▶ "+
+        speed+
+        "x";
+
+}
+
+
+/* =========================================================
+   ZEICHNEN
+========================================================= */
+
+function draw(){
+
+    const sw =
+        innerWidth;
+
+    const sh =
+        innerHeight;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        sw,
+        sh
+    );
+
+
+    ctx.fillStyle =
+        "#07131c";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        sw,
+        sh
+    );
+
+
+    ctx.fillStyle =
+        "#0a3243";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        sw,
+        sh
+    );
+
+
+    if(!state)
+        return;
+
+
+    for(
+        let y=0;
+        y<H;
+        y++
+    ){
+
+        for(
+            let x=0;
+            x<W;
+            x++
+        ){
+
+            const p =
+                worldToScreen(
+                    x,
+                    y
+                );
+
+
+            const z =
+                TILE*
+                view.zoom;
+
+
+            if(
+                p.x+z<0 ||
+                p.y+z<0 ||
+                p.x>sw ||
+                p.y>sh
+            )
+                continue;
+
+
+            const h =
+                state.terrain[y][x];
+
+
+            const flooded =
+                isFlooded(
+                    x,
+                    y
+                );
+
+
+            if(flooded){
+
+                const wave =
+                    Math.sin(
+                        elapsed*2+
+                        x*.7+
+                        y*.4
+                    )*
+                    1.5;
+
+
+                ctx.fillStyle =
+                    "#15516a";
+
+
+                ctx.fillRect(
+                    p.x,
+                    p.y,
+                    z+1,
+                    z+1
+                );
+
+
+                ctx.fillStyle =
+                    "rgba(84,220,255,.25)";
+
+
+                ctx.fillRect(
+                    p.x,
+                    p.y+
+                    z*.25+
+                    wave,
+                    z,
+                    Math.max(
+                        1,
+                        z*.035
+                    )
+                );
+
+            }
+
+            else{
+
+                const v =
+                    clamp(
+                        80+
+                        h*8,
+                        65,
+                        170
+                    );
+
+
+                ctx.fillStyle =
+                    "rgb("+
+                    Math.floor(v*.38)+
+                    ","+
+                    Math.floor(v*.65)+
+                    ","+
+                    Math.floor(v*.38)+
+                    ")";
+
+
+                ctx.fillRect(
+                    p.x,
+                    p.y,
+                    z+1,
+                    z+1
+                );
+
+            }
+
+
+            ctx.strokeStyle =
+                "rgba(0,0,0,.12)";
+
+
+            ctx.strokeRect(
+                p.x,
+                p.y,
+                z,
+                z
+            );
+
+        }
+
+    }
+
+
+    for(
+        const b of state.buildings
+    ){
+
+        drawBuilding(b);
+
+    }
+
+
+    if(stormActive){
+
+        ctx.fillStyle =
+            "rgba(120,180,210,.08)";
+
+
+        ctx.fillRect(
+            0,
+            0,
+            sw,
+            sh
+        );
+
+    }
+
+
+    drawMini();
+
+}
+
+
+/* =========================================================
+   GEBÄUDE ZEICHNEN
+========================================================= */
+
+function drawBuilding(b){
+
+    const p =
+        worldToScreen(
+            b.x,
+            b.y
+        );
+
+
+    const z =
+        TILE*
+        view.zoom;
+
+
+    const cx =
+        p.x+
+        z/2;
+
+
+    const cy =
+        p.y+
+        z/2;
+
+
+    const flooded =
+        isFlooded(
+            b.x,
+            b.y
+        );
+
+
+    const data =
+        BUILDINGS[b.type];
+
+
+    if(
+        b.type==="wall" ||
+        b.type==="dike"
+    ){
+
+        ctx.fillStyle =
+            b.type==="dike"
+            ? "#a99a72"
+            : "#7d8790";
+
+
+        ctx.fillRect(
+            p.x+
+            z*.08,
+            p.y+
+            z*.18,
+            z*.84,
+            z*.64
+        );
+
+
+        ctx.fillStyle =
+            "rgba(255,255,255,.15)";
+
+
+        ctx.fillRect(
+            p.x+
+            z*.1,
+            p.y+
+            z*.2,
+            z*.8,
+            z*.1
+        );
+
+    }
+
+    else{
+
+        ctx.fillStyle =
+            flooded
+            ? "#46535a"
+            : "#7a5b3d";
+
+
+        ctx.fillRect(
+            p.x+
+            z*.16,
+            p.y+
+            z*.25,
+            z*.68,
+            z*.58
+        );
+
+
+        if(
+            b.type==="house"
+        ){
+
+            ctx.fillStyle =
+                "#b54d45";
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                p.x+
+                z*.08,
+                p.y+
+                z*.3
+            );
+
+
+            ctx.lineTo(
+                cx,
+                p.y+
+                z*.05
+            );
+
+
+            ctx.lineTo(
+                p.x+
+                z*.92,
+                p.y+
+                z*.3
+            );
+
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }
+
+
+        else if(
+            b.type==="farm"
+        ){
+
+            ctx.fillStyle =
+                "#d5bb55";
+
+
+            for(
+                let i=0;
+                i<4;
+                i++
+            ){
+
+                ctx.fillRect(
+                    p.x+
+                    z*
+                    (.18+
+                    i*.17),
+                    p.y+
+                    z*.35,
+                    z*.08,
+                    z*.4
+                );
+
+            }
+
+        }
+
+
+        else if(
+            b.type==="wind"
+        ){
+
+            ctx.fillStyle =
+                "#e5edf0";
+
+
+            ctx.fillRect(
+                cx-
+                z*.04,
+                p.y+
+                z*.2,
+                z*.08,
+                z*.55
+            );
+
+
+            ctx.strokeStyle =
+                "#eefaff";
+
+
+            ctx.lineWidth =
+                Math.max(
+                    1,
+                    z*.035
+                );
+
+
+            for(
+                let i=0;
+                i<3;
+                i++
+            ){
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    cx,
+                    cy-z*.12
+                );
+
+
+                ctx.lineTo(
+                    cx+
+                    Math.cos(
+                        i*2.1+
+                        elapsed*.3
+                    )*
+                    z*.35,
+
+                    cy+
+                    Math.sin(
+                        i*2.1+
+                        elapsed*.3
+                    )*
+                    z*.35
+                );
+
+
+                ctx.stroke();
+
+            }
+
+        }
+
+
+        else if(
+            b.type==="pump"
+        ){
+
+            ctx.fillStyle =
+                "#55c7d9";
+
+
+            ctx.fillRect(
+                p.x+
+                z*.25,
+                p.y+
+                z*.25,
+                z*.5,
+                z*.5
+            );
+
+        }
+
+
+        else{
+
+            ctx.fillStyle =
+                "#e6c77b";
+
+
+            ctx.font =
+                Math.max(
+                    10,
+                    z*.32
+                )+
+                "px system-ui";
+
+
+            ctx.textAlign =
+                "center";
+
+
+            ctx.textBaseline =
+                "middle";
+
+
+            ctx.fillText(
+                data.symbol,
+                cx,
+                cy
+            );
+
+        }
+
+    }
+
+
+    if(
+        b.hp <
+        data.hp
+    ){
+
+        ctx.fillStyle =
+            "#27151a";
+
+
+        ctx.fillRect(
+            p.x+
+            z*.12,
+            p.y+
+            z*.05,
+            z*.76,
+            3
+        );
+
+
+        ctx.fillStyle =
+            b.hp/data.hp>.5
+            ? "#65df8b"
+            : "#ff6875";
+
+
+        ctx.fillRect(
+            p.x+
+            z*.12,
+            p.y+
+            z*.05,
+            z*.76*
+            clamp(
+                b.hp/data.hp,
+                0,
+                1
+            ),
+            3
+        );
+
+    }
+
+
+    if(flooded){
+
+        ctx.fillStyle =
+            "rgba(40,190,225,.22)";
+
+
+        ctx.fillRect(
+            p.x,
+            p.y,
+            z,
+            z
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MINIMAP
+========================================================= */
+
+function drawMini(){
+
+    const mw =
+        mini.width;
+
+    const mh =
+        mini.height;
+
+
+    mctx.clearRect(
+        0,
+        0,
+        mw,
+        mh
+    );
+
+
+    mctx.fillStyle =
+        "#082b3a";
+
+
+    mctx.fillRect(
+        0,
+        0,
+        mw,
+        mh
+    );
+
+
+    if(!state)
+        return;
+
+
+    const sx =
+        mw/W;
+
+    const sy =
+        mh/H;
+
+
+    for(
+        let y=0;
+        y<H;
+        y++
+    ){
+
+        for(
+            let x=0;
+            x<W;
+            x++
+        ){
+
+            mctx.fillStyle =
+                isFlooded(x,y)
+                ? "#15516a"
+                : "#4c7b50";
+
+
+            mctx.fillRect(
+                x*sx,
+                y*sy,
+                Math.ceil(sx),
+                Math.ceil(sy)
+            );
+
+        }
+
+    }
+
+
+    for(
+        const b of state.buildings
+    ){
+
+        mctx.fillStyle =
+            (
+                b.type==="wall" ||
+                b.type==="dike"
+            )
+            ? "#ddd"
+            : "#ffd166";
+
+
+        mctx.fillRect(
+            b.x*sx,
+            b.y*sy,
+            Math.max(2,sx),
+            Math.max(2,sy)
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(msg){
+
+    const el =
+        document.getElementById(
+            "toast"
+        );
+
+
+    el.textContent =
+        msg;
+
+
+    el.style.opacity =
+        "1";
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            ()=>{
+                el.style.opacity="0";
+            },
+            2500
+        );
+
+}
+
+
+/* =========================================================
+   BAUMENÜ
+========================================================= */
+
+document
+    .querySelectorAll(".buildBtn")
+    .forEach(btn=>{
+
+        btn.addEventListener(
+            "click",
+            ()=>{
+
+                selected =
+                    btn.dataset.type;
+
+
+                document
+                    .querySelectorAll(
+                        ".buildBtn"
+                    )
+                    .forEach(
+                        b =>
+                        b.classList.toggle(
+                            "selected",
+                            b.dataset.type===
+                            selected
+                        )
+                    );
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+document
+    .getElementById("pauseBtn")
+    .onclick = ()=>{
+
+        paused =
+            !paused;
+
+        updateUI();
+
+    };
+
+
+document
+    .getElementById("speedBtn")
+    .onclick = ()=>{
+
+        speed =
+            speed===1
+            ? 2
+            : speed===2
+            ? 4
+            : 1;
+
+
+        updateUI();
+
+
+        toast(
+            "Geschwindigkeit: "+
+            speed+
+            "x"
+        );
+
+    };
+
+
+/* =========================================================
+   SPEICHERN
+========================================================= */
+
+document
+    .getElementById("saveBtn")
+    .onclick = ()=>{
+
+        try{
+
+            localStorage.setItem(
+                "inselwacht-save",
+                JSON.stringify({
+
+                    state,
+
+                    elapsed,
+
+                    speed,
+
+                    nextEvent,
+
+                    difficulty
+
+                })
+            );
+
+
+            toast(
+                "Spiel gespeichert."
+            );
+
+        }
+
+        catch(e){
+
+            toast(
+                "Speichern ist nicht verfügbar."
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   LADEN
+========================================================= */
+
+document
+    .getElementById("loadBtn")
+    .onclick =
+    loadGame;
+
+
+function loadGame(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(
+                "inselwacht-save"
+            );
+
+
+        if(!raw){
+
+            toast(
+                "Kein Spielstand gefunden."
+            );
+
+            return;
+
+        }
+
+
+        const s =
+            JSON.parse(raw);
+
+
+        if(
+            !s.state ||
+            !s.state.terrain ||
+            !s.state.buildings
+        )
+            throw new Error(
+                "Ungültiger Spielstand"
+            );
+
+
+        state =
+            s.state;
+
+
+        elapsed =
+            s.elapsed || 0;
+
+
+        speed =
+            s.speed || 1;
+
+
+        nextEvent =
+            s.nextEvent || 45;
+
+
+        difficulty =
+            s.difficulty ||
+            "normal";
+
+
+        gameEnded=false;
+
+        stormActive=false;
+
+
+        document
+            .getElementById(
+                "gameover"
+            )
+            .style.display =
+            "none";
+
+
+        updateUI();
+
+
+        toast(
+            "Spielstand geladen."
+        );
+
+    }
+
+    catch(e){
+
+        toast(
+            "Spielstand konnte nicht geladen werden."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   NEUSTART
+========================================================= */
+
+document
+    .getElementById("resetBtn")
+    .onclick = ()=>{
+
+        if(
+            confirm(
+                "Wirklich eine neue Insel starten?"
+            )
+        ){
+
+            document
+                .getElementById(
+                    "game"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "startScreen"
+                )
+                .style.display =
+                "flex";
+
+        }
+
+    };
+
+
+/* =========================================================
+   HILFE
+========================================================= */
+
+document
+    .getElementById("helpBtn")
+    .onclick = ()=>{
+
+        document
+            .getElementById("help")
+            .style.display =
+            "grid";
+
+    };
+
+
+document
+    .getElementById("closeHelp")
+    .onclick = ()=>{
+
+        document
+            .getElementById("help")
+            .style.display =
+            "none";
+
+    };
+
+
+document
+    .getElementById("restartGame")
+    .onclick = ()=>{
+
+        document
+            .getElementById("gameover")
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById("game")
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById("startScreen")
+            .style.display =
+            "flex";
+
+    };
+
+
+/* =========================================================
+   MAUS
+========================================================= */
+
+let drag = null;
+
+
+canvas.addEventListener(
+    "pointerdown",
+    e=>{
+
+        if(
+            e.button===1 ||
+            e.shiftKey
+        ){
+
+            drag={
+
+                id:e.pointerId,
+
+                x:e.clientX,
+
+                y:e.clientY,
+
+                ox:view.x,
+
+                oy:view.y
+
+            };
+
+
+            canvas.setPointerCapture(
+                e.pointerId
+            );
+
+
+            return;
+
+        }
+
+
+        if(
+            e.button===2
+        )
+            return;
+
+
+        const p =
+            screenToWorld(
+                e.clientX,
+                e.clientY
+            );
+
+
+        const t =
+            tileAt(
+                p.x,
+                p.y
+            );
+
+
+        if(t)
+            place(
+                selected,
+                t.x,
+                t.y
+            );
+
+    }
+);
+
+
+canvas.addEventListener(
+    "pointermove",
+    e=>{
+
+        if(
+            drag &&
+            drag.id===
+            e.pointerId
+        ){
+
+            view.x =
+                drag.ox+
+                (
+                    e.clientX-
+                    drag.x
+                );
+
+
+            view.y =
+                drag.oy+
+                (
+                    e.clientY-
+                    drag.y
+                );
+
+        }
+
+    }
+);
+
+
+canvas.addEventListener(
+    "pointerup",
+    e=>{
+
+        if(
+            drag &&
+            drag.id===
+            e.pointerId
+        ){
+
+            drag=null;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   RECHTSKLICK
+========================================================= */
+
+canvas.addEventListener(
+    "contextmenu",
+    e=>{
+
+        e.preventDefault();
+
+
+        const p =
+            screenToWorld(
+                e.clientX,
+                e.clientY
+            );
+
+
+        const t =
+            tileAt(
+                p.x,
+                p.y
+            );
+
+
+        if(t)
+            removeBuilding(
+                t.x,
+                t.y
+            );
+
+    }
+);
+
+
+/* =========================================================
+   ZOOM
+========================================================= */
+
+canvas.addEventListener(
+    "wheel",
+    e=>{
+
+        e.preventDefault();
+
+
+        const before =
+            screenToWorld(
+                e.clientX,
+                e.clientY
+            );
+
+
+        const factor =
+            e.deltaY<0
+            ? 1.12
+            : .89;
+
+
+        view.zoom =
+            clamp(
+                view.zoom*
+                factor,
+                .45,
+                2.3
+            );
+
+
+        const after =
+            screenToWorld(
+                e.clientX,
+                e.clientY
+            );
+
+
+        view.x +=
+            (
+                after.x-
+                before.x
+            )*
+            TILE*
+            view.zoom;
+
+
+        view.y +=
+            (
+                after.y-
+                before.y
+            )*
+            TILE*
+            view.zoom;
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+let touchStart=null;
+let touchDist=0;
+
+
+canvas.addEventListener(
+    "touchstart",
+    e=>{
+
+        if(
+            e.touches.length===2
+        ){
+
+            touchDist =
+                Math.hypot(
+                    e.touches[0].clientX-
+                    e.touches[1].clientX,
+
+                    e.touches[0].clientY-
+                    e.touches[1].clientY
+                );
+
+        }
+
+        else if(
+            e.touches.length===1
+        ){
+
+            touchStart={
+
+                x:e.touches[0].clientX,
+
+                y:e.touches[0].clientY,
+
+                world:
+                    screenToWorld(
+                        e.touches[0].clientX,
+                        e.touches[0].clientY
+                    ),
+
+                moved:false
+
+            };
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchmove",
+    e=>{
+
+        e.preventDefault();
+
+
+        if(
+            e.touches.length===2
+        ){
+
+            const d =
+                Math.hypot(
+                    e.touches[0].clientX-
+                    e.touches[1].clientX,
+
+                    e.touches[0].clientY-
+                    e.touches[1].clientY
+                );
+
+
+            if(touchDist){
+
+                const factor =
+                    d/touchDist;
+
+
+                const center={
+
+                    x:
+                        (
+                            e.touches[0].clientX+
+                            e.touches[1].clientX
+                        )/2,
+
+                    y:
+                        (
+                            e.touches[0].clientY+
+                            e.touches[1].clientY
+                        )/2
+
+                };
+
+
+                const before =
+                    screenToWorld(
+                        center.x,
+                        center.y
+                    );
+
+
+                view.zoom =
+                    clamp(
+                        view.zoom*
+                        factor,
+                        .45,
+                        2.3
+                    );
+
+
+                const after =
+                    screenToWorld(
+                        center.x,
+                        center.y
+                    );
+
+
+                view.x +=
+                    (
+                        after.x-
+                        before.x
+                    )*
+                    TILE*
+                    view.zoom;
+
+
+                view.y +=
+                    (
+                        after.y-
+                        before.y
+                    )*
+                    TILE*
+                    view.zoom;
+
+
+                touchDist=d;
+
+            }
+
+        }
+
+
+        else if(
+            e.touches.length===1 &&
+            touchStart
+        ){
+
+            const dx =
+                e.touches[0].clientX-
+                touchStart.x;
+
+
+            const dy =
+                e.touches[0].clientY-
+                touchStart.y;
+
+
+            if(
+                Math.hypot(dx,dy)>8
+            )
+                touchStart.moved=true;
+
+
+            if(
+                touchStart.moved
+            ){
+
+                view.x += dx;
+
+                view.y += dy;
+
+
+                touchStart.x =
+                    e.touches[0].clientX;
+
+                touchStart.y =
+                    e.touches[0].clientY;
+
+            }
+
+        }
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+canvas.addEventListener(
+    "touchend",
+    e=>{
+
+        if(
+            e.touches.length===0 &&
+            touchStart &&
+            !touchStart.moved
+        ){
+
+            const t =
+                tileAt(
+                    touchStart.world.x,
+                    touchStart.world.y
+                );
+
+
+            if(t)
+                place(
+                    selected,
+                    t.x,
+                    t.y
+                );
+
+
+            touchStart=null;
+
+        }
+
+
+        if(
+            e.touches.length<2
+        )
+            touchDist=0;
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+/* =========================================================
+   TASTATUR
+========================================================= */
+
+addEventListener(
+    "keydown",
+    e=>{
+
+        if(
+            ["INPUT","TEXTAREA"]
+            .includes(
+                document.activeElement.tagName
+            )
+        )
+            return;
+
+
+        const step=35;
+
+
+        if(
+            e.key==="ArrowLeft" ||
+            e.key.toLowerCase()==="a"
+        )
+            view.x+=step;
+
+
+        if(
+            e.key==="ArrowRight" ||
+            e.key.toLowerCase()==="d"
+        )
+            view.x-=step;
+
+
+        if(
+            e.key==="ArrowUp" ||
+            e.key.toLowerCase()==="w"
+        )
+            view.y+=step;
+
+
+        if(
+            e.key==="ArrowDown" ||
+            e.key.toLowerCase()==="s"
+        )
+            view.y-=step;
+
+
+        if(e.key===" "){
+
+            e.preventDefault();
+
+            paused=
+                !paused;
+
+            updateUI();
+
+        }
+
+
+        if(
+            e.key==="Escape"
+        ){
+
+            document
+                .getElementById(
+                    "help"
+                )
+                .style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HAUPTSCHLEIFE
+========================================================= */
+
+function loop(now){
+
+    const dt =
+        (now-lastTime)/1000;
+
+
+    lastTime =
+        now;
+
+
+    update(dt);
+
+    draw();
+
+
+    requestAnimationFrame(
+        loop
+    );
+
+}
+
+
+requestAnimationFrame(
+    loop
+);
+
+</script>
+
+</body>
+</html>
