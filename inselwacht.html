@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Inselwacht – Die sinkende Insel</title>
 
 <style>
@@ -11,14 +10,17 @@
     box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
+
     font-family:Arial,Helvetica,sans-serif;
-    background:#07131c;
-    color:white;
+
+    background:#051019;
+    color:#fff;
 }
 
 button{
@@ -26,7 +28,7 @@ button{
 }
 
 .hidden{
-    display:none !important;
+    display:none!important;
 }
 
 /* =========================================================
@@ -42,29 +44,48 @@ button{
     align-items:center;
     justify-content:center;
 
-    padding:20px;
+    padding:18px;
 
     background:
-        radial-gradient(circle at 15% 15%,rgba(0,190,255,.22),transparent 35%),
-        radial-gradient(circle at 85% 75%,rgba(0,255,160,.13),transparent 35%),
-        linear-gradient(155deg,#06111b,#0a2634 55%,#06151e);
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(29,189,255,.25),
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(36,255,175,.13),
+            transparent 35%
+        ),
+        linear-gradient(
+            155deg,
+            #06111b,
+            #0a2736 55%,
+            #06151d
+        );
 }
 
 .startPanel{
-    width:min(1100px,96vw);
+    width:min(1120px,97vw);
     max-height:95vh;
+
     overflow:auto;
 
     padding:28px;
 
-    background:rgba(6,20,29,.95);
+    background:
+        linear-gradient(
+            160deg,
+            rgba(7,27,38,.98),
+            rgba(5,18,27,.98)
+        );
 
-    border:1px solid rgba(100,220,255,.30);
-    border-radius:22px;
+    border:1px solid rgba(103,223,255,.3);
+    border-radius:24px;
 
     box-shadow:
-        0 30px 90px rgba(0,0,0,.68),
-        inset 0 0 60px rgba(0,160,230,.04);
+        0 35px 100px rgba(0,0,0,.68),
+        inset 0 0 70px rgba(0,180,255,.035);
 }
 
 .logo{
@@ -74,31 +95,31 @@ button{
 .logo h1{
     margin:0;
 
-    font-size:clamp(34px,6vw,68px);
+    font-size:clamp(36px,6vw,70px);
 
-    letter-spacing:4px;
+    letter-spacing:5px;
 
     color:#8eeaff;
 
     text-shadow:
-        0 0 15px rgba(80,220,255,.3),
-        0 0 40px rgba(30,170,220,.15);
+        0 0 18px rgba(80,220,255,.36),
+        0 0 50px rgba(30,170,220,.18);
 }
 
 .logo p{
-    max-width:760px;
+    max-width:780px;
 
-    margin:12px auto 0;
+    margin:11px auto 0;
 
-    color:#b8d2dc;
+    color:#bdd6df;
 
     line-height:1.55;
 }
 
 .difficultyTitle{
-    margin:26px 0 14px;
-
     text-align:center;
+
+    margin:25px 0 14px;
 
     color:#ddf8ff;
 
@@ -107,21 +128,27 @@ button{
 
 .difficulties{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
 
     gap:12px;
 }
 
 .difficulty{
+    min-height:205px;
+
     padding:17px;
 
-    min-height:200px;
-
     background:
-        linear-gradient(160deg,#0d2936,#0b202b);
+        linear-gradient(
+            160deg,
+            #0f2c3a,
+            #0a202b
+        );
 
     border:2px solid transparent;
-    border-radius:14px;
+    border-radius:15px;
 
     cursor:pointer;
 
@@ -132,15 +159,19 @@ button{
     transform:translateY(-3px);
 
     background:
-        linear-gradient(160deg,#123746,#0c2632);
+        linear-gradient(
+            160deg,
+            #143b4b,
+            #0d2834
+        );
 }
 
 .difficulty.selected{
     border-color:#5de6ff;
 
     box-shadow:
-        0 0 0 2px rgba(93,230,255,.10),
-        0 0 25px rgba(50,200,255,.18);
+        0 0 0 2px rgba(93,230,255,.1),
+        0 0 28px rgba(50,200,255,.18);
 }
 
 .difficulty h3{
@@ -152,26 +183,38 @@ button{
 .difficulty p{
     margin:0 0 12px;
 
-    color:#b1cad3;
+    color:#b5ccd5;
 
     font-size:13px;
     line-height:1.45;
 }
 
 .details{
-    color:#81a8b7;
+    color:#84aebb;
 
     font-size:12px;
     line-height:1.65;
 }
 
-.easy h3{color:#7dff9c;}
-.normal h3{color:#70dfff;}
-.hard h3{color:#ffd76b;}
-.extreme h3{color:#ff7777;}
+.easy h3{
+    color:#7dff9c;
+}
+
+.normal h3{
+    color:#70dfff;
+}
+
+.hard h3{
+    color:#ffd76b;
+}
+
+.extreme h3{
+    color:#ff7777;
+}
 
 .startButtons{
     display:flex;
+
     justify-content:center;
 
     gap:12px;
@@ -185,7 +228,7 @@ button{
     border:none;
     border-radius:12px;
 
-    padding:14px 26px;
+    padding:14px 27px;
 
     font-size:16px;
     font-weight:bold;
@@ -195,7 +238,11 @@ button{
     color:#06161d;
 
     background:
-        linear-gradient(135deg,#6beaff,#68ffc0);
+        linear-gradient(
+            135deg,
+            #6beaff,
+            #68ffc0
+        );
 
     box-shadow:
         0 8px 25px rgba(0,200,255,.18);
@@ -206,7 +253,7 @@ button{
 }
 
 .secondaryButton{
-    color:#dffaff;
+    color:#e3faff;
 
     border:1px solid #326074;
 
@@ -224,14 +271,18 @@ button{
     display:flex;
     flex-direction:column;
 
-    background:#07131c;
+    background:#051019;
 }
+
+/* =========================================================
+   OBERE LEISTE
+========================================================= */
 
 #topBar{
     position:relative;
     z-index:30;
 
-    min-height:70px;
+    min-height:72px;
 
     display:flex;
     align-items:center;
@@ -242,16 +293,18 @@ button{
 
     overflow-x:auto;
 
-    background:rgba(5,17,25,.98);
+    background:
+        rgba(4,16,24,.985);
 
-    border-bottom:1px solid #183c4b;
+    border-bottom:
+        1px solid #18404f;
 
     box-shadow:
-        0 3px 18px rgba(0,0,0,.5);
+        0 3px 22px rgba(0,0,0,.55);
 }
 
 .stat{
-    min-width:87px;
+    min-width:88px;
 
     padding:7px 9px;
 
@@ -260,17 +313,27 @@ button{
     white-space:nowrap;
 
     background:
-        linear-gradient(180deg,#102d3a,#0a222d);
+        linear-gradient(
+            180deg,
+            #102f3d,
+            #09212c
+        );
 
     border:1px solid #194657;
     border-radius:9px;
 }
 
 .stat.money{
-    border-color:#927d35;
+    min-width:105px;
+
+    border-color:#8d7932;
 
     background:
-        linear-gradient(180deg,#3a3419,#26220f);
+        linear-gradient(
+            180deg,
+            #3b3519,
+            #25210e
+        );
 }
 
 .stat .label{
@@ -298,6 +361,10 @@ button{
     color:#ffe889;
 }
 
+/* =========================================================
+   SPIELBEREICH
+========================================================= */
+
 #gameArea{
     position:relative;
 
@@ -319,37 +386,45 @@ button{
 
     cursor:crosshair;
 
-    background:#0b3650;
+    background:#0a3853;
 
     touch-action:none;
 }
 
 /* =========================================================
-   MISSIONSFENSTER
+   MISSION
 ========================================================= */
 
 #objectiveBox{
     position:absolute;
+
     top:12px;
     left:12px;
 
     z-index:15;
 
-    width:265px;
+    width:282px;
 
     padding:12px;
 
     pointer-events:none;
 
-    background:rgba(5,18,27,.90);
+    background:
+        linear-gradient(
+            160deg,
+            rgba(5,20,30,.93),
+            rgba(4,14,22,.92)
+        );
 
-    border:1px solid rgba(100,210,255,.28);
-    border-radius:12px;
+    border:
+        1px solid rgba(100,210,255,.3);
+
+    border-radius:13px;
 
     box-shadow:
-        0 5px 18px rgba(0,0,0,.25);
+        0 7px 22px rgba(0,0,0,.32);
 
-    backdrop-filter:blur(6px);
+    backdrop-filter:blur(7px);
 }
 
 #objectiveBox h3{
@@ -358,14 +433,17 @@ button{
     color:#7deaff;
 
     font-size:14px;
+
+    letter-spacing:.7px;
 }
 
 #objectiveBox p{
     margin:3px 0;
 
-    color:#c2d9e1;
+    color:#c6dce4;
 
     font-size:12px;
+
     line-height:1.35;
 }
 
@@ -376,21 +454,25 @@ button{
 
     overflow:hidden;
 
-    background:#07151c;
+    background:#06141b;
 
     border-radius:5px;
 }
 
 #dayProgress{
-    width:0%;
+    width:0;
     height:100%;
 
     background:
-        linear-gradient(90deg,#62e9ff,#65ffb5);
+        linear-gradient(
+            90deg,
+            #62e9ff,
+            #65ffb5
+        );
 }
 
 /* =========================================================
-   RECHTE STEUERUNG
+   STEUERUNG
 ========================================================= */
 
 #sideControls{
@@ -408,21 +490,27 @@ button{
 }
 
 .controlButton{
-    min-width:105px;
+    min-width:108px;
 
     padding:8px 10px;
 
-    color:white;
+    color:#fff;
 
     font-size:12px;
     font-weight:bold;
 
     cursor:pointer;
 
-    border:1px solid #2d5c6e;
+    border:
+        1px solid #2d5c6e;
+
     border-radius:8px;
 
-    background:rgba(9,34,46,.95);
+    background:
+        rgba(8,33,45,.95);
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.22);
 }
 
 .controlButton:hover{
@@ -435,7 +523,62 @@ button{
     border-color:#67e7ff;
 
     box-shadow:
-        0 0 12px rgba(70,220,255,.12);
+        0 0 13px rgba(70,220,255,.15);
+}
+
+/* =========================================================
+   MINIMAP
+========================================================= */
+
+#miniWrap{
+    position:absolute;
+
+    right:12px;
+    bottom:12px;
+
+    z-index:18;
+
+    width:190px;
+
+    padding:6px;
+
+    pointer-events:none;
+
+    background:
+        rgba(4,16,24,.91);
+
+    border:
+        1px solid rgba(108,215,245,.28);
+
+    border-radius:10px;
+
+    box-shadow:
+        0 6px 22px rgba(0,0,0,.32);
+}
+
+#miniTitle{
+    margin:0 0 4px;
+
+    color:#95dfee;
+
+    font-size:9px;
+
+    text-align:center;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+#miniMap{
+    display:block;
+
+    width:176px;
+    height:118px;
+
+    border-radius:5px;
+
+    background:#08344d;
 }
 
 /* =========================================================
@@ -446,7 +589,7 @@ button{
     position:relative;
     z-index:30;
 
-    min-height:135px;
+    min-height:138px;
 
     display:flex;
     align-items:center;
@@ -457,55 +600,76 @@ button{
 
     overflow-x:auto;
 
-    background:rgba(5,17,25,.99);
+    background:
+        rgba(4,16,24,.99);
 
-    border-top:1px solid #173d4c;
+    border-top:
+        1px solid #173d4c;
+
+    box-shadow:
+        0 -5px 24px rgba(0,0,0,.25);
 }
 
 .buildItem{
-    flex:0 0 115px;
+    flex:0 0 118px;
 
-    min-height:115px;
+    min-height:118px;
 
     padding:6px 5px;
 
-    color:white;
+    color:#fff;
 
     text-align:center;
 
     cursor:pointer;
 
     background:
-        linear-gradient(180deg,#102e3c,#0b222d);
+        linear-gradient(
+            180deg,
+            #10303e,
+            #0a222d
+        );
 
     border:2px solid transparent;
     border-radius:10px;
+
+    transition:.15s;
 }
 
 .buildItem:hover{
     background:
-        linear-gradient(180deg,#164456,#0d2c39);
+        linear-gradient(
+            180deg,
+            #17485b,
+            #0c2e3b
+        );
+
+    transform:
+        translateY(-2px);
 }
 
 .buildItem.selected{
     border-color:#61e6ff;
 
     box-shadow:
-        0 0 14px rgba(80,220,255,.18);
+        0 0 15px rgba(80,220,255,.2);
 }
 
 .previewCanvas{
     display:block;
 
-    width:62px;
-    height:50px;
+    width:66px;
+    height:52px;
 
     margin:0 auto 2px;
 
     border-radius:6px;
 
     background:
-        linear-gradient(#77a85e,#5b8448);
+        linear-gradient(
+            #7eaa64,
+            #567d45
+        );
 }
 
 .buildName{
@@ -520,7 +684,7 @@ button{
 
     margin-top:4px;
 
-    color:#9ab6c0;
+    color:#9bb9c3;
 
     font-size:9px;
     line-height:1.3;
@@ -538,9 +702,10 @@ button{
 
     z-index:50;
 
-    width:min(530px,90vw);
+    width:min(550px,90vw);
 
-    transform:translateX(-50%);
+    transform:
+        translateX(-50%);
 
     pointer-events:none;
 }
@@ -555,29 +720,36 @@ button{
     font-size:13px;
     font-weight:bold;
 
-    background:rgba(7,29,39,.95);
+    background:
+        rgba(7,29,39,.96);
 
-    border:1px solid #397489;
+    border:
+        1px solid #397489;
+
     border-radius:9px;
 
     box-shadow:
-        0 5px 20px rgba(0,0,0,.35);
+        0 5px 20px rgba(0,0,0,.38);
 
-    animation:messageIn .25s ease;
+    animation:
+        messageIn .25s ease;
 }
 
 .message.warning{
     color:#ffe5a9;
+
     border-color:#ffc95f;
 }
 
 .message.danger{
     color:#ffb0b0;
+
     border-color:#ff6868;
 }
 
 .message.good{
     color:#a5ffc5;
+
     border-color:#66efa0;
 }
 
@@ -602,28 +774,31 @@ button{
 
     z-index:60;
 
-    max-width:270px;
+    max-width:290px;
 
-    padding:8px 10px;
+    padding:9px 11px;
 
-    color:#d9eef5;
+    color:#dcf0f6;
 
     font-size:11px;
-    line-height:1.4;
+    line-height:1.45;
 
     pointer-events:none;
 
-    background:rgba(3,14,20,.96);
+    background:
+        rgba(3,14,20,.97);
 
-    border:1px solid #315f70;
+    border:
+        1px solid #315f70;
+
     border-radius:7px;
 
     box-shadow:
-        0 5px 16px rgba(0,0,0,.4);
+        0 5px 17px rgba(0,0,0,.45);
 }
 
 /* =========================================================
-   MODAL
+   MODALS
 ========================================================= */
 
 .modal{
@@ -638,11 +813,12 @@ button{
 
     padding:20px;
 
-    background:rgba(0,0,0,.74);
+    background:
+        rgba(0,0,0,.75);
 }
 
 .modalBox{
-    width:min(650px,95vw);
+    width:min(680px,95vw);
     max-height:90vh;
 
     overflow:auto;
@@ -651,7 +827,9 @@ button{
 
     background:#0b2531;
 
-    border:1px solid #306276;
+    border:
+        1px solid #306276;
+
     border-radius:18px;
 
     box-shadow:
@@ -682,33 +860,38 @@ button{
 }
 
 /* =========================================================
-   RESPONSIVE
+   MOBILE
 ========================================================= */
 
 @media(max-width:850px){
 
     .difficulties{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     #objectiveBox{
-        width:205px;
+        width:215px;
     }
 
     #sideControls{
         top:auto;
+
         bottom:10px;
         right:8px;
     }
 
     .controlButton{
-        min-width:78px;
+        min-width:80px;
 
         padding:6px;
 
         font-size:10px;
     }
 
+    #miniWrap{
+        display:none;
+    }
 }
 
 @media(max-width:550px){
@@ -725,23 +908,22 @@ button{
         top:5px;
         left:5px;
 
-        width:180px;
+        width:182px;
 
         padding:8px;
     }
 
-    #objectiveBox p:nth-of-type(n+3){
+    #objectiveBox p:nth-of-type(n+4){
         display:none;
     }
 
     .stat{
-        min-width:75px;
+        min-width:76px;
     }
 
     .buildItem{
-        flex-basis:100px;
+        flex-basis:102px;
     }
-
 }
 </style>
 </head>
@@ -749,7 +931,7 @@ button{
 <body>
 
 <!-- =======================================================
-     START
+     STARTBILDSCHIRM
 ======================================================= -->
 
 <div id="startScreen">
@@ -761,10 +943,13 @@ button{
             <h1>INSELWACHT</h1>
 
             <p>
-                Eine abgelegene Insel sinkt langsam ins Meer.
-                Errichte eine funktionierende Siedlung,
-                sichere Rohstoffe, baue Hochwasserschutz
-                und halte die Bevölkerung 60 Tage am Leben.
+                Die Insel sinkt, das Meer steigt und du hast
+                60 Tage Zeit, aus einer kleinen Siedlung eine
+                hochwassersichere Inselgemeinschaft zu machen.
+                Mauern halten Wasser jetzt tatsächlich auf,
+                Deiche sind stärker und die Wirtschaft liefert
+                genug Geld, um auch im späteren Spiel noch
+                reagieren zu können.
             </p>
 
         </div>
@@ -775,76 +960,84 @@ button{
 
         <div class="difficulties">
 
-            <div class="difficulty easy selected"
-                 data-difficulty="easy">
+            <div
+                class="difficulty easy selected"
+                data-difficulty="easy"
+            >
 
                 <h3>LEICHT</h3>
 
                 <p>
-                    Viel Aufbauzeit und sehr hohe
-                    Startressourcen.
+                    Große Reserven, hohe Förderungen
+                    und viel Zeit.
                 </p>
 
                 <div class="details">
-                    2.500 € Startkapital<br>
-                    700 Holz · 550 Stein<br>
-                    180 Metall · 400 Nahrung<br>
+                    4.000 € Startkapital<br>
+                    850 Holz · 700 Stein<br>
+                    240 Metall · 500 Nahrung<br>
                     ca. 24 Minuten
                 </div>
 
             </div>
 
-            <div class="difficulty normal"
-                 data-difficulty="normal">
+            <div
+                class="difficulty normal"
+                data-difficulty="normal"
+            >
 
                 <h3>NORMAL</h3>
 
                 <p>
-                    Ausgewogenes Strategiespiel mit
-                    zunehmendem Wasserdruck.
+                    Ausgewogen mit klar zunehmendem
+                    Hochwasserdruck.
                 </p>
 
                 <div class="details">
-                    1.900 € Startkapital<br>
-                    550 Holz · 420 Stein<br>
-                    140 Metall · 320 Nahrung<br>
+                    3.200 € Startkapital<br>
+                    700 Holz · 560 Stein<br>
+                    190 Metall · 420 Nahrung<br>
                     ca. 20 Minuten
                 </div>
 
             </div>
 
-            <div class="difficulty hard"
-                 data-difficulty="hard">
+            <div
+                class="difficulty hard"
+                data-difficulty="hard"
+            >
 
                 <h3>SCHWER</h3>
 
                 <p>
-                    Weniger Reserven und stärkere Stürme.
+                    Weniger Spielraum und stärkere Stürme.
                 </p>
 
                 <div class="details">
-                    1.500 € Startkapital<br>
-                    450 Holz · 340 Stein<br>
-                    110 Metall · 260 Nahrung<br>
+                    2.500 € Startkapital<br>
+                    560 Holz · 440 Stein<br>
+                    150 Metall · 340 Nahrung<br>
                     ca. 18 Minuten
                 </div>
 
             </div>
 
-            <div class="difficulty extreme"
-                 data-difficulty="extreme">
+            <div
+                class="difficulty extreme"
+                data-difficulty="extreme"
+            >
 
                 <h3>EXTREM</h3>
 
                 <p>
-                    Für Menschen, die Katastrophenschutz
-                    offenbar als Freizeitbeschäftigung sehen.
+                    Das Meer hat offenbar einen persönlichen
+                    Termin mit deiner Insel.
                 </p>
 
                 <div class="details">
-                    1.200 € Startkapital<br>
-                    380 Holz · 280 Stein<br>
-                    90 Metall · 220 Nahrung<br>
+                    2.000 € Startkapital<br>
+                    460 Holz · 360 Stein<br>
+                    120 Metall · 280 Nahrung<br>
                     ca. 16 Minuten
                 </div>
 
@@ -854,18 +1047,18 @@ button{
 
         <div class="startButtons">
 
-            <button id="startButton"
-                    class="bigButton">
-
+            <button
+                id="startButton"
+                class="bigButton"
+            >
                 Insel betreten
-
             </button>
 
-            <button id="loadStartButton"
-                    class="bigButton secondaryButton">
-
+            <button
+                id="loadStartButton"
+                class="bigButton secondaryButton"
+            >
                 Spielstand laden
-
             </button>
 
         </div>
@@ -878,149 +1071,143 @@ button{
      SPIEL
 ======================================================= -->
 
-<div id="game" class="hidden">
+<div
+    id="game"
+    class="hidden"
+>
 
     <div id="topBar">
 
         <div class="stat">
-
-            <div class="label">Tag</div>
-
-            <div class="value"
-                 id="dayStat">
+            <div class="label">
+                Tag
+            </div>
+            <div
+                class="value"
+                id="dayStat"
+            >
                 1 / 60
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Bevölkerung
             </div>
-
-            <div class="value"
-                 id="populationStat">
+            <div
+                class="value"
+                id="populationStat"
+            >
                 12 / 24
             </div>
-
         </div>
 
         <div class="stat money">
-
             <div class="label">
                 Geld
             </div>
-
-            <div class="value"
-                 id="moneyStat">
+            <div
+                class="value"
+                id="moneyStat"
+            >
                 0 €
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Nahrung
             </div>
-
-            <div class="value"
-                 id="foodStat">
+            <div
+                class="value"
+                id="foodStat"
+            >
                 0
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Holz
             </div>
-
-            <div class="value"
-                 id="woodStat">
+            <div
+                class="value"
+                id="woodStat"
+            >
                 0
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Stein
             </div>
-
-            <div class="value"
-                 id="stoneStat">
+            <div
+                class="value"
+                id="stoneStat"
+            >
                 0
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Metall
             </div>
-
-            <div class="value"
-                 id="metalStat">
+            <div
+                class="value"
+                id="metalStat"
+            >
                 0
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Energie
             </div>
-
-            <div class="value"
-                 id="energyStat">
+            <div
+                class="value"
+                id="energyStat"
+            >
                 0
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Meer
             </div>
-
-            <div class="value"
-                 id="seaStat">
+            <div
+                class="value"
+                id="seaStat"
+            >
                 0.00 m
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Absenkung
             </div>
-
-            <div class="value"
-                 id="sinkStat">
+            <div
+                class="value"
+                id="sinkStat"
+            >
                 0.00 m
             </div>
-
         </div>
 
         <div class="stat">
-
             <div class="label">
                 Kern trocken
             </div>
-
-            <div class="value"
-                 id="dryStat">
+            <div
+                class="value"
+                id="dryStat"
+            >
                 100 %
             </div>
-
         </div>
 
     </div>
@@ -1034,20 +1221,21 @@ button{
             <h3>MISSION</h3>
 
             <p>
-                Überlebe 60 Tage.
+                Überlebe 60 Tage und halte mindestens
+                10 Einwohner am Leben.
             </p>
 
             <p>
-                Halte mindestens 10 Einwohner am Leben.
-            </p>
-
-            <p>
-                Mindestens 70 % des Inselkerns
-                müssen trocken bleiben.
+                Am Ende müssen mindestens 70 % des
+                Inselkerns trocken sein.
             </p>
 
             <p id="incomeText">
-                Steuern: 0 €/Tag
+                Einnahmen: 0 €/Tag
+            </p>
+
+            <p id="grantText">
+                Nächste Förderung: Tag 15
             </p>
 
             <p id="weatherText">
@@ -1064,69 +1252,84 @@ button{
 
         <div id="sideControls">
 
-            <button class="controlButton"
-                    id="pauseButton">
-
+            <button
+                class="controlButton"
+                id="pauseButton"
+            >
                 ⏸ Pause
-
             </button>
 
-            <button class="controlButton active speedButton"
-                    data-speed="1">
-
+            <button
+                class="controlButton active speedButton"
+                data-speed="1"
+            >
                 1×
-
             </button>
 
-            <button class="controlButton speedButton"
-                    data-speed="2">
-
+            <button
+                class="controlButton speedButton"
+                data-speed="2"
+            >
                 2×
-
             </button>
 
-            <button class="controlButton speedButton"
-                    data-speed="4">
-
+            <button
+                class="controlButton speedButton"
+                data-speed="4"
+            >
                 4×
-
             </button>
 
-            <button class="controlButton"
-                    id="saveButton">
-
+            <button
+                class="controlButton"
+                id="saveButton"
+            >
                 💾 Speichern
-
             </button>
 
-            <button class="controlButton"
-                    id="loadButton">
-
+            <button
+                class="controlButton"
+                id="loadButton"
+            >
                 📂 Laden
-
             </button>
 
-            <button class="controlButton"
-                    id="helpButton">
-
+            <button
+                class="controlButton"
+                id="helpButton"
+            >
                 ❔ Hilfe
-
             </button>
 
-            <button class="controlButton"
-                    id="resetButton">
-
+            <button
+                class="controlButton"
+                id="resetButton"
+            >
                 ↻ Neustart
-
             </button>
+
+        </div>
+
+        <div id="miniWrap">
+
+            <div id="miniTitle">
+                Inselübersicht
+            </div>
+
+            <canvas
+                id="miniMap"
+                width="176"
+                height="118"
+            ></canvas>
 
         </div>
 
         <div id="messages"></div>
 
-        <div id="tooltip"
-             class="hidden">
-        </div>
+        <div
+            id="tooltip"
+            class="hidden"
+        ></div>
 
     </div>
 
@@ -1138,27 +1341,37 @@ button{
      HILFE
 ======================================================= -->
 
-<div id="helpModal"
-     class="modal hidden">
+<div
+    id="helpModal"
+    class="modal hidden"
+>
 
     <div class="modalBox">
 
-        <h2>Anleitung</h2>
+        <h2>
+            Inselwacht – Anleitung
+        </h2>
 
         <p>
-            Die Insel sinkt langsam ab und gleichzeitig
-            steigt das Meer. Die ersten Tage sind bewusst
-            relativ ruhig, damit du zuerst deine Wirtschaft
-            aufbauen kannst.
+            Das Wasser breitet sich jetzt tatsächlich vom
+            Meer aus über zusammenhängende niedrige Flächen
+            aus. Ein geschlossener Mauerring hält das Meer
+            deshalb draußen. Eine einzige Lücke reicht
+            allerdings aus, damit Wasser hineinläuft.
+            Wird eine Mauer überspült oder zerstört,
+            kann das Wasser ebenfalls dahinter eindringen.
         </p>
 
         <ul>
+
             <li>
-                Gebäude unten auswählen und mit Linksklick bauen.
+                Gebäude unten auswählen und mit
+                Linksklick bauen.
             </li>
 
             <li>
-                Rechtsklick auf ein Gebäude reißt es ab.
+                Rechtsklick reißt ein Gebäude ab
+                und erstattet 30 %.
             </li>
 
             <li>
@@ -1166,60 +1379,49 @@ button{
             </li>
 
             <li>
-                Das Mausrad verändert den Zoom.
+                Mausrad zoomt hinein und hinaus.
             </li>
 
             <li>
-                Einwohner bezahlen täglich Steuern.
+                Normale Mauern sind günstig und für
+                frühes Hochwasser gedacht.
             </li>
 
             <li>
-                Farmen produzieren Nahrung.
+                Deiche sind deutlich höher und halten
+                spätere Sturmfluten aus.
             </li>
 
             <li>
-                Sägewerke produzieren Holz.
+                Einwohner zahlen Steuern, zusätzlich
+                gibt es eine tägliche Insel-Förderung.
             </li>
 
             <li>
-                Steinbrüche produzieren Stein.
+                An Tag 15, 30 und 45 erhältst du
+                Infrastrukturhilfen mit Geld,
+                Stein und Metall.
             </li>
 
             <li>
-                Metallminen benötigen Energie.
+                Nach überstandenen Stürmen gibt es
+                Katastrophenhilfe.
             </li>
 
             <li>
-                Windräder produzieren Energie.
+                Pumpwerke senken den effektiven
+                Wasserstand, benötigen aber Energie.
             </li>
 
-            <li>
-                Pumpwerke bremsen den Wasseranstieg.
-            </li>
-
-            <li>
-                Mauern schützen gegen leichtes Hochwasser.
-            </li>
-
-            <li>
-                Deiche bieten deutlich stärkeren Schutz.
-            </li>
         </ul>
-
-        <p>
-            Gebäude werden nicht sofort zerstört, wenn
-            Wasser sie erreicht. Zunächst fällt die Produktion
-            aus. Erst nach längerer Überflutung entstehen
-            Schäden.
-        </p>
 
         <div class="modalButtons">
 
-            <button class="bigButton"
-                    id="closeHelpButton">
-
+            <button
+                class="bigButton"
+                id="closeHelpButton"
+            >
                 Weiter
-
             </button>
 
         </div>
@@ -1232,8 +1434,10 @@ button{
      SPIELENDE
 ======================================================= -->
 
-<div id="endModal"
-     class="modal hidden">
+<div
+    id="endModal"
+    class="modal hidden"
+>
 
     <div class="modalBox">
 
@@ -1245,11 +1449,11 @@ button{
 
         <div class="modalButtons">
 
-            <button class="bigButton"
-                    id="endRestartButton">
-
+            <button
+                class="bigButton"
+                id="endRestartButton"
+            >
                 Neues Spiel
-
             </button>
 
         </div>
@@ -1262,73 +1466,93 @@ button{
 "use strict";
 
 /* =========================================================
-   GRUNDDATEN
+   GRUNDWERTE
 ========================================================= */
 
-const MAP_W = 72;
-const MAP_H = 52;
+const MAP_W=72;
+const MAP_H=52;
 
-const TILE = 38;
+const TILE=40;
 
-const MAX_DAYS = 60;
+const MAX_DAYS=60;
 
-const SAVE_KEY =
-    "inselwacht_save_v3";
+const SAVE_KEY=
+    "inselwacht_save_v4";
 
-const canvas =
-    document.getElementById("gameCanvas");
+const canvas=
+    document.getElementById(
+        "gameCanvas"
+    );
 
-const ctx =
-    canvas.getContext("2d");
+const ctx=
+    canvas.getContext(
+        "2d"
+    );
 
-const startScreen =
-    document.getElementById("startScreen");
+const miniMap=
+    document.getElementById(
+        "miniMap"
+    );
 
-const gameElement =
-    document.getElementById("game");
+const miniCtx=
+    miniMap.getContext(
+        "2d"
+    );
 
-let selectedDifficulty =
+const startScreen=
+    document.getElementById(
+        "startScreen"
+    );
+
+const gameElement=
+    document.getElementById(
+        "game"
+    );
+
+let selectedDifficulty=
     "easy";
 
-let selectedBuild =
+let selectedBuild=
     "wall";
 
-let state = null;
+let state=null;
 
-let mouseTile = null;
+let floodMap=null;
 
-let mouseScreen = {
+let mouseTile=null;
+
+let mouseScreen={
     x:0,
     y:0
 };
 
-let camera = {
+let camera={
     x:0,
     y:0,
-    zoom:.75
+    zoom:.72
 };
 
-let keys = {};
+let keys={};
 
-let dragging = false;
+let dragging=false;
 
-let dragStart = null;
+let dragStart=null;
 
-let cameraStart = null;
+let cameraStart=null;
 
-let touchStart = null;
+let touchStart=null;
 
-let lastTime =
+let lastTime=
     performance.now();
 
-let animationTime = 0;
+let animationTime=0;
 
 
 /* =========================================================
-   SCHWIERIGKEITEN
+   SCHWIERIGKEIT
 ========================================================= */
 
-const difficulties = {
+const difficulties={
 
     easy:{
 
@@ -1341,26 +1565,33 @@ const difficulties = {
 
         sinkPerDay:.006,
 
-        money:2500,
+        money:4000,
 
-        food:400,
-        wood:700,
-        stone:550,
-        metal:180,
-        energy:150,
+        food:500,
+        wood:850,
+        stone:700,
+        metal:240,
+        energy:200,
 
         production:1.25,
 
-        taxPerPerson:4.5,
+        taxPerPerson:7,
+        baseIncome:70,
 
         stormStart:18,
         stormMin:11,
         stormMax:15,
 
         stormLevel:.25,
-        stormDamage:.35,
+        stormDamage:.28,
 
-        starvationDamage:.12
+        starvationDamage:.10,
+
+        stormBonus:400,
+
+        grantMoney:700,
+        grantStone:100,
+        grantMetal:25
     },
 
     normal:{
@@ -1374,26 +1605,33 @@ const difficulties = {
 
         sinkPerDay:.009,
 
-        money:1900,
+        money:3200,
 
-        food:320,
-        wood:550,
-        stone:420,
-        metal:140,
-        energy:120,
+        food:420,
+        wood:700,
+        stone:560,
+        metal:190,
+        energy:160,
 
         production:1,
 
-        taxPerPerson:4,
+        taxPerPerson:6.5,
+        baseIncome:60,
 
         stormStart:14,
         stormMin:9,
         stormMax:13,
 
         stormLevel:.38,
-        stormDamage:.55,
+        stormDamage:.48,
 
-        starvationDamage:.20
+        starvationDamage:.18,
+
+        stormBonus:350,
+
+        grantMoney:600,
+        grantStone:85,
+        grantMetal:20
     },
 
     hard:{
@@ -1407,26 +1645,33 @@ const difficulties = {
 
         sinkPerDay:.013,
 
-        money:1500,
+        money:2500,
 
-        food:260,
-        wood:450,
-        stone:340,
-        metal:110,
-        energy:90,
+        food:340,
+        wood:560,
+        stone:440,
+        metal:150,
+        energy:120,
 
         production:.92,
 
-        taxPerPerson:3.5,
+        taxPerPerson:6,
+        baseIncome:50,
 
         stormStart:11,
         stormMin:8,
         stormMax:11,
 
         stormLevel:.52,
-        stormDamage:.8,
+        stormDamage:.75,
 
-        starvationDamage:.28
+        starvationDamage:.27,
+
+        stormBonus:300,
+
+        grantMoney:500,
+        grantStone:70,
+        grantMetal:18
     },
 
     extreme:{
@@ -1440,88 +1685,95 @@ const difficulties = {
 
         sinkPerDay:.017,
 
-        money:1200,
+        money:2000,
 
-        food:220,
-        wood:380,
-        stone:280,
-        metal:90,
-        energy:70,
+        food:280,
+        wood:460,
+        stone:360,
+        metal:120,
+        energy:100,
 
         production:.82,
 
-        taxPerPerson:3,
+        taxPerPerson:5.5,
+        baseIncome:40,
 
         stormStart:9,
         stormMin:6,
         stormMax:9,
 
         stormLevel:.70,
-        stormDamage:1.05,
+        stormDamage:1,
 
-        starvationDamage:.38
+        starvationDamage:.36,
+
+        stormBonus:250,
+
+        grantMoney:450,
+        grantStone:60,
+        grantMetal:15
     }
 
 };
 
 
 /* =========================================================
-   GEBÄUDEDATEN
+   GEBÄUDE
 ========================================================= */
 
-const BUILDINGS = {
+const BUILDINGS={
 
     wall:{
 
         name:"Schutzmauer",
 
-        money:20,
+        money:10,
 
         cost:{
-            wood:10,
-            stone:8
+            wood:8,
+            stone:6
         },
 
-        hp:200,
+        hp:260,
 
-        barrier:.95,
+        barrier:1.45,
 
         description:
-            "Günstiger Schutz gegen leichtes Hochwasser."
+            "Günstige Mauer. Geschlossene Linien halten Wasser wirklich auf."
     },
 
     dike:{
 
         name:"Deich",
 
-        money:75,
+        money:45,
 
         cost:{
-            wood:25,
-            stone:30,
-            metal:6
+            wood:18,
+            stone:20,
+            metal:3
         },
 
-        hp:380,
+        hp:500,
 
-        barrier:2.15,
+        barrier:3,
 
         description:
-            "Starker Hochwasserschutz."
+            "Sehr starker Hochwasserschutz für spätere Meeresspiegel."
     },
 
     house:{
 
         name:"Wohnhaus",
 
-        money:150,
+        money:135,
 
         cost:{
-            wood:26,
-            stone:10
+            wood:24,
+            stone:9
         },
 
-        hp:150,
+        hp:155,
 
         housing:8,
 
@@ -1533,16 +1785,16 @@ const BUILDINGS = {
 
         name:"Farm",
 
-        money:120,
+        money:110,
 
         cost:{
-            wood:18,
-            stone:8
+            wood:17,
+            stone:7
         },
 
-        hp:120,
+        hp:125,
 
-        food:9,
+        food:9.5,
 
         description:
             "Produziert Nahrung."
@@ -1552,14 +1804,14 @@ const BUILDINGS = {
 
         name:"Sägewerk",
 
-        money:140,
+        money:135,
 
         cost:{
-            wood:15,
-            stone:8
+            wood:14,
+            stone:7
         },
 
-        hp:135,
+        hp:140,
 
         wood:8,
 
@@ -1571,14 +1823,14 @@ const BUILDINGS = {
 
         name:"Steinbruch",
 
-        money:170,
+        money:155,
 
         cost:{
-            wood:18,
-            stone:12
+            wood:17,
+            stone:10
         },
 
-        hp:150,
+        hp:160,
 
         stone:7,
 
@@ -1590,59 +1842,59 @@ const BUILDINGS = {
 
         name:"Metallmine",
 
-        money:280,
+        money:245,
 
         cost:{
-            wood:28,
-            stone:25,
-            metal:7
+            wood:26,
+            stone:22,
+            metal:6
         },
 
-        hp:165,
+        hp:175,
 
-        metal:3.2,
+        metal:3.3,
 
         energyUse:1.5,
 
         description:
-            "Produziert Metall und verbraucht Energie."
+            "Produziert Metall und benötigt Energie."
     },
 
     wind:{
 
         name:"Windrad",
 
-        money:260,
+        money:220,
 
         cost:{
-            wood:20,
-            stone:12,
-            metal:8
+            wood:18,
+            stone:10,
+            metal:7
         },
 
-        hp:140,
+        hp:150,
 
-        energy:14,
+        energy:15,
 
         description:
-            "Produziert Energie."
+            "Produziert Energie. Der Rotor dreht sich mit dem Wind."
     },
 
     pump:{
 
         name:"Pumpwerk",
 
-        money:320,
+        money:275,
 
         cost:{
-            wood:28,
-            stone:24,
-            metal:10
+            wood:25,
+            stone:21,
+            metal:8
         },
 
-        hp:170,
+        hp:180,
 
-        pump:.018,
+        pump:.019,
 
         energyUse:4,
 
@@ -1654,17 +1906,17 @@ const BUILDINGS = {
 
         name:"Lagerhaus",
 
-        money:220,
+        money:190,
 
         cost:{
-            wood:25,
-            stone:25,
-            metal:5
+            wood:22,
+            stone:22,
+            metal:4
         },
 
-        hp:180,
+        hp:190,
 
-        storageBonus:300,
+        storageBonus:350,
 
         description:
             "Erhöht die Lagerkapazität."
@@ -1674,63 +1926,77 @@ const BUILDINGS = {
 
         name:"Werkstatt",
 
-        money:350,
+        money:320,
 
         cost:{
-            wood:35,
-            stone:30,
-            metal:14
+            wood:32,
+            stone:27,
+            metal:12
         },
 
-        hp:175,
+        hp:185,
 
         productionBonus:.10,
 
         description:
-            "Erhöht die Produktion aller Rohstoffbetriebe."
+            "Erhöht die Rohstoffproduktion."
     }
 
 };
 
 
 /* =========================================================
-   SCHWIERIGKEIT AUSWÄHLEN
+   STARTAUSWAHL
 ========================================================= */
 
 document
 .querySelectorAll(".difficulty")
-.forEach(card=>{
+.forEach(
+    card=>
+        card.addEventListener(
+            "click",
+            ()=>{
 
-    card.addEventListener(
-        "click",
-        ()=>{
+                document
+                .querySelectorAll(
+                    ".difficulty"
+                )
+                .forEach(
+                    c=>
+                        c.classList.remove(
+                            "selected"
+                        )
+                );
 
-            document
-            .querySelectorAll(".difficulty")
-            .forEach(c=>
-                c.classList.remove("selected")
-            );
+                card
+                .classList
+                .add(
+                    "selected"
+                );
 
-            card.classList.add("selected");
-
-            selectedDifficulty =
-                card.dataset.difficulty;
-        }
-    );
-
-});
-
-
-document
-.getElementById("startButton")
-.addEventListener(
-    "click",
-    ()=>startNewGame(selectedDifficulty)
+                selectedDifficulty=
+                    card.dataset.difficulty;
+            }
+        )
 );
 
 
 document
-.getElementById("loadStartButton")
+.getElementById(
+    "startButton"
+)
+.addEventListener(
+    "click",
+    ()=>startNewGame(
+        selectedDifficulty
+    )
+);
+
+
+document
+.getElementById(
+    "loadStartButton"
+)
 .addEventListener(
     "click",
     loadGame
@@ -1741,26 +2007,42 @@ document
    NEUES SPIEL
 ========================================================= */
 
-function startNewGame(difficulty){
+function startNewGame(
+    difficulty
+){
 
-    state =
-        createState(difficulty);
-
-    selectedDifficulty =
+    selectedDifficulty=
         difficulty;
 
+    state=
+        createState(
+            difficulty
+        );
+
+    floodMap=null;
+
+    computeFloodMap();
+
     startScreen
-        .classList
-        .add("hidden");
+    .classList
+    .add(
+        "hidden"
+    );
 
     gameElement
-        .classList
-        .remove("hidden");
+    .classList
+    .remove(
+        "hidden"
+    );
 
     document
-        .getElementById("endModal")
-        .classList
-        .add("hidden");
+    .getElementById(
+        "endModal"
+    )
+    .classList
+    .add(
+        "hidden"
+    );
 
     createBuildBar();
 
@@ -1768,50 +2050,64 @@ function startNewGame(difficulty){
 
     centerCamera();
 
-    selectedBuild =
+    selectedBuild=
         "wall";
 
     updateBuildSelection();
 
     message(
-        "Du hast ausreichend Vorräte. Nutze die ruhigen ersten Tage für den Aufbau.",
+        "Die ersten Tage sind ruhig. Baue Wirtschaft und einen geschlossenen Schutzring auf.",
         "good"
     );
 
-    lastTime =
+    lastTime=
         performance.now();
 }
 
 
 /* =========================================================
-   STATUS ERSTELLEN
+   SPIELSTATUS
 ========================================================= */
 
-function createState(difficulty){
+function createState(
+    difficulty
+){
 
-    const diff =
-        difficulties[difficulty];
+    const diff=
+        difficulties[
+            difficulty
+        ];
 
-    const terrain =
+    const terrain=
         generateTerrain();
 
-    const buildings = [];
+    const buildings=[];
 
-    const cx =
-        Math.floor(MAP_W/2);
+    const cx=
+        Math.floor(
+            MAP_W/2
+        );
 
-    const cy =
-        Math.floor(MAP_H/2);
+    const cy=
+        Math.floor(
+            MAP_H/2
+        );
 
-    function addStartBuilding(type,x,y){
+    const add=(
+        type,
+        x,
+        y
+    )=>{
 
-        const data =
-            BUILDINGS[type];
+        const d=
+            BUILDINGS[
+                type
+            ];
 
         buildings.push({
 
             id:
-                Date.now() +
+                Date.now()+
                 Math.random(),
 
             type,
@@ -1819,68 +2115,64 @@ function createState(difficulty){
             x,
             y,
 
-            hp:data.hp,
-            maxHp:data.hp,
+            hp:d.hp,
+            maxHp:d.hp,
 
             floodTime:0
         });
-    }
+    };
 
-    /*
-        Startdorf im Hochland
-    */
-
-    addStartBuilding(
+    add(
         "house",
         cx-2,
         cy-2
     );
 
-    addStartBuilding(
+    add(
         "house",
         cx+1,
         cy-2
     );
 
-    addStartBuilding(
+    add(
         "house",
         cx-1,
         cy+1
     );
 
-    addStartBuilding(
+    add(
         "farm",
         cx+2,
         cy+1
     );
 
-    addStartBuilding(
+    add(
         "lumber",
         cx-4,
         cy+1
     );
 
-    addStartBuilding(
+    add(
         "quarry",
         cx-4,
         cy-2
     );
 
-    addStartBuilding(
+    add(
         "wind",
         cx+4,
         cy-2
     );
 
-    addStartBuilding(
+    add(
         "reservoir",
         cx+1,
         cy+4
     );
 
-    return {
+    return{
 
-        version:3,
+        version:4,
 
         difficulty,
 
@@ -1891,19 +2183,31 @@ function createState(difficulty){
         gameDay:1,
 
         paused:false,
+
         speed:1,
 
         population:12,
 
-        money:diff.money,
+        money:
+            diff.money,
 
-        food:diff.food,
-        wood:diff.wood,
-        stone:diff.stone,
-        metal:diff.metal,
-        energy:diff.energy,
+        food:
+            diff.food,
 
-        seaLevel:diff.seaStart,
+        wood:
+            diff.wood,
+
+        stone:
+            diff.stone,
+
+        metal:
+            diff.metal,
+
+        energy:
+            diff.energy,
+
+        seaLevel:
+            diff.seaStart,
 
         sinkLevel:0,
 
@@ -1914,14 +2218,22 @@ function createState(difficulty){
         stormRemaining:0,
 
         nextStormDay:
-            diff.stormStart +
+            diff.stormStart+
             Math.random()*3,
+
+        stormWarningIssued:false,
 
         stormNumber:0,
 
         gameEnded:false,
 
-        resourceCapacity:1500,
+        resourceCapacity:1800,
+
+        grantsClaimed:{
+            15:false,
+            30:false,
+            45:false
+        },
 
         statistics:{
 
@@ -1931,25 +2243,26 @@ function createState(difficulty){
 
             populationLost:0,
 
-            moneyEarned:0
+            moneyEarned:0,
 
+            grantsReceived:0
         }
     };
 }
 
 
 /* =========================================================
-   INSEL ERZEUGEN
+   INSEL
 ========================================================= */
 
 function generateTerrain(){
 
-    const terrain = [];
+    const terrain=[];
 
-    const cx =
+    const cx=
         MAP_W/2;
 
-    const cy =
+    const cy=
         MAP_H/2;
 
     for(
@@ -1966,88 +2279,130 @@ function generateTerrain(){
             x++
         ){
 
-            const nx =
+            const nx=
                 (x-cx)/30;
 
-            const ny =
+            const ny=
                 (y-cy)/22;
 
-            const distance =
+            const distance=
                 Math.sqrt(
                     nx*nx+
                     ny*ny
                 );
 
-            const coastNoise =
-                Math.sin(x*.38)*.08 +
-                Math.cos(y*.31)*.07 +
-                Math.sin((x+y)*.17)*.06;
+            const coastNoise=
 
-            const r =
-                distance +
+                Math.sin(
+                    x*.38
+                )*.08+
+
+                Math.cos(
+                    y*.31
+                )*.07+
+
+                Math.sin(
+                    (x+y)*.17
+                )*.06+
+
+                Math.cos(
+                    (x-y)*.11
+                )*.035;
+
+            const r=
+                distance+
                 coastNoise;
 
             let elevation;
 
-            if(r>=1.08){
+            if(
+                r>=1.08
+            ){
 
-                elevation =
-                    -1 +
-                    Math.sin(x*.5)*.15;
+                elevation=
+
+                    -1+
+
+                    Math.sin(
+                        x*.5
+                    )*.15+
+
+                    Math.cos(
+                        y*.36
+                    )*.08;
 
             }else{
 
-                const land =
+                const land=
                     Math.max(
                         0,
                         1-r/1.08
                     );
 
-                elevation =
-                    .15 +
+                elevation=
+
+                    .15+
+
                     Math.pow(
                         land,
                         1.42
                     )*
                     9.7;
 
-                elevation +=
-                    Math.sin(x*.31)*.23 +
-                    Math.cos(y*.27)*.21 +
-                    Math.sin((x-y)*.19)*.17;
+                elevation+=
 
-                const dx =
+                    Math.sin(
+                        x*.31
+                    )*.23+
+
+                    Math.cos(
+                        y*.27
+                    )*.21+
+
+                    Math.sin(
+                        (x-y)*.19
+                    )*.17;
+
+                const dx=
                     x-cx;
 
-                const dy =
+                const dy=
                     y-cy;
 
-                const centerDistance =
+                const cd=
                     Math.sqrt(
                         dx*dx+
                         dy*dy
                     );
 
-                if(centerDistance<9){
+                if(
+                    cd<10
+                ){
 
-                    elevation +=
-                        (9-centerDistance)*.10;
+                    elevation+=
+                        (
+                            10-cd
+                        )*
+                        .105;
                 }
             }
 
-            elevation =
+            row.push(
+
                 Math.max(
                     -1.2,
+
                     Math.min(
-                        10.8,
+                        10.9,
                         elevation
                     )
-                );
-
-            row.push(elevation);
+                )
+            );
         }
 
-        terrain.push(row);
+        terrain.push(
+            row
+        );
     }
 
     return terrain;
@@ -2060,7 +2415,7 @@ function generateTerrain(){
 
 function createBuildBar(){
 
-    const bar =
+    const bar=
         document.getElementById(
             "buildBar"
         );
@@ -2068,136 +2423,232 @@ function createBuildBar(){
     bar.innerHTML="";
 
     Object
-    .entries(BUILDINGS)
-    .forEach(([key,data])=>{
+    .entries(
+        BUILDINGS
+    )
+    .forEach(
+        (
+            [
+                key,
+                data
+            ]
+        )=>{
 
-        const button =
-            document.createElement(
-                "button"
+            const button=
+                document.createElement(
+                    "button"
+                );
+
+            button.className=
+                "buildItem";
+
+            button.dataset.type=
+                key;
+
+            button.title=
+                data.description;
+
+
+            const preview=
+                document.createElement(
+                    "canvas"
+                );
+
+            preview.className=
+                "previewCanvas";
+
+            preview.width=132;
+            preview.height=104;
+
+
+            const name=
+                document.createElement(
+                    "span"
+                );
+
+            name.className=
+                "buildName";
+
+            name.textContent=
+                data.name;
+
+
+            const cost=
+                document.createElement(
+                    "span"
+                );
+
+            cost.className=
+                "buildCost";
+
+            cost.innerHTML=
+                formatCost(
+                    data
+                );
+
+
+            button.append(
+                preview,
+                name,
+                cost
             );
 
-        button.className =
-            "buildItem";
 
-        button.dataset.type =
-            key;
+            button
+            .addEventListener(
+                "click",
+                ()=>{
 
-        const preview =
-            document.createElement(
-                "canvas"
+                    selectedBuild=
+                        key;
+
+                    updateBuildSelection();
+                }
             );
 
-        preview.className =
-            "previewCanvas";
 
-        preview.width=124;
-        preview.height=100;
-
-        const name =
-            document.createElement(
-                "span"
+            bar.appendChild(
+                button
             );
 
-        name.className =
-            "buildName";
 
-        name.textContent =
-            data.name;
+            const pctx=
+                preview.getContext(
+                    "2d"
+                );
 
-        const cost =
-            document.createElement(
-                "span"
+            pctx.scale(
+                2,
+                2
             );
 
-        cost.className =
-            "buildCost";
+            drawPreviewGround(
+                pctx
+            );
 
-        cost.innerHTML =
-            formatCost(data);
+            drawBuildingGraphic(
+                pctx,
+                key,
+                33,
+                26,
+                43,
+                1,
+                false,
+                true,
+                null
+            );
+        }
+    );
+}
 
-        button.appendChild(preview);
-        button.appendChild(name);
-        button.appendChild(cost);
 
-        button.title =
-            data.description;
+function drawPreviewGround(c){
 
-        button.addEventListener(
-            "click",
-            ()=>{
+    c.fillStyle=
+        "#6d9956";
 
-                selectedBuild=key;
+    c.fillRect(
+        0,
+        0,
+        66,
+        52
+    );
 
-                updateBuildSelection();
-            }
-        );
+    c.fillStyle=
+        "rgba(255,255,255,.05)";
 
-        bar.appendChild(button);
+    for(
+        let i=0;
+        i<18;
+        i++
+    ){
 
-        const pctx =
-            preview.getContext("2d");
+        const x=
+            (
+                i*17
+            )%
+            66;
 
-        pctx.scale(2,2);
+        const y=
+            (
+                i*29
+            )%
+            52;
 
-        drawBuildingGraphic(
-            pctx,
-            key,
-            31,
-            25,
-            42,
+        c.fillRect(
+            x,
+            y,
             1,
-            false,
-            true
+            1
         );
-    });
+    }
 }
 
 
 function formatCost(data){
 
-    const parts=[];
+    const a=[
+        "💰 "+
+        data.money+
+        " €"
+    ];
 
-    parts.push(
-        "💰 "+data.money+" €"
+    if(
+        data.cost.wood
+    ){
+
+        a.push(
+            "Holz "+
+            data.cost.wood
+        );
+    }
+
+    if(
+        data.cost.stone
+    ){
+
+        a.push(
+            "Stein "+
+            data.cost.stone
+        );
+    }
+
+    if(
+        data.cost.metal
+    ){
+
+        a.push(
+            "Metall "+
+            data.cost.metal
+        );
+    }
+
+    return a.join(
+        "<br>"
     );
-
-    if(data.cost.wood){
-
-        parts.push(
-            "Holz "+data.cost.wood
-        );
-    }
-
-    if(data.cost.stone){
-
-        parts.push(
-            "Stein "+data.cost.stone
-        );
-    }
-
-    if(data.cost.metal){
-
-        parts.push(
-            "Metall "+data.cost.metal
-        );
-    }
-
-    return parts.join("<br>");
 }
 
 
 function updateBuildSelection(){
 
     document
-    .querySelectorAll(".buildItem")
-    .forEach(button=>{
+    .querySelectorAll(
+        ".buildItem"
+    )
+    .forEach(
+        b=>{
 
-        button.classList.toggle(
-            "selected",
-            button.dataset.type===
-            selectedBuild
-        );
-    });
+            b
+            .classList
+            .toggle(
+
+                "selected",
+
+                b.dataset.type===
+                selectedBuild
+            );
+        }
+    );
 }
 
 
@@ -2207,32 +2658,36 @@ function updateBuildSelection(){
 
 function resizeCanvas(){
 
-    const rect =
+    const rect=
         canvas
         .parentElement
         .getBoundingClientRect();
 
-    const dpr =
+    const dpr=
         Math.min(
             window.devicePixelRatio||1,
             2
         );
 
-    canvas.width =
+    canvas.width=
         Math.floor(
-            rect.width*dpr
+            rect.width*
+            dpr
         );
 
-    canvas.height =
+    canvas.height=
         Math.floor(
-            rect.height*dpr
+            rect.height*
+            dpr
         );
 
-    canvas.style.width =
-        rect.width+"px";
+    canvas.style.width=
+        rect.width+
+        "px";
 
-    canvas.style.height =
-        rect.height+"px";
+    canvas.style.height=
+        rect.height+
+        "px";
 
     ctx.setTransform(
         dpr,
@@ -2242,6 +2697,9 @@ function resizeCanvas(){
         0,
         0
     );
+
+    ctx.imageSmoothingEnabled=
+        true;
 }
 
 
@@ -2257,80 +2715,95 @@ window.addEventListener(
 
 function centerCamera(){
 
-    const rect =
+    const rect=
         canvas
         .getBoundingClientRect();
 
-    camera.zoom=.68;
+    camera.zoom=.70;
 
-    camera.x =
-        rect.width/2 -
-        MAP_W*TILE*
-        camera.zoom/2;
+    camera.x=
 
-    camera.y =
-        rect.height/2 -
-        MAP_H*TILE*
-        camera.zoom/2;
+        rect.width/2-
+
+        (
+            MAP_W*
+            TILE*
+            camera.zoom
+        )/
+        2;
+
+    camera.y=
+
+        rect.height/2-
+
+        (
+            MAP_H*
+            TILE*
+            camera.zoom
+        )/
+        2;
 }
 
 
 function moveCamera(dt){
 
-    const speed =
-        520*dt;
+    const s=
+        540*
+        dt;
 
     if(
-        keys["w"]||
-        keys["arrowup"]
+        keys.w||
+        keys.arrowup
     ){
-        camera.y+=speed;
+        camera.y+=s;
     }
 
     if(
-        keys["s"]||
-        keys["arrowdown"]
+        keys.s||
+        keys.arrowdown
     ){
-        camera.y-=speed;
+        camera.y-=s;
     }
 
     if(
-        keys["a"]||
-        keys["arrowleft"]
+        keys.a||
+        keys.arrowleft
     ){
-        camera.x+=speed;
+        camera.x+=s;
     }
 
     if(
-        keys["d"]||
-        keys["arrowright"]
+        keys.d||
+        keys.arrowright
     ){
-        camera.x-=speed;
+        camera.x-=s;
     }
 }
 
 
 window.addEventListener(
     "keydown",
-    e=>{
-
+    e=>
         keys[
             e.key.toLowerCase()
-        ]=true;
-    }
+        ]=
+        true
 );
 
 
 window.addEventListener(
     "keyup",
-    e=>{
-
+    e=>
         keys[
             e.key.toLowerCase()
-        ]=false;
-    }
+        ]=
+        false
 );
 
+
+/* =========================================================
+   ZOOM
+========================================================= */
 
 canvas.addEventListener(
     "wheel",
@@ -2338,54 +2811,61 @@ canvas.addEventListener(
 
         e.preventDefault();
 
-        const rect =
+        const rect=
             canvas
             .getBoundingClientRect();
 
-        const mx =
+        const mx=
             e.clientX-
             rect.left;
 
-        const my =
+        const my=
             e.clientY-
             rect.top;
 
-        const oldZoom =
+        const old=
             camera.zoom;
 
-        const factor =
+        const f=
             e.deltaY<0
-            ?1.12
-            :.89;
+            ?
+            1.12
+            :
+            .89;
 
-        camera.zoom =
+        camera.zoom=
             Math.max(
                 .42,
+
                 Math.min(
-                    1.9,
-                    camera.zoom*
-                    factor
+                    1.95,
+                    camera.zoom*f
                 )
             );
 
-        const worldX =
-            (mx-camera.x)/
-            oldZoom;
+        const wx=
+            (
+                mx-camera.x
+            )/
+            old;
 
-        const worldY =
-            (my-camera.y)/
-            oldZoom;
+        const wy=
+            (
+                my-camera.y
+            )/
+            old;
 
-        camera.x =
+        camera.x=
             mx-
-            worldX*
+            wx*
             camera.zoom;
 
-        camera.y =
+        camera.y=
             my-
-            worldY*
+            wy*
             camera.zoom;
     },
+
     {
         passive:false
     }
@@ -2400,32 +2880,40 @@ canvas.addEventListener(
     "mousemove",
     e=>{
 
-        const rect =
+        const rect=
             canvas
             .getBoundingClientRect();
 
-        mouseScreen.x =
+        mouseScreen.x=
             e.clientX-
             rect.left;
 
-        mouseScreen.y =
+        mouseScreen.y=
             e.clientY-
             rect.top;
 
-        if(dragging){
+        if(
+            dragging
+        ){
 
-            camera.x =
+            camera.x=
+
                 cameraStart.x+
+
                 e.clientX-
+
                 dragStart.x;
 
-            camera.y =
+            camera.y=
+
                 cameraStart.y+
+
                 e.clientY-
+
                 dragStart.y;
         }
 
-        mouseTile =
+        mouseTile=
             screenToTile(
                 mouseScreen.x,
                 mouseScreen.y
@@ -2440,7 +2928,9 @@ canvas.addEventListener(
     "mousedown",
     e=>{
 
-        if(e.button===1){
+        if(
+            e.button===1
+        ){
 
             dragging=true;
 
@@ -2460,10 +2950,7 @@ canvas.addEventListener(
 
 window.addEventListener(
     "mouseup",
-    ()=>{
-
-        dragging=false;
-    }
+    ()=>dragging=false
 );
 
 
@@ -2472,17 +2959,16 @@ canvas.addEventListener(
     ()=>{
 
         if(
-            !state||
-            !mouseTile||
-            state.gameEnded
+            state&&
+            mouseTile&&
+            !state.gameEnded
         ){
-            return;
-        }
 
-        buildAt(
-            mouseTile.x,
-            mouseTile.y
-        );
+            buildAt(
+                mouseTile.x,
+                mouseTile.y
+            );
+        }
     }
 );
 
@@ -2494,16 +2980,15 @@ canvas.addEventListener(
         e.preventDefault();
 
         if(
-            !state||
-            !mouseTile
+            state&&
+            mouseTile
         ){
-            return;
-        }
 
-        demolishAt(
-            mouseTile.x,
-            mouseTile.y
-        );
+            demolishAt(
+                mouseTile.x,
+                mouseTile.y
+            );
+        }
     }
 );
 
@@ -2516,7 +3001,9 @@ canvas.addEventListener(
     "touchstart",
     e=>{
 
-        if(e.touches.length===1){
+        if(
+            e.touches.length===1
+        ){
 
             const t=
                 e.touches[0];
@@ -2533,6 +3020,7 @@ canvas.addEventListener(
             };
         }
     },
+
     {
         passive:false
     }
@@ -2546,7 +3034,7 @@ canvas.addEventListener(
         e.preventDefault();
 
         if(
-            e.touches.length===1 &&
+            e.touches.length===1&&
             touchStart
         ){
 
@@ -2562,21 +3050,24 @@ canvas.addEventListener(
                 touchStart.y;
 
             if(
-                Math.abs(dx)>8 ||
+                Math.abs(dx)>8||
                 Math.abs(dy)>8
             ){
-                touchStart.moved=true;
+
+                touchStart.moved=
+                    true;
             }
 
-            camera.x =
+            camera.x=
                 touchStart.cameraX+
                 dx;
 
-            camera.y =
+            camera.y=
                 touchStart.cameraY+
                 dy;
         }
     },
+
     {
         passive:false
     }
@@ -2587,18 +3078,23 @@ canvas.addEventListener(
     "touchend",
     ()=>{
 
-        if(!touchStart){
+        if(
+            !touchStart
+        ){
             return;
         }
 
-        if(!touchStart.moved){
+        if(
+            !touchStart.moved
+        ){
 
-            const rect =
+            const rect=
                 canvas
                 .getBoundingClientRect();
 
-            const tile =
+            const tile=
                 screenToTile(
+
                     touchStart.x-
                     rect.left,
 
@@ -2606,7 +3102,9 @@ canvas.addEventListener(
                     rect.top
                 );
 
-            if(tile){
+            if(
+                tile
+            ){
 
                 buildAt(
                     tile.x,
@@ -2624,24 +3122,31 @@ canvas.addEventListener(
    KOORDINATEN
 ========================================================= */
 
-function screenToTile(sx,sy){
+function screenToTile(
+    sx,
+    sy
+){
 
-    const worldX =
-        (sx-camera.x)/
+    const wx=
+        (
+            sx-camera.x
+        )/
         camera.zoom;
 
-    const worldY =
-        (sy-camera.y)/
+    const wy=
+        (
+            sy-camera.y
+        )/
         camera.zoom;
 
-    const x =
+    const x=
         Math.floor(
-            worldX/TILE
+            wx/TILE
         );
 
-    const y =
+    const y=
         Math.floor(
-            worldY/TILE
+            wy/TILE
         );
 
     if(
@@ -2650,10 +3155,37 @@ function screenToTile(sx,sy){
         x>=MAP_W||
         y>=MAP_H
     ){
+
         return null;
     }
 
-    return {x,y};
+    return{
+        x,
+        y
+    };
+}
+
+
+/* =========================================================
+   GEBÄUDE
+========================================================= */
+
+function buildingAt(
+    x,
+    y
+){
+
+    return state
+        ?
+        state
+        .buildings
+        .find(
+            b=>
+                b.x===x&&
+                b.y===y
+        )
+        :
+        null;
 }
 
 
@@ -2661,7 +3193,10 @@ function screenToTile(sx,sy){
    BAUEN
 ========================================================= */
 
-function buildAt(x,y){
+function buildAt(
+    x,
+    y
+){
 
     if(
         !state||
@@ -2671,29 +3206,33 @@ function buildAt(x,y){
         return;
     }
 
-    const validation =
+    const v=
         canBuild(
             selectedBuild,
             x,
             y
         );
 
-    if(!validation.ok){
+    if(
+        !v.ok
+    ){
 
         message(
-            validation.reason,
+            v.reason,
             "warning"
         );
 
         return;
     }
 
-    const data =
+    const d=
         BUILDINGS[
             selectedBuild
         ];
 
-    payCost(data);
+    payCost(
+        d
+    );
 
     state
     .buildings
@@ -2703,14 +3242,13 @@ function buildAt(x,y){
             Date.now()+
             Math.random(),
 
-        type:
-            selectedBuild,
+        type:selectedBuild,
 
         x,
         y,
 
-        hp:data.hp,
-        maxHp:data.hp,
+        hp:d.hp,
+        maxHp:d.hp,
 
         floodTime:0
     });
@@ -2718,26 +3256,42 @@ function buildAt(x,y){
     state
     .statistics
     .buildingsBuilt++;
+
+    computeFloodMap();
 }
 
 
-function canBuild(type,x,y){
+function canBuild(
+    type,
+    x,
+    y
+){
 
-    const data =
-        BUILDINGS[type];
+    if(
+        buildingAt(
+            x,
+            y
+        )
+    ){
 
-    if(buildingAt(x,y)){
-
-        return {
+        return{
             ok:false,
             reason:
                 "Dieses Feld ist bereits bebaut."
         };
     }
 
-    if(state.money<data.money){
+    const d=
+        BUILDINGS[
+            type
+        ];
 
-        return {
+    if(
+        state.money<
+        d.money
+    ){
+
+        return{
             ok:false,
             reason:
                 "Nicht genügend Geld."
@@ -2746,48 +3300,61 @@ function canBuild(type,x,y){
 
     if(
         !hasResources(
-            data.cost
+            d.cost
         )
     ){
 
-        return {
+        return{
             ok:false,
             reason:
                 "Nicht genügend Rohstoffe."
         };
     }
 
-    const terrain =
+    const flooded=
+        isFlooded(
+            x,
+            y
+        );
+
+    const depth=
+        floodDepth(
+            x,
+            y
+        );
+
+    const terrain=
         effectiveTerrain(
             x,
             y
         );
 
-    const water =
-        getCurrentWaterLevel();
-
-    if(type==="wall"){
+    if(
+        type==="wall"
+    ){
 
         if(
-            terrain<
-            water-.8
+            flooded&&
+            depth>.9
         ){
 
-            return {
+            return{
                 ok:false,
                 reason:
-                    "Das Wasser ist hier für eine Mauer zu tief."
+                    "Das Wasser ist hier für eine normale Mauer zu tief."
             };
         }
 
-    }else if(type==="dike"){
+    }else if(
+        type==="dike"
+    ){
 
         if(
-            terrain<
-            water-1.5
+            flooded&&
+            depth>1.8
         ){
 
-            return {
+            return{
                 ok:false,
                 reason:
                     "Das Wasser ist hier selbst für einen Deich zu tief."
@@ -2797,45 +3364,66 @@ function canBuild(type,x,y){
     }else{
 
         if(
-            terrain<=
-            water+.1
+            flooded
         ){
 
-            return {
+            return{
                 ok:false,
                 reason:
-                    "Normale Gebäude können nicht im Wasser gebaut werden."
+                    "Normale Gebäude können nicht in überflutetem Gebiet gebaut werden."
+            };
+        }
+
+        if(
+            terrain<-.2
+        ){
+
+            return{
+                ok:false,
+                reason:
+                    "Hier befindet sich offenes Meer."
             };
         }
     }
 
-    return {ok:true};
+    return{
+        ok:true
+    };
 }
 
 
-function hasResources(cost){
+/* =========================================================
+   KOSTEN
+========================================================= */
+
+function hasResources(
+    cost
+){
 
     if(
-        cost.wood &&
+        cost.wood&&
         state.wood<
         cost.wood
     ){
+
         return false;
     }
 
     if(
-        cost.stone &&
+        cost.stone&&
         state.stone<
         cost.stone
     ){
+
         return false;
     }
 
     if(
-        cost.metal &&
+        cost.metal&&
         state.metal<
         cost.metal
     ){
+
         return false;
     }
 
@@ -2843,27 +3431,33 @@ function hasResources(cost){
 }
 
 
-function payCost(data){
+function payCost(d){
 
-    state.money -=
-        data.money;
+    state.money-=
+        d.money;
 
-    if(data.cost.wood){
+    if(
+        d.cost.wood
+    ){
 
-        state.wood -=
-            data.cost.wood;
+        state.wood-=
+            d.cost.wood;
     }
 
-    if(data.cost.stone){
+    if(
+        d.cost.stone
+    ){
 
-        state.stone -=
-            data.cost.stone;
+        state.stone-=
+            d.cost.stone;
     }
 
-    if(data.cost.metal){
+    if(
+        d.cost.metal
+    ){
 
-        state.metal -=
-            data.cost.metal;
+        state.metal-=
+            d.cost.metal;
     }
 }
 
@@ -2872,88 +3466,80 @@ function payCost(data){
    ABREISSEN
 ========================================================= */
 
-function demolishAt(x,y){
+function demolishAt(
+    x,
+    y
+){
 
-    const index =
+    const i=
         state
         .buildings
         .findIndex(
             b=>
-                b.x===x &&
+                b.x===x&&
                 b.y===y
         );
 
-    if(index===-1){
+    if(
+        i<0
+    ){
         return;
     }
 
-    const building =
-        state.buildings[index];
-
-    const data =
-        BUILDINGS[
-            building.type
+    const b=
+        state
+        .buildings[
+            i
         ];
 
-    /*
-        30 % Rückerstattung
-    */
+    const d=
+        BUILDINGS[
+            b.type
+        ];
 
-    state.money +=
+    state.money+=
         Math.floor(
-            data.money*.30
+            d.money*.30
         );
 
-    if(data.cost.wood){
+    if(
+        d.cost.wood
+    ){
 
-        state.wood +=
+        state.wood+=
             Math.floor(
-                data.cost.wood*.30
+                d.cost.wood*.30
             );
     }
 
-    if(data.cost.stone){
+    if(
+        d.cost.stone
+    ){
 
-        state.stone +=
+        state.stone+=
             Math.floor(
-                data.cost.stone*.30
+                d.cost.stone*.30
             );
     }
 
-    if(data.cost.metal){
+    if(
+        d.cost.metal
+    ){
 
-        state.metal +=
+        state.metal+=
             Math.floor(
-                data.cost.metal*.30
+                d.cost.metal*.30
             );
     }
 
     state
     .buildings
     .splice(
-        index,
+        i,
         1
     );
-}
 
-
-/* =========================================================
-   GEBÄUDE FINDEN
-========================================================= */
-
-function buildingAt(x,y){
-
-    if(!state){
-        return null;
-    }
-
-    return state
-        .buildings
-        .find(
-            b=>
-                b.x===x &&
-                b.y===y
-        );
+    computeFloodMap();
 }
 
 
@@ -2961,10 +3547,14 @@ function buildingAt(x,y){
    WASSER
 ========================================================= */
 
-function effectiveTerrain(x,y){
+function effectiveTerrain(
+    x,
+    y
+){
 
-    return (
-        state.terrain[y][x]-
+    return(
+        state
+        .terrain[y][x]-
         state.sinkLevel
     );
 }
@@ -2972,124 +3562,439 @@ function effectiveTerrain(x,y){
 
 function getCurrentWaterLevel(){
 
-    let water =
+    let water=
+
         state.seaLevel-
+
         state.pumpReduction;
 
-    if(state.stormActive){
+    if(
+        state.stormActive
+    ){
 
-        water +=
+        water+=
             difficulties[
                 state.difficulty
             ].stormLevel;
     }
 
     return Math.max(
+
         difficulties[
             state.difficulty
         ].seaStart,
+
         water
     );
 }
 
 
 /* =========================================================
-   SCHUTZ
+   MAUER / DEICH
 ========================================================= */
 
-function getBarrierProtection(x,y){
+function getFloodBarrier(
+    x,
+    y
+){
 
-    let protection=0;
+    const b=
+        buildingAt(
+            x,
+            y
+        );
 
-    for(
-        const b
-        of state.buildings
+    if(
+        b&&
+        b.hp>0&&
+        (
+            b.type==="wall"||
+            b.type==="dike"
+        )
     ){
 
-        if(
-            b.type!=="wall" &&
-            b.type!=="dike"
-        ){
-            continue;
-        }
-
-        if(b.hp<=0){
-            continue;
-        }
-
-        const dx=
-            Math.abs(
-                b.x-x
-            );
-
-        const dy=
-            Math.abs(
-                b.y-y
-            );
-
-        const base =
-            BUILDINGS[
-                b.type
-            ].barrier;
-
-        if(
-            dx===0 &&
-            dy===0
-        ){
-
-            protection =
-                Math.max(
-                    protection,
-                    base
-                );
-
-        }else if(
-            dx+dy===1
-        ){
-
-            protection =
-                Math.max(
-                    protection,
-                    base*.72
-                );
-
-        }else if(
-            dx===1 &&
-            dy===1
-        ){
-
-            protection =
-                Math.max(
-                    protection,
-                    base*.48
-                );
-        }
+        return b;
     }
 
-    return protection;
+    return null;
 }
 
 
-function floodDepth(x,y){
+function getBarrierCrest(
+    x,
+    y
+){
 
-    return (
-        getCurrentWaterLevel()-
-        effectiveTerrain(x,y)-
-        getBarrierProtection(x,y)
-    );
-}
+    const b=
+        getFloodBarrier(
+            x,
+            y
+        );
 
+    if(
+        !b
+    ){
 
-function isFlooded(x,y){
+        return -Infinity;
+    }
 
-    return (
-        floodDepth(x,y)>0
+    const d=
+        BUILDINGS[
+            b.type
+        ];
+
+    const health=
+        Math.max(
+            0,
+            b.hp/
+            b.maxHp
+        );
+
+    const healthFactor=
+        .70+
+        health*.30;
+
+    return(
+
+        effectiveTerrain(
+            x,
+            y
+        )+
+
+        d.barrier*
+        healthFactor
     );
 }
 
 
 /* =========================================================
-   INSELKERN
+   ECHTE WASSERAUSBREITUNG
+========================================================= */
+
+function canWaterEnter(
+    x,
+    y,
+    waterLevel
+){
+
+    const terrain=
+        effectiveTerrain(
+            x,
+            y
+        );
+
+    /*
+        Liegt das Gelände über dem Wasser,
+        kann dort natürlich kein Meerwasser
+        eindringen.
+    */
+
+    if(
+        terrain>=
+        waterLevel
+    ){
+
+        return false;
+    }
+
+    const barrier=
+        getFloodBarrier(
+            x,
+            y
+        );
+
+    /*
+        Keine Schutzanlage.
+    */
+
+    if(
+        !barrier
+    ){
+
+        return true;
+    }
+
+    /*
+        Mauer oder Deich:
+        Nur wenn Wasser über die Krone steigt.
+    */
+
+    return(
+        waterLevel>
+        getBarrierCrest(
+            x,
+            y
+        )
+    );
+}
+
+
+/* =========================================================
+   FLOOD MAP
+========================================================= */
+
+function computeFloodMap(){
+
+    if(
+        !state
+    ){
+        return;
+    }
+
+    const water=
+        getCurrentWaterLevel();
+
+    floodMap=
+        Array.from(
+            {
+                length:MAP_H
+            },
+            ()=>
+                Array(
+                    MAP_W
+                ).fill(
+                    false
+                )
+        );
+
+    const q=[];
+
+
+    const add=(
+        x,
+        y
+    )=>{
+
+        if(
+            x<0||
+            y<0||
+            x>=MAP_W||
+            y>=MAP_H
+        ){
+            return;
+        }
+
+        if(
+            floodMap[
+                y
+            ][
+                x
+            ]
+        ){
+            return;
+        }
+
+        if(
+            !canWaterEnter(
+                x,
+                y,
+                water
+            )
+        ){
+            return;
+        }
+
+        floodMap[
+            y
+        ][
+            x
+        ]=
+        true;
+
+        q.push({
+            x,
+            y
+        });
+    };
+
+
+    /*
+        Wasser startet an allen Kartenrändern.
+    */
+
+    for(
+        let x=0;
+        x<MAP_W;
+        x++
+    ){
+
+        add(
+            x,
+            0
+        );
+
+        add(
+            x,
+            MAP_H-1
+        );
+    }
+
+
+    for(
+        let y=0;
+        y<MAP_H;
+        y++
+    ){
+
+        add(
+            0,
+            y
+        );
+
+        add(
+            MAP_W-1,
+            y
+        );
+    }
+
+
+    const dirs=[
+
+        [1,0],
+
+        [-1,0],
+
+        [0,1],
+
+        [0,-1]
+
+    ];
+
+
+    let i=0;
+
+
+    while(
+        i<
+        q.length
+    ){
+
+        const cur=
+            q[
+                i++
+            ];
+
+        for(
+            const[
+                dx,
+                dy
+            ]
+            of dirs
+        ){
+
+            const nx=
+                cur.x+
+                dx;
+
+            const ny=
+                cur.y+
+                dy;
+
+            if(
+                nx<0||
+                ny<0||
+                nx>=MAP_W||
+                ny>=MAP_H
+            ){
+                continue;
+            }
+
+            if(
+                floodMap[
+                    ny
+                ][
+                    nx
+                ]
+            ){
+                continue;
+            }
+
+            if(
+                !canWaterEnter(
+                    nx,
+                    ny,
+                    water
+                )
+            ){
+                continue;
+            }
+
+            floodMap[
+                ny
+            ][
+                nx
+            ]=
+            true;
+
+            q.push({
+                x:nx,
+                y:ny
+            });
+        }
+    }
+}
+
+
+function isFlooded(
+    x,
+    y
+){
+
+    if(
+        !floodMap
+    ){
+
+        computeFloodMap();
+    }
+
+    return!!(
+
+        floodMap&&
+
+        floodMap[
+            y
+        ]&&
+
+        floodMap[
+            y
+        ][
+            x
+        ]
+    );
+}
+
+
+function floodDepth(
+    x,
+    y
+){
+
+    if(
+        !isFlooded(
+            x,
+            y
+        )
+    ){
+
+        return 0;
+    }
+
+    return Math.max(
+
+        0,
+
+        getCurrentWaterLevel()-
+
+        effectiveTerrain(
+            x,
+            y
+        )
+    );
+}
+
+
+/* =========================================================
+   TROCKENER INSELKERN
 ========================================================= */
 
 function calculateCoreDry(){
@@ -3100,10 +4005,10 @@ function calculateCoreDry(){
     const cy=
         MAP_H/2;
 
+    const r=16;
+
     let total=0;
     let dry=0;
-
-    const radius=16;
 
     for(
         let y=0;
@@ -3117,36 +4022,41 @@ function calculateCoreDry(){
             x++
         ){
 
-            const dx=x-cx;
-            const dy=y-cy;
+            const dx=
+                x-cx;
+
+            const dy=
+                y-cy;
 
             if(
                 Math.sqrt(
                     dx*dx+
                     dy*dy
-                )<=radius
+                )<=r&&
+                state
+                .terrain[y][x]>0
             ){
 
+                total++;
+
                 if(
-                    state
-                    .terrain[y][x]>0
+                    !isFlooded(
+                        x,
+                        y
+                    )
                 ){
 
-                    total++;
-
-                    if(
-                        !isFlooded(x,y)
-                    ){
-                        dry++;
-                    }
+                    dry++;
                 }
             }
         }
     }
 
     return total
-        ? dry/total
-        : 0;
+        ?
+        dry/total
+        :
+        0;
 }
 
 
@@ -3156,7 +4066,7 @@ function calculateCoreDry(){
 
 function housingCapacity(){
 
-    let capacity=0;
+    let c=0;
 
     for(
         const b
@@ -3164,22 +4074,22 @@ function housingCapacity(){
     ){
 
         if(
-            b.type==="house" &&
-            b.hp>0 &&
+            b.type==="house"&&
+            b.hp>0&&
             !isFlooded(
                 b.x,
                 b.y
             )
         ){
 
-            capacity +=
+            c+=
                 BUILDINGS
                 .house
                 .housing;
         }
     }
 
-    return capacity;
+    return c;
 }
 
 
@@ -3187,38 +4097,42 @@ function housingCapacity(){
    WIRTSCHAFT
 ========================================================= */
 
-function simulateProduction(gameDays){
+function simulateProduction(
+    gameDays
+){
 
-    const diff =
+    const diff=
         difficulties[
             state.difficulty
         ];
 
-    let foodProduction=0;
-    let woodProduction=0;
-    let stoneProduction=0;
-    let metalProduction=0;
+    let food=0;
+    let wood=0;
+    let stone=0;
+    let metal=0;
 
-    let energyProduction=0;
-    let energyConsumption=0;
+    let energyProd=0;
+    let energyUse=0;
 
     let workshops=0;
     let reservoirs=0;
-
     let pumps=0;
+
 
     for(
         const b
         of state.buildings
     ){
 
-        if(b.hp<=0){
+        if(
+            b.hp<=0
+        ){
             continue;
         }
 
         if(
-            b.type!=="wall" &&
-            b.type!=="dike" &&
+            b.type!=="wall"&&
+            b.type!=="dike"&&
             isFlooded(
                 b.x,
                 b.y
@@ -3227,224 +4141,269 @@ function simulateProduction(gameDays){
             continue;
         }
 
-        const data =
+        const d=
             BUILDINGS[
                 b.type
             ];
 
-        foodProduction +=
-            data.food||0;
+        food+=
+            d.food||0;
 
-        woodProduction +=
-            data.wood||0;
+        wood+=
+            d.wood||0;
 
-        stoneProduction +=
-            data.stone||0;
+        stone+=
+            d.stone||0;
 
-        metalProduction +=
-            data.metal||0;
+        metal+=
+            d.metal||0;
 
-        energyProduction +=
-            data.energy||0;
+        energyProd+=
+            d.energy||0;
 
-        if(data.metal){
 
-            energyConsumption +=
-                data.energyUse||0;
+        if(
+            d.metal
+        ){
+
+            energyUse+=
+                d.energyUse||0;
         }
 
-        if(data.pump){
+
+        if(
+            d.pump
+        ){
 
             pumps++;
 
-            energyConsumption +=
-                data.energyUse||0;
+            energyUse+=
+                d.energyUse||0;
         }
 
+
         if(
-            data.productionBonus
+            d.productionBonus
         ){
 
             workshops++;
         }
 
+
         if(
-            data.storageBonus
+            d.storageBonus
         ){
 
             reservoirs++;
         }
     }
 
-    const workshopMultiplier =
-        1+
-        workshops*.10;
 
-    const multiplier =
+    const mult=
+
         diff.production*
-        workshopMultiplier;
 
-    foodProduction *=
-        multiplier;
+        (
+            1+
+            workshops*.10
+        );
 
-    woodProduction *=
-        multiplier;
 
-    stoneProduction *=
-        multiplier;
+    food*=mult;
+    wood*=mult;
+    stone*=mult;
+    metal*=mult;
 
-    metalProduction *=
-        multiplier;
+    energyProd*=mult;
 
-    energyProduction *=
-        multiplier;
 
     /*
-        Energie
+        ENERGIE
     */
 
-    state.energy +=
+    state.energy+=
+
         (
-            energyProduction-
-            energyConsumption
+            energyProd-
+            energyUse
         )*
+
         gameDays;
 
-    state.energy =
+
+    state.energy=
         Math.max(
             0,
             state.energy
         );
 
+
     /*
-        Pumpwerke
+        Pumpwirkung fällt langsam ab.
+        Aktive Pumpen erhöhen sie wieder.
     */
 
+    state.pumpReduction=
+        Math.max(
+
+            0,
+
+            state.pumpReduction-
+            .004*
+            gameDays
+        );
+
+
     if(
-        pumps>0 &&
+        pumps>0&&
         state.energy>0
     ){
 
-        state.pumpReduction +=
+        state.pumpReduction+=
+
             pumps*
+
             BUILDINGS
             .pump
             .pump*
+
             gameDays;
     }
 
-    state.pumpReduction =
+
+    state.pumpReduction=
         Math.min(
-            1.8,
+            1.9,
             state.pumpReduction
         );
 
-    /*
-        Lager
-    */
-
-    state.resourceCapacity =
-        1500+
-        reservoirs*300;
 
     /*
-        Produktion
+        LAGER
     */
 
-    state.food +=
-        foodProduction*
-        gameDays;
+    state.resourceCapacity=
 
-    state.wood +=
-        woodProduction*
-        gameDays;
+        1800+
 
-    state.stone +=
-        stoneProduction*
-        gameDays;
+        reservoirs*
+        350;
 
-    state.metal +=
-        metalProduction*
-        gameDays;
 
     /*
-        Steuereinnahmen
+        PRODUKTION
     */
 
-    const income =
+    state.food+=
+        food*
+        gameDays;
+
+    state.wood+=
+        wood*
+        gameDays;
+
+    state.stone+=
+        stone*
+        gameDays;
+
+    state.metal+=
+        metal*
+        gameDays;
+
+
+    /*
+        GELD
+    */
+
+    const dailyIncome=
+
         state.population*
-        diff.taxPerPerson*
+        diff.taxPerPerson+
+
+        diff.baseIncome;
+
+
+    const income=
+
+        dailyIncome*
         gameDays;
 
-    state.money += income;
+
+    state.money+=
+        income;
+
 
     state
     .statistics
-    .moneyEarned +=
+    .moneyEarned+=
         income;
 
+
     /*
-        Nahrung
+        NAHRUNGSVERBRAUCH
     */
 
-    state.food -=
+    state.food-=
+
         state.population*
         .48*
         gameDays;
 
-    if(state.food<0){
+
+    if(
+        state.food<0
+    ){
 
         state.food=0;
 
         if(
             Math.random()<
+
             diff.starvationDamage*
-            gameDays
+            gameDays&&
+
+            state.population>0
         ){
 
-            if(
-                state.population>0
-            ){
+            state.population--;
 
-                state.population--;
+            state
+            .statistics
+            .populationLost++;
 
-                state
-                .statistics
-                .populationLost++;
-
-                message(
-                    "Nahrungsmangel: Die Bevölkerung schrumpft.",
-                    "danger"
-                );
-            }
+            message(
+                "Nahrungsmangel: Die Bevölkerung schrumpft.",
+                "danger"
+            );
         }
     }
 
-    state.food =
+
+    state.food=
         Math.min(
             state.food,
             state.resourceCapacity
         );
 
-    state.wood =
+    state.wood=
         Math.min(
             state.wood,
             state.resourceCapacity
         );
 
-    state.stone =
+    state.stone=
         Math.min(
             state.stone,
             state.resourceCapacity
         );
 
-    state.metal =
+    state.metal=
         Math.min(
             state.metal,
             state.resourceCapacity
         );
 
-    state.energy =
+    state.energy=
         Math.min(
             state.energy,
             state.resourceCapacity
@@ -3456,28 +4415,111 @@ function simulateProduction(gameDays){
    BEVÖLKERUNG
 ========================================================= */
 
-function simulatePopulation(gameDays){
+function simulatePopulation(
+    gameDays
+){
 
-    const capacity =
+    const cap=
         housingCapacity();
 
     if(
         state.population<
-        capacity &&
+        cap&&
+
         state.food>
-        state.population*4
+        state.population*4&&
+
+        Math.random()<
+        .075*
+        gameDays
+    ){
+
+        state.population++;
+
+        message(
+            "Ein neuer Einwohner ist auf die Insel gezogen.",
+            "good"
+        );
+    }
+}
+
+
+/* =========================================================
+   FÖRDERUNGEN
+========================================================= */
+
+function simulateGrants(){
+
+    const diff=
+        difficulties[
+            state.difficulty
+        ];
+
+    for(
+        const day
+        of[
+            15,
+            30,
+            45
+        ]
     ){
 
         if(
-            Math.random()<
-            .05*
-            gameDays
+            state.gameDay>=
+            day&&
+
+            !state
+            .grantsClaimed[
+                day
+            ]
         ){
 
-            state.population++;
+            state
+            .grantsClaimed[
+                day
+            ]=
+            true;
+
+
+            state.money+=
+                diff.grantMoney;
+
+
+            state.stone=
+                Math.min(
+
+                    state.resourceCapacity,
+
+                    state.stone+
+                    diff.grantStone
+                );
+
+
+            state.metal=
+                Math.min(
+
+                    state.resourceCapacity,
+
+                    state.metal+
+                    diff.grantMetal
+                );
+
+
+            state
+            .statistics
+            .grantsReceived++;
+
 
             message(
-                "Ein neuer Einwohner ist auf die Insel gezogen.",
+
+                "Infrastrukturhilfe: +"+
+                diff.grantMoney+
+                " €, +"+
+                diff.grantStone+
+                " Stein und +"+
+                diff.grantMetal+
+                " Metall.",
+
                 "good"
             );
         }
@@ -3486,81 +4528,97 @@ function simulatePopulation(gameDays){
 
 
 /* =========================================================
-   WASSERSCHÄDEN
+   HOCHWASSERSCHÄDEN
 ========================================================= */
 
-function simulateFloodDamage(dt){
-
-    let destroyed=false;
+function simulateFloodDamage(
+    dt
+){
 
     for(
         const b
         of state.buildings
     ){
 
-        const depth =
+        const depth=
             floodDepth(
                 b.x,
                 b.y
             );
 
-        if(depth>0){
+        if(
+            depth>0
+        ){
 
-            b.floodTime += dt;
+            b.floodTime+=
+                dt;
 
             if(
                 b.floodTime>9
             ){
 
-                let damage =
+                let damage=
+
                     depth*
                     1.05*
                     dt;
 
+
                 if(
                     b.type==="wall"
                 ){
-                    damage*=.42;
+
+                    damage*=.38;
                 }
+
 
                 if(
                     b.type==="dike"
                 ){
-                    damage*=.20;
+
+                    damage*=.16;
                 }
 
-                b.hp -= damage;
+
+                b.hp-=
+                    damage;
             }
 
         }else{
 
-            b.floodTime =
+            b.floodTime=
                 Math.max(
+
                     0,
+
                     b.floodTime-
                     dt*2
                 );
         }
     }
 
-    const oldCount =
-        state.buildings.length;
 
-    state.buildings =
+    const before=
+        state
+        .buildings
+        .length;
+
+
+    state.buildings=
+
         state
         .buildings
         .filter(
             b=>b.hp>0
         );
 
-    if(
-        state.buildings.length<
-        oldCount
-    ){
-        destroyed=true;
-    }
 
-    if(destroyed){
+    if(
+        state
+        .buildings
+        .length<
+        before
+    ){
 
         message(
             "Ein Gebäude wurde durch das Hochwasser zerstört.",
@@ -3574,45 +4632,94 @@ function simulateFloodDamage(dt){
    STÜRME
 ========================================================= */
 
-function simulateStorms(gameDays){
+function simulateStorms(
+    gameDays
+){
 
-    const diff =
+    const diff=
         difficulties[
             state.difficulty
         ];
 
-    if(state.stormActive){
 
-        state.stormRemaining -=
+    if(
+        state.stormActive
+    ){
+
+        state.stormRemaining-=
             gameDays;
+
 
         if(
             state.stormRemaining<=0
         ){
 
-            state.stormActive=false;
+            state.stormActive=
+                false;
+
 
             state
-                .statistics
-                .stormsSurvived++;
+            .statistics
+            .stormsSurvived++;
 
-            state.nextStormDay =
+
+            state.money+=
+                diff.stormBonus;
+
+
+            state.nextStormDay=
+
                 state.gameDay+
+
                 diff.stormMin+
+
                 Math.random()*
                 (
                     diff.stormMax-
                     diff.stormMin
                 );
 
+
+            state.stormWarningIssued=
+                false;
+
+
             message(
-                "Der Sturm ist vorüber.",
+
+                "Der Sturm ist vorbei. Katastrophenhilfe: +"+
+                diff.stormBonus+
+                " €.",
+
                 "good"
             );
         }
 
         return;
     }
+
+
+    const distance=
+
+        state.nextStormDay-
+
+        state.gameDay;
+
+
+    if(
+        distance<=1.25&&
+        distance>0&&
+        !state.stormWarningIssued
+    ){
+
+        state.stormWarningIssued=
+            true;
+
+        message(
+            "Sturmwarnung! Prüfe Mauern und Deiche.",
+            "warning"
+        );
+    }
+
 
     if(
         state.gameDay>=
@@ -3626,18 +4733,22 @@ function simulateStorms(gameDays){
 
 function startStorm(){
 
-    const diff =
+    const diff=
         difficulties[
             state.difficulty
         ];
 
-    state.stormActive=true;
+    state.stormActive=
+        true;
 
-    state.stormRemaining =
+    state.stormRemaining=
+
         1.4+
+
         Math.random()*.8;
 
     state.stormNumber++;
+
 
     for(
         const b
@@ -3645,46 +4756,58 @@ function startStorm(){
     ){
 
         if(
-            b.type!=="wall" &&
+            b.type!=="wall"&&
             b.type!=="dike"
         ){
             continue;
         }
 
-        const terrain =
+
+        const terrain=
             effectiveTerrain(
                 b.x,
                 b.y
             );
 
-        const stormWater =
+
+        const stormWater=
+
             state.seaLevel+
+
             diff.stormLevel;
+
 
         if(
             terrain<
-            stormWater+1.5
+            stormWater+1.6
         ){
 
-            let damage =
+            let damage=
+
                 (
                     5+
                     Math.random()*8
                 )*
+
                 diff.stormDamage;
+
 
             if(
                 b.type==="dike"
             ){
-                damage*=.55;
+
+                damage*=.5;
             }
 
-            b.hp -= damage;
+
+            b.hp-=
+                damage;
         }
     }
 
+
     message(
-        "STURM! Der Meeresspiegel steigt vorübergehend.",
+        "STURM! Das Meer steigt vorübergehend und belastet die Schutzanlagen.",
         "danger"
     );
 }
@@ -3696,16 +4819,21 @@ function startStorm(){
 
 function updateSeaLevel(){
 
-    const diff =
+    const diff=
         difficulties[
             state.difficulty
         ];
 
-    const progress =
+
+    const p=
         Math.max(
+
             0,
+
             Math.min(
+
                 1,
+
                 (
                     state.gameDay-1
                 )/
@@ -3715,30 +4843,38 @@ function updateSeaLevel(){
             )
         );
 
-    const curve =
+
+    const curve=
         Math.pow(
-            progress,
+            p,
             1.55
         );
 
-    state.seaLevel =
+
+    state.seaLevel=
+
         diff.seaStart+
+
         (
             diff.seaEnd-
             diff.seaStart
         )*
+
         curve;
 
-    state.sinkLevel =
+
+    state.sinkLevel=
+
         (
             state.gameDay-1
         )*
+
         diff.sinkPerDay;
 }
 
 
 /* =========================================================
-   UPDATE
+   SIMULATION
 ========================================================= */
 
 function update(dt){
@@ -3751,39 +4887,59 @@ function update(dt){
         return;
     }
 
-    const diff =
+
+    const diff=
         difficulties[
             state.difficulty
         ];
 
-    const gameDays =
+
+    const gameDays=
+
         (
             dt/
             diff.daySeconds
         )*
+
         state.speed;
 
-    state.gameDay +=
+
+    state.gameDay+=
         gameDays;
+
 
     updateSeaLevel();
 
-    simulateProduction(
-        gameDays
-    );
-
-    simulatePopulation(
-        gameDays
-    );
 
     simulateStorms(
         gameDays
     );
 
+
+    computeFloodMap();
+
+
+    simulateProduction(
+        gameDays
+    );
+
+
+    simulatePopulation(
+        gameDays
+    );
+
+
+    simulateGrants();
+
+
     simulateFloodDamage(
         dt*
         state.speed
     );
+
+
+    computeFloodMap();
+
 
     checkGameState();
 }
@@ -3795,8 +4951,9 @@ function update(dt){
 
 function checkGameState(){
 
-    const dry =
+    const dry=
         calculateCoreDry();
+
 
     if(
         state.population<=0
@@ -3810,8 +4967,9 @@ function checkGameState(){
         return;
     }
 
+
     if(
-        state.gameDay>15 &&
+        state.gameDay>15&&
         dry<.12
     ){
 
@@ -3823,13 +4981,14 @@ function checkGameState(){
         return;
     }
 
+
     if(
         state.gameDay>=
         MAX_DAYS
     ){
 
         if(
-            state.population>=10 &&
+            state.population>=10&&
             dry>=.70
         ){
 
@@ -3840,92 +4999,114 @@ function checkGameState(){
 
         }else{
 
-            let reason =
-                "Tag 60 wurde erreicht, aber ";
-
-            if(
-                state.population<10
-            ){
-
-                reason +=
-                    "zu wenige Einwohner haben überlebt.";
-
-            }else{
-
-                reason +=
-                    "zu große Teile des Inselkerns stehen unter Wasser.";
-            }
-
             endGame(
+
                 false,
-                reason
+
+                state.population<10
+
+                ?
+                "Tag 60 wurde erreicht, aber zu wenige Einwohner haben überlebt."
+
+                :
+                "Tag 60 wurde erreicht, aber zu große Teile des Inselkerns stehen unter Wasser."
             );
         }
     }
 }
 
 
-function endGame(success,text){
+function endGame(
+    success,
+    text
+){
 
-    state.gameEnded=true;
+    state.gameEnded=
+        true;
+
 
     document
     .getElementById(
         "endTitle"
     )
-    .textContent =
+    .textContent=
+
         success
-        ?"INSEL GERETTET"
-        :"MISSION GESCHEITERT";
+
+        ?
+        "INSEL GERETTET"
+
+        :
+        "MISSION GESCHEITERT";
+
 
     document
     .getElementById(
         "endText"
     )
-    .innerHTML=`
+    .innerHTML=
 
-        ${text}
+        text+
 
-        <br><br>
+        "<br><br>"+
 
-        <strong>Tag:</strong>
-        ${Math.floor(state.gameDay)}
+        "<strong>Tag:</strong> "+
+        Math.floor(
+            state.gameDay
+        )+
 
-        <br>
+        "<br>"+
 
-        <strong>Bevölkerung:</strong>
-        ${state.population}
+        "<strong>Bevölkerung:</strong> "+
+        state.population+
 
-        <br>
+        "<br>"+
 
-        <strong>Geld:</strong>
-        ${Math.floor(state.money)} €
+        "<strong>Geld:</strong> "+
+        Math.floor(
+            state.money
+        )+
+        " €"+
 
-        <br>
+        "<br>"+
 
-        <strong>Gebäude gebaut:</strong>
-        ${state.statistics.buildingsBuilt}
+        "<strong>Gebäude gebaut:</strong> "+
+        state
+        .statistics
+        .buildingsBuilt+
 
-        <br>
+        "<br>"+
 
-        <strong>Stürme überstanden:</strong>
-        ${state.statistics.stormsSurvived}
+        "<strong>Stürme überstanden:</strong> "+
+        state
+        .statistics
+        .stormsSurvived+
 
-        <br>
+        "<br>"+
 
-        <strong>Inselkern trocken:</strong>
-        ${Math.round(
-            calculateCoreDry()*100
-        )} %
+        "<strong>Förderungen:</strong> "+
+        state
+        .statistics
+        .grantsReceived+
 
-    `;
+        "<br>"+
+
+        "<strong>Inselkern trocken:</strong> "+
+        Math.round(
+            calculateCoreDry()*
+            100
+        )+
+        " %";
+
 
     document
     .getElementById(
         "endModal"
     )
     .classList
-    .remove("hidden");
+    .remove(
+        "hidden"
+    );
 }
 
 
@@ -3935,174 +5116,443 @@ function endGame(success,text){
 
 function updateHUD(){
 
-    if(!state){
+    if(
+        !state
+    ){
         return;
     }
 
-    const capacity =
+
+    const diff=
+        difficulties[
+            state.difficulty
+        ];
+
+
+    const cap=
         housingCapacity();
+
 
     document
     .getElementById(
         "dayStat"
     )
-    .textContent =
+    .textContent=
+
         Math.min(
+
             MAX_DAYS,
+
             Math.floor(
                 state.gameDay
             )
+
         )+
+
         " / "+
+
         MAX_DAYS;
+
 
     document
     .getElementById(
         "populationStat"
     )
-    .textContent =
+    .textContent=
+
         state.population+
+
         " / "+
-        capacity;
+
+        cap;
+
 
     document
     .getElementById(
         "moneyStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.money
         )+
+
         " €";
+
 
     document
     .getElementById(
         "foodStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.food
         );
+
 
     document
     .getElementById(
         "woodStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.wood
         );
+
 
     document
     .getElementById(
         "stoneStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.stone
         );
+
 
     document
     .getElementById(
         "metalStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.metal
         );
+
 
     document
     .getElementById(
         "energyStat"
     )
-    .textContent =
+    .textContent=
+
         Math.floor(
             state.energy
         );
+
 
     document
     .getElementById(
         "seaStat"
     )
-    .textContent =
+    .textContent=
+
         getCurrentWaterLevel()
-        .toFixed(2)+
+        .toFixed(
+            2
+        )+
+
         " m";
+
 
     document
     .getElementById(
         "sinkStat"
     )
-    .textContent =
-        state.sinkLevel
-        .toFixed(2)+
+    .textContent=
+
+        state
+        .sinkLevel
+        .toFixed(
+            2
+        )+
+
         " m";
+
 
     document
     .getElementById(
         "dryStat"
     )
-    .textContent =
+    .textContent=
+
         Math.round(
-            calculateCoreDry()*100
+            calculateCoreDry()*
+            100
         )+
+
         " %";
+
 
     document
     .getElementById(
         "dayProgress"
     )
     .style
-    .width =
+    .width=
+
         Math.min(
+
             100,
+
             state.gameDay/
             MAX_DAYS*
             100
+
         )+
+
         "%";
+
 
     document
     .getElementById(
         "weatherText"
     )
-    .textContent =
-        state.stormActive
-        ?"Wetter: ⚠ Sturm"
-        :"Wetter: Ruhig";
+    .textContent=
 
-    const tax =
-        Math.floor(
-            state.population*
-            difficulties[
-                state.difficulty
-            ].taxPerPerson
-        );
+        state.stormActive
+
+        ?
+        "Wetter: ⚠ Sturm"
+
+        :
+        "Wetter: Ruhig";
+
 
     document
     .getElementById(
         "incomeText"
     )
-    .textContent =
-        "Steuern: "+
-        tax+
+    .textContent=
+
+        "Einnahmen: "+
+
+        Math.floor(
+
+            state.population*
+            diff.taxPerPerson+
+
+            diff.baseIncome
+
+        )+
+
         " €/Tag";
+
+
+    const next=
+
+        [
+            15,
+            30,
+            45
+        ]
+        .find(
+            d=>
+                !state
+                .grantsClaimed[
+                    d
+                ]
+        );
+
+
+    document
+    .getElementById(
+        "grantText"
+    )
+    .textContent=
+
+        next
+
+        ?
+        "Nächste Förderung: Tag "+
+        next
+
+        :
+        "Förderprogramm abgeschlossen";
 }
 
 
 /* =========================================================
-   ZEICHNEN
+   SICHTBARER KARTENBEREICH
+========================================================= */
+
+function visibleTileBounds(){
+
+    const rect=
+        canvas
+        .getBoundingClientRect();
+
+
+    return{
+
+        minX:
+            Math.max(
+
+                0,
+
+                Math.floor(
+
+                    (
+                        -camera.x/
+                        camera.zoom
+                    )/
+                    TILE
+
+                )-
+                2
+            ),
+
+
+        minY:
+            Math.max(
+
+                0,
+
+                Math.floor(
+
+                    (
+                        -camera.y/
+                        camera.zoom
+                    )/
+                    TILE
+
+                )-
+                2
+            ),
+
+
+        maxX:
+            Math.min(
+
+                MAP_W-1,
+
+                Math.ceil(
+
+                    (
+                        (
+                            rect.width-
+                            camera.x
+                        )/
+                        camera.zoom
+                    )/
+                    TILE
+
+                )+
+                2
+            ),
+
+
+        maxY:
+            Math.min(
+
+                MAP_H-1,
+
+                Math.ceil(
+
+                    (
+                        (
+                            rect.height-
+                            camera.y
+                        )/
+                        camera.zoom
+                    )/
+                    TILE
+
+                )+
+                2
+            )
+    };
+}
+
+
+/* =========================================================
+   PSEUDO RANDOM
+========================================================= */
+
+function pseudoRandom(
+    x,
+    y,
+    s=0
+){
+
+    const v=
+
+        Math.sin(
+
+            x*
+            12.9898+
+
+            y*
+            78.233+
+
+            s*
+            37.719
+
+        )*
+
+        43758.5453;
+
+
+    return(
+        v-
+        Math.floor(
+            v
+        )
+    );
+}
+
+
+/* =========================================================
+   BODENFARBE
+========================================================= */
+
+function landColor(e){
+
+    if(
+        e<1.2
+    ){
+        return "#c6b172";
+    }
+
+    if(
+        e<2.2
+    ){
+        return "#93aa61";
+    }
+
+    if(
+        e<4
+    ){
+        return "#76a457";
+    }
+
+    if(
+        e<6
+    ){
+        return "#619550";
+    }
+
+    if(
+        e<8
+    ){
+        return "#567f48";
+    }
+
+    return "#506f45";
+}
+
+
+/* =========================================================
+   HAUPTRENDER
 ========================================================= */
 
 function draw(){
 
-    if(!state){
+    if(
+        !state
+    ){
         return;
     }
 
-    const rect =
+
+    const rect=
         canvas
         .getBoundingClientRect();
+
 
     ctx.clearRect(
         0,
@@ -4111,11 +5561,8 @@ function draw(){
         rect.height
     );
 
-    /*
-        Ozean-Hintergrund
-    */
 
-    const oceanGradient =
+    const bg=
         ctx.createLinearGradient(
             0,
             0,
@@ -4123,18 +5570,22 @@ function draw(){
             rect.height
         );
 
-    oceanGradient.addColorStop(
+
+    bg.addColorStop(
         0,
-        "#0d4c6a"
+        "#0d4d6c"
     );
 
-    oceanGradient.addColorStop(
+
+    bg.addColorStop(
         1,
-        "#062b43"
+        "#052a42"
     );
 
-    ctx.fillStyle =
-        oceanGradient;
+
+    ctx.fillStyle=
+        bg;
+
 
     ctx.fillRect(
         0,
@@ -4143,21 +5594,29 @@ function draw(){
         rect.height
     );
 
+
     ctx.save();
+
 
     ctx.translate(
         camera.x,
         camera.y
     );
 
+
     ctx.scale(
         camera.zoom,
         camera.zoom
     );
 
+
     drawTerrain();
 
+    drawShoreFoam();
+
     drawDecorations();
+
+    drawSettlementPaths();
 
     drawGrid();
 
@@ -4165,93 +5624,16 @@ function draw(){
 
     drawBuildPreview();
 
+
     ctx.restore();
 
-    if(state.stormActive){
 
-        ctx.fillStyle =
-            "rgba(20,30,40,.16)";
-
-        ctx.fillRect(
-            0,
-            0,
-            rect.width,
-            rect.height
-        );
-    }
-}
+    drawScreenEffects(
+        rect
+    );
 
 
-/* =========================================================
-   SICHTBARE KACHELN
-========================================================= */
-
-function visibleTileBounds(){
-
-    const rect =
-        canvas
-        .getBoundingClientRect();
-
-    const minX =
-        Math.max(
-            0,
-            Math.floor(
-                (
-                    -camera.x/
-                    camera.zoom
-                )/
-                TILE
-            )-2
-        );
-
-    const minY =
-        Math.max(
-            0,
-            Math.floor(
-                (
-                    -camera.y/
-                    camera.zoom
-                )/
-                TILE
-            )-2
-        );
-
-    const maxX =
-        Math.min(
-            MAP_W-1,
-            Math.ceil(
-                (
-                    (
-                        rect.width-
-                        camera.x
-                    )/
-                    camera.zoom
-                )/
-                TILE
-            )+2
-        );
-
-    const maxY =
-        Math.min(
-            MAP_H-1,
-            Math.ceil(
-                (
-                    (
-                        rect.height-
-                        camera.y
-                    )/
-                    camera.zoom
-                )/
-                TILE
-            )+2
-        );
-
-    return {
-        minX,
-        minY,
-        maxX,
-        maxY
-    };
+    drawMiniMap();
 }
 
 
@@ -4261,59 +5643,95 @@ function visibleTileBounds(){
 
 function drawTerrain(){
 
-    const bounds =
+    const b=
         visibleTileBounds();
 
-    const water =
+
+    const water=
         getCurrentWaterLevel();
 
+
     for(
-        let y=bounds.minY;
-        y<=bounds.maxY;
+        let y=b.minY;
+        y<=b.maxY;
         y++
     ){
 
         for(
-            let x=bounds.minX;
-            x<=bounds.maxX;
+            let x=b.minX;
+            x<=b.maxX;
             x++
         ){
 
-            const elevation =
+            const e=
                 effectiveTerrain(
                     x,
                     y
                 );
 
-            const depth =
-                water-
-                elevation;
 
-            const px=x*TILE;
-            const py=y*TILE;
+            const flooded=
+                isFlooded(
+                    x,
+                    y
+                );
 
-            if(depth>0){
+
+            const px=
+                x*TILE;
+
+
+            const py=
+                y*TILE;
+
+
+            if(
+                flooded
+            ){
+
+                const depth=
+                    Math.max(
+
+                        0,
+
+                        water-e
+                    );
+
 
                 let color;
 
-                if(depth>3){
 
-                    color="#0a3956";
+                if(
+                    depth>3
+                ){
 
-                }else if(depth>1.5){
+                    color=
+                        "#083b59";
 
-                    color="#0c4d6f";
+                }else if(
+                    depth>1.5
+                ){
 
-                }else if(depth>.5){
+                    color=
+                        "#0c5072";
 
-                    color="#126888";
+                }else if(
+                    depth>.55
+                ){
+
+                    color=
+                        "#126b8c";
 
                 }else{
 
-                    color="#1d7f99";
+                    color=
+                        "#1d809a";
                 }
 
-                ctx.fillStyle=color;
+
+                ctx.fillStyle=
+                    color;
+
 
                 ctx.fillRect(
                     px,
@@ -4322,158 +5740,257 @@ function drawTerrain(){
                     TILE+1
                 );
 
-                /*
-                    Animierte Wasserlinien
-                */
 
-                const wave =
+                const wave=
                     Math.sin(
-                        animationTime*
-                        1.8+
-                        x*.65+
-                        y*.45
+
+                        animationTime*2+
+
+                        x*.66+
+
+                        y*.42
                     );
 
-                ctx.strokeStyle =
-                    depth<1
-                    ?"rgba(220,250,255,.24)"
-                    :"rgba(150,225,255,.12)";
 
-                ctx.lineWidth=1;
+                ctx.strokeStyle=
+
+                    depth<1
+
+                    ?
+                    "rgba(220,250,255,.28)"
+
+                    :
+                    "rgba(150,225,255,.13)";
+
+
+                ctx.lineWidth=
+                    1.2;
+
 
                 ctx.beginPath();
 
+
                 ctx.moveTo(
-                    px+5,
+
+                    px+4,
+
                     py+
-                    TILE*.5+
+                    TILE*.45+
                     wave*2
                 );
 
-                ctx.lineTo(
+
+                ctx.quadraticCurveTo(
+
                     px+
-                    TILE-5,
+                    TILE*.5,
+
                     py+
-                    TILE*.5+
+                    TILE*.40-
+                    wave,
+
+                    px+
+                    TILE-
+                    4,
+
+                    py+
+                    TILE*.45+
                     wave*2
                 );
+
 
                 ctx.stroke();
 
-                continue;
-            }
-
-            /*
-                Bodenfarben
-            */
-
-            let color;
-
-            if(elevation<1.2){
-
-                color="#c3ad6c";
-
-            }else if(elevation<2.2){
-
-                color="#91a85f";
-
-            }else if(elevation<4){
-
-                color="#72a154";
-
-            }else if(elevation<6){
-
-                color="#5e934e";
-
-            }else if(elevation<8){
-
-                color="#567e49";
-
-            }else{
-
-                color="#526f47";
-            }
-
-            ctx.fillStyle=color;
-
-            ctx.fillRect(
-                px,
-                py,
-                TILE+1,
-                TILE+1
-            );
-
-            /*
-                Geländeschattierung
-            */
-
-            const east =
-                x<MAP_W-1
-                ?effectiveTerrain(
-                    x+1,
-                    y
-                )
-                :elevation;
-
-            const south =
-                y<MAP_H-1
-                ?effectiveTerrain(
-                    x,
-                    y+1
-                )
-                :elevation;
-
-            const slope =
-                (
-                    elevation-east+
-                    elevation-south
-                )*.04;
-
-            if(slope>0){
-
-                ctx.fillStyle=
-                    "rgba(255,255,210,"+
-                    Math.min(.14,slope)+
-                    ")";
-
-            }else{
-
-                ctx.fillStyle=
-                    "rgba(0,30,20,"+
-                    Math.min(
-                        .14,
-                        Math.abs(slope)
-                    )+
-                    ")";
-            }
-
-            ctx.fillRect(
-                px,
-                py,
-                TILE,
-                TILE
-            );
-
-            /*
-                Strandkante
-            */
-
-            if(
-                elevation<
-                water+.4
-            ){
 
                 ctx.strokeStyle=
-                    "rgba(238,225,170,.45)";
+                    "rgba(3,35,55,.10)";
 
-                ctx.lineWidth=2;
 
-                ctx.strokeRect(
-                    px+1,
-                    py+1,
-                    TILE-2,
-                    TILE-2
+                ctx.beginPath();
+
+
+                ctx.moveTo(
+
+                    px+5,
+
+                    py+
+                    TILE*.68-
+                    wave
                 );
+
+
+                ctx.lineTo(
+
+                    px+
+                    TILE-
+                    6,
+
+                    py+
+                    TILE*.68-
+                    wave
+                );
+
+
+                ctx.stroke();
+
+
+            }else{
+
+
+                let col=
+                    landColor(
+                        e
+                    );
+
+
+                /*
+                    Eingedeichtes Land,
+                    das unter Meeresspiegel liegt.
+                */
+
+                if(
+                    e<
+                    water
+                ){
+
+                    col=
+                        "#5f844e";
+                }
+
+
+                ctx.fillStyle=
+                    col;
+
+
+                ctx.fillRect(
+                    px,
+                    py,
+                    TILE+1,
+                    TILE+1
+                );
+
+
+                const east=
+
+                    x<
+                    MAP_W-1
+
+                    ?
+                    effectiveTerrain(
+                        x+1,
+                        y
+                    )
+
+                    :
+                    e;
+
+
+                const south=
+
+                    y<
+                    MAP_H-1
+
+                    ?
+                    effectiveTerrain(
+                        x,
+                        y+1
+                    )
+
+                    :
+                    e;
+
+
+                const slope=
+
+                    (
+                        e-east+
+                        e-south
+                    )*
+                    .045;
+
+
+                ctx.fillStyle=
+
+                    slope>0
+
+                    ?
+                    "rgba(255,255,220,"+
+                    Math.min(
+                        .13,
+                        slope
+                    )+
+                    ")"
+
+                    :
+                    "rgba(0,28,18,"+
+                    Math.min(
+                        .13,
+                        Math.abs(
+                            slope
+                        )
+                    )+
+                    ")";
+
+
+                ctx.fillRect(
+                    px,
+                    py,
+                    TILE,
+                    TILE
+                );
+
+
+                const r=
+                    pseudoRandom(
+                        x,
+                        y,
+                        2
+                    );
+
+
+                ctx.fillStyle=
+                    "rgba(255,255,255,.055)";
+
+
+                ctx.fillRect(
+
+                    px+
+                    5+
+                    r*25,
+
+                    py+
+                    6+
+                    (
+                        1-r
+                    )*
+                    20,
+
+                    1.2,
+                    1.2
+                );
+
+
+                if(
+                    e<1.3
+                ){
+
+                    ctx.fillStyle=
+                        "rgba(235,220,165,.12)";
+
+
+                    ctx.fillRect(
+
+                        px,
+
+                        py+
+                        TILE-
+                        5,
+
+                        TILE,
+
+                        5
+                    );
+                }
             }
         }
     }
@@ -4481,159 +5998,646 @@ function drawTerrain(){
 
 
 /* =========================================================
-   DEKORATION
+   BRANDUNG
 ========================================================= */
 
-function pseudoRandom(x,y){
+function drawShoreFoam(){
 
-    const value =
-        Math.sin(
-            x*12.9898+
-            y*78.233
-        )*
-        43758.5453;
-
-    return (
-        value-
-        Math.floor(value)
-    );
-}
-
-
-function drawDecorations(){
-
-    const bounds =
+    const b=
         visibleTileBounds();
 
+
+    ctx.lineWidth=
+        2.2;
+
+
+    ctx.strokeStyle=
+        "rgba(225,250,255,.68)";
+
+
     for(
-        let y=bounds.minY;
-        y<=bounds.maxY;
+        let y=b.minY;
+        y<=b.maxY;
         y++
     ){
 
         for(
-            let x=bounds.minX;
-            x<=bounds.maxX;
+            let x=b.minX;
+            x<=b.maxX;
             x++
         ){
 
             if(
-                buildingAt(x,y)
+                isFlooded(
+                    x,
+                    y
+                )
             ){
                 continue;
             }
 
-            if(isFlooded(x,y)){
+
+            const px=
+                x*TILE;
+
+
+            const py=
+                y*TILE;
+
+
+            ctx.beginPath();
+
+
+            let any=false;
+
+
+            if(
+                y>0&&
+                isFlooded(
+                    x,
+                    y-1
+                )
+            ){
+
+                ctx.moveTo(
+                    px+2,
+                    py+1
+                );
+
+                ctx.lineTo(
+                    px+TILE-2,
+                    py+1
+                );
+
+                any=true;
+            }
+
+
+            if(
+                y<
+                MAP_H-1&&
+                isFlooded(
+                    x,
+                    y+1
+                )
+            ){
+
+                ctx.moveTo(
+                    px+2,
+                    py+TILE-1
+                );
+
+                ctx.lineTo(
+                    px+TILE-2,
+                    py+TILE-1
+                );
+
+                any=true;
+            }
+
+
+            if(
+                x>0&&
+                isFlooded(
+                    x-1,
+                    y
+                )
+            ){
+
+                ctx.moveTo(
+                    px+1,
+                    py+2
+                );
+
+                ctx.lineTo(
+                    px+1,
+                    py+TILE-2
+                );
+
+                any=true;
+            }
+
+
+            if(
+                x<
+                MAP_W-1&&
+                isFlooded(
+                    x+1,
+                    y
+                )
+            ){
+
+                ctx.moveTo(
+                    px+TILE-1,
+                    py+2
+                );
+
+                ctx.lineTo(
+                    px+TILE-1,
+                    py+TILE-2
+                );
+
+                any=true;
+            }
+
+
+            if(
+                any
+            ){
+
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+
+/* =========================================================
+   NATURDEKORATION
+========================================================= */
+
+function drawDecorations(){
+
+    const b=
+        visibleTileBounds();
+
+
+    for(
+        let y=b.minY;
+        y<=b.maxY;
+        y++
+    ){
+
+        for(
+            let x=b.minX;
+            x<=b.maxX;
+            x++
+        ){
+
+            if(
+                buildingAt(
+                    x,
+                    y
+                )||
+                isFlooded(
+                    x,
+                    y
+                )
+            ){
                 continue;
             }
 
-            const elevation =
+
+            const e=
                 effectiveTerrain(
                     x,
                     y
                 );
 
-            const rand =
+
+            const r=
                 pseudoRandom(
                     x,
                     y
                 );
 
+
             const px=
                 x*TILE;
+
 
             const py=
                 y*TILE;
 
-            /*
-                Kleine Bäume
-            */
 
             if(
-                elevation>2 &&
-                elevation<7 &&
-                rand>.88
+                e>2&&
+                e<7&&
+                r>.87
+            ){
+
+                drawTreeCluster(
+
+                    ctx,
+
+                    px+
+                    TILE*.5,
+
+                    py+
+                    TILE*.56,
+
+                    .8+
+                    pseudoRandom(
+                        x,
+                        y,
+                        3
+                    )*
+                    .25
+                );
+
+
+            }else if(
+                e>4&&
+                r<.035
+            ){
+
+                drawRockCluster(
+
+                    ctx,
+
+                    px+
+                    TILE*.5,
+
+                    py+
+                    TILE*.62,
+
+                    .8
+                );
+
+
+            }else if(
+
+                e>2.5&&
+                e<6&&
+                r>.80&&
+                r<.825
+
             ){
 
                 ctx.fillStyle=
-                    "#63472c";
+                    "#d7cf75";
 
-                ctx.fillRect(
-                    px+18,
-                    py+20,
-                    3,
-                    9
-                );
 
-                ctx.fillStyle=
-                    "#2f673a";
+                for(
+                    let i=0;
+                    i<4;
+                    i++
+                ){
 
-                ctx.beginPath();
+                    const rx=
 
-                ctx.arc(
-                    px+19,
-                    py+17,
-                    7,
-                    0,
-                    Math.PI*2
-                );
+                        px+
+                        8+
+                        pseudoRandom(
+                            x+i,
+                            y,
+                            8
+                        )*
+                        24;
 
-                ctx.fill();
 
-                ctx.fillStyle=
-                    "#3d7b45";
+                    const ry=
 
-                ctx.beginPath();
+                        py+
+                        10+
+                        pseudoRandom(
+                            x,
+                            y+i,
+                            9
+                        )*
+                        20;
 
-                ctx.arc(
-                    px+16,
-                    py+15,
-                    5,
-                    0,
-                    Math.PI*2
-                );
 
-                ctx.fill();
+                    ctx.fillRect(
+                        rx,
+                        ry,
+                        1.5,
+                        1.5
+                    );
+                }
             }
+        }
+    }
+}
 
-            /*
-                Steine
-            */
+
+function drawTreeCluster(
+    c,
+    cx,
+    cy,
+    s
+){
+
+    c.save();
+
+    c.translate(
+        cx,
+        cy
+    );
+
+    c.scale(
+        s,
+        s
+    );
+
+
+    c.fillStyle=
+        "rgba(0,0,0,.18)";
+
+
+    c.beginPath();
+
+    c.ellipse(
+        2,
+        9,
+        12,
+        5,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    c.fill();
+
+
+    c.fillStyle=
+        "#5d4128";
+
+
+    c.fillRect(
+        -1,
+        2,
+        3,
+        9
+    );
+
+
+    const crowns=[
+
+        [
+            -5,
+            -1,
+            7,
+            "#2f6939"
+        ],
+
+        [
+            4,
+            -3,
+            8,
+            "#3c7c43"
+        ],
+
+        [
+            0,
+            -8,
+            7,
+            "#43884a"
+        ]
+    ];
+
+
+    for(
+        const[
+            x,
+            y,
+            r,
+            col
+        ]
+        of crowns
+    ){
+
+        c.fillStyle=
+            col;
+
+        c.beginPath();
+
+        c.arc(
+            x,
+            y,
+            r,
+            0,
+            Math.PI*2
+        );
+
+        c.fill();
+    }
+
+
+    c.restore();
+}
+
+
+function drawRockCluster(
+    c,
+    cx,
+    cy,
+    s
+){
+
+    c.save();
+
+    c.translate(
+        cx,
+        cy
+    );
+
+    c.scale(
+        s,
+        s
+    );
+
+
+    c.fillStyle=
+        "rgba(0,0,0,.16)";
+
+
+    c.beginPath();
+
+    c.ellipse(
+        2,
+        7,
+        12,
+        4,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    c.fill();
+
+
+    const rocks=[
+
+        [
+            -6,
+            2,
+            6,
+            "#747b76"
+        ],
+
+        [
+            2,
+            -1,
+            8,
+            "#8b918b"
+        ],
+
+        [
+            8,
+            4,
+            5,
+            "#686f6a"
+        ]
+    ];
+
+
+    for(
+        const[
+            x,
+            y,
+            r,
+            col
+        ]
+        of rocks
+    ){
+
+        c.fillStyle=
+            col;
+
+        c.beginPath();
+
+        c.arc(
+            x,
+            y,
+            r,
+            0,
+            Math.PI*2
+        );
+
+        c.fill();
+    }
+
+
+    c.restore();
+}
+
+
+/* =========================================================
+   WEGE
+========================================================= */
+
+function drawSettlementPaths(){
+
+    const active=
+        state
+        .buildings
+        .filter(
+            b=>
+
+                b.type!=="wall"&&
+                b.type!=="dike"&&
+
+                !isFlooded(
+                    b.x,
+                    b.y
+                )
+        );
+
+
+    ctx.strokeStyle=
+        "rgba(184,151,94,.34)";
+
+
+    ctx.lineWidth=
+        5;
+
+
+    ctx.lineCap=
+        "round";
+
+
+    for(
+        let i=0;
+        i<active.length;
+        i++
+    ){
+
+        let nearest=null;
+
+        let dist=999;
+
+
+        for(
+            let j=0;
+            j<active.length;
+            j++
+        ){
 
             if(
-                elevation>5 &&
-                rand<.035
+                i===j
+            ){
+                continue;
+            }
+
+
+            const d=
+
+                Math.abs(
+                    active[i].x-
+                    active[j].x
+                )+
+
+                Math.abs(
+                    active[i].y-
+                    active[j].y
+                );
+
+
+            if(
+                d<dist&&
+                d<=5
             ){
 
-                ctx.fillStyle=
-                    "#6c756e";
+                dist=d;
 
-                ctx.beginPath();
-
-                ctx.moveTo(
-                    px+12,
-                    py+27
-                );
-
-                ctx.lineTo(
-                    px+16,
-                    py+18
-                );
-
-                ctx.lineTo(
-                    px+25,
-                    py+17
-                );
-
-                ctx.lineTo(
-                    px+29,
-                    py+27
-                );
-
-                ctx.closePath();
-
-                ctx.fill();
+                nearest=
+                    active[j];
             }
+        }
+
+
+        if(
+            nearest
+        ){
+
+            const a=
+                active[i];
+
+
+            const x1=
+                a.x*TILE+
+                TILE/2;
+
+
+            const y1=
+                a.y*TILE+
+                TILE/2;
+
+
+            const x2=
+                nearest.x*TILE+
+                TILE/2;
+
+
+            const y2=
+                nearest.y*TILE+
+                TILE/2;
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x1,
+                y1
+            );
+
+            ctx.lineTo(
+                x2,
+                y2
+            );
+
+            ctx.stroke();
         }
     }
 }
@@ -4646,68 +6650,76 @@ function drawDecorations(){
 function drawGrid(){
 
     if(
-        camera.zoom<.60
+        camera.zoom<.72
     ){
         return;
     }
 
-    const bounds =
+
+    const b=
         visibleTileBounds();
 
+
     ctx.strokeStyle=
-        "rgba(255,255,255,.045)";
+        "rgba(255,255,255,.035)";
+
 
     ctx.lineWidth=
-        1/camera.zoom;
+        1/
+        camera.zoom;
+
 
     ctx.beginPath();
 
+
     for(
-        let x=bounds.minX;
-        x<=bounds.maxX+1;
+        let x=b.minX;
+        x<=b.maxX+1;
         x++
     ){
 
         ctx.moveTo(
             x*TILE,
-            bounds.minY*TILE
+            b.minY*TILE
         );
 
         ctx.lineTo(
             x*TILE,
             (
-                bounds.maxY+1
+                b.maxY+1
             )*
             TILE
         );
     }
 
+
     for(
-        let y=bounds.minY;
-        y<=bounds.maxY+1;
+        let y=b.minY;
+        y<=b.maxY+1;
         y++
     ){
 
         ctx.moveTo(
-            bounds.minX*TILE,
+            b.minX*TILE,
             y*TILE
         );
 
         ctx.lineTo(
             (
-                bounds.maxX+1
+                b.maxX+1
             )*
             TILE,
             y*TILE
         );
     }
 
+
     ctx.stroke();
 }
 
 
 /* =========================================================
-   GEBÄUDE
+   GEBÄUDE ZEICHNEN
 ========================================================= */
 
 function drawBuildings(){
@@ -4721,83 +6733,64 @@ function drawBuildings(){
             b.x*TILE+
             TILE/2;
 
+
         const py=
             b.y*TILE+
             TILE/2;
 
-        const health =
+
+        const health=
             Math.max(
                 0,
                 b.hp/
                 b.maxHp
             );
 
-        const flooded =
+
+        const flooded=
             isFlooded(
                 b.x,
                 b.y
             );
 
-        drawBuildingGraphic(
-            ctx,
-            b.type,
-            px,
-            py,
-            TILE,
-            health,
-            flooded,
-            false
-        );
 
-        /*
-            Schadensbalken
-        */
+        if(
+            b.type==="wall"||
+            b.type==="dike"
+        ){
 
-        if(health<.99){
-
-            const barW =
-                TILE-8;
-
-            const bx =
-                b.x*TILE+4;
-
-            const by =
-                b.y*TILE+
-                TILE-5;
-
-            ctx.fillStyle=
-                "rgba(0,0,0,.7)";
-
-            ctx.fillRect(
-                bx,
-                by,
-                barW,
-                3
+            drawConnectedBarrier(
+                ctx,
+                b,
+                px,
+                py,
+                health,
+                flooded
             );
 
-            if(health>.55){
+        }else{
 
-                ctx.fillStyle=
-                    "#63ee83";
+            drawBuildingGraphic(
+                ctx,
+                b.type,
+                px,
+                py,
+                TILE,
+                health,
+                flooded,
+                false,
+                b
+            );
+        }
 
-            }else if(
-                health>.25
-            ){
 
-                ctx.fillStyle=
-                    "#ffd45f";
+        if(
+            health<.99
+        ){
 
-            }else{
-
-                ctx.fillStyle=
-                    "#ff6262";
-            }
-
-            ctx.fillRect(
-                bx,
-                by,
-                barW*health,
-                3
+            drawHealthBar(
+                b,
+                health
             );
         }
     }
@@ -4805,7 +6798,605 @@ function drawBuildings(){
 
 
 /* =========================================================
-   DETAILLIERTE GEBÄUDEGRAFIK
+   HP BALKEN
+========================================================= */
+
+function drawHealthBar(
+    b,
+    h
+){
+
+    const w=
+        TILE-8;
+
+
+    const x=
+        b.x*TILE+
+        4;
+
+
+    const y=
+        b.y*TILE+
+        TILE-
+        5;
+
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.75)";
+
+
+    ctx.fillRect(
+        x,
+        y,
+        w,
+        3
+    );
+
+
+    ctx.fillStyle=
+
+        h>.55
+
+        ?
+        "#63ee83"
+
+        :
+        h>.25
+
+        ?
+        "#ffd45f"
+
+        :
+        "#ff6262";
+
+
+    ctx.fillRect(
+        x,
+        y,
+        w*h,
+        3
+    );
+}
+
+
+/* =========================================================
+   VERBUNDENE MAUERN
+========================================================= */
+
+function barrierNeighbor(
+    x,
+    y
+){
+
+    const b=
+        buildingAt(
+            x,
+            y
+        );
+
+    return!!(
+
+        b&&
+        b.hp>0&&
+
+        (
+            b.type==="wall"||
+            b.type==="dike"
+        )
+    );
+}
+
+
+function drawConnectedBarrier(
+    c,
+    b,
+    cx,
+    cy,
+    health,
+    flooded
+){
+
+    const L=
+        barrierNeighbor(
+            b.x-1,
+            b.y
+        );
+
+
+    const R=
+        barrierNeighbor(
+            b.x+1,
+            b.y
+        );
+
+
+    const U=
+        barrierNeighbor(
+            b.x,
+            b.y-1
+        );
+
+
+    const D=
+        barrierNeighbor(
+            b.x,
+            b.y+1
+        );
+
+
+    c.save();
+
+
+    c.translate(
+        cx,
+        cy
+    );
+
+
+    c.shadowColor=
+        "rgba(0,0,0,.28)";
+
+
+    c.shadowBlur=4;
+
+    c.shadowOffsetY=3;
+
+
+    if(
+        b.type==="wall"
+    ){
+
+        const drawSeg=(
+            x,
+            y,
+            w,
+            h
+        )=>{
+
+            const g=
+                c.createLinearGradient(
+                    x,
+                    y,
+                    x,
+                    y+h
+                );
+
+
+            g.addColorStop(
+                0,
+                "#b7aa96"
+            );
+
+
+            g.addColorStop(
+                .45,
+                "#9c8d79"
+            );
+
+
+            g.addColorStop(
+                1,
+                "#756858"
+            );
+
+
+            c.fillStyle=
+                g;
+
+
+            c.fillRect(
+                x,
+                y,
+                w,
+                h
+            );
+
+
+            c.strokeStyle=
+                "#60564b";
+
+
+            c.lineWidth=1;
+
+
+            c.strokeRect(
+                x+.5,
+                y+.5,
+                w-1,
+                h-1
+            );
+        };
+
+
+        if(
+            L
+        ){
+
+            drawSeg(
+                -20,
+                -6,
+                20,
+                12
+            );
+        }
+
+
+        if(
+            R
+        ){
+
+            drawSeg(
+                0,
+                -6,
+                20,
+                12
+            );
+        }
+
+
+        if(
+            U
+        ){
+
+            drawSeg(
+                -6,
+                -20,
+                12,
+                20
+            );
+        }
+
+
+        if(
+            D
+        ){
+
+            drawSeg(
+                -6,
+                0,
+                12,
+                20
+            );
+        }
+
+
+        if(
+            !L&&
+            !R&&
+            !U&&
+            !D
+        ){
+
+            drawSeg(
+                -13,
+                -6,
+                26,
+                12
+            );
+        }
+
+
+        drawSeg(
+            -7,
+            -7,
+            14,
+            14
+        );
+
+
+        c.shadowBlur=0;
+
+
+        c.strokeStyle=
+            "rgba(255,255,255,.18)";
+
+
+        c.beginPath();
+
+        c.moveTo(
+            -6,
+            -3
+        );
+
+        c.lineTo(
+            6,
+            -3
+        );
+
+        c.stroke();
+
+
+    }else{
+
+
+        c.fillStyle=
+            "#7c6843";
+
+
+        if(
+            L
+        ){
+
+            c.fillRect(
+                -20,
+                -10,
+                20,
+                20
+            );
+        }
+
+
+        if(
+            R
+        ){
+
+            c.fillRect(
+                0,
+                -10,
+                20,
+                20
+            );
+        }
+
+
+        if(
+            U
+        ){
+
+            c.fillRect(
+                -10,
+                -20,
+                20,
+                20
+            );
+        }
+
+
+        if(
+            D
+        ){
+
+            c.fillRect(
+                -10,
+                0,
+                20,
+                20
+            );
+        }
+
+
+        if(
+            !L&&
+            !R&&
+            !U&&
+            !D
+        ){
+
+            c.fillRect(
+                -15,
+                -10,
+                30,
+                20
+            );
+        }
+
+
+        c.beginPath();
+
+        c.arc(
+            0,
+            0,
+            12,
+            0,
+            Math.PI*2
+        );
+
+        c.fill();
+
+
+        c.shadowBlur=0;
+
+
+        c.fillStyle=
+            "#5f8447";
+
+
+        if(
+            L
+        ){
+
+            c.fillRect(
+                -20,
+                -5,
+                20,
+                10
+            );
+        }
+
+
+        if(
+            R
+        ){
+
+            c.fillRect(
+                0,
+                -5,
+                20,
+                10
+            );
+        }
+
+
+        if(
+            U
+        ){
+
+            c.fillRect(
+                -5,
+                -20,
+                10,
+                20
+            );
+        }
+
+
+        if(
+            D
+        ){
+
+            c.fillRect(
+                -5,
+                0,
+                10,
+                20
+            );
+        }
+
+
+        c.fillRect(
+            -7,
+            -7,
+            14,
+            14
+        );
+
+
+        c.fillStyle=
+            "#aaa8a0";
+
+
+        if(
+            L||
+            R
+        ){
+
+            c.fillRect(
+                -20,
+                -2.5,
+                40,
+                5
+            );
+        }
+
+
+        if(
+            U||
+            D
+        ){
+
+            c.fillRect(
+                -2.5,
+                -20,
+                5,
+                40
+            );
+        }
+
+
+        c.fillRect(
+            -6,
+            -3,
+            12,
+            6
+        );
+    }
+
+
+    if(
+        flooded
+    ){
+
+        c.fillStyle=
+            "rgba(40,175,225,.28)";
+
+
+        c.fillRect(
+            -20,
+            -20,
+            40,
+            40
+        );
+
+
+        c.strokeStyle=
+            "rgba(210,248,255,.72)";
+
+
+        c.lineWidth=
+            1.3;
+
+
+        c.beginPath();
+
+
+        c.moveTo(
+            -15,
+            8
+        );
+
+
+        c.quadraticCurveTo(
+            -7,
+            4,
+            0,
+            8
+        );
+
+
+        c.quadraticCurveTo(
+            7,
+            12,
+            15,
+            8
+        );
+
+
+        c.stroke();
+    }
+
+
+    if(
+        health<.45
+    ){
+
+        c.strokeStyle=
+            "#4a3427";
+
+
+        c.lineWidth=2;
+
+
+        c.beginPath();
+
+
+        c.moveTo(
+            -5,
+            -4
+        );
+
+
+        c.lineTo(
+            0,
+            1
+        );
+
+
+        c.lineTo(
+            -3,
+            7
+        );
+
+
+        c.stroke();
+    }
+
+
+    c.restore();
+}
+
+
+/* =========================================================
+   GEBÄUDEGRAFIK
 ========================================================= */
 
 function drawBuildingGraphic(
@@ -4816,277 +7407,374 @@ function drawBuildingGraphic(
     size,
     health=1,
     flooded=false,
-    preview=false
+    preview=false,
+    building=null
 ){
 
-    const scale =
-        size/38;
+    const s=
+        size/40;
+
 
     c.save();
+
 
     c.translate(
         cx,
         cy
     );
 
+
     c.scale(
-        scale,
-        scale
+        s,
+        s
     );
 
-    /*
-        Schatten
-    */
 
-    if(!preview){
+    c.shadowColor=
+        "rgba(0,0,0,.28)";
 
-        c.fillStyle=
-            "rgba(0,0,0,.22)";
 
-        c.beginPath();
+    c.shadowBlur=
+        preview
+        ?
+        2
+        :
+        5;
 
-        c.ellipse(
-            2,
-            13,
-            15,
-            6,
-            0,
-            0,
-            Math.PI*2
-        );
 
-        c.fill();
-    }
+    c.shadowOffsetY=
+        preview
+        ?
+        1
+        :
+        3;
 
-    switch(type){
 
-        case "house":
+    c.fillStyle=
+        "rgba(0,0,0,.18)";
+
+
+    c.beginPath();
+
+
+    c.ellipse(
+        2,
+        13,
+        15,
+        6,
+        0,
+        0,
+        Math.PI*2
+    );
+
+
+    c.fill();
+
+
+    switch(
+        type
+    ){
+
+        case"house":
             drawHouse(c);
             break;
 
-        case "farm":
+        case"farm":
             drawFarm(c);
             break;
 
-        case "lumber":
+        case"lumber":
             drawLumber(c);
             break;
 
-        case "quarry":
+        case"quarry":
             drawQuarry(c);
             break;
 
-        case "mine":
+        case"mine":
             drawMine(c);
             break;
 
-        case "wind":
+        case"wind":
             drawWindTurbine(c);
             break;
 
-        case "pump":
+        case"pump":
             drawPump(c);
             break;
 
-        case "reservoir":
+        case"reservoir":
             drawWarehouse(c);
             break;
 
-        case "workshop":
+        case"workshop":
             drawWorkshop(c);
             break;
 
-        case "wall":
-            drawWall(c);
+        case"wall":
+            drawWallPreview(c);
             break;
 
-        case "dike":
-            drawDike(c);
+        case"dike":
+            drawDikePreview(c);
             break;
     }
 
-    /*
-        Wasser über Gebäude
-    */
+
+    c.shadowBlur=0;
+
 
     if(
-        flooded &&
+        flooded&&
         !preview
     ){
 
         c.fillStyle=
-            "rgba(40,170,220,.22)";
+            "rgba(38,170,220,.23)";
+
 
         c.fillRect(
-            -18,
-            -18,
-            36,
-            36
+            -19,
+            -19,
+            38,
+            38
         );
 
-        c.strokeStyle=
-            "rgba(170,240,255,.60)";
 
-        c.lineWidth=1;
+        c.strokeStyle=
+            "rgba(190,245,255,.7)";
+
+
+        c.lineWidth=
+            1.2;
+
 
         c.beginPath();
 
+
         c.moveTo(
-            -15,
+            -16,
             9
         );
 
+
         c.quadraticCurveTo(
-            -7,
+            -8,
             5,
             0,
             9
         );
 
+
         c.quadraticCurveTo(
-            7,
+            8,
             13,
-            15,
+            16,
             9
         );
+
 
         c.stroke();
     }
 
-    /*
-        Beschädigt
-    */
 
     if(
-        health<.45 &&
+        health<.45&&
         !preview
     ){
 
         c.strokeStyle=
-            "rgba(50,30,20,.8)";
+            "rgba(55,32,22,.85)";
 
-        c.lineWidth=1.5;
+
+        c.lineWidth=
+            1.7;
+
 
         c.beginPath();
+
 
         c.moveTo(
             -7,
             -7
         );
 
+
         c.lineTo(
             -2,
             -1
         );
+
 
         c.lineTo(
             -6,
             5
         );
 
+
         c.stroke();
     }
+
 
     c.restore();
 }
 
 
 /* =========================================================
-   HAUS
+   WOHNHAUS
 ========================================================= */
 
 function drawHouse(c){
 
-    /*
-        Wände
-    */
-
     c.fillStyle=
-        "#d5c59c";
+        "#d8c9a6";
+
 
     c.fillRect(
-        -12,
+        -13,
         -5,
-        24,
+        26,
         18
     );
 
-    /*
-        Dach
-    */
 
     c.fillStyle=
-        "#8c3f32";
+        "#bfaf8e";
+
+
+    c.fillRect(
+        -13,
+        8,
+        26,
+        5
+    );
+
+
+    c.fillStyle=
+        "#853e32";
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -15,
+        -16,
         -5
     );
+
 
     c.lineTo(
         0,
         -17
     );
 
+
     c.lineTo(
-        15,
+        16,
         -5
     );
+
 
     c.closePath();
 
     c.fill();
 
-    c.strokeStyle=
-        "#5a2c26";
 
-    c.lineWidth=1.5;
+    c.fillStyle=
+        "#a94e3d";
+
+
+    c.beginPath();
+
+
+    c.moveTo(
+        -13,
+        -5
+    );
+
+
+    c.lineTo(
+        0,
+        -14
+    );
+
+
+    c.lineTo(
+        13,
+        -5
+    );
+
+
+    c.closePath();
+
+    c.fill();
+
+
+    c.strokeStyle=
+        "#5e2e27";
+
 
     c.stroke();
 
-    /*
-        Tür
-    */
 
     c.fillStyle=
-        "#72492c";
+        "#70482d";
+
 
     c.fillRect(
         -3,
-        4,
+        3,
         6,
-        9
+        10
     );
 
-    /*
-        Fenster
-    */
 
     c.fillStyle=
-        "#82d7ed";
+        "#8fe0ef";
 
-    c.fillRect(
-        -9,
-        0,
-        5,
-        5
-    );
 
-    c.fillRect(
-        5,
-        0,
-        5,
-        5
-    );
+    for(
+        const x
+        of[
+            -9,
+            6
+        ]
+    ){
 
-    /*
-        Kamin
-    */
+        c.fillRect(
+            x,
+            -1,
+            5,
+            5
+        );
+
+
+        c.strokeStyle=
+            "rgba(255,255,255,.55)";
+
+
+        c.beginPath();
+
+
+        c.moveTo(
+            x+2.5,
+            -1
+        );
+
+
+        c.lineTo(
+            x+2.5,
+            4
+        );
+
+
+        c.stroke();
+    }
+
 
     c.fillStyle=
-        "#6e5a4a";
+        "#6d5a4c";
+
 
     c.fillRect(
         7,
@@ -5094,6 +7782,33 @@ function drawHouse(c){
         4,
         7
     );
+
+
+    const smoke=
+        Math.sin(
+            animationTime*
+            1.1
+        )*
+        1.5;
+
+
+    c.fillStyle=
+        "rgba(220,230,230,.22)";
+
+
+    c.beginPath();
+
+
+    c.arc(
+        10+smoke,
+        -19,
+        3,
+        0,
+        Math.PI*2
+    );
+
+
+    c.fill();
 }
 
 
@@ -5103,87 +7818,135 @@ function drawHouse(c){
 
 function drawFarm(c){
 
-    /*
-        Feld
-    */
-
     c.fillStyle=
-        "#997b3e";
+        "#9a7b3d";
+
 
     c.fillRect(
-        -16,
-        -12,
-        32,
-        25
+        -17,
+        -13,
+        34,
+        26
     );
 
-    /*
-        Reihen
-    */
-
-    c.strokeStyle=
-        "#d9bd54";
-
-    c.lineWidth=2;
 
     for(
-        let y=-8;
-        y<=8;
+        let y=-9;
+        y<=9;
         y+=5
     ){
 
+        c.strokeStyle=
+            "#d9bd55";
+
+
+        c.lineWidth=2;
+
+
         c.beginPath();
 
+
         c.moveTo(
-            -13,
+            -14,
             y
         );
 
+
         c.lineTo(
-            13,
+            14,
             y
         );
+
+
+        c.stroke();
+
+
+        c.strokeStyle=
+            "rgba(77,85,35,.35)";
+
+
+        c.lineWidth=.8;
+
+
+        c.beginPath();
+
+
+        c.moveTo(
+            -14,
+            y+2
+        );
+
+
+        c.lineTo(
+            14,
+            y+2
+        );
+
 
         c.stroke();
     }
 
-    /*
-        Kleine Scheune
-    */
 
     c.fillStyle=
-        "#aa4d36";
+        "#a94f37";
+
 
     c.fillRect(
         5,
         -7,
-        9,
-        10
+        10,
+        11
     );
+
 
     c.fillStyle=
         "#672e25";
 
+
     c.beginPath();
+
 
     c.moveTo(
         3,
         -7
     );
 
-    c.lineTo(
-        9.5,
-        -13
-    );
 
     c.lineTo(
-        16,
+        10,
+        -14
+    );
+
+
+    c.lineTo(
+        17,
         -7
     );
+
 
     c.closePath();
 
     c.fill();
+
+
+    c.fillStyle=
+        "#f0d36d";
+
+
+    for(
+        let i=0;
+        i<5;
+        i++
+    ){
+
+        c.fillRect(
+            -13+
+            i*5,
+            -11,
+            1,
+            3
+        );
+    }
 }
 
 
@@ -5193,47 +7956,47 @@ function drawFarm(c){
 
 function drawLumber(c){
 
-    /*
-        Gebäude
-    */
-
     c.fillStyle=
-        "#8a6743";
+        "#876543";
+
 
     c.fillRect(
-        -12,
+        -13,
         -5,
-        20,
-        17
+        21,
+        18
     );
 
+
     c.fillStyle=
-        "#574434";
+        "#4f4034";
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -14,
+        -15,
         -5
     );
+
 
     c.lineTo(
         -2,
         -14
     );
 
+
     c.lineTo(
-        10,
+        11,
         -5
     );
+
 
     c.closePath();
 
     c.fill();
 
-    /*
-        Holzstämme
-    */
 
     for(
         let i=0;
@@ -5242,66 +8005,130 @@ function drawLumber(c){
     ){
 
         const y=
-            4+i*4;
+            3+
+            i*4;
+
 
         c.strokeStyle=
-            "#714828";
+            "#704727";
+
 
         c.lineWidth=4;
 
+
         c.beginPath();
+
 
         c.moveTo(
             4,
             y
         );
 
+
         c.lineTo(
-            16,
+            17,
             y
         );
 
+
         c.stroke();
 
+
         c.fillStyle=
-            "#c79253";
+            "#c99150";
+
 
         c.beginPath();
 
+
         c.arc(
-            16,
+            17,
             y,
             2,
             0,
             Math.PI*2
         );
 
+
         c.fill();
     }
 
-    /*
-        Sägeblatt
-    */
 
     c.fillStyle=
-        "#c8d0d2";
+        "#cbd2d4";
+
 
     c.beginPath();
 
+
     c.arc(
-        -5,
+        -6,
         4,
-        5,
+        5.5,
         0,
         Math.PI*2
     );
 
+
     c.fill();
 
+
     c.strokeStyle=
-        "#68777d";
+        "#65767d";
+
 
     c.stroke();
+
+
+    for(
+        let a=0;
+        a<8;
+        a++
+    ){
+
+        const ang=
+            a*
+            Math.PI/
+            4;
+
+
+        c.beginPath();
+
+
+        c.moveTo(
+
+            -6+
+            Math.cos(
+                ang
+            )*
+            5,
+
+            Math.sin(
+                ang
+            )*
+            5+
+            4
+        );
+
+
+        c.lineTo(
+
+            -6+
+            Math.cos(
+                ang
+            )*
+            7,
+
+            4+
+            Math.sin(
+                ang
+            )*
+            7
+        );
+
+
+        c.stroke();
+    }
 }
 
 
@@ -5311,68 +8138,99 @@ function drawLumber(c){
 
 function drawQuarry(c){
 
-    /*
-        Grube
-    */
-
     c.fillStyle=
-        "#756f62";
+        "#736d62";
+
 
     c.beginPath();
+
 
     c.ellipse(
         0,
         4,
-        16,
-        11,
+        17,
+        12,
         0,
         0,
         Math.PI*2
     );
 
+
     c.fill();
 
+
     c.fillStyle=
-        "#57554f";
+        "#53514c";
+
 
     c.beginPath();
+
 
     c.ellipse(
         0,
         6,
-        11,
-        7,
+        12,
+        8,
         0,
         0,
         Math.PI*2
     );
 
+
     c.fill();
 
-    /*
-        Steine
-    */
-
-    c.fillStyle=
-        "#a29f92";
 
     const rocks=[
-        [-8,-4,5],
-        [4,-5,4],
-        [10,4,3],
-        [-3,7,4]
+
+        [
+            -9,
+            -4,
+            5,
+            "#9f9c92"
+        ],
+
+        [
+            4,
+            -5,
+            4,
+            "#8f8c84"
+        ],
+
+        [
+            10,
+            4,
+            3,
+            "#b0aca0"
+        ],
+
+        [
+            -3,
+            7,
+            4,
+            "#7b7973"
+        ]
     ];
 
+
     for(
-        const r of rocks
+        const[
+            x,
+            y,
+            r,
+            col
+        ]
+        of rocks
     ){
+
+        c.fillStyle=
+            col;
 
         c.beginPath();
 
         c.arc(
-            r[0],
-            r[1],
-            r[2],
+            x,
+            y,
+            r,
             0,
             Math.PI*2
         );
@@ -5380,167 +8238,265 @@ function drawQuarry(c){
         c.fill();
     }
 
-    /*
-        Kran
-    */
 
     c.strokeStyle=
         "#d5b445";
 
+
     c.lineWidth=2;
+
 
     c.beginPath();
 
+
     c.moveTo(
-        9,
-        -5
+        10,
+        -4
     );
 
-    c.lineTo(
-        9,
-        -16
-    );
 
     c.lineTo(
-        -2,
-        -16
+        10,
+        -17
     );
+
+
+    c.lineTo(
+        -3,
+        -17
+    );
+
+
+    c.stroke();
+
+
+    c.strokeStyle=
+        "#9d8131";
+
+
+    c.beginPath();
+
+
+    c.moveTo(
+        -3,
+        -17
+    );
+
+
+    c.lineTo(
+        -3,
+        -9
+    );
+
 
     c.stroke();
 }
 
 
 /* =========================================================
-   MINE
+   METALLMINE
 ========================================================= */
 
 function drawMine(c){
 
-    /*
-        Eingang
-    */
-
     c.fillStyle=
-        "#403b37";
+        "#3e3a36";
+
 
     c.beginPath();
+
 
     c.arc(
         0,
         4,
-        12,
+        13,
         Math.PI,
         0
     );
 
+
     c.lineTo(
-        12,
+        13,
         13
     );
 
+
     c.lineTo(
-        -12,
+        -13,
         13
     );
+
 
     c.closePath();
 
     c.fill();
 
-    /*
-        Holzrahmen
-    */
+
+    c.fillStyle=
+        "#17191a";
+
+
+    c.beginPath();
+
+
+    c.arc(
+        0,
+        5,
+        8,
+        Math.PI,
+        0
+    );
+
+
+    c.lineTo(
+        8,
+        13
+    );
+
+
+    c.lineTo(
+        -8,
+        13
+    );
+
+
+    c.closePath();
+
+    c.fill();
+
 
     c.strokeStyle=
         "#835b35";
 
+
     c.lineWidth=3;
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -11,
+        -12,
         13
     );
 
+
     c.lineTo(
-        -8,
+        -9,
         -5
     );
+
 
     c.lineTo(
         0,
-        -13
+        -14
     );
 
+
     c.lineTo(
-        8,
+        9,
         -5
     );
 
+
     c.lineTo(
-        11,
+        12,
         13
     );
 
-    c.stroke();
-
-    c.beginPath();
 
     c.moveTo(
-        -8,
+        -9,
         -5
     );
 
+
     c.lineTo(
-        8,
+        9,
         -5
     );
+
 
     c.stroke();
 
-    /*
-        Förderrad
-    */
 
     c.strokeStyle=
-        "#aeb6b8";
+        "#b6bfc1";
 
-    c.lineWidth=1.5;
+
+    c.lineWidth=
+        1.5;
+
 
     c.beginPath();
+
 
     c.arc(
         0,
-        -13,
+        -14,
         5,
         0,
         Math.PI*2
     );
 
-    c.stroke();
-
-    c.beginPath();
 
     c.moveTo(
         -5,
-        -13
+        -14
     );
+
 
     c.lineTo(
         5,
-        -13
+        -14
     );
+
 
     c.moveTo(
         0,
-        -18
+        -19
     );
+
 
     c.lineTo(
         0,
-        -8
+        -9
     );
+
+
+    c.stroke();
+
+
+    c.strokeStyle=
+        "#727b7e";
+
+
+    c.beginPath();
+
+
+    c.moveTo(
+        -5,
+        13
+    );
+
+
+    c.lineTo(
+        -2,
+        6
+    );
+
+
+    c.moveTo(
+        5,
+        13
+    );
+
+
+    c.lineTo(
+        2,
+        6
+    );
+
 
     c.stroke();
 }
@@ -5557,13 +8513,15 @@ function drawWindTurbine(c){
     */
 
     c.fillStyle=
-        "#777c7d";
+        "#747b7d";
+
 
     c.beginPath();
 
+
     c.ellipse(
         0,
-        13,
+        14,
         7,
         3,
         0,
@@ -5571,85 +8529,115 @@ function drawWindTurbine(c){
         Math.PI*2
     );
 
+
     c.fill();
 
+
     /*
-        Turm
+        Turm mit Farbverlauf
     */
 
+    const tower=
+        c.createLinearGradient(
+            -3,
+            0,
+            4,
+            0
+        );
+
+
+    tower.addColorStop(
+        0,
+        "#b9c4c5"
+    );
+
+
+    tower.addColorStop(
+        .5,
+        "#f3f7f7"
+    );
+
+
+    tower.addColorStop(
+        1,
+        "#a9b4b5"
+    );
+
+
     c.fillStyle=
-        "#e7ecec";
+        tower;
+
 
     c.beginPath();
 
+
     c.moveTo(
         -3,
-        13
+        14
     );
 
-    c.lineTo(
-        -1.4,
-        -9
-    );
 
     c.lineTo(
-        1.4,
-        -9
+        -1.3,
+        -10
     );
+
+
+    c.lineTo(
+        1.3,
+        -10
+    );
+
 
     c.lineTo(
         3,
-        13
+        14
     );
+
 
     c.closePath();
 
     c.fill();
 
-    c.strokeStyle=
-        "#9ca8aa";
-
-    c.lineWidth=1;
-
-    c.stroke();
 
     /*
         Gondel
     */
 
     c.fillStyle=
-        "#d6dddd";
+        "#d7dfdf";
+
 
     c.fillRect(
         -2,
-        -12,
+        -13,
         8,
         5
     );
+
 
     /*
         Rotor
     */
 
-    const rotorX=0;
-    const rotorY=-10;
+    const angle=
+        animationTime*
+        1.8;
 
-    const angle =
-        animationTime*1.7;
 
     c.save();
 
+
     c.translate(
-        rotorX,
-        rotorY
+        0,
+        -10.5
     );
 
-    c.rotate(angle);
 
-    c.strokeStyle=
-        "#f1f5f5";
+    c.rotate(
+        angle
+    );
 
-    c.lineWidth=2.4;
 
     for(
         let i=0;
@@ -5659,67 +8647,89 @@ function drawWindTurbine(c){
 
         c.save();
 
+
         c.rotate(
+
             i*
             Math.PI*
-            2/3
+            2/
+            3
         );
 
-        c.beginPath();
 
-        c.moveTo(
+        const blade=
+            c.createLinearGradient(
+                0,
+                -4,
+                0,
+                -16
+            );
+
+
+        blade.addColorStop(
             0,
-            0
+            "#e2e8e8"
         );
 
-        c.lineTo(
-            0,
-            -13
+
+        blade.addColorStop(
+            1,
+            "#ffffff"
         );
 
-        c.stroke();
 
         c.fillStyle=
-            "#eef3f3";
+            blade;
+
 
         c.beginPath();
+
 
         c.moveTo(
             -1,
-            -5
+            -2
         );
 
+
         c.lineTo(
-            -2.5,
+            -3,
+            -16
+        );
+
+
+        c.lineTo(
+            1.2,
             -14
         );
 
-        c.lineTo(
-            1,
-            -13
-        );
 
         c.closePath();
 
         c.fill();
 
+
         c.restore();
     }
 
+
     c.fillStyle=
-        "#aebabb";
+        "#aab6b7";
+
 
     c.beginPath();
+
 
     c.arc(
         0,
         0,
-        2.5,
+        2.7,
         0,
         Math.PI*2
     );
 
+
     c.fill();
+
 
     c.restore();
 }
@@ -5732,111 +8742,171 @@ function drawWindTurbine(c){
 function drawPump(c){
 
     c.fillStyle=
-        "#858d8d";
+        "#858f92";
+
 
     c.fillRect(
-        -12,
+        -13,
         -7,
-        22,
-        19
+        23,
+        20
     );
 
+
     c.fillStyle=
-        "#596366";
+        "#4e5c61";
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -14,
+        -15,
         -7
     );
 
+
     c.lineTo(
         -1,
-        -14
+        -15
     );
+
 
     c.lineTo(
         12,
         -7
     );
 
+
     c.closePath();
 
     c.fill();
 
+
     /*
-        Rohre
+        Rohr
     */
 
     c.strokeStyle=
-        "#4b9eb1";
+        "#42a6bc";
+
 
     c.lineWidth=4;
 
+
     c.beginPath();
+
 
     c.moveTo(
         8,
         5
     );
 
+
     c.lineTo(
-        16,
+        17,
         5
     );
 
+
     c.lineTo(
-        16,
-        13
+        17,
+        14
     );
 
+
     c.stroke();
+
 
     /*
         Pumpenrad
     */
 
     c.strokeStyle=
-        "#ccd8da";
+        "#d2dcde";
+
 
     c.lineWidth=2;
 
+
     c.beginPath();
+
 
     c.arc(
         -4,
         3,
-        5,
+        5.5,
         0,
         Math.PI*2
     );
 
+
+    c.moveTo(
+        -9.5,
+        3
+    );
+
+
+    c.lineTo(
+        1.5,
+        3
+    );
+
+
+    c.moveTo(
+        -4,
+        -2.5
+    );
+
+
+    c.lineTo(
+        -4,
+        8.5
+    );
+
+
     c.stroke();
+
+
+    /*
+        Animiertes Wasser
+    */
+
+    const pulse=
+
+        (
+            Math.sin(
+                animationTime*3
+            )+
+            1
+        )/
+        2;
+
+
+    c.fillStyle=
+
+        "rgba(83,209,237,"+
+        (
+            .25+
+            .35*
+            pulse
+        )+
+        ")";
+
 
     c.beginPath();
 
-    c.moveTo(
-        -9,
-        3
+
+    c.arc(
+        16,
+        14,
+        3,
+        0,
+        Math.PI*2
     );
 
-    c.lineTo(
-        1,
-        3
-    );
 
-    c.moveTo(
-        -4,
-        -2
-    );
-
-    c.lineTo(
-        -4,
-        8
-    );
-
-    c.stroke();
+    c.fill();
 }
 
 
@@ -5849,88 +8919,144 @@ function drawWarehouse(c){
     c.fillStyle=
         "#a88b60";
 
+
     c.fillRect(
-        -14,
+        -15,
         -6,
-        28,
-        19
+        30,
+        20
     );
 
+
     c.fillStyle=
-        "#69605a";
+        "#62605b";
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -16,
+        -17,
         -6
     );
+
 
     c.lineTo(
         0,
         -15
     );
 
+
     c.lineTo(
-        16,
+        17,
         -6
     );
+
 
     c.closePath();
 
     c.fill();
 
+
+    /*
+        Dachlinien
+    */
+
+    c.strokeStyle=
+        "rgba(255,255,255,.18)";
+
+
+    for(
+        let x=-12;
+        x<=12;
+        x+=6
+    ){
+
+        c.beginPath();
+
+
+        c.moveTo(
+            x,
+            -8
+        );
+
+
+        c.lineTo(
+            x+9,
+            -13
+        );
+
+
+        c.stroke();
+    }
+
+
     c.fillStyle=
         "#66503a";
+
 
     c.fillRect(
         -5,
         2,
         10,
-        11
+        12
     );
+
 
     c.strokeStyle=
-        "#9a815f";
+        "#a68a63";
 
-    c.lineWidth=1;
 
-    c.beginPath();
+    for(
+        let y=5;
+        y<=10;
+        y+=4
+    ){
 
-    c.moveTo(
-        -5,
-        5
-    );
+        c.beginPath();
 
-    c.lineTo(
-        5,
-        5
-    );
 
-    c.moveTo(
-        -5,
-        9
-    );
+        c.moveTo(
+            -5,
+            y
+        );
 
-    c.lineTo(
-        5,
-        9
-    );
 
-    c.stroke();
+        c.lineTo(
+            5,
+            y
+        );
+
+
+        c.stroke();
+    }
+
 
     /*
-        Kisten
+        Kiste
     */
 
     c.fillStyle=
         "#b78348";
 
+
     c.fillRect(
-        7,
+        8,
         5,
         7,
         7
+    );
+
+
+    c.strokeStyle=
+        "#76522f";
+
+
+    c.strokeRect(
+        8.5,
+        5.5,
+        6,
+        6
     );
 }
 
@@ -5944,60 +9070,68 @@ function drawWorkshop(c){
     c.fillStyle=
         "#8e9a9e";
 
+
     c.fillRect(
-        -13,
+        -14,
         -5,
-        26,
-        18
+        28,
+        19
     );
 
+
     c.fillStyle=
-        "#4d5559";
+        "#4c5559";
+
 
     c.beginPath();
 
+
     c.moveTo(
-        -15,
+        -16,
         -5
     );
+
 
     c.lineTo(
         -2,
         -14
     );
 
+
     c.lineTo(
-        15,
+        16,
         -5
     );
+
 
     c.closePath();
 
     c.fill();
 
+
     c.fillStyle=
-        "#41484c";
+        "#3f474b";
+
 
     c.fillRect(
         -5,
         3,
         10,
-        10
+        11
     );
 
-    /*
-        Schornstein
-    */
 
     c.fillStyle=
         "#686d70";
 
+
     c.fillRect(
-        7,
-        -13,
+        8,
+        -14,
         4,
-        10
+        11
     );
+
 
     /*
         Zahnrad
@@ -6006,9 +9140,12 @@ function drawWorkshop(c){
     c.strokeStyle=
         "#e0c267";
 
+
     c.lineWidth=2;
 
+
     c.beginPath();
+
 
     c.arc(
         -7,
@@ -6018,76 +9155,108 @@ function drawWorkshop(c){
         Math.PI*2
     );
 
-    c.stroke();
-
-    c.beginPath();
 
     c.moveTo(
         -11,
         1
     );
 
+
     c.lineTo(
         -3,
         1
     );
+
 
     c.moveTo(
         -7,
         -3
     );
 
+
     c.lineTo(
         -7,
         5
     );
 
+
     c.stroke();
+
+
+    /*
+        Rauch
+    */
+
+    const smokeX=
+        Math.sin(
+            animationTime*.8
+        );
+
+
+    c.fillStyle=
+        "rgba(210,220,220,.22)";
+
+
+    c.beginPath();
+
+
+    c.arc(
+        10+smokeX,
+        -19,
+        3.5,
+        0,
+        Math.PI*2
+    );
+
+
+    c.fill();
 }
 
 
 /* =========================================================
-   MAUER
+   MAUER BAUVORSCHAU
 ========================================================= */
 
-function drawWall(c){
+function drawWallPreview(c){
 
     c.fillStyle=
-        "#9c876e";
+        "#a59580";
+
 
     c.fillRect(
         -17,
-        -5,
+        -6,
         34,
         13
     );
 
+
     c.strokeStyle=
-        "#6e5d4c";
+        "#62574b";
 
-    c.lineWidth=1;
 
-    /*
-        Horizontale Fugen
-    */
+    c.strokeRect(
+        -16.5,
+        -5.5,
+        33,
+        12
+    );
+
 
     c.beginPath();
+
 
     c.moveTo(
         -17,
         1
     );
 
+
     c.lineTo(
         17,
         1
     );
 
-    c.stroke();
-
-    /*
-        Vertikale Fugen
-    */
 
     for(
         let x=-12;
@@ -6095,126 +9264,84 @@ function drawWall(c){
         x+=8
     ){
 
-        c.beginPath();
-
         c.moveTo(
             x,
-            -5
+            -6
         );
+
 
         c.lineTo(
             x,
             1
         );
-
-        c.stroke();
     }
 
-    for(
-        let x=-16;
-        x<=16;
-        x+=8
-    ){
 
-        c.beginPath();
-
-        c.moveTo(
-            x,
-            1
-        );
-
-        c.lineTo(
-            x,
-            8
-        );
-
-        c.stroke();
-    }
+    c.stroke();
 }
 
 
 /* =========================================================
-   DEICH
+   DEICH BAUVORSCHAU
 ========================================================= */
 
-function drawDike(c){
-
-    /*
-        Erdwall
-    */
+function drawDikePreview(c){
 
     c.fillStyle=
-        "#826c43";
+        "#7d6842";
+
 
     c.beginPath();
+
 
     c.moveTo(
         -18,
         12
     );
 
+
     c.lineTo(
         -10,
-        -7
+        -8
     );
+
 
     c.lineTo(
         10,
-        -7
+        -8
     );
+
 
     c.lineTo(
         18,
         12
     );
 
+
     c.closePath();
 
     c.fill();
 
-    /*
-        Gras
-    */
 
     c.fillStyle=
-        "#587d43";
+        "#5f8447";
 
-    c.beginPath();
 
-    c.moveTo(
+    c.fillRect(
         -11,
-        -7
+        -8,
+        22,
+        7
     );
 
-    c.lineTo(
-        10,
-        -7
-    );
-
-    c.lineTo(
-        12,
-        -2
-    );
-
-    c.lineTo(
-        -13,
-        -2
-    );
-
-    c.closePath();
-
-    c.fill();
-
-    /*
-        Betonkrone
-    */
 
     c.fillStyle=
-        "#9a9993";
+        "#aaa8a0";
+
 
     c.fillRect(
         -10,
-        -9,
+        -10,
         20,
         4
     );
@@ -6234,29 +9361,40 @@ function drawBuildPreview(){
         return;
     }
 
-    const x=
-        mouseTile.x;
 
-    const y=
-        mouseTile.y;
+    const{
+        x,
+        y
+    }=
+    mouseTile;
 
-    const validation =
+
+    const v=
         canBuild(
             selectedBuild,
             x,
             y
         );
 
+
     const px=
         x*TILE;
+
 
     const py=
         y*TILE;
 
-    ctx.fillStyle =
-        validation.ok
-        ?"rgba(80,255,150,.20)"
-        :"rgba(255,60,60,.24)";
+
+    ctx.fillStyle=
+
+        v.ok
+
+        ?
+        "rgba(80,255,150,.20)"
+
+        :
+        "rgba(255,60,60,.25)";
+
 
     ctx.fillRect(
         px,
@@ -6265,13 +9403,22 @@ function drawBuildPreview(){
         TILE
     );
 
-    ctx.strokeStyle =
-        validation.ok
-        ?"#6effae"
-        :"#ff6565";
+
+    ctx.strokeStyle=
+
+        v.ok
+
+        ?
+        "#6effae"
+
+        :
+        "#ff6565";
+
 
     ctx.lineWidth=
-        2/camera.zoom;
+        2/
+        camera.zoom;
+
 
     ctx.strokeRect(
         px+1,
@@ -6280,20 +9427,377 @@ function drawBuildPreview(){
         TILE-2
     );
 
-    ctx.globalAlpha=.68;
+
+    ctx.globalAlpha=
+        .72;
+
 
     drawBuildingGraphic(
+
         ctx,
+
         selectedBuild,
-        px+TILE/2,
-        py+TILE/2,
+
+        px+
+        TILE/2,
+
+        py+
+        TILE/2,
+
         TILE,
+
         1,
+
         false,
-        false
+
+        false,
+
+        null
     );
 
-    ctx.globalAlpha=1;
+
+    ctx.globalAlpha=
+        1;
+}
+
+
+/* =========================================================
+   BILDSCHIRMEFFEKTE
+========================================================= */
+
+function drawScreenEffects(
+    rect
+){
+
+    /*
+        Sturmregen
+    */
+
+    if(
+        state.stormActive
+    ){
+
+        ctx.fillStyle=
+            "rgba(18,28,38,.18)";
+
+
+        ctx.fillRect(
+            0,
+            0,
+            rect.width,
+            rect.height
+        );
+
+
+        ctx.strokeStyle=
+            "rgba(190,225,240,.26)";
+
+
+        ctx.lineWidth=
+            1.1;
+
+
+        for(
+            let i=0;
+            i<90;
+            i++
+        ){
+
+            const x=
+
+                (
+                    i*83+
+                    animationTime*290
+                )%
+
+                (
+                    rect.width+
+                    100
+                )-
+
+                50;
+
+
+            const y=
+
+                (
+                    i*47+
+                    animationTime*520
+                )%
+
+                (
+                    rect.height+
+                    100
+                )-
+
+                50;
+
+
+            ctx.beginPath();
+
+
+            ctx.moveTo(
+                x,
+                y
+            );
+
+
+            ctx.lineTo(
+                x-8,
+                y+18
+            );
+
+
+            ctx.stroke();
+        }
+    }
+
+
+    /*
+        Vignette
+    */
+
+    const vignette=
+        ctx.createRadialGradient(
+
+            rect.width/2,
+
+            rect.height/2,
+
+            Math.min(
+                rect.width,
+                rect.height
+            )*
+            .25,
+
+            rect.width/2,
+
+            rect.height/2,
+
+            Math.max(
+                rect.width,
+                rect.height
+            )*
+            .72
+        );
+
+
+    vignette.addColorStop(
+        0,
+        "rgba(0,0,0,0)"
+    );
+
+
+    vignette.addColorStop(
+        1,
+        "rgba(0,0,0,.20)"
+    );
+
+
+    ctx.fillStyle=
+        vignette;
+
+
+    ctx.fillRect(
+        0,
+        0,
+        rect.width,
+        rect.height
+    );
+}
+
+
+/* =========================================================
+   MINIMAP
+========================================================= */
+
+function drawMiniMap(){
+
+    if(
+        !state
+    ){
+        return;
+    }
+
+
+    const w=
+        miniMap.width;
+
+
+    const h=
+        miniMap.height;
+
+
+    const sx=
+        w/
+        MAP_W;
+
+
+    const sy=
+        h/
+        MAP_H;
+
+
+    miniCtx.clearRect(
+        0,
+        0,
+        w,
+        h
+    );
+
+
+    for(
+        let y=0;
+        y<MAP_H;
+        y++
+    ){
+
+        for(
+            let x=0;
+            x<MAP_W;
+            x++
+        ){
+
+            miniCtx.fillStyle=
+
+                isFlooded(
+                    x,
+                    y
+                )
+
+                ?
+                "#176b8c"
+
+                :
+                landColor(
+                    effectiveTerrain(
+                        x,
+                        y
+                    )
+                );
+
+
+            miniCtx.fillRect(
+
+                x*sx,
+
+                y*sy,
+
+                Math.ceil(
+                    sx
+                )+
+                1,
+
+                Math.ceil(
+                    sy
+                )+
+                1
+            );
+        }
+    }
+
+
+    for(
+        const b
+        of state.buildings
+    ){
+
+        miniCtx.fillStyle=
+
+            (
+                b.type==="wall"||
+                b.type==="dike"
+            )
+
+            ?
+            "#e1c38a"
+
+            :
+            "#f4f1d0";
+
+
+        miniCtx.fillRect(
+
+            b.x*sx,
+
+            b.y*sy,
+
+            Math.max(
+                1.5,
+                sx
+            ),
+
+            Math.max(
+                1.5,
+                sy
+            )
+        );
+    }
+
+
+    const rect=
+        canvas
+        .getBoundingClientRect();
+
+
+    const wx=
+        (
+            -camera.x
+        )/
+        camera.zoom;
+
+
+    const wy=
+        (
+            -camera.y
+        )/
+        camera.zoom;
+
+
+    const ww=
+        rect.width/
+        camera.zoom;
+
+
+    const wh=
+        rect.height/
+        camera.zoom;
+
+
+    miniCtx.strokeStyle=
+        "rgba(255,255,255,.85)";
+
+
+    miniCtx.lineWidth=
+        1;
+
+
+    miniCtx.strokeRect(
+
+        wx/
+        (
+            MAP_W*TILE
+        )*
+        w,
+
+        wy/
+        (
+            MAP_H*TILE
+        )*
+        h,
+
+        ww/
+        (
+            MAP_W*TILE
+        )*
+        w,
+
+        wh/
+        (
+            MAP_H*TILE
+        )*
+        h
+    );
 }
 
 
@@ -6303,107 +9807,197 @@ function drawBuildPreview(){
 
 function updateTooltip(){
 
-    const tooltip =
-        document
-        .getElementById(
+    const t=
+        document.getElementById(
             "tooltip"
         );
+
 
     if(
         !state||
         !mouseTile
     ){
 
-        tooltip
+        t
         .classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
 
         return;
     }
 
-    const x=
-        mouseTile.x;
 
-    const y=
-        mouseTile.y;
+    const{
+        x,
+        y
+    }=
+    mouseTile;
 
-    const terrain =
+
+    const e=
         effectiveTerrain(
             x,
             y
         );
 
-    const depth =
+
+    const f=
+        isFlooded(
+            x,
+            y
+        );
+
+
+    const depth=
         floodDepth(
             x,
             y
         );
 
-    const building =
+
+    const b=
         buildingAt(
             x,
             y
         );
 
-    let html=`
-        <strong>Feld ${x}, ${y}</strong>
-        <br>
-        Geländehöhe:
-        ${terrain.toFixed(2)} m
-        <br>
-    `;
 
-    if(depth>0){
+    const water=
+        getCurrentWaterLevel();
 
-        html +=
-            "Wassertiefe: "+
-            depth.toFixed(2)+
-            " m<br>";
 
-    }else{
+    let status=
 
-        html +=
-            "Status: trocken<br>";
-    }
+        f
 
-    if(building){
+        ?
+        "Überflutet · "+
+        depth.toFixed(
+            2
+        )+
+        " m Wasser"
 
-        const data =
+        :
+        e<water
+
+        ?
+        "Durch Schutzanlage trocken"
+
+        :
+        "Trocken";
+
+
+    let html=
+
+        "<strong>Feld "+
+        x+
+        ", "+
+        y+
+        "</strong>"+
+
+        "<br>"+
+
+        "Geländehöhe: "+
+        e.toFixed(
+            2
+        )+
+        " m"+
+
+        "<br>"+
+
+        "Status: "+
+        status+
+
+        "<br>";
+
+
+    if(
+        b
+    ){
+
+        const d=
             BUILDINGS[
-                building.type
+                b.type
             ];
 
-        html += `
-            <br>
-            <strong>${data.name}</strong>
-            <br>
-            Zustand:
-            ${Math.round(
+
+        html+=
+
+            "<br>"+
+
+            "<strong>"+
+            d.name+
+            "</strong>"+
+
+            "<br>"+
+
+            "Zustand: "+
+
+            Math.round(
+
                 Math.max(
+
                     0,
-                    building.hp/
-                    building.maxHp
+
+                    b.hp/
+                    b.maxHp
+
                 )*
                 100
-            )} %
-        `;
+
+            )+
+
+            " %";
+
+
+        if(
+            b.type==="wall"||
+            b.type==="dike"
+        ){
+
+            html+=
+
+                "<br>"+
+
+                "Schutzkrone: "+
+
+                getBarrierCrest(
+                    x,
+                    y
+                )
+                .toFixed(
+                    2
+                )+
+
+                " m";
+        }
     }
 
-    tooltip.innerHTML=html;
 
-    tooltip.style.left =
+    t.innerHTML=
+        html;
+
+
+    t.style.left=
+
         mouseScreen.x+
         15+
         "px";
 
-    tooltip.style.top =
+
+    t.style.top=
+
         mouseScreen.y+
         15+
         "px";
 
-    tooltip
-        .classList
-        .remove("hidden");
+
+    t
+    .classList
+    .remove(
+        "hidden"
+    );
 }
 
 
@@ -6411,43 +10005,54 @@ function updateTooltip(){
    MELDUNGEN
 ========================================================= */
 
-function message(text,type=""){
+function message(
+    text,
+    type=""
+){
 
-    const container =
-        document
-        .getElementById(
+    const c=
+        document.getElementById(
             "messages"
         );
 
-    const element =
-        document
-        .createElement(
+
+    const el=
+        document.createElement(
             "div"
         );
 
-    element.className =
+
+    el.className=
         "message "+
         type;
 
-    element.textContent =
+
+    el.textContent=
         text;
 
-    container.appendChild(
-        element
+
+    c.appendChild(
+        el
     );
+
 
     setTimeout(
         ()=>{
 
-            element.style.opacity="0";
-            element.style.transition=".5s";
+            el.style.opacity=
+                "0";
 
+
+            el.style.transition=
+                ".5s";
         },
+
         3500
     );
 
+
     setTimeout(
-        ()=>element.remove(),
+        ()=>el.remove(),
         4100
     );
 }
@@ -6459,19 +10064,25 @@ function message(text,type=""){
 
 function saveGame(){
 
-    if(!state){
+    if(
+        !state
+    ){
         return;
     }
 
-    const save={
-        state,
-        camera
-    };
 
     localStorage.setItem(
+
         SAVE_KEY,
-        JSON.stringify(save)
+
+        JSON.stringify({
+
+            state,
+
+            camera
+        })
     );
+
 
     message(
         "Spielstand gespeichert.",
@@ -6486,13 +10097,16 @@ function saveGame(){
 
 function loadGame(){
 
-    const raw =
+    const raw=
         localStorage
         .getItem(
             SAVE_KEY
         );
 
-    if(!raw){
+
+    if(
+        !raw
+    ){
 
         alert(
             "Es wurde noch kein Spielstand dieser Version gefunden."
@@ -6501,62 +10115,99 @@ function loadGame(){
         return;
     }
 
+
     try{
 
-        const save =
-            JSON.parse(raw);
+        const save=
+            JSON.parse(
+                raw
+            );
 
-        state =
+
+        state=
             save.state;
 
-        camera =
-            save.camera||{
+
+        camera=
+            save.camera||
+            {
                 x:0,
                 y:0,
                 zoom:.7
             };
 
-        selectedDifficulty =
+
+        selectedDifficulty=
             state.difficulty;
 
-        state.paused=false;
-        state.gameEnded=false;
+
+        state.paused=
+            false;
+
+
+        state.gameEnded=
+            false;
+
+
+        floodMap=null;
+
+
+        computeFloodMap();
+
 
         startScreen
-            .classList
-            .add("hidden");
+        .classList
+        .add(
+            "hidden"
+        );
+
 
         gameElement
-            .classList
-            .remove("hidden");
+        .classList
+        .remove(
+            "hidden"
+        );
+
 
         document
-            .getElementById(
-                "endModal"
-            )
-            .classList
-            .add("hidden");
+        .getElementById(
+            "endModal"
+        )
+        .classList
+        .add(
+            "hidden"
+        );
+
 
         createBuildBar();
+
 
         selectedBuild=
             "wall";
 
+
         updateBuildSelection();
 
+
         resizeCanvas();
+
 
         message(
             "Spielstand geladen.",
             "good"
         );
 
+
         lastTime=
             performance.now();
 
-    }catch(error){
 
-        console.error(error);
+    }catch(err){
+
+        console.error(
+            err
+        );
+
 
         alert(
             "Der Spielstand konnte nicht geladen werden."
@@ -6566,7 +10217,7 @@ function loadGame(){
 
 
 /* =========================================================
-   KNÖPFE
+   PAUSE
 ========================================================= */
 
 document
@@ -6577,63 +10228,90 @@ document
     "click",
     ()=>{
 
-        if(!state){
+        if(
+            !state
+        ){
             return;
         }
 
-        state.paused =
+
+        state.paused=
             !state.paused;
+
 
         document
         .getElementById(
             "pauseButton"
         )
-        .textContent =
+        .textContent=
+
             state.paused
-            ?"▶ Weiter"
-            :"⏸ Pause";
+
+            ?
+            "▶ Weiter"
+
+            :
+            "⏸ Pause";
     }
 );
 
+
+/* =========================================================
+   SPIELGESCHWINDIGKEIT
+========================================================= */
 
 document
 .querySelectorAll(
     ".speedButton"
 )
-.forEach(button=>{
+.forEach(
+    button=>
+        button.addEventListener(
+            "click",
+            ()=>{
 
-    button.addEventListener(
-        "click",
-        ()=>{
+                if(
+                    !state
+                ){
+                    return;
+                }
 
-            if(!state){
-                return;
-            }
 
-            state.speed =
-                Number(
-                    button
-                    .dataset
-                    .speed
+                state.speed=
+                    Number(
+                        button
+                        .dataset
+                        .speed
+                    );
+
+
+                document
+                .querySelectorAll(
+                    ".speedButton"
+                )
+                .forEach(
+                    b=>
+                        b
+                        .classList
+                        .remove(
+                            "active"
+                        )
                 );
 
-            document
-            .querySelectorAll(
-                ".speedButton"
-            )
-            .forEach(
-                b=>
-                    b.classList
-                    .remove("active")
-            );
 
-            button
+                button
                 .classList
-                .add("active");
-        }
-    );
-});
+                .add(
+                    "active"
+                );
+            }
+        )
+);
 
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 document
 .getElementById(
@@ -6668,11 +10346,17 @@ document
             "helpModal"
         )
         .classList
-        .remove("hidden");
+        .remove(
+            "hidden"
+        );
 
-        if(state){
 
-            state.paused=true;
+        if(
+            state
+        ){
+
+            state.paused=
+                true;
         }
     }
 );
@@ -6691,11 +10375,17 @@ document
             "helpModal"
         )
         .classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
 
-        if(state){
 
-            state.paused=false;
+        if(
+            state
+        ){
+
+            state.paused=
+                false;
         }
     }
 );
@@ -6717,15 +10407,24 @@ document
             return;
         }
 
+
         state=null;
 
+        floodMap=null;
+
+
         gameElement
-            .classList
-            .add("hidden");
+        .classList
+        .add(
+            "hidden"
+        );
+
 
         startScreen
-            .classList
-            .remove("hidden");
+        .classList
+        .remove(
+            "hidden"
+        );
     }
 );
 
@@ -6743,17 +10442,28 @@ document
             "endModal"
         )
         .classList
-        .add("hidden");
+        .add(
+            "hidden"
+        );
+
 
         state=null;
 
+        floodMap=null;
+
+
         gameElement
-            .classList
-            .add("hidden");
+        .classList
+        .add(
+            "hidden"
+        );
+
 
         startScreen
-            .classList
-            .remove("hidden");
+        .classList
+        .remove(
+            "hidden"
+        );
     }
 );
 
@@ -6764,9 +10474,11 @@ document
 
 function gameLoop(time){
 
-    const dt =
+    const dt=
         Math.min(
+
             .05,
+
             (
                 time-
                 lastTime
@@ -6774,20 +10486,35 @@ function gameLoop(time){
             1000
         );
 
-    lastTime=time;
 
-    animationTime += dt;
+    lastTime=
+        time;
 
-    if(state){
 
-        moveCamera(dt);
+    animationTime+=
+        dt;
 
-        update(dt);
+
+    if(
+        state
+    ){
+
+        moveCamera(
+            dt
+        );
+
+
+        update(
+            dt
+        );
+
 
         updateHUD();
 
+
         draw();
     }
+
 
     requestAnimationFrame(
         gameLoop
@@ -6795,11 +10522,14 @@ function gameLoop(time){
 }
 
 
+/* =========================================================
+   START LOOP
+========================================================= */
+
 requestAnimationFrame(
     gameLoop
 );
 
 </script>
-
 </body>
 </html>
