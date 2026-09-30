@@ -1,0 +1,5393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Drone Simulator</title>
+
+<style>
+:root{
+    --panel:rgba(8,14,18,.78);
+    --line:rgba(255,255,255,.16);
+    --text:#f5f7f8;
+    --muted:#aab7bf;
+    --accent:#58e0ff;
+    --warn:#ffd65a;
+    --danger:#ff6666;
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    touch-action:none;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+#hud{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:10;
+}
+
+.panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    backdrop-filter:blur(8px);
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+    border-radius:14px;
+}
+
+#telemetry{
+    position:absolute;
+    left:14px;
+    top:14px;
+    padding:12px 14px;
+    min-width:210px;
+    font-size:13px;
+    line-height:1.55;
+}
+
+#telemetry strong{
+    display:inline-block;
+    min-width:105px;
+    color:#fff;
+}
+
+#telemetry span{
+    color:var(--accent);
+}
+
+#modeBox{
+    position:absolute;
+    right:14px;
+    top:14px;
+    padding:11px 14px;
+    text-align:right;
+    font-size:13px;
+    line-height:1.5;
+}
+
+#status{
+    position:absolute;
+    left:50%;
+    top:16px;
+    transform:translateX(-50%);
+    padding:9px 14px;
+    font-weight:700;
+    letter-spacing:.04em;
+}
+
+#crosshair{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:34px;
+    height:34px;
+    transform:translate(-50%,-50%);
+    opacity:.7;
+}
+
+#crosshair:before,
+#crosshair:after{
+    content:"";
+    position:absolute;
+    background:rgba(255,255,255,.8);
+}
+
+#crosshair:before{
+    width:34px;
+    height:1px;
+    left:0;
+    top:16px;
+}
+
+#crosshair:after{
+    width:1px;
+    height:34px;
+    left:16px;
+    top:0;
+}
+
+#help{
+    position:absolute;
+    left:14px;
+    bottom:14px;
+    padding:10px 12px;
+    color:var(--muted);
+    font-size:12px;
+    max-width:430px;
+    line-height:1.45;
+}
+
+#batteryBar{
+    height:6px;
+    background:rgba(255,255,255,.12);
+    border-radius:99px;
+    overflow:hidden;
+    margin-top:7px;
+}
+
+#batteryFill{
+    height:100%;
+    width:100%;
+    background:#6ff08c;
+    transition:width .2s;
+}
+
+/* =========================================================
+   STARTMENÜ
+========================================================= */
+
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:30;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(20,35,46,.72),
+            rgba(0,0,0,.95)
+        );
+
+    padding:18px;
+}
+
+#startCard{
+    width:min(720px,100%);
+    padding:22px;
+
+    border-radius:18px;
+
+    background:rgba(7,12,16,.94);
+
+    border:1px solid rgba(255,255,255,.14);
+
+    box-shadow:
+        0 20px 80px rgba(0,0,0,.55);
+}
+
+#startCard h1{
+    margin:0 0 8px;
+    font-size:clamp(26px,5vw,42px);
+}
+
+#startCard p{
+    color:#b8c3ca;
+    line-height:1.5;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:12px;
+    margin:18px 0;
+}
+
+.option{
+    background:
+        rgba(255,255,255,.045);
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius:12px;
+
+    padding:12px;
+}
+
+.option label{
+    display:block;
+    font-size:12px;
+    color:#9eabb3;
+    margin-bottom:7px;
+}
+
+select,
+input[type=range]{
+    width:100%;
+}
+
+select{
+    background:#111b22;
+    color:#fff;
+
+    border:
+        1px solid #31414b;
+
+    border-radius:8px;
+
+    padding:9px;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+
+    padding:12px 16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    background:#58e0ff;
+    color:#071015;
+}
+
+button.secondary{
+    background:#1a2831;
+    color:#e8f0f4;
+
+    border:
+        1px solid #334651;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+/* =========================================================
+   TOUCH STEUERUNG
+========================================================= */
+
+#touchControls{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:20;
+
+    pointer-events:none;
+}
+
+.stick{
+    position:absolute;
+
+    bottom:22px;
+
+    width:132px;
+    height:132px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.06);
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
+    pointer-events:auto;
+
+    touch-action:none;
+}
+
+.stick.left{
+    left:22px;
+}
+
+.stick.right{
+    right:22px;
+}
+
+.knob{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:54px;
+    height:54px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:50%;
+
+    background:
+        rgba(88,224,255,.28);
+
+    border:
+        2px solid rgba(88,224,255,.65);
+
+    box-shadow:
+        0 0 22px rgba(88,224,255,.2);
+}
+
+#mobileButtons{
+    position:absolute;
+
+    right:16px;
+    bottom:166px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,72px);
+
+    gap:8px;
+
+    pointer-events:auto;
+}
+
+.mobileBtn{
+    padding:9px 8px;
+
+    background:
+        rgba(8,14,18,.75);
+
+    color:#fff;
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
+    font-size:11px;
+}
+
+#message{
+    position:absolute;
+
+    left:50%;
+    top:80px;
+
+    transform:
+        translateX(-50%);
+
+    padding:10px 14px;
+
+    opacity:0;
+
+    transition:
+        opacity .2s;
+
+    white-space:nowrap;
+}
+
+#message.show{
+    opacity:1;
+}
+
+/* =========================================================
+   HANDY
+========================================================= */
+
+@media(max-width:700px){
+
+    #telemetry{
+        font-size:11px;
+        min-width:166px;
+        padding:9px 10px;
+    }
+
+    #telemetry strong{
+        min-width:82px;
+    }
+
+    #modeBox{
+        font-size:11px;
+        padding:8px 10px;
+    }
+
+    #help{
+        display:none;
+    }
+
+    #status{
+        top:auto;
+        bottom:170px;
+        font-size:11px;
+    }
+
+    #touchControls{
+        display:block;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- ======================================================
+     HUD
+====================================================== -->
+
+<div id="hud">
+
+    <div id="telemetry" class="panel">
+
+        <div>
+            <strong>Höhe</strong>
+            <span id="alt">0.0 m</span>
+        </div>
+
+        <div>
+            <strong>Geschwindigkeit</strong>
+            <span id="speed">0 km/h</span>
+        </div>
+
+        <div>
+            <strong>Vertikal</strong>
+            <span id="vs">0.0 m/s</span>
+        </div>
+
+        <div>
+            <strong>Entfernung</strong>
+            <span id="dist">0 m</span>
+        </div>
+
+        <div>
+            <strong>Akku</strong>
+            <span id="battery">100 %</span>
+        </div>
+
+        <div id="batteryBar">
+            <div id="batteryFill"></div>
+        </div>
+
+    </div>
+
+
+    <div id="modeBox" class="panel">
+
+        <div>
+            MODE:
+            <b id="flightMode">ANGLE</b>
+        </div>
+
+        <div>
+            CAM:
+            <b id="cameraMode">CHASE</b>
+        </div>
+
+        <div>
+            WIND:
+            <b id="windLabel">0 km/h</b>
+        </div>
+
+    </div>
+
+
+    <div id="status" class="panel">
+        MOTOREN AUS
+    </div>
+
+
+    <div id="crosshair"></div>
+
+
+    <div id="message" class="panel"></div>
+
+
+    <div id="help" class="panel">
+
+        <b>PC:</b>
+        W/S Gas ·
+        A/D Yaw ·
+        Pfeile Pitch/Roll ·
+        Leertaste Motoren ·
+        M Flugmodus ·
+        C Kamera ·
+        R Reset ·
+        H Hilfe
+
+        <br>
+
+        <b>Gamepad:</b>
+        linker Stick Gas/Yaw ·
+        rechter Stick Pitch/Roll
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     TOUCH STEUERUNG
+====================================================== -->
+
+<div id="touchControls">
+
+    <div
+        class="stick left"
+        id="leftStick"
+    >
+        <div class="knob"></div>
+    </div>
+
+
+    <div
+        class="stick right"
+        id="rightStick"
+    >
+        <div class="knob"></div>
+    </div>
+
+
+    <div id="mobileButtons">
+
+        <button
+            class="mobileBtn"
+            id="armBtn"
+        >
+            ARM
+        </button>
+
+        <button
+            class="mobileBtn"
+            id="modeBtn"
+        >
+            MODE
+        </button>
+
+        <button
+            class="mobileBtn"
+            id="camBtn"
+        >
+            CAM
+        </button>
+
+        <button
+            class="mobileBtn"
+            id="resetBtn"
+        >
+            RESET
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     STARTMENÜ
+====================================================== -->
+
+<div id="startScreen">
+
+    <div id="startCard">
+
+        <h1>
+            Drone Simulator
+        </h1>
+
+
+        <p>
+            Große prozedurale Welt,
+            trägheitsbasierte Quadrocopter-Physik,
+            Wind,
+            Akku,
+            Gamepad,
+            Touch-Steuerung
+            sowie Angle- und Acro-Modus.
+        </p>
+
+
+        <div class="grid">
+
+
+            <div class="option">
+
+                <label>
+                    Start-Flugmodus
+                </label>
+
+                <select id="startMode">
+
+                    <option value="angle">
+                        Angle / stabilisiert
+                    </option>
+
+                    <option value="acro">
+                        Acro / manuell
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="option">
+
+                <label>
+                    Wind:
+                    <span id="windValue">
+                        12
+                    </span>
+                    km/h
+                </label>
+
+                <input
+                    id="windSlider"
+                    type="range"
+                    min="0"
+                    max="45"
+                    value="12"
+                >
+
+            </div>
+
+
+            <div class="option">
+
+                <label>
+                    Grafik
+                </label>
+
+                <select id="quality">
+
+                    <option value="high">
+                        Hoch
+                    </option>
+
+                    <option
+                        value="medium"
+                        selected
+                    >
+                        Mittel
+                    </option>
+
+                    <option value="low">
+                        Niedrig
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="option">
+
+                <label>
+                    Startkamera
+                </label>
+
+                <select id="startCamera">
+
+                    <option value="chase">
+                        Verfolgerkamera
+                    </option>
+
+                    <option value="fpv">
+                        FPV
+                    </option>
+
+                    <option value="pilot">
+                        Pilotensicht
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <button id="startBtn">
+                Simulator starten
+            </button>
+
+            <button
+                class="secondary"
+                id="quickBtn"
+            >
+                Schnellstart
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     SPIEL
+====================================================== -->
+
+<script type="module">
+
+import * as THREE
+from
+'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js';
+
+
+const $ =
+    id =>
+    document.getElementById(id);
+
+
+const clamp =
+    THREE.MathUtils.clamp;
+
+
+const DEG =
+    Math.PI / 180;
+
+
+/* =========================================================
+   GLOBALE VARIABLEN
+========================================================= */
+
+let scene;
+
+let camera;
+
+let renderer;
+
+let clock;
+
+let terrain;
+
+let drone;
+
+let droneBody;
+
+let fpvCameraAnchor;
+
+
+let started = false;
+
+let armed = false;
+
+let crashed = false;
+
+
+let flightMode = 'angle';
+
+let cameraMode = 'chase';
+
+
+let battery = 100;
+
+let throttle = 0;
+
+
+let quality = 'medium';
+
+
+let lastGroundY = 0;
+
+
+let helpVisible = true;
+
+
+let windStrength =
+    12 / 3.6;
+
+
+const home =
+    new THREE.Vector3(
+        0,
+        0,
+        0
+    );
+
+
+const velocity =
+    new THREE.Vector3();
+
+
+const wind =
+    new THREE.Vector3();
+
+
+const tempV =
+    new THREE.Vector3();
+
+
+const tempV2 =
+    new THREE.Vector3();
+
+
+const tempQ =
+    new THREE.Quaternion();
+
+
+const worldUp =
+    new THREE.Vector3(
+        0,
+        1,
+        0
+    );
+
+
+const euler =
+    new THREE.Euler(
+        0,
+        0,
+        0,
+        'YXZ'
+    );
+
+
+const rates = {
+
+    pitch:0,
+
+    roll:0,
+
+    yaw:0
+
+};
+
+
+const command = {
+
+    pitch:0,
+
+    roll:0,
+
+    yaw:0
+
+};
+
+
+const keys = {};
+
+
+const touchInput = {
+
+    yaw:0,
+
+    pitch:0,
+
+    roll:0,
+
+    throttle:.5
+
+};
+
+
+let gamepadActive = false;
+
+
+/* =========================================================
+   HUD ELEMENTE
+========================================================= */
+
+const ui = {
+
+    alt:
+        $('alt'),
+
+    speed:
+        $('speed'),
+
+    vs:
+        $('vs'),
+
+    dist:
+        $('dist'),
+
+    battery:
+        $('battery'),
+
+    batteryFill:
+        $('batteryFill'),
+
+    flightMode:
+        $('flightMode'),
+
+    cameraMode:
+        $('cameraMode'),
+
+    windLabel:
+        $('windLabel'),
+
+    status:
+        $('status'),
+
+    message:
+        $('message'),
+
+    help:
+        $('help')
+
+};
+
+
+/* =========================================================
+   TERRAIN HÖHE
+========================================================= */
+
+function terrainHeight(
+    x,
+    z
+){
+
+    const broad =
+
+        Math.sin(
+            x * 0.0017
+        ) * 18
+
+        +
+
+        Math.cos(
+            z * 0.0013
+        ) * 14;
+
+
+    const hills =
+
+        Math.sin(
+            (x + z) * 0.0031
+        ) * 7
+
+        +
+
+        Math.cos(
+            (x - z) * 0.0023
+        ) * 6;
+
+
+    const detail =
+
+        Math.sin(
+            x * 0.011
+        ) * 1.5
+
+        +
+
+        Math.cos(
+            z * 0.009
+        ) * 1.2;
+
+
+    const startFlatten =
+
+        Math.exp(
+
+            -(x*x + z*z)
+
+            /
+
+            (
+                2 *
+                240 *
+                240
+            )
+
+        );
+
+
+    return (
+
+        broad +
+        hills +
+        detail
+
+    )
+
+    *
+
+    (
+        1 -
+        startFlatten
+    )
+
+    -
+
+    1.5 *
+    startFlatten;
+
+}
+
+
+/* =========================================================
+   INITIALISIERUNG
+========================================================= */
+
+function init(){
+
+    scene =
+        new THREE.Scene();
+
+
+    scene.background =
+        new THREE.Color(
+            0x8fc8ee
+        );
+
+
+    scene.fog =
+        new THREE.FogExp2(
+
+            0x9ec9df,
+
+            quality === 'high'
+
+            ? 0.00020
+
+            : quality === 'medium'
+
+            ? 0.00027
+
+            : 0.00036
+
+        );
+
+
+    camera =
+        new THREE.PerspectiveCamera(
+
+            78,
+
+            innerWidth /
+            innerHeight,
+
+            0.05,
+
+            9000
+
+        );
+
+
+    camera.position.set(
+        0,
+        5,
+        10
+    );
+
+
+    renderer =
+        new THREE.WebGLRenderer({
+
+            antialias:
+                quality !== 'low',
+
+            powerPreference:
+                'high-performance'
+
+        });
+
+
+    renderer.setPixelRatio(
+
+        Math.min(
+
+            devicePixelRatio,
+
+            quality === 'high'
+
+            ? 1.75
+
+            : quality === 'medium'
+
+            ? 1.35
+
+            : 1
+
+        )
+
+    );
+
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+
+
+    renderer.shadowMap.enabled =
+        quality !== 'low';
+
+
+    renderer.shadowMap.type =
+        THREE.PCFSoftShadowMap;
+
+
+    renderer.outputColorSpace =
+        THREE.SRGBColorSpace;
+
+
+    renderer.toneMapping =
+        THREE.ACESFilmicToneMapping;
+
+
+    renderer.toneMappingExposure =
+        1.05;
+
+
+    document.body.insertBefore(
+
+        renderer.domElement,
+
+        document.body.firstChild
+
+    );
+
+
+    /* Himmel / Umgebungslicht */
+
+    const hemi =
+        new THREE.HemisphereLight(
+
+            0xbde4ff,
+
+            0x59633e,
+
+            1.8
+
+        );
+
+
+    scene.add(
+        hemi
+    );
+
+
+    /* Sonne */
+
+    const sun =
+        new THREE.DirectionalLight(
+
+            0xfff2d2,
+
+            2.4
+
+        );
+
+
+    sun.position.set(
+
+        900,
+
+        1200,
+
+        400
+
+    );
+
+
+    sun.castShadow =
+        quality !== 'low';
+
+
+    if(
+        sun.castShadow
+    ){
+
+        const shadowSize =
+
+            quality === 'high'
+
+            ? 2048
+
+            : 1024;
+
+
+        sun.shadow.mapSize.set(
+
+            shadowSize,
+
+            shadowSize
+
+        );
+
+
+        sun.shadow.camera.left =
+            -220;
+
+        sun.shadow.camera.right =
+            220;
+
+        sun.shadow.camera.top =
+            220;
+
+        sun.shadow.camera.bottom =
+            -220;
+
+
+        sun.shadow.camera.near =
+            20;
+
+        sun.shadow.camera.far =
+            2400;
+
+    }
+
+
+    scene.add(
+        sun
+    );
+
+
+    buildTerrain();
+
+    buildWorldObjects();
+
+    buildDrone();
+
+    resetDrone();
+
+
+    clock =
+        new THREE.Clock();
+
+
+    addEventListeners();
+
+
+    animate();
+
+}
+
+
+/* =========================================================
+   TERRAIN
+========================================================= */
+
+function buildTerrain(){
+
+    const size =
+        7000;
+
+
+    const segments =
+
+        quality === 'high'
+
+        ? 220
+
+        : quality === 'medium'
+
+        ? 160
+
+        : 110;
+
+
+    const geo =
+        new THREE.PlaneGeometry(
+
+            size,
+
+            size,
+
+            segments,
+
+            segments
+
+        );
+
+
+    geo.rotateX(
+        -Math.PI / 2
+    );
+
+
+    const pos =
+        geo.attributes.position;
+
+
+    const colors = [];
+
+
+    const color =
+        new THREE.Color();
+
+
+    for(
+        let i = 0;
+        i < pos.count;
+        i++
+    ){
+
+        const x =
+            pos.getX(i);
+
+
+        const z =
+            pos.getZ(i);
+
+
+        const h =
+            terrainHeight(
+                x,
+                z
+            );
+
+
+        pos.setY(
+            i,
+            h
+        );
+
+
+        if(
+            h < -6
+        ){
+
+            color.set(
+                0x5c8b4e
+            );
+
+        }
+
+        else if(
+            h < 8
+        ){
+
+            color.set(
+                0x6e934f
+            );
+
+        }
+
+        else if(
+            h < 22
+        ){
+
+            color.set(
+                0x7b8753
+            );
+
+        }
+
+        else{
+
+            color.set(
+                0x777a67
+            );
+
+        }
+
+
+        const n =
+
+            (
+                Math.sin(
+                    x * .02
+                )
+
+                +
+
+                Math.cos(
+                    z * .018
+                )
+            )
+
+            *
+
+            .018;
+
+
+        colors.push(
+
+            clamp(
+                color.r + n,
+                0,
+                1
+            ),
+
+            clamp(
+                color.g + n,
+                0,
+                1
+            ),
+
+            clamp(
+                color.b + n,
+                0,
+                1
+            )
+
+        );
+
+    }
+
+
+    geo.setAttribute(
+
+        'color',
+
+        new THREE.Float32BufferAttribute(
+
+            colors,
+
+            3
+
+        )
+
+    );
+
+
+    geo.computeVertexNormals();
+
+
+    const mat =
+        new THREE.MeshStandardMaterial({
+
+            vertexColors:true,
+
+            roughness:.98,
+
+            metalness:0
+
+        });
+
+
+    terrain =
+        new THREE.Mesh(
+            geo,
+            mat
+        );
+
+
+    terrain.receiveShadow =
+        true;
+
+
+    scene.add(
+        terrain
+    );
+
+
+    /* Straßen */
+
+    const roadMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x4f5355,
+
+            roughness:1
+
+        });
+
+
+    for(
+        let i = -2;
+        i <= 2;
+        i++
+    ){
+
+        const road =
+            new THREE.Mesh(
+
+                new THREE.PlaneGeometry(
+                    18,
+                    4200
+                ),
+
+                roadMat
+
+            );
+
+
+        road.rotation.x =
+            -Math.PI / 2;
+
+
+        road.rotation.z =
+            (i % 2) * 0.32;
+
+
+        road.position.set(
+
+            i * 520,
+
+            terrainHeight(
+                i * 520,
+                0
+            ) + .18,
+
+            0
+
+        );
+
+
+        scene.add(
+            road
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ZUFALLSGENERATOR
+========================================================= */
+
+function seeded(
+    i
+){
+
+    return (
+
+        Math.sin(
+            i * 127.1 +
+            311.7
+        )
+
+        *
+
+        43758.5453
+
+    )
+
+    %
+
+    1;
+
+}
+
+
+function rand01(
+    i
+){
+
+    const v =
+        seeded(i);
+
+
+    return v < 0
+
+        ? v + 1
+
+        : v;
+
+}
+
+
+/* =========================================================
+   WELT
+========================================================= */
+
+function buildWorldObjects(){
+
+    const treeCount =
+
+        quality === 'high'
+
+        ? 650
+
+        : quality === 'medium'
+
+        ? 420
+
+        : 220;
+
+
+    /* Bäume */
+
+    const trunkGeo =
+        new THREE.CylinderGeometry(
+
+            .22,
+
+            .35,
+
+            3.4,
+
+            6
+
+        );
+
+
+    const crownGeo =
+        new THREE.ConeGeometry(
+
+            1.55,
+
+            4.6,
+
+            7
+
+        );
+
+
+    const trunkMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x5e3c23,
+
+            roughness:1
+
+        });
+
+
+    const crownMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x2d6c3c,
+
+            roughness:1
+
+        });
+
+
+    const trunks =
+        new THREE.InstancedMesh(
+
+            trunkGeo,
+
+            trunkMat,
+
+            treeCount
+
+        );
+
+
+    const crowns =
+        new THREE.InstancedMesh(
+
+            crownGeo,
+
+            crownMat,
+
+            treeCount
+
+        );
+
+
+    const m =
+        new THREE.Matrix4();
+
+
+    const q =
+        new THREE.Quaternion();
+
+
+    const s =
+        new THREE.Vector3();
+
+
+    for(
+        let i = 0;
+        i < treeCount;
+        i++
+    ){
+
+        let x =
+
+            (
+                rand01(
+                    i * 5 + 1
+                )
+
+                - .5
+
+            )
+
+            *
+
+            6200;
+
+
+        let z =
+
+            (
+                rand01(
+                    i * 5 + 2
+                )
+
+                - .5
+
+            )
+
+            *
+
+            6200;
+
+
+        if(
+            Math.hypot(
+                x,
+                z
+            ) < 180
+        ){
+
+            x += 250;
+
+            z += 180;
+
+        }
+
+
+        const y =
+            terrainHeight(
+                x,
+                z
+            );
+
+
+        const scale =
+
+            .75
+
+            +
+
+            rand01(
+                i * 5 + 3
+            )
+
+            *
+
+            1.25;
+
+
+        s.set(
+
+            scale,
+
+            scale,
+
+            scale
+
+        );
+
+
+        m.compose(
+
+            new THREE.Vector3(
+
+                x,
+
+                y + 1.7 * scale,
+
+                z
+
+            ),
+
+            q,
+
+            s
+
+        );
+
+
+        trunks.setMatrixAt(
+            i,
+            m
+        );
+
+
+        m.compose(
+
+            new THREE.Vector3(
+
+                x,
+
+                y + 4.25 * scale,
+
+                z
+
+            ),
+
+            q,
+
+            s
+
+        );
+
+
+        crowns.setMatrixAt(
+            i,
+            m
+        );
+
+    }
+
+
+    trunks.castShadow =
+        quality === 'high';
+
+
+    crowns.castShadow =
+        quality === 'high';
+
+
+    scene.add(
+
+        trunks,
+
+        crowns
+
+    );
+
+
+    /* =====================================================
+       HÄUSER
+    ===================================================== */
+
+    const buildingMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0xc0b8aa,
+
+            roughness:.9
+
+        });
+
+
+    const roofMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x6b4036,
+
+            roughness:.85
+
+        });
+
+
+    for(
+        let i = 0;
+        i < 34;
+        i++
+    ){
+
+        const angle =
+
+            (
+                i / 34
+            )
+
+            *
+
+            Math.PI *
+            2;
+
+
+        const radius =
+
+            700
+
+            +
+
+            (
+                i % 6
+            )
+
+            *
+
+            42;
+
+
+        const x =
+
+            Math.cos(
+                angle
+            )
+
+            *
+
+            radius
+
+            +
+
+            240;
+
+
+        const z =
+
+            Math.sin(
+                angle
+            )
+
+            *
+
+            radius
+
+            -
+
+            420;
+
+
+        const y =
+            terrainHeight(
+                x,
+                z
+            );
+
+
+        const w =
+            8 +
+            (i % 4) * 4;
+
+
+        const h =
+            6 +
+            (i % 3) * 2;
+
+
+        const d =
+            10 +
+            (i % 5) * 3;
+
+
+        const house =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+
+                    w,
+
+                    h,
+
+                    d
+
+                ),
+
+                buildingMat
+
+            );
+
+
+        house.position.set(
+
+            x,
+
+            y + h / 2,
+
+            z
+
+        );
+
+
+        house.rotation.y =
+            angle + .4;
+
+
+        house.castShadow =
+            true;
+
+
+        house.receiveShadow =
+            true;
+
+
+        scene.add(
+            house
+        );
+
+
+        const roof =
+            new THREE.Mesh(
+
+                new THREE.ConeGeometry(
+
+                    Math.max(
+                        w,
+                        d
+                    ) * .72,
+
+                    3.2,
+
+                    4
+
+                ),
+
+                roofMat
+
+            );
+
+
+        roof.position.set(
+
+            x,
+
+            y + h + 1.6,
+
+            z
+
+        );
+
+
+        roof.rotation.y =
+
+            Math.PI / 4
+
+            +
+
+            angle
+
+            +
+
+            .4;
+
+
+        roof.castShadow =
+            true;
+
+
+        scene.add(
+            roof
+        );
+
+    }
+
+
+    /* =====================================================
+       WINDRÄDER
+    ===================================================== */
+
+    const mastMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0xd8d8d8,
+
+            metalness:.6,
+
+            roughness:.4
+
+        });
+
+
+    for(
+        let i = 0;
+        i < 6;
+        i++
+    ){
+
+        const x =
+
+            -1600
+
+            +
+
+            i * 430;
+
+
+        const z =
+
+            1300
+
+            +
+
+            Math.sin(i) *
+            180;
+
+
+        const y =
+            terrainHeight(
+                x,
+                z
+            );
+
+
+        const mast =
+            new THREE.Mesh(
+
+                new THREE.CylinderGeometry(
+
+                    .6,
+
+                    1.4,
+
+                    55,
+
+                    8
+
+                ),
+
+                mastMat
+
+            );
+
+
+        mast.position.set(
+
+            x,
+
+            y + 27.5,
+
+            z
+
+        );
+
+
+        mast.castShadow =
+            true;
+
+
+        scene.add(
+            mast
+        );
+
+
+        const rotor =
+            new THREE.Group();
+
+
+        rotor.position.set(
+
+            x,
+
+            y + 53,
+
+            z
+
+        );
+
+
+        rotor.rotation.y =
+            .4 * i;
+
+
+        scene.add(
+            rotor
+        );
+
+
+        const hub =
+            new THREE.Mesh(
+
+                new THREE.SphereGeometry(
+
+                    1.5,
+
+                    12,
+
+                    8
+
+                ),
+
+                mastMat
+
+            );
+
+
+        rotor.add(
+            hub
+        );
+
+
+        for(
+            let b = 0;
+            b < 3;
+            b++
+        ){
+
+            const blade =
+                new THREE.Mesh(
+
+                    new THREE.BoxGeometry(
+
+                        .6,
+
+                        18,
+
+                        1.1
+
+                    ),
+
+                    new THREE.MeshStandardMaterial({
+
+                        color:0xf3f3f3,
+
+                        roughness:.6
+
+                    })
+
+                );
+
+
+            blade.position.y =
+                9;
+
+
+            blade.rotation.z =
+
+                b
+
+                *
+
+                Math.PI
+
+                *
+
+                2
+
+                /
+
+                3;
+
+
+            rotor.add(
+                blade
+            );
+
+        }
+
+
+        rotor.userData.windRotor =
+            true;
+
+    }
+
+
+    /* =====================================================
+       STARTPLATZ
+    ===================================================== */
+
+    const pad =
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+
+                7,
+
+                7,
+
+                .3,
+
+                48
+
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color:0x3b3f42,
+
+                roughness:.9
+
+            })
+
+        );
+
+
+    pad.position.set(
+
+        0,
+
+        terrainHeight(
+            0,
+            0
+        ) + .05,
+
+        0
+
+    );
+
+
+    pad.receiveShadow =
+        true;
+
+
+    scene.add(
+        pad
+    );
+
+
+    const ring =
+        new THREE.Mesh(
+
+            new THREE.TorusGeometry(
+
+                4.5,
+
+                .22,
+
+                8,
+
+                48
+
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color:0xffffff
+
+            })
+
+        );
+
+
+    ring.rotation.x =
+        Math.PI / 2;
+
+
+    ring.position.y =
+        pad.position.y + .18;
+
+
+    scene.add(
+        ring
+    );
+
+}
+
+
+/* =========================================================
+   DROHNE
+========================================================= */
+
+function buildDrone(){
+
+    drone =
+        new THREE.Group();
+
+
+    droneBody =
+        new THREE.Group();
+
+
+    drone.add(
+        droneBody
+    );
+
+
+    scene.add(
+        drone
+    );
+
+
+    const bodyMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x1e2429,
+
+            metalness:.55,
+
+            roughness:.38
+
+        });
+
+
+    const accentMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x4fdfff,
+
+            metalness:.25,
+
+            roughness:.35,
+
+            emissive:0x102c33
+
+        });
+
+
+    const darkMat =
+        new THREE.MeshStandardMaterial({
+
+            color:0x111417,
+
+            metalness:.7,
+
+            roughness:.28
+
+        });
+
+
+    /* Hauptkörper */
+
+    const core =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+
+                1.8,
+
+                .55,
+
+                1.35
+
+            ),
+
+            bodyMat
+
+        );
+
+
+    core.castShadow =
+        true;
+
+
+    droneBody.add(
+        core
+    );
+
+
+    /* Akku */
+
+    const batteryPack =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+
+                1.25,
+
+                .28,
+
+                .82
+
+            ),
+
+            accentMat
+
+        );
+
+
+    batteryPack.position.y =
+        .38;
+
+
+    batteryPack.castShadow =
+        true;
+
+
+    droneBody.add(
+        batteryPack
+    );
+
+
+    const armLength =
+        1.75;
+
+
+    const rotorPositions = [
+
+        [
+            1.35,
+            0,
+            1.35
+        ],
+
+        [
+            -1.35,
+            0,
+            1.35
+        ],
+
+        [
+            1.35,
+            0,
+            -1.35
+        ],
+
+        [
+            -1.35,
+            0,
+            -1.35
+        ]
+
+    ];
+
+
+    drone.userData.rotors =
+        [];
+
+
+    rotorPositions.forEach(
+
+        (
+            p,
+            i
+        ) => {
+
+            /* Arm */
+
+            const arm =
+                new THREE.Mesh(
+
+                    new THREE.BoxGeometry(
+
+                        .18,
+
+                        .18,
+
+                        armLength * 1.8
+
+                    ),
+
+                    darkMat
+
+                );
+
+
+            arm.rotation.y =
+
+                (
+                    p[0] *
+                    p[2] >
+                    0
+                )
+
+                ?
+
+                Math.PI / 4
+
+                :
+
+                -Math.PI / 4;
+
+
+            arm.position.set(
+
+                p[0] * .48,
+
+                -.04,
+
+                p[2] * .48
+
+            );
+
+
+            arm.castShadow =
+                true;
+
+
+            droneBody.add(
+                arm
+            );
+
+
+            /* Motor */
+
+            const motor =
+                new THREE.Mesh(
+
+                    new THREE.CylinderGeometry(
+
+                        .24,
+
+                        .28,
+
+                        .28,
+
+                        16
+
+                    ),
+
+                    darkMat
+
+                );
+
+
+            motor.position.set(
+
+                p[0],
+
+                .04,
+
+                p[2]
+
+            );
+
+
+            motor.castShadow =
+                true;
+
+
+            droneBody.add(
+                motor
+            );
+
+
+            /* Rotorgruppe */
+
+            const rotor =
+                new THREE.Group();
+
+
+            rotor.position.set(
+
+                p[0],
+
+                .22,
+
+                p[2]
+
+            );
+
+
+            droneBody.add(
+                rotor
+            );
+
+
+            const hub =
+                new THREE.Mesh(
+
+                    new THREE.CylinderGeometry(
+
+                        .12,
+
+                        .12,
+
+                        .08,
+
+                        12
+
+                    ),
+
+                    accentMat
+
+                );
+
+
+            rotor.add(
+                hub
+            );
+
+
+            const bladeMaterial =
+                new THREE.MeshStandardMaterial({
+
+                    color:0x22272a,
+
+                    metalness:.4,
+
+                    roughness:.4,
+
+                    transparent:true,
+
+                    opacity:.88
+
+                });
+
+
+            const blade1 =
+                new THREE.Mesh(
+
+                    new THREE.BoxGeometry(
+
+                        2.15,
+
+                        .035,
+
+                        .12
+
+                    ),
+
+                    bladeMaterial
+
+                );
+
+
+            const blade2 =
+                blade1.clone();
+
+
+            blade2.rotation.y =
+                Math.PI / 2;
+
+
+            rotor.add(
+
+                blade1,
+
+                blade2
+
+            );
+
+
+            rotor.userData.dir =
+
+                i % 2 === 0
+
+                ? 1
+
+                : -1;
+
+
+            drone.userData.rotors.push(
+                rotor
+            );
+
+        }
+
+    );
+
+
+    /* =====================================================
+       FPV KAMERA
+    ===================================================== */
+
+    fpvCameraAnchor =
+        new THREE.Object3D();
+
+
+    fpvCameraAnchor.position.set(
+
+        0,
+
+        .08,
+
+        -.86
+
+    );
+
+
+    fpvCameraAnchor.rotation.x =
+        -8 * DEG;
+
+
+    droneBody.add(
+        fpvCameraAnchor
+    );
+
+
+    const cameraBox =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+
+                .5,
+
+                .32,
+
+                .3
+
+            ),
+
+            darkMat
+
+        );
+
+
+    cameraBox.position.set(
+
+        0,
+
+        -.03,
+
+        -.79
+
+    );
+
+
+    droneBody.add(
+        cameraBox
+    );
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetDrone(){
+
+    armed =
+        false;
+
+
+    crashed =
+        false;
+
+
+    battery =
+        100;
+
+
+    throttle =
+        0;
+
+
+    const y =
+
+        terrainHeight(
+            0,
+            0
+        )
+
+        +
+
+        .65;
+
+
+    drone.position.set(
+
+        0,
+
+        y,
+
+        0
+
+    );
+
+
+    velocity.set(
+
+        0,
+
+        0,
+
+        0
+
+    );
+
+
+    euler.set(
+
+        0,
+
+        0,
+
+        0
+
+    );
+
+
+    rates.pitch =
+        0;
+
+
+    rates.roll =
+        0;
+
+
+    rates.yaw =
+        0;
+
+
+    drone.rotation.set(
+
+        0,
+
+        0,
+
+        0,
+
+        'YXZ'
+
+    );
+
+
+    home.set(
+
+        0,
+
+        y,
+
+        0
+
+    );
+
+
+    lastGroundY =
+        terrainHeight(
+            0,
+            0
+        );
+
+
+    showMessage(
+        'Drohne zurückgesetzt'
+    );
+
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   MOTOREN
+========================================================= */
+
+function armToggle(){
+
+    if(
+        crashed
+    ){
+
+        showMessage(
+            'Nach Absturz zuerst RESET'
+        );
+
+        return;
+
+    }
+
+
+    if(
+        battery <= 2
+    ){
+
+        showMessage(
+            'Akku leer'
+        );
+
+        return;
+
+    }
+
+
+    armed =
+        !armed;
+
+
+    if(
+        !armed
+    ){
+
+        throttle =
+            0;
+
+    }
+
+
+    showMessage(
+
+        armed
+
+        ? 'Motoren gestartet'
+
+        : 'Motoren gestoppt'
+
+    );
+
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   FLUGMODUS
+========================================================= */
+
+function cycleMode(){
+
+    flightMode =
+
+        flightMode === 'angle'
+
+        ? 'acro'
+
+        : 'angle';
+
+
+    ui.flightMode.textContent =
+        flightMode.toUpperCase();
+
+
+    showMessage(
+
+        flightMode === 'angle'
+
+        ?
+
+        'ANGLE: automatische Stabilisierung'
+
+        :
+
+        'ACRO: manuelle Rotationsraten'
+
+    );
+
+}
+
+
+/* =========================================================
+   KAMERA
+========================================================= */
+
+function cycleCamera(){
+
+    cameraMode =
+
+        cameraMode === 'chase'
+
+        ? 'fpv'
+
+        :
+
+        cameraMode === 'fpv'
+
+        ? 'pilot'
+
+        : 'chase';
+
+
+    ui.cameraMode.textContent =
+        cameraMode.toUpperCase();
+
+
+    showMessage(
+
+        'Kamera: ' +
+        cameraMode.toUpperCase()
+
+    );
+
+}
+
+
+/* =========================================================
+   EINGABE
+========================================================= */
+
+function addEventListeners(){
+
+    addEventListener(
+
+        'keydown',
+
+        e => {
+
+            keys[e.code] =
+                true;
+
+
+            if(
+                e.code === 'Space'
+                &&
+                !e.repeat
+            ){
+
+                e.preventDefault();
+
+                armToggle();
+
+            }
+
+
+            if(
+                e.code === 'KeyM'
+                &&
+                !e.repeat
+            ){
+
+                cycleMode();
+
+            }
+
+
+            if(
+                e.code === 'KeyC'
+                &&
+                !e.repeat
+            ){
+
+                cycleCamera();
+
+            }
+
+
+            if(
+                e.code === 'KeyR'
+                &&
+                !e.repeat
+            ){
+
+                resetDrone();
+
+            }
+
+
+            if(
+                e.code === 'KeyH'
+                &&
+                !e.repeat
+            ){
+
+                helpVisible =
+                    !helpVisible;
+
+
+                ui.help.style.display =
+
+                    helpVisible
+
+                    ? 'block'
+
+                    : 'none';
+
+            }
+
+        }
+
+    );
+
+
+    addEventListener(
+
+        'keyup',
+
+        e => {
+
+            keys[e.code] =
+                false;
+
+        }
+
+    );
+
+
+    addEventListener(
+
+        'resize',
+
+        () => {
+
+            camera.aspect =
+
+                innerWidth /
+                innerHeight;
+
+
+            camera.updateProjectionMatrix();
+
+
+            renderer.setSize(
+
+                innerWidth,
+
+                innerHeight
+
+            );
+
+        }
+
+    );
+
+
+    setupStick(
+        $('leftStick'),
+        true
+    );
+
+
+    setupStick(
+        $('rightStick'),
+        false
+    );
+
+
+    $('armBtn').onclick =
+        armToggle;
+
+
+    $('modeBtn').onclick =
+        cycleMode;
+
+
+    $('camBtn').onclick =
+        cycleCamera;
+
+
+    $('resetBtn').onclick =
+        resetDrone;
+
+}
+
+
+/* =========================================================
+   TOUCH STICKS
+========================================================= */
+
+function setupStick(
+    el,
+    isLeft
+){
+
+    const knob =
+        el.querySelector(
+            '.knob'
+        );
+
+
+    let pid =
+        null;
+
+
+    const update =
+        (
+            clientX,
+            clientY
+        ) => {
+
+
+            const r =
+                el.getBoundingClientRect();
+
+
+            const cx =
+                r.left +
+                r.width / 2;
+
+
+            const cy =
+                r.top +
+                r.height / 2;
+
+
+            const max =
+                r.width * .34;
+
+
+            let dx =
+                clientX -
+                cx;
+
+
+            let dy =
+                clientY -
+                cy;
+
+
+            const len =
+                Math.hypot(
+                    dx,
+                    dy
+                );
+
+
+            if(
+                len > max
+            ){
+
+                dx *=
+                    max / len;
+
+
+                dy *=
+                    max / len;
+
+            }
+
+
+            knob.style.transform =
+
+                `translate(
+                    calc(-50% + ${dx}px),
+                    calc(-50% + ${dy}px)
+                )`;
+
+
+            const nx =
+                clamp(
+                    dx / max,
+                    -1,
+                    1
+                );
+
+
+            const ny =
+                clamp(
+                    dy / max,
+                    -1,
+                    1
+                );
+
+
+            if(
+                isLeft
+            ){
+
+                touchInput.yaw =
+                    nx;
+
+
+                touchInput.throttle =
+                    clamp(
+
+                        .5 -
+                        ny * .5,
+
+                        0,
+
+                        1
+
+                    );
+
+            }
+
+            else{
+
+                touchInput.roll =
+                    nx;
+
+
+                touchInput.pitch =
+                    -ny;
+
+            }
+
+        };
+
+
+    el.addEventListener(
+
+        'pointerdown',
+
+        e => {
+
+            pid =
+                e.pointerId;
+
+
+            el.setPointerCapture(
+                pid
+            );
+
+
+            update(
+
+                e.clientX,
+
+                e.clientY
+
+            );
+
+        }
+
+    );
+
+
+    el.addEventListener(
+
+        'pointermove',
+
+        e => {
+
+            if(
+                e.pointerId === pid
+            ){
+
+                update(
+
+                    e.clientX,
+
+                    e.clientY
+
+                );
+
+            }
+
+        }
+
+    );
+
+
+    const end =
+        e => {
+
+            if(
+                e.pointerId !== pid
+            ){
+
+                return;
+
+            }
+
+
+            pid =
+                null;
+
+
+            if(
+                isLeft
+            ){
+
+                touchInput.yaw =
+                    0;
+
+
+                knob.style.transform =
+                    'translate(-50%,-50%)';
+
+            }
+
+            else{
+
+                touchInput.pitch =
+                    0;
+
+
+                touchInput.roll =
+                    0;
+
+
+                knob.style.transform =
+                    'translate(-50%,-50%)';
+
+            }
+
+        };
+
+
+    el.addEventListener(
+        'pointerup',
+        end
+    );
+
+
+    el.addEventListener(
+        'pointercancel',
+        end
+    );
+
+}
+
+
+/* =========================================================
+   INPUT AUSLESEN
+========================================================= */
+
+function readInputs(
+    dt
+){
+
+    let pitch =
+        0;
+
+
+    let roll =
+        0;
+
+
+    let yaw =
+        0;
+
+
+    /* Tastatur */
+
+    if(
+        keys['ArrowUp']
+    ){
+
+        pitch += 1;
+
+    }
+
+
+    if(
+        keys['ArrowDown']
+    ){
+
+        pitch -= 1;
+
+    }
+
+
+    if(
+        keys['ArrowRight']
+    ){
+
+        roll += 1;
+
+    }
+
+
+    if(
+        keys['ArrowLeft']
+    ){
+
+        roll -= 1;
+
+    }
+
+
+    if(
+        keys['KeyD']
+    ){
+
+        yaw += 1;
+
+    }
+
+
+    if(
+        keys['KeyA']
+    ){
+
+        yaw -= 1;
+
+    }
+
+
+    if(
+        keys['KeyW']
+    ){
+
+        throttle =
+            clamp(
+
+                throttle +
+                dt * .42,
+
+                0,
+
+                1
+
+            );
+
+    }
+
+
+    if(
+        keys['KeyS']
+    ){
+
+        throttle =
+            clamp(
+
+                throttle -
+                dt * .42,
+
+                0,
+
+                1
+
+            );
+
+    }
+
+
+    /* Touch */
+
+    pitch +=
+        touchInput.pitch;
+
+
+    roll +=
+        touchInput.roll;
+
+
+    yaw +=
+        touchInput.yaw;
+
+
+    if(
+        innerWidth < 701
+        &&
+        !keys['KeyW']
+        &&
+        !keys['KeyS']
+    ){
+
+        throttle =
+            touchInput.throttle;
+
+    }
+
+
+    /* Gamepad */
+
+    gamepadActive =
+        false;
+
+
+    const gps =
+
+        navigator.getGamepads
+
+        ?
+
+        navigator.getGamepads()
+
+        :
+
+        [];
+
+
+    for(
+        const gp of gps
+    ){
+
+        if(
+            !gp
+        ){
+
+            continue;
+
+        }
+
+
+        gamepadActive =
+            true;
+
+
+        const dead =
+            v =>
+
+            Math.abs(v) < .08
+
+            ? 0
+
+            : v;
+
+
+        const lx =
+            dead(
+                gp.axes[0] || 0
+            );
+
+
+        const ly =
+            dead(
+                gp.axes[1] || 0
+            );
+
+
+        const rx =
+            dead(
+                gp.axes[2] || 0
+            );
+
+
+        const ry =
+            dead(
+                gp.axes[3] || 0
+            );
+
+
+        yaw =
+            lx;
+
+
+        throttle =
+            clamp(
+
+                .5 -
+                ly * .5,
+
+                0,
+
+                1
+
+            );
+
+
+        roll =
+            rx;
+
+
+        pitch =
+            -ry;
+
+
+        break;
+
+    }
+
+
+    command.pitch =
+        clamp(
+
+            pitch,
+
+            -1,
+
+            1
+
+        );
+
+
+    command.roll =
+        clamp(
+
+            roll,
+
+            -1,
+
+            1
+
+        );
+
+
+    command.yaw =
+        clamp(
+
+            yaw,
+
+            -1,
+
+            1
+
+        );
+
+}
+
+
+/* =========================================================
+   FLUGPHYSIK
+========================================================= */
+
+function updatePhysics(
+    dt,
+    time
+){
+
+    readInputs(
+        dt
+    );
+
+
+    /* Motoren aus */
+
+    if(
+        !armed
+        ||
+        crashed
+    ){
+
+        spinRotors(
+
+            dt,
+
+            armed
+            ? .15
+            : 0
+
+        );
+
+
+        if(
+
+            !armed
+
+            &&
+
+            drone.position.y
+
+            >
+
+            terrainHeight(
+
+                drone.position.x,
+
+                drone.position.z
+
+            )
+
+            +
+
+            .65
+
+        ){
+
+            velocity.y -=
+
+                9.81 *
+                dt;
+
+
+            velocity.multiplyScalar(
+
+                Math.exp(
+                    -.08 *
+                    dt
+                )
+
+            );
+
+
+            drone.position.addScaledVector(
+
+                velocity,
+
+                dt
+
+            );
+
+        }
+
+
+        groundCollision();
+
+        return;
+
+    }
+
+
+    const response =
+
+        flightMode === 'angle'
+
+        ? 7.5
+
+        : 10;
+
+
+    /* =====================================================
+       ANGLE MODE
+    ===================================================== */
+
+    if(
+        flightMode === 'angle'
+    ){
+
+        const targetPitch =
+
+            command.pitch
+
+            *
+
+            32
+
+            *
+
+            DEG;
+
+
+        const targetRoll =
+
+            -command.roll
+
+            *
+
+            32
+
+            *
+
+            DEG;
+
+
+        rates.pitch +=
+
+            (
+
+                (
+                    targetPitch
+                    -
+                    euler.x
+                )
+
+                *
+
+                response
+
+                -
+
+                rates.pitch
+
+                *
+
+                4.3
+
+            )
+
+            *
+
+            dt;
+
+
+        rates.roll +=
+
+            (
+
+                (
+                    targetRoll
+                    -
+                    euler.z
+                )
+
+                *
+
+                response
+
+                -
+
+                rates.roll
+
+                *
+
+                4.3
+
+            )
+
+            *
+
+            dt;
+
+
+        const targetYawRate =
+
+            -command.yaw
+
+            *
+
+            125
+
+            *
+
+            DEG;
+
+
+        rates.yaw +=
+
+            (
+
+                targetYawRate
+
+                -
+
+                rates.yaw
+
+            )
+
+            *
+
+            5.5
+
+            *
+
+            dt;
+
+    }
+
+    /* =====================================================
+       ACRO MODE
+    ===================================================== */
+
+    else{
+
+        const maxRate =
+            260 * DEG;
+
+
+        const maxYaw =
+            180 * DEG;
+
+
+        const targetPitchRate =
+
+            command.pitch
+
+            *
+
+            maxRate;
+
+
+        const targetRollRate =
+
+            -command.roll
+
+            *
+
+            maxRate;
+
+
+        const targetYawRate =
+
+            -command.yaw
+
+            *
+
+            maxYaw;
+
+
+        rates.pitch +=
+
+            (
+
+                targetPitchRate
+
+                -
+
+                rates.pitch
+
+            )
+
+            *
+
+            8
+
+            *
+
+            dt;
+
+
+        rates.roll +=
+
+            (
+
+                targetRollRate
+
+                -
+
+                rates.roll
+
+            )
+
+            *
+
+            8
+
+            *
+
+            dt;
+
+
+        rates.yaw +=
+
+            (
+
+                targetYawRate
+
+                -
+
+                rates.yaw
+
+            )
+
+            *
+
+            7
+
+            *
+
+            dt;
+
+    }
+
+
+    euler.x +=
+
+        rates.pitch *
+        dt;
+
+
+    euler.z +=
+
+        rates.roll *
+        dt;
+
+
+    euler.y +=
+
+        rates.yaw *
+        dt;
+
+
+    if(
+        flightMode === 'angle'
+    ){
+
+        euler.x =
+            clamp(
+
+                euler.x,
+
+                -45 * DEG,
+
+                45 * DEG
+
+            );
+
+
+        euler.z =
+            clamp(
+
+                euler.z,
+
+                -45 * DEG,
+
+                45 * DEG
+
+            );
+
+    }
+
+
+    drone.rotation.set(
+
+        euler.x,
+
+        euler.y,
+
+        euler.z,
+
+        'YXZ'
+
+    );
+
+
+    /* =====================================================
+       AUFTRIEB
+    ===================================================== */
+
+    const up =
+
+        tempV
+
+        .set(
+            0,
+            1,
+            0
+        )
+
+        .applyEuler(
+            euler
+        )
+
+        .normalize();
+
+
+    /*
+       Bei ungefähr 50 % Gas
+       wird das Gewicht ausgeglichen.
+    */
+
+    const thrustAccel =
+
+        9.81
+
+        *
+
+        (
+            throttle /
+            0.50
+        );
+
+
+    velocity.addScaledVector(
+
+        up,
+
+        thrustAccel *
+        dt
+
+    );
+
+
+    /* Schwerkraft */
+
+    velocity.y -=
+
+        9.81 *
+        dt;
+
+
+    /* =====================================================
+       WIND
+    ===================================================== */
+
+    const gust =
+
+        Math.sin(
+            time * .00083
+        )
+
+        +
+
+        .45
+
+        *
+
+        Math.sin(
+
+            time * .0021
+
+            +
+
+            1.6
+
+        );
+
+
+    wind
+
+        .set(
+
+            1,
+
+            0,
+
+            .36
+
+        )
+
+        .normalize()
+
+        .multiplyScalar(
+
+            windStrength
+
+            *
+
+            (
+                1 +
+                gust * .18
+            )
+
+        );
+
+
+    /* =====================================================
+       LUFTWIDERSTAND
+    ===================================================== */
+
+    const airRel =
+
+        tempV2
+
+        .copy(
+            velocity
+        )
+
+        .sub(
+            wind
+        );
+
+
+    const dragFactor =
+
+        .10
+
+        +
+
+        airRel.length()
+
+        *
+
+        .0045;
+
+
+    velocity.addScaledVector(
+
+        airRel,
+
+        -dragFactor *
+        dt
+
+    );
+
+
+    velocity.multiplyScalar(
+
+        Math.exp(
+
+            -.018 *
+            dt
+
+        )
+
+    );
+
+
+    /* Position */
+
+    drone.position.addScaledVector(
+
+        velocity,
+
+        dt
+
+    );
+
+
+    /* =====================================================
+       AKKUVERBRAUCH
+    ===================================================== */
+
+    const consumption =
+
+        (
+
+            .12
+
+            +
+
+            throttle * .78
+
+            +
+
+            Math.abs(
+                command.pitch
+            ) * .05
+
+            +
+
+            Math.abs(
+                command.roll
+            ) * .05
+
+        )
+
+        *
+
+        dt
+
+        *
+
+        .055;
+
+
+    battery =
+        clamp(
+
+            battery -
+            consumption,
+
+            0,
+
+            100
+
+        );
+
+
+    if(
+        battery <= 0
+    ){
+
+        battery =
+            0;
+
+
+        armed =
+            false;
+
+
+        throttle =
+            0;
+
+
+        showMessage(
+            'Akku leer - Motoren aus'
+        );
+
+    }
+
+
+    /* Rotoren */
+
+    spinRotors(
+
+        dt,
+
+        .18
+
+        +
+
+        throttle *
+        2.4
+
+    );
+
+
+    /* Kollision */
+
+    groundCollision();
+
+}
+
+
+/* =========================================================
+   BODENKOLLISION
+========================================================= */
+
+function groundCollision(){
+
+    const ground =
+
+        terrainHeight(
+
+            drone.position.x,
+
+            drone.position.z
+
+        );
+
+
+    lastGroundY =
+        ground;
+
+
+    const minY =
+        ground + .52;
+
+
+    if(
+        drone.position.y <
+        minY
+    ){
+
+        const impact =
+
+            Math.abs(
+                velocity.y
+            )
+
+            +
+
+            Math.hypot(
+
+                velocity.x,
+
+                velocity.z
+
+            )
+
+            *
+
+            .22;
+
+
+        const tilt =
+
+            Math.max(
+
+                Math.abs(
+                    euler.x
+                ),
+
+                Math.abs(
+                    euler.z
+                )
+
+            );
+
+
+        drone.position.y =
+            minY;
+
+
+        if(
+
+            impact >
+            6.8
+
+            ||
+
+            tilt >
+            58 * DEG
+
+        ){
+
+            if(
+                !crashed
+            ){
+
+                showMessage(
+                    'ABSTURZ - R / RESET'
+                );
+
+            }
+
+
+            crashed =
+                true;
+
+
+            armed =
+                false;
+
+
+            throttle =
+                0;
+
+
+            velocity.multiplyScalar(
+                .12
+            );
+
+
+            updateStatus();
+
+        }
+
+        else{
+
+            if(
+                velocity.y < 0
+            ){
+
+                velocity.y =
+                    0;
+
+            }
+
+
+            velocity.x *=
+                .76;
+
+
+            velocity.z *=
+                .76;
+
+        }
+
+    }
+
+
+    /* Weltbegrenzung */
+
+    if(
+
+        Math.abs(
+            drone.position.x
+        )
+
+        >
+
+        3450
+
+        ||
+
+        Math.abs(
+            drone.position.z
+        )
+
+        >
+
+        3450
+
+    ){
+
+        showMessage(
+            'Weltrand erreicht'
+        );
+
+
+        drone.position.x =
+            clamp(
+
+                drone.position.x,
+
+                -3440,
+
+                3440
+
+            );
+
+
+        drone.position.z =
+            clamp(
+
+                drone.position.z,
+
+                -3440,
+
+                3440
+
+            );
+
+
+        velocity.multiplyScalar(
+            .45
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ROTOREN
+========================================================= */
+
+function spinRotors(
+    dt,
+    power
+){
+
+    if(
+        !drone?.userData.rotors
+    ){
+
+        return;
+
+    }
+
+
+    for(
+        const r
+        of
+        drone.userData.rotors
+    ){
+
+        r.rotation.y +=
+
+            r.userData.dir
+
+            *
+
+            power
+
+            *
+
+            dt
+
+            *
+
+            38;
+
+    }
+
+}
+
+
+/* =========================================================
+   KAMERA
+========================================================= */
+
+function updateCamera(
+    dt
+){
+
+    const forward =
+
+        new THREE.Vector3(
+
+            0,
+
+            0,
+
+            -1
+
+        )
+
+        .applyEuler(
+            euler
+        )
+
+        .normalize();
+
+
+    const right =
+
+        new THREE.Vector3(
+
+            1,
+
+            0,
+
+            0
+
+        )
+
+        .applyEuler(
+            euler
+        )
+
+        .normalize();
+
+
+    /* =====================================================
+       FPV
+    ===================================================== */
+
+    if(
+        cameraMode === 'fpv'
+    ){
+
+        fpvCameraAnchor.getWorldPosition(
+            tempV
+        );
+
+
+        fpvCameraAnchor.getWorldQuaternion(
+            tempQ
+        );
+
+
+        camera.position.lerp(
+
+            tempV,
+
+            1
+
+            -
+
+            Math.exp(
+                -18 * dt
+            )
+
+        );
+
+
+        camera.quaternion.slerp(
+
+            tempQ,
+
+            1
+
+            -
+
+            Math.exp(
+                -18 * dt
+            )
+
+        );
+
+
+        camera.fov =
+            88;
+
+
+        camera.updateProjectionMatrix();
+
+
+        droneBody.visible =
+            false;
+
+    }
+
+    /* =====================================================
+       VERFOLGER
+    ===================================================== */
+
+    else if(
+        cameraMode === 'chase'
+    ){
+
+        droneBody.visible =
+            true;
+
+
+        const targetPos =
+
+            tempV
+
+            .copy(
+                drone.position
+            )
+
+            .addScaledVector(
+
+                forward,
+
+                -8.5
+
+            )
+
+            .addScaledVector(
+
+                worldUp,
+
+                4.2
+
+            )
+
+            .addScaledVector(
+
+                right,
+
+                0
+
+            );
+
+
+        camera.position.lerp(
+
+            targetPos,
+
+            1
+
+            -
+
+            Math.exp(
+                -4.2 * dt
+            )
+
+        );
+
+
+        const look =
+
+            tempV2
+
+            .copy(
+                drone.position
+            )
+
+            .addScaledVector(
+
+                forward,
+
+                7
+
+            )
+
+            .addScaledVector(
+
+                worldUp,
+
+                .8
+
+            );
+
+
+        camera.lookAt(
+            look
+        );
+
+
+        camera.fov =
+            72;
+
+
+        camera.updateProjectionMatrix();
+
+    }
+
+    /* =====================================================
+       PILOT
+    ===================================================== */
+
+    else{
+
+        droneBody.visible =
+            true;
+
+
+        const targetPos =
+
+            tempV
+
+            .set(
+
+                22,
+
+                7,
+
+                22
+
+            )
+
+            .add(
+                home
+            );
+
+
+        camera.position.lerp(
+
+            targetPos,
+
+            1
+
+            -
+
+            Math.exp(
+                -2.5 * dt
+            )
+
+        );
+
+
+        camera.lookAt(
+            drone.position
+        );
+
+
+        camera.fov =
+            58;
+
+
+        camera.updateProjectionMatrix();
+
+    }
+
+}
+
+
+/* =========================================================
+   WELT ANIMATION
+========================================================= */
+
+function updateWorld(
+    time,
+    dt
+){
+
+    scene.traverse(
+
+        o => {
+
+            if(
+                o.userData.windRotor
+            ){
+
+                o.rotation.z +=
+
+                    dt
+
+                    *
+
+                    (
+                        .35
+
+                        +
+
+                        windStrength *
+                        .04
+                    );
+
+            }
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    const alt =
+
+        Math.max(
+
+            0,
+
+            drone.position.y
+
+            -
+
+            lastGroundY
+
+        );
+
+
+    ui.alt.textContent =
+
+        alt.toFixed(1)
+
+        +
+
+        ' m';
+
+
+    ui.speed.textContent =
+
+        Math.round(
+
+            Math.hypot(
+
+                velocity.x,
+
+                velocity.z
+
+            )
+
+            *
+
+            3.6
+
+        )
+
+        +
+
+        ' km/h';
+
+
+    ui.vs.textContent =
+
+        velocity.y.toFixed(1)
+
+        +
+
+        ' m/s';
+
+
+    ui.dist.textContent =
+
+        Math.round(
+
+            Math.hypot(
+
+                drone.position.x
+                -
+                home.x,
+
+                drone.position.z
+                -
+                home.z
+
+            )
+
+        )
+
+        +
+
+        ' m';
+
+
+    ui.battery.textContent =
+
+        battery.toFixed(0)
+
+        +
+
+        ' %';
+
+
+    ui.batteryFill.style.width =
+
+        battery
+
+        +
+
+        '%';
+
+
+    ui.batteryFill.style.background =
+
+        battery > 35
+
+        ?
+
+        '#6ff08c'
+
+        :
+
+        battery > 15
+
+        ?
+
+        '#ffd65a'
+
+        :
+
+        '#ff6666';
+
+
+    ui.windLabel.textContent =
+
+        Math.round(
+
+            windStrength *
+            3.6
+
+        )
+
+        +
+
+        ' km/h';
+
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function updateStatus(){
+
+    if(
+        crashed
+    ){
+
+        ui.status.textContent =
+            'ABSTURZ';
+
+
+        ui.status.style.color =
+            '#ff7777';
+
+
+        return;
+
+    }
+
+
+    if(
+        !armed
+    ){
+
+        ui.status.textContent =
+            'MOTOREN AUS';
+
+
+        ui.status.style.color =
+            '#fff';
+
+
+        return;
+
+    }
+
+
+    ui.status.textContent =
+
+        'ARMED · '
+
+        +
+
+        Math.round(
+            throttle * 100
+        )
+
+        +
+
+        '% GAS';
+
+
+    ui.status.style.color =
+        '#76efff';
+
+}
+
+
+/* =========================================================
+   MELDUNGEN
+========================================================= */
+
+let msgTimer =
+    0;
+
+
+function showMessage(
+    text
+){
+
+    ui.message.textContent =
+        text;
+
+
+    ui.message.classList.add(
+        'show'
+    );
+
+
+    clearTimeout(
+        msgTimer
+    );
+
+
+    msgTimer =
+        setTimeout(
+
+            () =>
+
+            ui.message.classList.remove(
+                'show'
+            ),
+
+            1600
+
+        );
+
+}
+
+
+/* =========================================================
+   SPIELSCHLEIFE
+========================================================= */
+
+function animate(
+    time = 0
+){
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    if(
+
+        !started
+
+        ||
+
+        !clock
+
+        ||
+
+        !drone
+
+    ){
+
+        return;
+
+    }
+
+
+    const dt =
+
+        Math.min(
+
+            clock.getDelta(),
+
+            .033
+
+        );
+
+
+    updatePhysics(
+        dt,
+        time
+    );
+
+
+    updateWorld(
+        time,
+        dt
+    );
+
+
+    updateCamera(
+        dt
+    );
+
+
+    updateHUD();
+
+
+    renderer.render(
+
+        scene,
+
+        camera
+
+    );
+
+}
+
+
+/* =========================================================
+   SPIELSTART
+========================================================= */
+
+function launch(
+    useSettings = true
+){
+
+    if(
+        started
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        useSettings
+    ){
+
+        flightMode =
+            $('startMode').value;
+
+
+        cameraMode =
+            $('startCamera').value;
+
+
+        quality =
+            $('quality').value;
+
+
+        windStrength =
+
+            Number(
+                $('windSlider').value
+            )
+
+            /
+
+            3.6;
+
+    }
+
+    else{
+
+        flightMode =
+            'angle';
+
+
+        cameraMode =
+            'chase';
+
+
+        quality =
+            'medium';
+
+
+        windStrength =
+            12 / 3.6;
+
+    }
+
+
+    ui.flightMode.textContent =
+        flightMode.toUpperCase();
+
+
+    ui.cameraMode.textContent =
+        cameraMode.toUpperCase();
+
+
+    $('startScreen').style.display =
+        'none';
+
+
+    started =
+        true;
+
+
+    init();
+
+}
+
+
+/* =========================================================
+   STARTMENÜ EVENTS
+========================================================= */
+
+$('windSlider').addEventListener(
+
+    'input',
+
+    () => {
+
+        $('windValue').textContent =
+            $('windSlider').value;
+
+    }
+
+);
+
+
+$('startBtn').onclick =
+    () =>
+
+    launch(
+        true
+    );
+
+
+$('quickBtn').onclick =
+    () =>
+
+    launch(
+        false
+    );
+
+</script>
+
+</body>
+</html>
