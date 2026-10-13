@@ -1,97 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Austrian Moonshiner</title>
 
 <style>
 
-/* =========================================================
+/* =========================================
    GRUNDLAYOUT
-========================================================= */
+========================================= */
 
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    min-height:100vh;
-
-    font-family:Arial,Helvetica,sans-serif;
-
-    color:#fff;
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    text-align: center;
+    overflow-x: hidden;
 
     background:
-        radial-gradient(
-            circle at 10% 10%,
-            rgba(0,255,255,.18),
-            transparent 25%
-        ),
-        radial-gradient(
-            circle at 90% 15%,
-            rgba(255,0,170,.18),
-            transparent 25%
-        ),
-        radial-gradient(
-            circle at 20% 80%,
-            rgba(100,0,255,.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(0,255,130,.12),
-            transparent 25%
-        ),
-        linear-gradient(
-            135deg,
-            #050814,
-            #0a1024 45%,
-            #12051c
-        );
+        radial-gradient(circle at 10% 10%, rgba(0,255,255,.18), transparent 25%),
+        radial-gradient(circle at 90% 15%, rgba(255,0,170,.18), transparent 25%),
+        radial-gradient(circle at 20% 80%, rgba(100,0,255,.18), transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(0,255,130,.12), transparent 25%),
+        linear-gradient(135deg, #050814, #0a1024 45%, #12051c);
 
-    background-attachment:fixed;
-
-    text-align:center;
-
-    overflow-x:hidden;
+    background-attachment: fixed;
 }
 
+.container {
+    width: 94%;
+    max-width: 950px;
+    margin: 30px auto 50px;
+    padding: 30px 20px 55px;
 
-/* =========================================================
-   HAUPTCONTAINER
-========================================================= */
+    background: linear-gradient(145deg, rgba(8,15,35,.94), rgba(15,7,30,.94));
 
-.container{
-    width:94%;
-    max-width:950px;
-
-    margin:30px auto 50px;
-
-    padding:30px 20px 55px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(8,15,35,.94),
-            rgba(15,7,30,.94)
-        );
-
-    border:1px solid rgba(0,255,255,.35);
-
-    border-radius:24px;
+    border: 1px solid rgba(0,255,255,.35);
+    border-radius: 24px;
 
     box-shadow:
         0 0 25px rgba(0,255,255,.12),
@@ -99,1181 +55,843 @@ body{
         0 20px 60px rgba(0,0,0,.5);
 }
 
+/* =========================================
+   LOGO UND NAVIGATION
+========================================= */
 
-/* =========================================================
-   LOGO
-========================================================= */
-
-.logo{
-    display:block;
-
-    width:80%;
-    max-width:270px;
-
-    margin:0 auto 15px;
+.logo {
+    display: block;
+    width: 80%;
+    max-width: 270px;
+    margin: 0 auto 15px;
 
     filter:
         drop-shadow(0 0 8px rgba(0,255,255,.45))
         drop-shadow(0 0 18px rgba(255,0,200,.2));
 }
 
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-nav{
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-
-    margin:15px auto 25px;
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px auto 25px;
 }
 
-nav a{
-    display:inline-block;
+nav a {
+    display: inline-block;
+    padding: 9px 15px;
+    color: #dffcff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
 
-    padding:9px 15px;
-
-    color:#dffcff;
-
-    text-decoration:none;
-
-    font-size:14px;
-    font-weight:bold;
-
-    border:1px solid rgba(0,255,255,.35);
-
-    border-radius:10px;
-
-    background:rgba(0,180,255,.08);
-
-    transition:.2s;
+    border: 1px solid rgba(0,255,255,.35);
+    border-radius: 10px;
+    background: rgba(0,180,255,.08);
+    transition: .2s;
 }
 
-nav a:hover{
-    color:#fff;
-
-    border-color:#00ffff;
-
-    background:rgba(0,255,255,.16);
-
-    box-shadow:
-        0 0 12px rgba(0,255,255,.25);
-
-    transform:translateY(-2px);
+nav a:hover {
+    color: #fff;
+    border-color: #00ffff;
+    background: rgba(0,255,255,.16);
+    box-shadow: 0 0 12px rgba(0,255,255,.25);
+    transform: translateY(-2px);
 }
 
+/* =========================================
+   TITEL UND HINWEIS
+========================================= */
 
-/* =========================================================
-   TITEL
-========================================================= */
+h1 {
+    margin: 15px 0 8px;
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: 2px;
 
-h1{
-    margin:15px 0 8px;
+    background: linear-gradient(
+        90deg, #00ffff, #ffffff,
+        #ff00c8, #8c5cff, #00ffff
+    );
 
-    font-size:40px;
-    font-weight:900;
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 
-    letter-spacing:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #00ffff,
-            #ffffff,
-            #ff00c8,
-            #8c5cff,
-            #00ffff
-        );
-
-    background-size:300% 100%;
-
-    -webkit-background-clip:text;
-    background-clip:text;
-
-    color:transparent;
-
-    animation:titleGlow 7s linear infinite;
-
-    text-shadow:
-        0 0 20px rgba(0,255,255,.15);
+    animation: titleGlow 7s linear infinite;
+    text-shadow: 0 0 20px rgba(0,255,255,.15);
 }
 
-@keyframes titleGlow{
-
-    0%{
-        background-position:0% 50%;
-    }
-
-    50%{
-        background-position:100% 50%;
-    }
-
-    100%{
-        background-position:0% 50%;
-    }
+@keyframes titleGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-p{
-    line-height:1.6;
+p {
+    line-height: 1.6;
 }
 
+.hinweis {
+    width: 95%;
+    margin: 25px auto;
+    padding: 15px;
+    color: #dffcff;
+    font-size: 14px;
 
-/* =========================================================
-   HINWEIS
-========================================================= */
+    background: linear-gradient(
+        135deg,
+        rgba(255,180,0,.08),
+        rgba(255,0,100,.08)
+    );
 
-.hinweis{
-    width:95%;
-
-    margin:25px auto;
-
-    padding:15px;
-
-    color:#dffcff;
-
-    font-size:14px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,180,0,.08),
-            rgba(255,0,100,.08)
-        );
-
-    border:1px solid rgba(255,190,0,.35);
-
-    border-radius:14px;
-
-    box-shadow:
-        0 0 15px rgba(255,180,0,.08);
+    border: 1px solid rgba(255,190,0,.35);
+    border-radius: 14px;
+    box-shadow: 0 0 15px rgba(255,180,0,.08);
 }
 
-
-/* =========================================================
+/* =========================================
    HAUPTSPIELE
-========================================================= */
+========================================= */
 
-.haupt-buttons{
-    width:95%;
-
-    margin:35px auto;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
+.haupt-buttons {
+    width: 95%;
+    margin: 35px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
+/* BATTLE AGES */
 
-/* =========================================================
-   BATTLE AGES
-========================================================= */
+.battleages-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    padding: 20px;
 
-.battleages-button{
+    color: #fff;
+    text-decoration: none;
+    font-size: 28px;
+    font-weight: 900;
+    border-radius: 18px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        rgba(10,35,50,.98),
+        rgba(10,15,30,.98)
+    );
 
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:100px;
-
-    padding:20px;
-
-    color:#fff;
-
-    text-decoration:none;
-
-    font-size:28px;
-    font-weight:900;
-
-    border-radius:18px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(10,35,50,.98),
-            rgba(10,15,30,.98)
-        );
-
-    border:2px solid rgba(0,255,255,.65);
+    border: 2px solid rgba(0,255,255,.65);
 
     box-shadow:
         0 0 15px rgba(0,255,255,.15),
         inset 0 0 20px rgba(0,255,255,.04);
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.battleages-button span{
-
-    margin-top:7px;
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#9defff;
+.battleages-button span {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #9defff;
 }
 
-.battleages-button:hover{
-
-    transform:translateY(-4px) scale(1.01);
-
-    border-color:#00ffff;
+.battleages-button:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #00ffff;
 
     box-shadow:
         0 0 25px rgba(0,255,255,.3),
         0 15px 30px rgba(0,0,0,.4);
 }
 
+/* TOWER DEFENSE 2 */
 
-/* =========================================================
-   TOWER DEFENSE 2
-========================================================= */
+.tower2-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 90px;
+    padding: 18px;
 
-.tower2-button{
+    color: white;
+    text-decoration: none;
+    font-size: 26px;
+    font-weight: 900;
+    border-radius: 17px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        #09264a, #102d6b, #351064
+    );
 
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:90px;
-
-    padding:18px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:26px;
-    font-weight:900;
-
-    border-radius:17px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #09264a,
-            #102d6b,
-            #351064
-        );
-
-    border:1px solid rgba(0,200,255,.6);
-
-    box-shadow:
-        0 0 18px rgba(0,140,255,.18);
-
-    transition:.25s;
+    border: 1px solid rgba(0,200,255,.6);
+    box-shadow: 0 0 18px rgba(0,140,255,.18);
+    transition: .25s;
 }
 
-.tower2-button span{
-
-    margin-top:6px;
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#bdeaff;
+.tower2-button span {
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #bdeaff;
 }
 
-.tower2-button:hover{
-
-    transform:translateY(-4px);
+.tower2-button:hover {
+    transform: translateY(-4px);
 
     box-shadow:
         0 0 30px rgba(0,180,255,.35),
         0 12px 25px rgba(0,0,0,.4);
 }
 
+/* DORFHERRSCHER */
 
-/* =========================================================
-   DORFHERRSCHER
-========================================================= */
+.dorf-button {
+    width: 100%;
+    min-height: 90px;
+    padding: 18px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 25px;
+    font-weight: 900;
+    border-radius: 17px;
+    cursor: pointer;
 
-.dorf-button{
+    background: linear-gradient(
+        135deg,
+        #3a2110, #6b3d14, #241308
+    );
 
-    width:100%;
-
-    min-height:90px;
-
-    padding:18px;
-
-    color:#fff;
-
-    font-family:inherit;
-
-    font-size:25px;
-    font-weight:900;
-
-    border-radius:17px;
-
-    cursor:pointer;
-
-    background:
-        linear-gradient(
-            135deg,
-            #3a2110,
-            #6b3d14,
-            #241308
-        );
-
-    border:1px solid rgba(255,190,70,.65);
-
-    box-shadow:
-        0 0 18px rgba(255,150,30,.12);
-
-    transition:.25s;
+    border: 1px solid rgba(255,190,70,.65);
+    box-shadow: 0 0 18px rgba(255,150,30,.12);
+    transition: .25s;
 }
 
-.dorf-button span{
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#ffe5ae;
+.dorf-button span {
+    font-size: 14px;
+    font-weight: normal;
+    color: #ffe5ae;
 }
 
-.dorf-button:hover{
-
-    transform:translateY(-4px);
+.dorf-button:hover {
+    transform: translateY(-4px);
 
     box-shadow:
         0 0 28px rgba(255,170,50,.3),
         0 12px 25px rgba(0,0,0,.4);
 }
 
+/* INSELWACHT */
 
-/* =========================================================
-   INSELWACHT
-========================================================= */
+.inselwacht-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 95px;
+    padding: 20px;
 
-.inselwacht-button{
+    color: #fff;
+    text-decoration: none;
+    font-size: 27px;
+    font-weight: 900;
+    border-radius: 18px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        #083b4c, #0d6670, #123d35, #071f2b
+    );
 
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:95px;
-
-    padding:20px;
-
-    color:#fff;
-
-    text-decoration:none;
-
-    font-size:27px;
-    font-weight:900;
-
-    border-radius:18px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #083b4c,
-            #0d6670,
-            #123d35,
-            #071f2b
-        );
-
-    border:2px solid rgba(80,230,255,.65);
+    border: 2px solid rgba(80,230,255,.65);
 
     box-shadow:
         0 0 18px rgba(0,220,255,.16),
         inset 0 0 20px rgba(60,255,190,.05);
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.inselwacht-button span{
-
-    margin-top:7px;
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#bdfcff;
+.inselwacht-button span {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #bdfcff;
 }
 
-.inselwacht-button:hover{
-
-    transform:translateY(-4px) scale(1.01);
-
-    border-color:#67f5ff;
+.inselwacht-button:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #67f5ff;
 
     box-shadow:
         0 0 28px rgba(0,220,255,.30),
         0 12px 28px rgba(0,0,0,.4);
 }
 
+/* ISLAND LIFE */
 
-/* =========================================================
-   ISLAND LIFE
-========================================================= */
+.islandlife-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 95px;
+    padding: 20px;
 
-.islandlife-button{
+    color: #fff;
+    text-decoration: none;
+    font-size: 27px;
+    font-weight: 900;
+    border-radius: 18px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        #123f28, #1d6b3a, #197c68, #0b3442
+    );
 
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:95px;
-
-    padding:20px;
-
-    color:#fff;
-
-    text-decoration:none;
-
-    font-size:27px;
-    font-weight:900;
-
-    border-radius:18px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #123f28,
-            #1d6b3a,
-            #197c68,
-            #0b3442
-        );
-
-    border:2px solid rgba(80,255,170,.65);
+    border: 2px solid rgba(80,255,170,.65);
 
     box-shadow:
         0 0 18px rgba(50,255,160,.16),
         inset 0 0 20px rgba(70,255,190,.05);
 
-    transition:.25s;
+    transition: .25s;
 }
 
-.islandlife-button span{
-
-    margin-top:7px;
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#c9ffe2;
+.islandlife-button span {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #c9ffe2;
 }
 
-.islandlife-button:hover{
-
-    transform:translateY(-4px) scale(1.01);
-
-    border-color:#70ffb0;
+.islandlife-button:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #70ffb0;
 
     box-shadow:
         0 0 28px rgba(50,255,160,.30),
         0 12px 28px rgba(0,0,0,.4);
 }
 
+/* DROHNEN SIMULATOR */
 
-/* =========================================================
-   DROHNEN SIMULATOR
-========================================================= */
+.drone-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    padding: 20px;
 
-.drone-button{
+    color: #fff;
+    text-decoration: none;
+    font-size: 27px;
+    font-weight: 900;
+    border-radius: 18px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        #101c2c, #153d52, #12647a, #101827
+    );
 
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:100px;
-
-    padding:20px;
-
-    color:#fff;
-
-    text-decoration:none;
-
-    font-size:27px;
-    font-weight:900;
-
-    border-radius:18px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #101c2c,
-            #153d52,
-            #12647a,
-            #101827
-        );
-
-    border:2px solid rgba(90,225,255,.72);
+    border: 2px solid rgba(90,225,255,.72);
 
     box-shadow:
         0 0 18px rgba(0,190,255,.18),
         inset 0 0 24px rgba(90,220,255,.05);
 
-    transition:.25s;
-
-    position:relative;
-
-    overflow:hidden;
+    transition: .25s;
+    position: relative;
+    overflow: hidden;
 }
 
-.drone-button::before{
+.drone-button::before {
+    content: "";
+    position: absolute;
+    top: -120%;
+    left: -35%;
+    width: 35%;
+    height: 340%;
+    transform: rotate(25deg);
 
-    content:"";
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.12),
+        transparent
+    );
 
-    position:absolute;
-
-    top:-120%;
-    left:-35%;
-
-    width:35%;
-    height:340%;
-
-    transform:rotate(25deg);
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.12),
-            transparent
-        );
-
-    transition:.5s;
+    transition: .5s;
 }
 
-.drone-button:hover::before{
-
-    left:120%;
+.drone-button:hover::before {
+    left: 120%;
 }
 
-.drone-button span{
-
-    margin-top:7px;
-
-    font-size:14px;
-    font-weight:normal;
-
-    color:#bdefff;
+.drone-button span {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #bdefff;
 }
 
-.drone-button:hover{
-
-    transform:
-        translateY(-4px)
-        scale(1.01);
-
-    border-color:#7cecff;
+.drone-button:hover {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #7cecff;
 
     box-shadow:
         0 0 32px rgba(0,200,255,.34),
         0 14px 30px rgba(0,0,0,.4);
 }
 
+/* =========================================
+   NEU: WIMMELWELTEN
+========================================= */
 
-/* =========================================================
-   SPEZIAL BUTTONS
-========================================================= */
+.wimmelwelten-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-.special-button{
+    min-height: 100px;
+    padding: 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 27px;
+    font-weight: 900;
+    text-align: center;
+    border-radius: 18px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        #263c68,
+        #48356e,
+        #195d72,
+        #123049
+    );
 
-    justify-content:center;
-    align-items:center;
-
-    min-height:76px;
-
-    padding:15px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:24px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    transition:.25s;
-}
-
-.special-button:hover{
-
-    transform:translateY(-4px);
+    border: 2px solid rgba(112,230,255,.7);
 
     box-shadow:
-        0 0 25px rgba(255,255,255,.15);
+        0 0 18px rgba(0,200,255,.18),
+        inset 0 0 20px rgba(190,100,255,.07);
+
+    transition:
+        transform .25s,
+        border-color .25s,
+        box-shadow .25s;
 }
 
-
-/* TOWER DEFENSE */
-
-.tower-button{
-
-    background:
-        linear-gradient(
-            135deg,
-            #0c422c,
-            #12633d,
-            #082719
-        );
-
-    border:1px solid rgba(0,255,150,.55);
+.wimmelwelten-button span {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #d5f4ff;
 }
 
+.wimmelwelten-button:hover,
+.wimmelwelten-button:focus-visible {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #9ef5ff;
 
-/* ZOMBIE */
-
-.zombie-button{
-
-    background:
-        linear-gradient(
-            135deg,
-            #441014,
-            #7b1820,
-            #21080c
-        );
-
-    border:1px solid rgba(255,50,70,.6);
+    box-shadow:
+        0 0 30px rgba(85,215,255,.3),
+        0 12px 28px rgba(0,0,0,.4);
 }
 
+/* =========================================
+   SPEZIAL BUTTONS
+========================================= */
 
-/* =========================================================
+.special-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 76px;
+    padding: 15px;
+
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 15px;
+    transition: .25s;
+}
+
+.special-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 25px rgba(255,255,255,.15);
+}
+
+.tower-button {
+    background: linear-gradient(
+        135deg, #0c422c, #12633d, #082719
+    );
+    border: 1px solid rgba(0,255,150,.55);
+}
+
+.zombie-button {
+    background: linear-gradient(
+        135deg, #441014, #7b1820, #21080c
+    );
+    border: 1px solid rgba(255,50,70,.6);
+}
+
+/* =========================================
    TRENNER
-========================================================= */
+========================================= */
 
-.section-divider{
+.section-divider {
+    width: 85%;
+    margin: 55px auto 30px;
+    padding: 12px 20px;
 
-    width:85%;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
 
-    margin:55px auto 30px;
+    border-top: 1px solid rgba(0,255,255,.3);
+    border-bottom: 1px solid rgba(255,0,200,.3);
+    border-radius: 30px;
 
-    padding:12px 20px;
-
-    color:#fff;
-
-    font-size:20px;
-    font-weight:bold;
-
-    border-top:1px solid rgba(0,255,255,.3);
-    border-bottom:1px solid rgba(255,0,200,.3);
-
-    border-radius:30px;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(0,255,255,.05),
-            rgba(255,0,200,.08),
-            rgba(120,70,255,.05)
-        );
+    background: linear-gradient(
+        90deg,
+        rgba(0,255,255,.05),
+        rgba(255,0,200,.08),
+        rgba(120,70,255,.05)
+    );
 }
 
+/* =========================================
+   SPIELE BEREICH
+========================================= */
 
-/* =========================================================
-   SPIELE-BEREICH
-========================================================= */
-
-.spiele-bereich{
-
-    width:92%;
-    max-width:720px;
-
-    margin:55px auto;
+.spiele-bereich {
+    width: 92%;
+    max-width: 720px;
+    margin: 55px auto;
 }
 
-.spiele-bereich h2{
-
-    margin-bottom:30px;
-
-    font-size:34px;
-
-    color:white;
+.spiele-bereich h2 {
+    margin-bottom: 30px;
+    font-size: 34px;
+    color: white;
 
     text-shadow:
         0 0 10px rgba(0,255,255,.5),
         0 0 20px rgba(255,0,200,.25);
 }
 
+.spiel-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-/* =========================================================
-   SPIEL BUTTONS
-========================================================= */
+    width: 100%;
+    min-height: 76px;
+    margin-bottom: 22px;
+    padding: 15px 20px;
 
-.spiel-button{
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 15px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg,
+        rgba(30,40,65,.95),
+        rgba(20,15,45,.95)
+    );
 
-    align-items:center;
-    justify-content:center;
-
-    width:100%;
-
-    min-height:76px;
-
-    margin-bottom:22px;
-
-    padding:15px 20px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:24px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(30,40,65,.95),
-            rgba(20,15,45,.95)
-        );
-
-    border:1px solid rgba(0,220,255,.35);
-
-    box-shadow:
-        0 5px 18px rgba(0,0,0,.4);
-
-    transition:.2s;
+    border: 1px solid rgba(0,220,255,.35);
+    box-shadow: 0 5px 18px rgba(0,0,0,.4);
+    transition: .2s;
 }
 
-.spiel-button:hover{
+.spiel-button:hover {
+    transform: translateY(-4px) scale(1.015);
+    border-color: #00ffff;
 
-    transform:
-        translateY(-4px)
-        scale(1.015);
-
-    border-color:#00ffff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,100,130,.5),
-            rgba(100,0,130,.5)
-        );
+    background: linear-gradient(
+        135deg,
+        rgba(0,100,130,.5),
+        rgba(100,0,130,.5)
+    );
 
     box-shadow:
         0 0 15px rgba(0,255,255,.35),
         0 10px 25px rgba(0,0,0,.45);
 }
 
-.spiel-button:active{
-
-    transform:
-        translateY(2px)
-        scale(.98);
+.spiel-button:active {
+    transform: translateY(2px) scale(.98);
 }
 
-
-/* Farbwechsel */
-
-.spiele-bereich
-.spiel-button:nth-of-type(3n+1){
-
-    border-color:
-        rgba(0,255,255,.55);
+.spiele-bereich .spiel-button:nth-of-type(3n+1) {
+    border-color: rgba(0,255,255,.55);
 }
 
-.spiele-bereich
-.spiel-button:nth-of-type(3n+2){
-
-    border-color:
-        rgba(255,0,200,.55);
+.spiele-bereich .spiel-button:nth-of-type(3n+2) {
+    border-color: rgba(255,0,200,.55);
 }
 
-.spiele-bereich
-.spiel-button:nth-of-type(3n){
-
-    border-color:
-        rgba(130,80,255,.60);
+.spiele-bereich .spiel-button:nth-of-type(3n) {
+    border-color: rgba(130,80,255,.60);
 }
 
+/* =========================================
+   TOOLS BUTTONS
+========================================= */
 
-/* =========================================================
-   PC TOOLS
-========================================================= */
+.tool-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.tool-button{
+    width: 92%;
+    max-width: 720px;
+    min-height: 70px;
+    margin: 20px auto;
+    padding: 15px;
 
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    width:92%;
-    max-width:720px;
-
-    min-height:70px;
-
-    margin:20px auto;
-
-    padding:15px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:22px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    transition:.25s;
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 15px;
+    transition: .25s;
 }
 
-.tool-button:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 0 25px rgba(0,255,255,.2);
+.tool-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0,255,255,.2);
 }
 
-
-/* Netzteil */
-
-.netzteil{
-
-    background:
-        linear-gradient(
-            135deg,
-            #17384a,
-            #10232f,
-            #172044
-        );
-
-    border:1px solid rgba(0,220,255,.55);
+.netzteil {
+    background: linear-gradient(
+        135deg, #17384a, #10232f, #172044
+    );
+    border: 1px solid rgba(0,220,255,.55);
 }
 
+.wav-mp3-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-/* WAV */
+    width: 92%;
+    max-width: 720px;
+    min-height: 70px;
+    margin: 20px auto;
+    padding: 15px;
 
-.wav-mp3-button{
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 15px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg, #30205a, #56175f, #24133e
+    );
 
-    align-items:center;
-    justify-content:center;
-
-    width:92%;
-    max-width:720px;
-
-    min-height:70px;
-
-    margin:20px auto;
-
-    padding:15px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:22px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #30205a,
-            #56175f,
-            #24133e
-        );
-
-    border:1px solid rgba(255,0,220,.55);
-
-    transition:.25s;
+    border: 1px solid rgba(255,0,220,.55);
+    transition: .25s;
 }
 
-.wav-mp3-button:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 0 25px rgba(255,0,220,.2);
+.wav-mp3-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(255,0,220,.2);
 }
 
+.qr-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-/* QR */
+    width: 92%;
+    max-width: 720px;
+    min-height: 70px;
+    margin: 20px auto;
+    padding: 15px;
 
-.qr-button{
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 15px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg, #123f2d, #164e39, #102a22
+    );
 
-    align-items:center;
-    justify-content:center;
-
-    width:92%;
-    max-width:720px;
-
-    min-height:70px;
-
-    margin:20px auto;
-
-    padding:15px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:22px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #123f2d,
-            #164e39,
-            #102a22
-        );
-
-    border:1px solid rgba(0,255,160,.5);
-
-    transition:.25s;
+    border: 1px solid rgba(0,255,160,.5);
+    transition: .25s;
 }
 
-.qr-button:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 0 25px rgba(0,255,160,.2);
+.qr-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0,255,160,.2);
 }
 
+.passwort-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-/* =========================================================
-   PASSWORTGENERATOR
-========================================================= */
+    width: 92%;
+    max-width: 720px;
+    min-height: 70px;
+    margin: 20px auto;
+    padding: 15px;
 
-.passwort-button{
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 15px;
 
-    display:flex;
+    background: linear-gradient(
+        135deg, #182d5a, #263b82, #25134f
+    );
 
-    align-items:center;
-    justify-content:center;
-
-    width:92%;
-    max-width:720px;
-
-    min-height:70px;
-
-    margin:20px auto;
-
-    padding:15px;
-
-    color:white;
-
-    text-decoration:none;
-
-    font-size:22px;
-    font-weight:bold;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #182d5a,
-            #263b82,
-            #25134f
-        );
-
-    border:1px solid rgba(120,150,255,.65);
-
-    box-shadow:
-        0 0 18px rgba(80,120,255,.14);
-
-    transition:.25s;
+    border: 1px solid rgba(120,150,255,.65);
+    box-shadow: 0 0 18px rgba(80,120,255,.14);
+    transition: .25s;
 }
 
-.passwort-button:hover{
-
-    transform:translateY(-3px);
-
-    border-color:#8ca8ff;
+.passwort-button:hover {
+    transform: translateY(-3px);
+    border-color: #8ca8ff;
 
     box-shadow:
         0 0 25px rgba(100,130,255,.3),
         0 8px 20px rgba(0,0,0,.35);
 }
 
-
-/* =========================================================
+/* =========================================
    FOOTER
-========================================================= */
+========================================= */
 
-.footer{
-
-    margin-top:60px;
-
-    padding-top:25px;
-
-    color:#83909f;
-
-    font-size:13px;
-
-    border-top:1px solid rgba(255,255,255,.08);
+.footer {
+    margin-top: 60px;
+    padding-top: 25px;
+    color: #83909f;
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,.08);
 }
 
+/* =========================================
+   MOBILE OPTIMIERUNG
+========================================= */
 
-/* =========================================================
-   MOBILE
-========================================================= */
+@media (max-width:600px) {
 
-@media(max-width:600px){
-
-    .container{
-
-        width:96%;
-
-        margin:15px auto 30px;
-
-        padding:
-            22px 12px
-            40px;
+    .container {
+        width: 96%;
+        margin: 15px auto 30px;
+        padding: 22px 12px 40px;
     }
 
-    .logo{
-
-        width:75%;
+    .logo {
+        width: 75%;
     }
 
-    h1{
-
-        font-size:29px;
-
-        letter-spacing:1px;
+    h1 {
+        font-size: 29px;
+        letter-spacing: 1px;
     }
 
-    .spiele-bereich{
-
-        width:95%;
+    .spiele-bereich {
+        width: 95%;
     }
 
-    .spiele-bereich h2{
-
-        font-size:28px;
+    .spiele-bereich h2 {
+        font-size: 28px;
     }
 
-    .spiel-button{
-
-        min-height:68px;
-
-        padding:13px 12px;
-
-        font-size:20px;
+    .spiel-button {
+        min-height: 68px;
+        padding: 13px 12px;
+        font-size: 20px;
     }
 
-    .battleages-button{
-
-        font-size:23px;
-
-        min-height:90px;
+    .battleages-button {
+        font-size: 23px;
+        min-height: 90px;
     }
 
-    .tower2-button{
-
-        font-size:21px;
+    .tower2-button {
+        font-size: 21px;
     }
 
-    .inselwacht-button{
-
-        font-size:22px;
-
-        min-height:85px;
+    .inselwacht-button,
+    .islandlife-button {
+        font-size: 22px;
+        min-height: 85px;
     }
 
-    .islandlife-button{
-
-        font-size:22px;
-
-        min-height:85px;
+    .drone-button {
+        font-size: 22px;
+        min-height: 88px;
     }
 
-    .drone-button{
-
-        font-size:22px;
-
-        min-height:88px;
+    .drone-button span {
+        font-size: 13px;
     }
 
-    .drone-button span{
-
-        font-size:13px;
+    .wimmelwelten-button {
+        font-size: 22px;
+        min-height: 88px;
     }
 
-    .dorf-button{
-
-        font-size:21px;
+    .wimmelwelten-button span {
+        font-size: 13px;
     }
 
-    .special-button{
+    .dorf-button {
+        font-size: 21px;
+    }
 
-        font-size:20px;
+    .special-button {
+        font-size: 20px;
     }
 
     .tool-button,
     .wav-mp3-button,
     .qr-button,
-    .passwort-button{
-
-        font-size:19px;
-
-        min-height:64px;
+    .passwort-button {
+        font-size: 19px;
+        min-height: 64px;
     }
 
-    nav a{
-
-        font-size:13px;
-
-        padding:8px 11px;
+    nav a {
+        font-size: 13px;
+        padding: 8px 11px;
     }
 }
 
 </style>
-
 </head>
-
 
 <body>
 
-
 <div class="container">
 
-
-<!-- =====================================================
+<!-- =====================================
      LOGO
-====================================================== -->
+===================================== -->
 
 <img
     src="logo.png"
@@ -1281,112 +899,66 @@ p{
     class="logo"
 >
 
-
-<!-- =====================================================
+<!-- =====================================
      NAVIGATION
-====================================================== -->
+===================================== -->
 
 <nav>
-
-    <a href="#spiele">
-        🎮 Spiele
-    </a>
-
-    <a href="#tools">
-        🛠️ Tools
-    </a>
-
-    <a href="impressum.html">
-        📄 Impressum
-    </a>
-
+    <a href="#spiele">🎮 Spiele</a>
+    <a href="#tools">🛠️ Tools</a>
+    <a href="impressum.html">📄 Impressum</a>
 </nav>
 
-
-<!-- =====================================================
+<!-- =====================================
      TITEL
-====================================================== -->
+===================================== -->
 
-<h1>
-    AUSTRIAN MOONSHINER
-</h1>
+<h1>AUSTRIAN MOONSHINER</h1>
 
-
-<p>
-    🎮 Online Arcade Spielhalle &amp; nützliche Tools
-</p>
-
+<p>🎮 Online Arcade Spielhalle &amp; nützliche Tools</p>
 
 <p>
     Meine neue Projekt-Webseite mit selbst programmierten
     Browser-Spielen und praktischen Tools.
 </p>
 
-
 <p>
     Alle Spiele und Tools sind selbst programmiert
     und werden laufend weiterentwickelt.
 </p>
 
+<p>Neue Spiele und Tools werden regelmäßig hinzugefügt.</p>
 
-<p>
-    Neue Spiele und Tools werden regelmäßig hinzugefügt.
-</p>
-
-
-<!-- =====================================================
+<!-- =====================================
      HINWEIS
-====================================================== -->
+===================================== -->
 
 <div class="hinweis">
-
     ⚠️ <strong>Hinweis:</strong><br>
-
     Alle Spiele dienen ausschließlich der Unterhaltung.
     Es gibt keine echten Geldeinsätze und keine echten
     Geldgewinne.
-
 </div>
 
-
-<!-- =====================================================
+<!-- =====================================
      HAUPTSPIELE
-====================================================== -->
+===================================== -->
 
 <div class="haupt-buttons">
 
-
     <!-- BATTLE AGES -->
 
-    <a
-        href="zeitenkrieg.html"
-        class="battleages-button"
-    >
-
+    <a href="zeitenkrieg.html" class="battleages-button">
         ⚔️ BATTLE AGES
-
-        <span>
-            Strategie • Einheiten • Wellen
-        </span>
-
+        <span>Strategie • Einheiten • Wellen</span>
     </a>
-
 
     <!-- TOWER DEFENSE 2 -->
 
-    <a
-        href="towerdefense2.html"
-        class="tower2-button"
-    >
-
+    <a href="towerdefense2.html" class="tower2-button">
         🏰 TOWER DEFENSE 2
-
-        <span>
-            Verteidige deine Basis!
-        </span>
-
+        <span>Verteidige deine Basis!</span>
     </a>
-
 
     <!-- DORFHERRSCHER -->
 
@@ -1394,71 +966,56 @@ p{
         class="dorf-button"
         onclick="window.location.href='dorfherrscher.html'"
     >
-
         🏰 Dorfherrscher
-
         <br>
-
         <span>
             Baue dein Dorf auf und verteidige dein Reich
         </span>
-
     </button>
 
+    <!-- INSELWACHT -->
 
-    <!-- =====================================================
-         INSELWACHT
-    ====================================================== -->
-
-    <a
-        href="inselwacht.html"
-        class="inselwacht-button"
-    >
-
+    <a href="inselwacht.html" class="inselwacht-button">
         🌊 INSELWACHT
-
         <span>
             Schütze deine Insel vor Sturm, Flut und Untergang
         </span>
-
     </a>
 
-
-    <!-- =====================================================
-         ISLAND LIFE
-    ====================================================== -->
+    <!-- ISLAND LIFE -->
 
     <a
         href="https://austrian-moonshiner.github.io/island-life-v7.1-schlaffix.html"
         class="islandlife-button"
     >
-
         🏝️ ISLAND LIFE
-
         <span>
             Erkunde deine Insel, sammle Ressourcen und gestalte dein Zuhause
         </span>
-
     </a>
 
+    <!-- DROHNEN SIMULATOR -->
 
-    <!-- =====================================================
-         DROHNEN SIMULATOR
-    ====================================================== -->
-
-    <a
-        href="drone.html"
-        class="drone-button"
-    >
-
+    <a href="drone.html" class="drone-button">
         🚁 DROHNEN SIMULATOR
-
         <span>
             Fliege eine realistische Drohne durch eine große 3D-Welt
         </span>
-
     </a>
 
+    <!-- =====================================
+         NEU: WIMMELWELTEN
+    ===================================== -->
+
+    <a
+        href="https://austrian-moonshiner.github.io/wimmelwelten_spielbar_einzeldatei.html"
+        class="wimmelwelten-button"
+    >
+        🔎 WIMMELWELTEN
+        <span>
+            Entdecke verschiedene Welten und finde versteckte Gegenstände
+        </span>
+    </a>
 
     <!-- TOWER DEFENSE -->
 
@@ -1466,11 +1023,8 @@ p{
         href="towerdefense.html"
         class="special-button tower-button"
     >
-
         🏰 TOWER DEFENSE
-
     </a>
-
 
     <!-- ZOMBIE SURVIVAL -->
 
@@ -1478,315 +1032,173 @@ p{
         href="zombiesurvival.html"
         class="special-button zombie-button"
     >
-
         🧟 ZOMBIE SURVIVAL
-
     </a>
-
 
 </div>
 
-
-<!-- =====================================================
+<!-- =====================================
      SPIELE
-====================================================== -->
+===================================== -->
 
-<section
-    class="spiele-bereich"
-    id="spiele"
->
+<section class="spiele-bereich" id="spiele">
 
-    <h2>
-        🎮 MEINE SPIELE
-    </h2>
-
+    <h2>🎮 MEINE SPIELE</h2>
 
     <!-- BATTLE AGES 2 -->
-
-    <a
-        href="battleages2v2.html"
-        class="spiel-button"
-    >
+    <a href="battleages2v2.html" class="spiel-button">
         ⚔️ Battle Ages 2 V2
     </a>
 
-
     <!-- BIRDJUMP -->
-
-    <a
-        href="birdjump.html"
-        class="spiel-button"
-    >
+    <a href="birdjump.html" class="spiel-button">
         🐦 Birdjump
     </a>
 
-
     <!-- SOLITÄR -->
-
-    <a
-        href="groß.html"
-        class="spiel-button"
-    >
+    <a href="groß.html" class="spiel-button">
         🃏 Solitär
     </a>
 
-
     <!-- MEMORY -->
-
-    <a
-        href="Memory.html"
-        class="spiel-button"
-    >
+    <a href="Memory.html" class="spiel-button">
         🧠 Memory
     </a>
 
-
     <!-- MEMORY 2 -->
-
-    <a
-        href="memory2.html"
-        class="spiel-button"
-    >
+    <a href="memory2.html" class="spiel-button">
         🧠 Memory 2
     </a>
 
-
     <!-- MINESWEEPER -->
-
-    <a
-        href="minesweeper.html"
-        class="spiel-button"
-    >
+    <a href="minesweeper.html" class="spiel-button">
         💣 Minesweeper
     </a>
 
-
     <!-- SNAKE -->
-
-    <a
-        href="snake.html"
-        class="spiel-button"
-    >
+    <a href="snake.html" class="spiel-button">
         🐍 Snake
     </a>
 
-
     <!-- TETRIS -->
-
-    <a
-        href="Tetris.html"
-        class="spiel-button"
-    >
+    <a href="Tetris.html" class="spiel-button">
         🧱 Tetris
     </a>
 
-
     <!-- FLAPPY BIRD -->
-
-    <a
-        href="flappybird.html"
-        class="spiel-button"
-    >
+    <a href="flappybird.html" class="spiel-button">
         🐦 Flappy Bird
     </a>
 
-
     <!-- PAC-MAN -->
-
-    <a
-        href="pacman.html"
-        class="spiel-button"
-    >
+    <a href="pacman.html" class="spiel-button">
         🟡 Pac-Man
     </a>
 
-
     <!-- BIRDMANIA -->
-
-    <a
-        href="birdmania_v2.html"
-        class="spiel-button"
-    >
+    <a href="birdmania_v2.html" class="spiel-button">
         🐦 Birdmania
     </a>
 
-
     <!-- SUDOKU -->
-
-    <a
-        href="Sudoku.html"
-        class="spiel-button"
-    >
+    <a href="Sudoku.html" class="spiel-button">
         🔢 Sudoku
     </a>
 
-
     <!-- BREAKOUT -->
-
-    <a
-        href="breakout.html"
-        class="spiel-button"
-    >
+    <a href="breakout.html" class="spiel-button">
         🧱 Breakout
     </a>
 
-
     <!-- 4 GEWINNT -->
-
-    <a
-        href="4gewinnt.html"
-        class="spiel-button"
-    >
+    <a href="4gewinnt.html" class="spiel-button">
         🔴 4 Gewinnt
     </a>
 
-
     <!-- BULLDOGGEN SPIEL -->
-
-    <a
-        href="frenchie-mania.html"
-        class="spiel-button"
-    >
+    <a href="frenchie-mania.html" class="spiel-button">
         🐶 Bulldoggen-Spiel
     </a>
 
-
     <!-- BULLDOGMANIA 2 -->
-
-    <a
-        href="bulldogmania2.html"
-        class="spiel-button"
-    >
+    <a href="bulldogmania2.html" class="spiel-button">
         🐶 Bulldogmania 2
     </a>
 
-
     <!-- SCHACH -->
-
-    <a
-        href="schach.html"
-        class="spiel-button"
-    >
+    <a href="schach.html" class="spiel-button">
         ♟️ Schach mit KI
     </a>
 
-
     <!-- DOODLE JUMP -->
-
-    <a
-        href="doodlejump.html"
-        class="spiel-button"
-    >
+    <a href="doodlejump.html" class="spiel-button">
         🚀 Doodle Jump
     </a>
 
-
     <!-- CANDY CRUSH 2 -->
-
-    <a
-        href="candycrush2v1.html"
-        class="spiel-button"
-    >
+    <a href="candycrush2v1.html" class="spiel-button">
         🍬 Candy Crush 2
     </a>
 
-
     <!-- CANDY CRUSH -->
-
-    <a
-        href="candy-crush.html"
-        class="spiel-button"
-    >
+    <a href="candy-crush.html" class="spiel-button">
         🍭 Candy Crush
     </a>
 
-
     <!-- BIRDMANIA CLASSIC -->
-
-    <a
-        href="birdmania.html"
-        class="spiel-button"
-    >
+    <a href="birdmania.html" class="spiel-button">
         🐦 Birdmania Classic
     </a>
 
-
 </section>
 
+<!-- =====================================
+     TOOLS
+===================================== -->
 
-<!-- =====================================================
-     TOOLS TRENNER
-====================================================== -->
-
-<div
-    class="section-divider"
-    id="tools"
->
-
+<div class="section-divider" id="tools">
     🛠️ PC-TOOLS &amp; NÜTZLICHE WERKZEUGE
-
 </div>
 
-
-<!-- =====================================================
-     PC NETZTEIL RECHNER
-====================================================== -->
+<!-- PC NETZTEIL RECHNER -->
 
 <a
     href="pcnetzteilrechner.html"
     class="tool-button netzteil"
 >
-
     ⚡ PC Netzteil Rechner
-
 </a>
 
-
-<!-- =====================================================
-     WAV → MP3
-====================================================== -->
+<!-- WAV ZU MP3 -->
 
 <a
     href="wav-mp3.html"
     class="wav-mp3-button"
 >
-
     🎵 WAV → MP3 Konverter
-
 </a>
 
-
-<!-- =====================================================
-     QR GENERATOR
-====================================================== -->
+<!-- QR GENERATOR -->
 
 <a
     href="qr-generator.html"
     class="qr-button"
 >
-
     🔲 QR-Code Generator
-
 </a>
 
-
-<!-- =====================================================
-     PASSWORTGENERATOR
-====================================================== -->
+<!-- PASSWORTGENERATOR -->
 
 <a
     href="passwortgenerator.html"
     class="passwort-button"
 >
-
     🔐 Passwortgenerator
-
 </a>
 
-
-<!-- =====================================================
+<!-- =====================================
      FOOTER
-====================================================== -->
+===================================== -->
 
 <div class="footer">
 
@@ -1799,10 +1211,7 @@ p{
 
 </div>
 
-
 </div>
 
-
 </body>
-
 </html>
