@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MoonCraft v11 | Kreativwelt & Tschernobyl 1986</title>
+<meta name="description" content="MoonCraft 3D: Kreativwelt und große begehbare Tschernobyl-1986-Welt, Einzelspieler, Speichern, Bauen.">
+<style>:root{color-scheme:dark;--bg:#0d1521;--glass:rgba(10,23,35,.88);--stroke:rgba(195,223,228,.21);--text:#e3ebef;--mint:#a2e8c6;--amber:#edc875}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101a23;color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}body{touch-action:none}button,input{font:inherit}button{color:inherit;background:#243748;border:1px solid #7392a459;border-radius:9px;padding:10px 12px;cursor:pointer}button:hover{background:#375268}button:disabled{opacity:.4;cursor:default}button:focus-visible{outline:2px solid var(--mint)}button.primary{background:#2b6f65;border-color:#76cbbb;font-weight:800}button.primary:hover{background:#399184}button.danger{color:#ffd6ca}h1,h2,h3,p{margin:0}h1{font-size:28px;letter-spacing:.035em;color:#b8f4d5}h2{font-size:20px}h3{font-size:15px}p{line-height:1.55;color:#c6d5dd}small,.muted{color:#acbecb}.screen{position:absolute;inset:0;pointer-events:none;z-index:2}.hudbox{background:var(--glass);border:1px solid var(--stroke);backdrop-filter:blur(9px);border-radius:12px}.topbar{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;pointer-events:auto;max-width:73vw}.brand{font-weight:900;color:#b4ebd9;letter-spacing:.1em;padding:10px 13px;background:#0b1f2de6;border:1px solid #a4ddd03b;border-radius:10px}.topbar button{padding:9px 11px;font-size:12px}.stats{position:absolute;top:12px;right:12px;min-width:220px;text-align:right;padding:9px 12px;line-height:1.6;font-size:12px}.cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fbf4e2;font-size:25px;text-shadow:0 0 6px #080808;line-height:1}.helpLine{position:absolute;top:62px;left:12px;padding:7px 10px;font-size:11px;color:#b8cbd2;max-width:min(650px,70vw)}.hotbar{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);padding:7px;display:flex;gap:5px;max-width:95vw;overflow:auto;pointer-events:auto}.slot{width:67px;flex-shrink:0;height:65px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:10px;text-align:center}.slot.sel{border:2px solid #f4d98b;background:#475c65}.swatch{width:28px;height:26px;border:1px solid #fff8;border-radius:4px;box-shadow:inset 0 0 12px #0002}.toast{position:absolute;top:105px;left:50%;transform:translateX(-50%);max-width:80vw;padding:10px 14px;background:#102b32eb;border:1px solid #acd3bd57;border-radius:10px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;text-align:center}.aimInfo{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);padding:5px 10px;border-radius:9px;background:#0d1b29ad;font-size:12px;color:#f1e6ce;white-space:nowrap}.modalBack{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.42);pointer-events:auto;padding:20px}.panel{background:#102334f5;border:1px solid #738f9e89;box-shadow:0 24px 100px #000c;border-radius:20px;padding:25px;max-height:93vh;overflow-y:auto;max-width:680px;width:100%}.panel .subtitle{margin-top:8px;margin-bottom:14px}.worlds{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.worldChoice{text-align:left;padding:0;overflow:hidden;border:2px solid #547082;border-radius:12px;background:#162b3b}.worldChoice.active{border-color:#b8f2cb;box-shadow:0 0 0 2px #78c9a827}.worldArt{height:95px;position:relative;overflow:hidden;background:linear-gradient(150deg,#86c9e5 0 40%,#4c9368 41% 70%,#32553c 71%)}.worldArt.industrial{background:linear-gradient(155deg,#91a9b3 0 51%,#64787e 51%)}.worldArt svg{width:100%;height:100%}.worldChoice .body{padding:12px}.worldChoice strong{display:block;margin-bottom:4px;color:#f6f7e6}.worldChoice small{display:block;font-size:11px;line-height:1.5}.controlRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.controlRow button{flex:1 1 140px}.setting{margin-top:18px;display:flex;gap:10px;align-items:center;justify-content:space-between;font-size:13px}.setting input{width:50%}.fineprint{font-size:11px;color:#9eafbc;margin-top:14px}.hidden{display:none!important}.submodal{max-width:790px}.inventory{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;margin:14px 0}.item{display:flex;align-items:center;gap:8px;text-align:left;font-size:12px;padding:8px}.item .swatch{width:22px;height:22px;flex-shrink:0}.sidePanel{position:absolute;top:74px;right:12px;width:308px;max-height:min(79vh,730px);overflow:auto;padding:17px;pointer-events:auto}.sidePanel h2{margin:0 0 9px;color:#d6f2dd}.sidePanel p{font-size:12px;margin-bottom:10px}.travelButton{display:block;width:100%;text-align:left;margin-top:6px;padding:10px;font-size:12px}.travelButton span{display:block;color:#b3c8ce;font-size:10px;margin-top:3px}.footerActions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}.footerActions button{flex:1}#mapCanvas{display:block;width:100%;height:auto;border-radius:9px;border:1px solid #ffffff33;background:#1d3139;cursor:crosshair}#mapLegend{margin:8px 0;color:#b4c6cb;font-size:11px}.infoCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:15px 0}.infoCards div{background:#213746;padding:10px;border-radius:9px;font-size:12px}.infoCards strong{display:block;color:#dfedd9;margin-bottom:6px}.mobile{display:none}.tag{display:inline-block;border:1px solid #b4cabb60;border-radius:99px;padding:3px 9px;font-size:10px;color:#d1e5c9;margin-bottom:7px}.statusLine{font-size:12px;margin-top:7px;color:#a8c1ce}#loading{position:absolute;inset:0;z-index:20;background:#111b25;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}#loading strong{font-size:24px;color:#b7e8ca}#loading div{color:#a4b6c4}#loading.error{background:#3b2023}#loading.error div{max-width:540px;text-align:center;line-height:1.6}#miniCompass{position:absolute;bottom:110px;right:16px;font-size:12px;padding:9px}.badgeEdit{color:#dbf4b9}.hintKey{color:#f1d993}@media(max-width:750px){.stats{top:53px;right:6px;min-width:unset;max-width:47vw;font-size:10px}.topbar{left:6px;top:6px;max-width:100%;gap:4px}.topbar button{padding:7px 8px}.helpLine{display:none}.worlds{grid-template-columns:1fr}.worldArt{height:75px}.panel{padding:18px}.sidePanel{width:min(94vw,320px);right:3%;top:80px}.hotbar{bottom:7px}.slot{width:53px;height:56px;font-size:9px}.brand{font-size:12px}.mobile{display:block}.mobJoystick{position:absolute;bottom:85px;left:14px;width:102px;height:102px;pointer-events:auto;background:#edf3f321;border:2px solid #ffffff45;border-radius:50%}.joyDot{width:34px;height:34px;background:#e4f6ff8c;border-radius:50%;position:absolute;left:32px;top:32px}.mobButtons{position:absolute;bottom:90px;right:12px;display:grid;grid-template-columns:repeat(2,58px);gap:5px;pointer-events:auto}.mobButtons button{height:47px;font-size:11px;padding:3px}.aimInfo{bottom:75px}#miniCompass{display:none}}
+</style>
+</head><body>
+<div id="loading"><strong>◈ MOONCRAFT v11</strong><div>Kraftwerksgebäude, Fassaden und Höhlenwelt werden vorbereitet …</div></div>
+<div class="screen">
+ <div class="topbar"><span class="brand">◈ MOONCRAFT</span><button id="menuBtn">☰ Menü</button><button id="invBtn">▦ Blöcke (E)</button><button id="fly">✈ Flug AN</button><button id="travelBtn" title="Schnellreise mit T">⌖ Orte (T)</button><button id="mapBtn" title="Karte mit M">▦ Karte (M)</button><button id="caveBtn" title="Höhle suchen (C)">⛏ Höhle (C)</button><button id="undoBtn" title="Strg+Z">↶ Zurück</button><button id="redoBtn" title="Strg+Y">↷ Wiederholen</button><button id="graphicsBtn">⚙ Grafik</button><button id="helpBtn">? Hilfe</button></div>
+ <div class="stats hudbox" id="stats">Welt wird geladen …</div>
+ <div class="helpLine hudbox">WASD: Bewegung · C: Höhle · Maus: Blick · B halten: Serienbauen · M: Karte · Linksklick: abbauen · Rechtsklick: bauen · X: Stufe vor dem Bauen drehen · Q: gebaute Stufe drehen · Leertaste/Shift: hoch/runter · F: Flug · E: Blöcke · G: Tür/Bett/Aufzug · V: Wasser/Feuer frei · T: Orte · R: Dächer</div>
+ <div id="navigationHud" class="hudbox" style="position:absolute;left:12px;bottom:100px;padding:9px 12px;font-size:12px;max-width:280px;pointer-events:none"></div><div class="cross">+</div><div id="aimInfo" class="aimInfo"></div>
+ <div id="hotbar" class="hotbar hudbox"></div>
+ <div class="toast" id="toast"></div>
+ <div id="miniCompass" class="hudbox"><span id="actionText"></span> · <span id="selectedBlock">Gras</span></div>
+ <div class="mobile"><div id="joystick" class="mobJoystick"><div id="joyDot" class="joyDot"></div></div><div class="mobButtons"><button id="mBreak">⛏ Abbauen</button><button id="mPlace">▣ Bauen</button><button id="mUp">▲ Hoch</button><button id="mDown">▼ Runter</button><button id="mFly">✈ Flug</button></div></div>
+</div>
+<div class="modalBack" id="mainMenu">
+ <div class="panel"><div class="tag">EINZELSPIELER · KREATIVMODUS · VERSION 11</div><h1>◈ MoonCraft</h1>
+ <p class="statusLine">NEU V11: B halten zum Serienbauen · Kreativkarte mit M · Bauplatz und Zielmarkierung.</p><p class="subtitle">Deine tiefe 3D-Kreativwelt mit Höhlen und einer zweiten, begehbaren Kraftwerkswelt.</p>
+ <div class="worlds">
+  <button id="choiceCreative" class="worldChoice active"><div class="worldArt"><svg viewBox="0 0 320 95" preserveAspectRatio="none"><path d="M0 62L55 27 115 69 170 23 232 61 290 33 320 51V95H0" fill="#5d8e6d"/><path d="M0 88L40 59 92 88 161 56 222 88 274 67 320 88V95H0" fill="#385a45"/><rect x="65" y="39" width="12" height="49" fill="#6b5140"/><path d="M47 55L70 14 96 55Z" fill="#245e44"/><rect x="260" y="51" width="10" height="31" fill="#5e4733"/><path d="M244 61L265 27 287 61Z" fill="#1e654b"/></svg></div><div class="body"><strong>🌲 Kreativwelt + Höhlen</strong><small>Große Landschaften, tiefe Höhlen, Erze und freie Bauplätze bis Y −64.</small></div></button>
+  <button id="choicePlant" class="worldChoice"><div class="worldArt industrial"><svg viewBox="0 0 320 95" preserveAspectRatio="none"><path d="M0 80h320v15H0" fill="#525d5d"/><rect x="10" y="44" width="93" height="40" fill="#b4b9b0"/><rect x="100" y="29" width="105" height="55" fill="#919d9b"/><rect x="125" y="10" width="55" height="31" fill="#c3c7bd"/><rect x="207" y="48" width="113" height="36" fill="#9caeac"/><rect x="91" y="5" width="14" height="77" fill="#ece8d9"/><path d="M91 18h14v13H91zm0 25h14v13H91z" fill="#b75043"/><path d="M3 70H320" stroke="#334952" stroke-width="4" stroke-dasharray="11 3"/></svg></div><div class="body"><strong>☢ Tschernobyl 1986</strong><small>Großer AKW-Komplex mit Leitwarten, Reaktorhallen, Turbinen und Gelände.</small></div></button>
+ </div>
+ <div class="statusLine">NEU V9: Bett mit Kissen & Holzrahmen · Fackeln mit Flammenmodell · korrigierte Blockflächen · V8-Bauverlauf bleibt erhalten. <strong>Grafikbeschleunigung im Browser einschalten.</strong></div><p id="worldDescription">Tiefe Welt mit Höhlen, Erzadern und einer festen Grundgesteinschicht bei Y −61.</p>
+ <div class="statusLine" id="worldInfo">Spielstand wird geladen …</div>
+ <div class="controlRow"><button class="primary" id="play">▶ Kreativwelt betreten</button><button id="save">💾 Speichern</button><button id="reset" class="danger">✦ Neue Kreativwelt</button></div>
+ <div class="controlRow"><button id="menuGraphics">⚙ Grafikeinstellungen</button><button id="export">↓ Spielstand exportieren</button><button id="import">↑ Spielstand importieren</button><input type="file" hidden id="importFile" accept=".json,application/json"></div>
+ <div class="setting"><label for="distance">Sichtweite Kreativwelt: <strong id="distanceText">3</strong> Chunks</label><input id="distance" min="2" max="4" step="1" type="range" value="3"></div>
+ <div id="plantButtons" class="hidden"><div class="controlRow"><button id="roof">⌂ <span id="roofLabel">Dächer ausblenden</span></button><button id="light">☀ Licht: <span id="lightingLabel">Tag</span></button></div><div class="statusLine" id="plantMode">Dach: sichtbar</div></div>
+ <p class="fineprint">Die AKW-Welt ist eine künstlerische Rekonstruktion des Zustands vor dem Unfall von 1986. Gebäudeabmessungen orientieren sich grob an historischen Berichten. Innenräume, Wege und Instrumente sind für das Spiel teilweise erfunden und keine exakte Bauaufnahme. Die Reaktor-Attrappe kann nicht realistisch betrieben werden. Speichern erfolgt lokal im Browser. Wasserquellen und Feuer sind zunächst dekorative, frei platzierbare Spielblöcke: Es gibt keine vollständige Flüssigkeits- oder Brandausbreitung. Tipp: In der Kreativwelt bringt dich C zu einer nahegelegenen Höhle. Mit F wechselst du zwischen Fliegen und Laufen. Die 3D-Bibliothek wird beim Start online geladen.</p>
+ </div>
+</div>
+<div id="inventoryModal" class="modalBack hidden"><div class="panel submodal"><h2>▦ Unbegrenzte Baublöcke · Türen, Fenster, Feuer und Wasser</h2><p>Wähle einen Block. Auch die Wände und Böden in Tschernobyl lassen sich blockweise abbauen. Bett ansehen + G: bis zum Morgen schlafen. Mittlere Maustaste: Block aufnehmen. <strong>Holzstufen:</strong> X vor dem Platzieren drehen, Q zum nachträglichen Drehen.</p><input id="blockSearch" placeholder="Blöcke suchen …" aria-label="Blöcke suchen" style="width:100%;padding:12px;margin-top:12px;background:#203748;color:white;border:1px solid #597184;border-radius:8px"><div class="controlRow" id="categoryButtons"></div><p id="inventoryHint" class="statusLine"></p><div class="inventory" id="invGrid"></div><div class="controlRow"><button class="primary" id="closeInv">▶ Zurück ins Spiel</button></div></div></div>
+<div id="travel" class="modalBack hidden"><div class="panel submodal"><h2>⌖ Schnellreise · Tschernobyl 1986</h2><p>Reaktor 4 besitzt mehrere spielbare Etagen. Mit diesen Stationen gelangst du ohne lange Wege in die Gebäude.</p><div class="inventory" id="travelOptions"></div><div class="controlRow"><button class="primary" id="closeTravel">▶ Zurück ins Spiel</button></div></div></div>
+<div id="mapPanel" class="modalBack hidden"><div class="panel" style="max-width:570px"><h2 id="mapTitle">▦ Geländeübersicht</h2><p id="mapDescription">Du bist durch den gelben Punkt markiert. Klicke auf die Karte, um zur nächstgelegenen Schnellreise-Station zu gelangen.</p><canvas id="mapCanvas" width="280" height="210" style="margin-top:14px"></canvas><div id="creativeMapControls" class="hidden"><div class="controlRow"><button id="mapZoomIn">＋ Näher</button><button id="mapZoomOut">− Weiter</button><button id="mapCenter">Meine Position</button></div><div class="controlRow"><button id="mapSetHome">⌂ Hier ist mein Bauplatz</button><button id="mapHome">Bauplatz anzeigen</button><button id="mapClearTarget">Ziel löschen</button></div><p id="mapReadout" class="statusLine"></p></div><div id="mapLegend">Hell: Gebäude · Blau: Kühlkanal · Gelb: deine Position</div><div class="controlRow"><button class="primary" id="closeMap">▶ Zurück ins Spiel</button></div></div></div>
+<div id="graphicsModal" class="modalBack hidden"><div class="panel"><h2>⚙ Grafik & Ansicht</h2><p>Die Änderungen gelten sofort und werden auf diesem Gerät gespeichert.</p>
+<div class="controlRow"><button data-preset="low">Leistung</button><button data-preset="balanced">Ausgewogen</button><button data-preset="high">Qualität</button></div>
+<div class="setting"><label>Renderauflösung <span id="resolutionValue"></span></label><input id="resolution" type="range" min="0.5" max="2" step="0.1"></div>
+<div class="setting"><label>Sichtfeld <span id="fovValue"></span>°</label><input id="fov" type="range" min="50" max="100" step="1"></div>
+<div class="setting"><label>Helligkeit <span id="exposureValue"></span></label><input id="exposure" type="range" min="0.6" max="1.8" step="0.1"></div>
+<div class="setting"><label for="dynamicLights">Fackelbeleuchtung</label><input id="dynamicLights" type="checkbox"></div>
+<div class="setting"><label for="showStats">FPS & Koordinaten</label><input id="showStats" type="checkbox"></div>
+<div class="controlRow"><button id="dayButton">☀ Tag / Abend / Nacht</button><button id="closeGraphics" class="primary">Übernehmen & zurück</button></div><p class="fineprint">Sichtweite im Hauptmenü. Fackeln beleuchten ihre Umgebung; maximal 8 nahe Lichtquellen gleichzeitig. Renderauflösung beeinflusst Schärfe und Leistung.</p></div></div>
+<div id="helpModal" class="modalBack hidden"><div class="panel"><h2>⌨ Steuerung & Funktionen</h2><div class="infoCards"><div><strong>Fortbewegung</strong>WASD laufen/fliegen<br>Maus umsehen<br>Leertaste aufwärts / springen<br>Shift abwärts<br>Strg beschleunigen<br>F Flugmodus</div><div><strong>Kreatives Bauen</strong>Linksklick: Block / Gebäudestück abbauen<br>Rechtsklick: Block setzen<br>B / rechte Maustaste halten: Serienbauen<br>M: Karte in beiden Welten<br>E: alle Blockarten<br>1–9 / Mausrad: Schnellleiste<br>Strg+Z: Bauaktion rückgängig<br>Strg+Y: Wiederholen<br>G: Türen öffnen / Bett benutzen<br>Mittelklick: Block aufnehmen<br>X: Ausrichtung der nächsten Stufe um 90° drehen<br>Q: anvisierte Stufe um 90° drehen (Shift+Q: zurück)<br>C: Höhle entdecken<br>V: Wasser/Feuer im Raum<br>P: speichern</div><div><strong>AKW erkunden</strong>T: Schnellreise<br>M: Übersichtsplan<br>G: Aufzug bei Markierung<br>R: Dächer ein/aus<br>L: Tag/Abend/Nacht</div><div><strong>Spielstände</strong>Jede Welt separat gespeichert<br>Export als JSON<br>Import auf anderem PC<br>Schnellleiste pro Welt gespeichert<br>Automatisches Speichern<br>ESC: Menü</div></div><p class="fineprint">Gebäudewände, Böden und kastenförmige Ausstattung sind bearbeitbar. Runde Rohre und Maschinen bleiben dekorative Modelle. Rückgängig merkt sich die letzten 100 Bauaktionen dieser Sitzung. Laden, Zurücksetzen und Weltwechsel leeren den Verlauf. Das AKW ist als historisch inspirierte Architektur- und Bauwelt konzipiert und enthält keine authentischen Reaktorsteuerungsfunktionen.</p><div class="controlRow"><button class="primary" id="closeHelp">▶ Zurück ins Spiel</button></div></div></div>
+<script type="module">
+
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+const $=id=>document.getElementById(id);
+const SIZE=16, SEA=7, MIN_Y=-64, BEDROCK_Y=-61, TERRAIN_TOP=45, SAVEKEY={creative:'mooncraft_creative_save_v1',chernobyl:'mooncraft_chernobyl_1986_v1'};
+const BLOCKS=[
+ ['grass','Gras','#73b34f'],['dirt','Erde','#836047'],['stone','Stein','#9297a0'],['sand','Sand','#dfc98b'],['wood','Baumstamm','#876345'],['leaves','Blätter','#438d51'],['planks','Holzbretter','#c39963'],['brick','Ziegel','#a95c54'],['glass','Glas','#99cbd8'],['snow','Schnee','#e3eef0'],['cobble','Bruchstein','#6f7f80'],['gold','Gold','#e8b940'],['diamond','Diamant','#76dadd'],['obsidian','Obsidian','#2f2e45'],['wool','Wolle','#ede2ce'],['red','Rot','#ce5d50'],['blue','Blau','#568ac1'],['light','Leuchtblock','#ffeb9a'],['water','Wasser','#438ba8'],['clay','Ton','#a0a5a2'],['cactus','Kaktus','#518d53'],['darkwood','Dunkelholz','#503b2b'],['purple','Violett','#955dbc'],['black','Schwarz','#2a333a'],['concrete','Beton','#aeb9b6'],['metal','Stahl','#6f8489'],['yellow','Warn-Gelb','#f0d456'],['green','Industriegrün','#5a8573'],['white','Weiß','#e6e5da'],['rust','Rost','#985d43'],['floor','Bodenfliese','#9baca6'],['lamp','Leuchtkörper','#fae3a7'],['door_oak','Holztür','#ac7e51'],['door_steel','Stahltür','#9babb4'],['pane','Fensterscheibe','#9adbe8'],['fence','Holzzaun','#ac8555'],['slab','Steinplatte','#9297a0'],['stairs','Holzstufe','#c39963'],['fire','Feuer','#ff7b20'],['deepstone','Tiefengestein','#535865'],['bedrock','Grundgestein','#2d3037'],['coal_ore','Kohleerz','#50545d'],['iron_ore','Eisenerz','#ad8f78'],['copper_ore','Kupfererz','#bd805a'],['diamond_ore','Diamanterz','#58c4c9'],['crystal','Höhlenkristall','#b884ee'],['moss','Moosstein','#567766'],['torch','Fackel','#ffbf55'],['bed','Bett','#bd4a51'],['bookshelf','Bücherregal','#977249'],['stonebrick','Steinziegel','#8c9296'],['quartz','Quarz','#efece5'],['terracotta','Terrakotta','#b67651'],['orange','Orange Wolle','#e58d35'],['pink','Rosa Wolle','#df93ad'],['cyan','Türkis Wolle','#3eacb1'],['lime','Hellgrüne Wolle','#94bd4b'],['gravel','Kies','#87847e'],['basalt','Basalt','#444a52'],['lantern','Laterne','#f3ce80'],['table','Tisch','#ad8052']
+];
+const COLORS={...Object.fromEntries(BLOCKS.map(b=>[b[0],b[2]])),bed_head:'#bd4a51'};
+const BLOCK_IDS=[null,...BLOCKS.map(b=>b[0]),'door_top','bed_head'], BLOCK_NUM=Object.fromEntries(BLOCK_IDS.map((k,i)=>[k,i]));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(73,innerWidth/innerHeight,.12,1800);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.setSize(innerWidth,innerHeight);
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
+renderer.domElement.style.position='absolute';renderer.domElement.style.inset='0';document.body.prepend(renderer.domElement);
+const hemi=new THREE.HemisphereLight(0xcbe3ef,0x52594f,2.15);scene.add(hemi);const headlamp=new THREE.PointLight(0xffedcb,0,25,1.15);scene.add(headlamp);
+const sun=new THREE.DirectionalLight(0xffe8bb,2.3);sun.position.set(160,240,-120);scene.add(sun);
+const terrainGroup=new THREE.Group(),plantGroup=new THREE.Group(),customGroup=new THREE.Group();scene.add(terrainGroup,plantGroup,customGroup);
+scene.background=new THREE.Color('#95cbe9');scene.fog=new THREE.Fog('#95cbe9',110,220);
+const geoCube=new THREE.BoxGeometry(1,1,1),dummy=new THREE.Object3D(),ray=new THREE.Raycaster();ray.far=14;
+const marker=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.018,1.018,1.018)),new THREE.LineBasicMaterial({color:'#ffe79f',depthTest:false}));marker.visible=false;marker.renderOrder=99;scene.add(marker);
+const keys=new Set(),clock=new THREE.Clock();
+let mode='creative',seed=84321,edits=new Map(),chunkMap=new Map(),chunkQueue=[],queued=new Set(),chunkMeshes=[],customMeshes=[],selected=0,playing=false,fly=true,yVel=0,viewDistance=3,dirty=false,savedAt=0;
+let px=.5,py=38,pz=.5,yaw=0,pitch=-.08,joyX=0,joyY=0,holdUp=false,holdDown=false,lastCX=NaN,lastCZ=NaN,lastMode='creative',roofHidden=false,lightIndex=0;
+let fps=0,frames=0,fpsElapsed=0,elapsed=0,hitTarget=null,lastHint='',jumpLatch=false,freePlacement=false,simAccumulator=0,caveState=false,stairTurn=0;
+const SPECIAL=new Set(['door_oak','door_steel','door_top','pane','fence','slab','stairs','fire','torch','bed','bed_head','lantern','table']);
+// Sonderformen belegen zwar eine Voxelposition, sind aber keine undurchsichtigen Vollwuerfel.
+// Benachbarte Stein- und Erdoberflaechen bleiben deshalb sichtbar.
+function occludesWholeFace(id){return !!id&&!SPECIAL.has(id)&&!isTransparent(id)}
+function blockId(raw){return typeof raw==='string'?raw:raw&&typeof raw==='object'?raw.id:null}
+function validEditValue(raw){if(raw===null)return true;if(typeof raw==='string')return !!COLORS[raw]||raw==='door_top';return !!(raw&&typeof raw==='object'&&(COLORS[raw.id]||raw.id==='door_top')&&Number.isInteger(raw.dir??0)&&Number.isInteger(raw.open??0))}
+function valueAt(x,y,z){let k=positionKey(x,y,z);return edits.has(k)?edits.get(k):null}
+function isTransparent(id){return id==='water'||id==='glass'||id==='pane'||id==='fire'||id==='leaves'}
+function isSolid(id,x,y,z){if(!id||id==='water'||id==='fire'||id==='torch'||id==='lantern'||id==='leaves'||id==='pane')return false;if(id==='door_oak'||id==='door_steel')return !valueAt(x,y,z)?.open;if(id==='door_top')return !valueAt(x,y-1,z)?.open;return true}
+function colorForBlock(id){return COLORS[id]||'#b0b0b0'}
+function notify(t){let e=$('toast');e.textContent=t;e.style.opacity='1';clearTimeout(notify.timer);notify.timer=setTimeout(()=>e.style.opacity='0',3000)}
+function hash(x,z,extra=0){let h=Math.imul(x,374761393)+Math.imul(z,668265263)+Math.imul(seed+extra,1442695041);h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)/4294967295}
+function noise(x,z,sc){let a=Math.floor(x/sc),b=Math.floor(z/sc),u=x/sc-a,v=z/sc-b;u=u*u*(3-2*u);v=v*v*(3-2*v);return THREE.MathUtils.lerp(THREE.MathUtils.lerp(hash(a,b),hash(a+1,b),u),THREE.MathUtils.lerp(hash(a,b+1),hash(a+1,b+1),u),v)}
+const heightCache=new Map();
+function height(x,z){const k=x+','+z;if(heightCache.has(k))return heightCache.get(k);let h=Math.max(3,Math.min(35,Math.floor(3+noise(x,z,160)*14+noise(x+400,z-180,48)*7+noise(x,z,17)*4)));heightCache.set(k,h);if(heightCache.size>60000)heightCache.clear();return h}
+function biome(x,z){let n=noise(x+410,z+818,145);return n<.28?'desert':n>.76?'snow':'meadow'}
+function trunk(x,z){let v=hash(x,z,17);return biome(x,z)==='desert'?(v>.991?'cactus':null):(v>.982?'wood':null)}
+// V5: Deterministic deep voxel geology, connected cave tunnels and occasional natural shafts.
+// World height is -64 to +45 for procedural terrain; own builds can reach higher.
+function hash3(x,y,z,extra=0){let h=Math.imul(x,374761393)^Math.imul(y,668265263)^Math.imul(z,1442695041)^Math.imul(seed+extra,1274126177);h=Math.imul(h^(h>>>15),-2048144789);h=Math.imul(h^(h>>>13),-1028477387);return ((h^(h>>>16))>>>0)/4294967295}
+function noise3(x,y,z,scale){
+ const ax=Math.floor(x/scale),ay=Math.floor(y/scale),az=Math.floor(z/scale);
+ let u=x/scale-ax,v=y/scale-ay,w=z/scale-az;
+ u=u*u*(3-2*u);v=v*v*(3-2*v);w=w*w*(3-2*w);
+ const a=hash3(ax,ay,az),b=hash3(ax+1,ay,az),c=hash3(ax,ay+1,az),d=hash3(ax+1,ay+1,az);
+ const e=hash3(ax,ay,az+1),f=hash3(ax+1,ay,az+1),g=hash3(ax,ay+1,az+1),h=hash3(ax+1,ay+1,az+1);
+ return THREE.MathUtils.lerp(THREE.MathUtils.lerp(THREE.MathUtils.lerp(a,b,u),THREE.MathUtils.lerp(c,d,u),v),THREE.MathUtils.lerp(THREE.MathUtils.lerp(e,f,u),THREE.MathUtils.lerp(g,h,u),v),w)
+}
+const shaftCache=new Map();
+function shaftAt(x,z){const k=positionKey(x,0,z);if(shaftCache.has(k))return shaftCache.get(k);
+ const gx=Math.floor(x/80),gz=Math.floor(z/80);let yes=false;
+ for(let i=-1;i<=1&&!yes;i++)for(let j=-1;j<=1&&!yes;j++){
+  let a=gx+i,b=gz+j;
+  const cx=a*80+14+hash(a,b,121)*52,cz=b*80+14+hash(a,b,122)*52;
+  const dx=x-cx,dz=z-cz;
+  if(dx*dx+dz*dz<6.9)yes=true;
+ }
+ shaftCache.set(k,yes);if(shaftCache.size>85000)shaftCache.clear();return yes;
+}
+function caveColumn(x,z){
+ const phase=seed*.000011;
+ const zline=z-10*Math.sin(x*.048+phase),nearZ=zline-Math.round(zline/73)*73;
+ const xline=x-12*Math.sin(z*.043+phase),nearX=xline-Math.round(xline/79)*79;
+ return {
+  shaft:shaftAt(x,z),
+  z2:nearZ*nearZ,x2:nearX*nearX,
+  levelA:-17+6*Math.sin(x*.034+phase+Math.round(zline/73)*.73),
+  levelB:-25+7*Math.sin(z*.032-phase+Math.round(xline/79)*.56),
+  levelDeep:-44+4*Math.sin((x+z)*.033+phase)
+ }
+}
+function caveAt(x,y,z,h,column=null){
+ if(y<=BEDROCK_Y+2)return false;
+ const c=column||caveColumn(x,z);
+ if(y>=-23&&y<=h&&c.shaft&&h>=SEA+2)return true;
+ if(y>h-5)return false;
+ if(c.z2+(y-c.levelA)**2<13.5)return true;
+ if(c.x2+(y-c.levelB)**2<13.5)return true;
+ if(c.z2+(y-c.levelDeep)**2<10.5)return true;
+ // One continuous 3D noise field forms larger chambers; no seam at chunk borders.
+ const phase=seed*.000123;
+ const n=Math.sin(x*.102+y*.067+Math.sin(z*.041)+phase)*.42+Math.sin(z*.093-y*.076+Math.sin(x*.035)-phase)*.38+Math.cos((x+z)*.052+y*.12+phase*.7)*.20;
+ return n>.55;
+}
+function geology(x,y,z){
+ if(y<=BEDROCK_Y)return 'bedrock';
+ const a=hash3(Math.floor(x/3),Math.floor(y/3),Math.floor(z/3),41);
+ if(y<-35&&a>.989)return 'diamond_ore';
+ if(y<-13&&a>.972)return 'iron_ore';
+ if(y<4&&a<.032)return 'coal_ore';
+ if(y<12&&a>.948&&a<.968)return 'copper_ore';
+ if(y<-24&&a>.951&&a<.963)return 'crystal';
+ return y<-23?'deepstone':'stone';
+}
+function natural(x,y,z){
+ if(y<=BEDROCK_Y)return 'bedrock';
+ const h=height(x,z);
+ if(y<=h){
+  if(caveAt(x,y,z,h))return null;
+  if(y===h){let b=biome(x,z);return b==='desert'?'sand':b==='snow'?'snow':'grass'}
+  if(y>=h-3)return biome(x,z)==='desert'?'sand':'dirt';
+  return geology(x,y,z);
+ }
+ if(y<=SEA)return 'water';
+ if(y<=h+5){const t=trunk(x,z);if(t&&y<=h+(t==='cactus'?3:4))return t}
+ for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++){
+  if(trunk(x+dx,z+dz)!=='wood')continue;
+  const dy=y-height(x+dx,z+dz)-4;
+  if(dy>=-1&&dy<=2&&Math.abs(dx)+Math.abs(dz)+Math.max(dy,0)<=3)return 'leaves'
+ }
+ return null;
+}
+function positionKey(x,y,z){return x+','+y+','+z}
+function at(x,y,z){if(mode==='creative'&&y<=BEDROCK_Y)return 'bedrock';const k=positionKey(x,y,z);if(edits.has(k))return blockId(edits.get(k));return mode==='creative'?natural(x,y,z):null}
+const materialCache=new Map();
+function texturedBlock(id,side){let c=document.createElement('canvas');c.width=c.height=32;let ctx=c.getContext('2d'),color=COLORS[id];ctx.fillStyle=color;ctx.fillRect(0,0,32,32);const salt=BLOCKS.findIndex(a=>a[0]===id)*31+side*11;
+ for(let j=0;j<96;j++){let x=Math.floor(hash(j,salt,7)*32),y=Math.floor(hash(j,salt,17)*32),a=hash(j,salt,32);ctx.fillStyle=a>.53?'#ffffff':'#000000';ctx.globalAlpha=.04+a*.075;ctx.fillRect(x,y,1+(j%3),1+(j%2));}ctx.globalAlpha=1;
+ if(id==='planks'||id==='wood'||id==='darkwood'){ctx.strokeStyle='#34271a55';for(let i=8;i<=24;i+=8){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(32,i);ctx.stroke()}}
+ if(id==='door_steel'){ctx.strokeStyle='#343f45aa';ctx.strokeRect(4,3,24,26);ctx.fillStyle='#5c747d';ctx.fillRect(11,10,10,7)}
+ if(id==='door_oak'){ctx.strokeStyle='#60402e99';ctx.strokeRect(3,2,26,28);ctx.strokeRect(6,5,20,10);ctx.strokeRect(6,18,20,9);ctx.fillStyle='#f1cc6d';ctx.fillRect(24,16,2,2)}
+ if(id==='pane'){ctx.strokeStyle='#d4e9ec';ctx.lineWidth=3;ctx.strokeRect(1,1,30,30);ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(16,32);ctx.moveTo(0,16);ctx.lineTo(32,16);ctx.stroke()}
+ if(id==='bed_head'){ctx.fillStyle='#f1ead7';ctx.fillRect(0,0,32,9);ctx.fillStyle='#75363d';ctx.fillRect(0,29,32,3)}
+ if(id==='bookshelf'){ctx.fillStyle='#453221';ctx.fillRect(2,3,28,25);for(let i=3;i<29;i+=4){ctx.fillStyle=['#ab554e','#54858b','#c8b46a'][i%3];ctx.fillRect(i,5,3,21)}ctx.fillStyle='#a27a50';ctx.fillRect(0,15,32,3)}
+ if(id==='brick'||id==='stonebrick'){ctx.strokeStyle='#4e302c99';ctx.lineWidth=1;for(let y=0;y<=32;y+=8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(32,y);ctx.stroke();for(let x=(y%16)?0:8;x<32;x+=16){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+8);ctx.stroke()}}}
+ const texture=new THREE.CanvasTexture(c);texture.magFilter=THREE.NearestFilter;texture.minFilter=THREE.NearestMipmapNearestFilter;texture.colorSpace=THREE.SRGBColorSpace;return texture}
+const specialGeometries={
+ door_oak:new THREE.BoxGeometry(.15,1.96,.94),door_steel:new THREE.BoxGeometry(.15,1.96,.94),
+ pane:new THREE.BoxGeometry(.97,.96,.11),fence:buildFenceGeometry(),
+ slab:new THREE.BoxGeometry(1,.5,1),stairs:buildStairGeometry(),
+ fire:buildFireGeometry(),
+ torch:buildTorchGeometry(),
+ lantern:joinGeometries([new THREE.BoxGeometry(.38,.42,.38).translate(0,-.22,0),new THREE.BoxGeometry(.12,.14,.12).translate(0,.06,0)]),
+ bed:buildBedGeometry(false),
+ bed_head:buildBedGeometry(true),
+ table:joinGeometries([new THREE.BoxGeometry(1,.16,1).translate(0,.25,0),new THREE.BoxGeometry(.18,.7,.18).translate(0,-.15,0)])
+};
+// Bunte Einzelteile eines Gegenstands werden in EINER Geometrie zusammengefasst.
+// Vertexfarben vermeiden Materialgruppen und halten InstancedMesh schnell.
+function buildColoredGeometry(parts){
+ const positions=[],normals=[],uvs=[],colors=[];
+ for(const [w,h,d,x,y,z,hex] of parts){
+  const original=new THREE.BoxGeometry(w,h,d).translate(x,y,z);
+  const g=original.toNonIndexed(),p=g.getAttribute('position'),n=g.getAttribute('normal'),uv=g.getAttribute('uv');
+  const c=new THREE.Color(hex);
+  for(let i=0;i<p.count;i++){
+   positions.push(p.getX(i),p.getY(i),p.getZ(i));
+   normals.push(n.getX(i),n.getY(i),n.getZ(i));
+   uvs.push(uv.getX(i),uv.getY(i));
+   colors.push(c.r,c.g,c.b);
+  }
+  g.dispose();original.dispose();
+ }
+ const geometry=new THREE.BufferGeometry();
+ geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+ geometry.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));
+ geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
+ geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+ geometry.computeBoundingSphere();return geometry;
+}
+function buildTorchGeometry(){
+ // Unterkante liegt bei der Block-Unterseite, die Flamme knapp unter Block-Oberkante.
+ return buildColoredGeometry([
+  [.14,.62,.14,0,-.19,0,'#6f4b27'],
+  [.18,.10,.18,0,.15,0,'#5c3820'],
+  [.23,.20,.23,0,.28,0,'#ff9b31'],
+  [.13,.16,.13,0,.32,0,'#fff1a6']
+ ]);
+}
+function buildBedGeometry(head){
+ // Ein Bett besteht aus zwei zusammenpassenden, um 90 Grad drehbaren Haelften.
+ const p=[
+  [.98,.15,.99,0,-.29,0,'#785439'],       // Holzrahmen
+  [.95,.20,.97,0,-.115,0,'#efe4d4'],      // Matratze
+  [.95,.055,.98,0,.014,0,'#bf4148'],      // rote Bettdecke
+  [.98,.10,.09,0,-.22,head?-.445:.445,'#654127'], // Abschlussleiste
+  [.13,.29,.13,-.39,-.355,head?-.39:.39,'#68462e'],
+  [.13,.29,.13, .39,-.355,head?-.39:.39,'#68462e']
+ ];
+ if(head){
+  p.push([.84,.085,.35,0,.085,-.27,'#f7f4ea']); // nur am Kopfende: Kissen
+  p.push([.84,.02,.045,0,.135,-.41,'#dbd7c8']); // Kissennaht
+ }else{
+  p.push([.95,.018,.045,0,.055,.42,'#e8b7a0']); // Saum am Fussende
+ }
+ return buildColoredGeometry(p);
+}
+function joinGeometries(gs){
+ let positions=[],normals=[],uvs=[];
+ for(let g of gs){let n=g.toNonIndexed(),a=n.getAttribute('position'),b=n.getAttribute('normal'),c=n.getAttribute('uv');
+ for(let i=0;i<a.count;i++){positions.push(a.getX(i),a.getY(i),a.getZ(i));normals.push(b.getX(i),b.getY(i),b.getZ(i));uvs.push(c.getX(i),c.getY(i))}
+ n.dispose();g.dispose();}
+ let r=new THREE.BufferGeometry();r.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));r.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));r.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));r.computeBoundingSphere();return r;
+}
+function buildFenceGeometry(){
+ let post=new THREE.BoxGeometry(.22,1,.22);
+ let upper=new THREE.BoxGeometry(.94,.13,.14).translate(0,.22,0);
+ let lower=new THREE.BoxGeometry(.94,.13,.14).translate(0,-.17,0);
+ return joinGeometries([post,upper,lower]);
+}
+function buildStairGeometry(){
+ let a=new THREE.BoxGeometry(1,.5,1).translate(0,-.25,0);
+ let b=new THREE.BoxGeometry(1,.5,.5).translate(0,.25,.25);
+ return joinGeometries([a,b]);
+}
+function buildFireGeometry(){
+ let a=new THREE.PlaneGeometry(.84,1.06),b=new THREE.PlaneGeometry(.84,1.06).rotateY(Math.PI/2);
+ return joinGeometries([a,b]);
+}
+function fireTexture(){
+ const c=document.createElement('canvas');c.width=c.height=64;const ctx=c.getContext('2d');
+ const gradient=ctx.createLinearGradient(0,64,0,2);
+ gradient.addColorStop(0,'#ad2309');gradient.addColorStop(.27,'#ff6a11');gradient.addColorStop(.55,'#ffe35a');gradient.addColorStop(1,'#fff7b4');
+ ctx.fillStyle=gradient;ctx.beginPath();ctx.moveTo(8,64);ctx.bezierCurveTo(-2,41,20,38,15,17);ctx.bezierCurveTo(30,24,28,9,35,0);
+ ctx.bezierCurveTo(51,19,45,30,56,39);ctx.quadraticCurveTo(67,52,53,64);ctx.closePath();ctx.fill();
+ ctx.globalCompositeOperation='source-atop';for(let i=0;i<70;i++){ctx.fillStyle=i%2?'#ffffff23':'#ff3a081f';ctx.fillRect((i*13)%64,(i*31)%64,2,4)}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+function cubeMat(id){
+ if(materialCache.has(id))return materialCache.get(id);
+ // Eigenstaendige Vertexfarben fuer die Bettteile und den Fackelstiel samt Flamme.
+ if(id==='bed'||id==='bed_head'||id==='torch'){
+  const m=new THREE.MeshLambertMaterial({vertexColors:true});
+  if(id==='torch'){m.emissive=new THREE.Color('#7d3209');m.emissiveIntensity=.18;}
+  materialCache.set(id,m);return m;
+ }
+ let isGlass=id==='glass'||id==='pane',isWater=id==='water',isFire=id==='fire';
+ let mat=isFire?new THREE.MeshBasicMaterial({map:fireTexture(),transparent:true,opacity:.85,alphaTest:.12,depthWrite:false,side:THREE.DoubleSide}):
+  new THREE.MeshLambertMaterial({map:texturedBlock(id==='door_top'?'door_oak':id,0),transparent:isGlass||isWater,opacity:isGlass?.44:isWater?.66:1,depthWrite:!(isGlass||isWater),side:isGlass?THREE.DoubleSide:THREE.FrontSide});
+ if(['torch','lantern','lamp','light','crystal'].includes(id)){mat.emissive=new THREE.Color(COLORS[id]);mat.emissiveIntensity=.65;}
+ materialCache.set(id,mat);return mat;
+}
+function makeInstanced(coords,id){
+ if(!coords.length||id==='door_top')return null;
+ const special=SPECIAL.has(id);let mesh=new THREE.InstancedMesh(specialGeometries[id]||geoCube,cubeMat(id),coords.length);
+ mesh.count=coords.length;mesh.userData.positions=coords.map(p=>p.slice(0,3));mesh.userData.kind='blocks';mesh.userData.blockType=id;
+ for(let i=0;i<coords.length;i++){
+  let p=coords[i],data=p[3]||{},dir=(data.dir||0)*Math.PI/2,open=!!data.open;
+  dummy.rotation.set(0,0,0);dummy.position.set(p[0]+.5,p[1]+.5,p[2]+.5);
+  if(id==='door_oak'||id==='door_steel'){dummy.position.y=p[1]+1;dummy.rotation.y=dir+(open?Math.PI/2:0)}
+  else if(['pane','bed','bed_head','stairs','table'].includes(id)){dummy.rotation.y=dir}
+  else if(id==='slab')dummy.position.y=p[1]+.25;
+  else if(id==='fire')dummy.position.y=p[1]+.55;
+  dummy.scale.set(1,1,1);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);
+ }
+ mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();
+ if(id==='water')mesh.renderOrder=1;
+ if(id==='pane'||id==='glass')mesh.renderOrder=2;
+ if(id==='fire')mesh.renderOrder=3;
+ return mesh;
+}
+function coord(x){return Math.floor(x/SIZE)}
+function chunkKey(cx,cz){return cx+','+cz}
+function disposeChunk(cx,cz){
+ const k=chunkKey(cx,cz),arr=chunkMap.get(k);if(!arr)return;
+ for(const m of arr){terrainGroup.remove(m);const i=chunkMeshes.indexOf(m);if(i>=0)chunkMeshes.splice(i,1);if(m.userData.terrainOwnGeometry)m.geometry.dispose();else m.dispose?.()}
+ chunkMap.delete(k)
+}
+function rebuildChunk(cx,cz){disposeChunk(cx,cz);if(mode==='creative')buildChunk(cx,cz)}
+// Faces with counterclockwise outward winding: draw no hidden cube faces.
+const SURFACE_FACES=[
+ {n:[1,0,0],v:[[1,0,0],[1,1,0],[1,1,1],[1,0,1]]},
+ {n:[-1,0,0],v:[[0,0,1],[0,1,1],[0,1,0],[0,0,0]]},
+ {n:[0,1,0],v:[[0,1,1],[1,1,1],[1,1,0],[0,1,0]]},
+ {n:[0,-1,0],v:[[0,0,0],[1,0,0],[1,0,1],[0,0,1]]},
+ {n:[0,0,1],v:[[0,0,1],[1,0,1],[1,1,1],[0,1,1]]},
+ {n:[0,0,-1],v:[[1,0,0],[0,0,0],[0,1,0],[1,1,0]]}
+];
+function buildChunk(cx,cz){
+ if(mode!=='creative')return;
+ const k=chunkKey(cx,cz);if(chunkMap.has(k))return;
+ const YN=TERRAIN_TOP-MIN_Y+1,ZN=SIZE+2,XN=SIZE+2;
+ const voxels=new Uint8Array(XN*ZN*YN);
+ const voxelIdx=(ix,iz,y)=>(ix*ZN+iz)*YN+(y-MIN_Y);
+ // Build solid/air occupancy in one column pass. Resolve ore textures only if
+ // the block is actually exposed. This avoids thousands of wasted texture/ore lookups.
+ const num={stone:BLOCK_NUM.stone,bedrock:BLOCK_NUM.bedrock,dirt:BLOCK_NUM.dirt,sand:BLOCK_NUM.sand,grass:BLOCK_NUM.grass,snow:BLOCK_NUM.snow,water:BLOCK_NUM.water};
+ for(let ix=0;ix<XN;ix++)for(let iz=0;iz<ZN;iz++){
+  const x=cx*SIZE+ix-1,z=cz*SIZE+iz-1,h=height(x,z),b=biome(x,z),c=caveColumn(x,z);
+  const idx0=voxelIdx(ix,iz,MIN_Y);
+  for(let y=MIN_Y;y<=Math.min(TERRAIN_TOP,h);y++){
+   let code;
+   if(y<=BEDROCK_Y)code=num.bedrock;
+   else if(caveAt(x,y,z,h,c))code=0;
+   else if(y===h)code=b==='desert'?num.sand:b==='snow'?num.snow:num.grass;
+   else if(y>=h-3)code=b==='desert'?num.sand:num.dirt;
+   else code=num.stone;
+   voxels[idx0+y-MIN_Y]=code;
+  }
+  for(let y=h+1;y<=Math.min(TERRAIN_TOP,SEA);y++)voxels[idx0+y-MIN_Y]=num.water;
+ }
+ // Vegetation is generated once per tree, rather than searching 25 surrounding
+ // columns for every single air block. Same trees at every seed/chunk border.
+ const trees=[];
+ for(let tx=cx*SIZE-3;tx<=cx*SIZE+SIZE+2;tx++)for(let tz=cz*SIZE-3;tz<=cz*SIZE+SIZE+2;tz++){
+  const t=trunk(tx,tz);if(t)trees.push([tx,tz,height(tx,tz),t]);
+ }
+ for(const [tx,tz,h,t] of trees){
+  if(t!=='wood')continue;
+  for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++)for(let dy=-1;dy<=2;dy++){
+   if(Math.abs(dx)+Math.abs(dz)+Math.max(dy,0)>3)continue;
+   const x=tx+dx,z=tz+dz,y=h+4+dy,ix=x-cx*SIZE+1,iz=z-cz*SIZE+1;
+   if(ix<0||ix>=XN||iz<0||iz>=ZN||y<MIN_Y||y>TERRAIN_TOP)continue;
+   const i=voxelIdx(ix,iz,y);if(!voxels[i])voxels[i]=BLOCK_NUM.leaves;
+  }
+ }
+ for(const [tx,tz,h,t] of trees){
+  const ix=tx-cx*SIZE+1,iz=tz-cz*SIZE+1;if(ix<0||ix>=XN||iz<0||iz>=ZN)continue;
+  for(let y=h+1;y<=Math.min(TERRAIN_TOP,h+(t==='cactus'?3:4));y++){
+   if(y>SEA)voxels[voxelIdx(ix,iz,y)]=BLOCK_NUM[t];
+  }
+ }
+ // Apply the saved additions/deletions AFTER base generation, including neighbor borders.
+ for(const [key,raw] of edits){
+  const parts=key.split(','),x=+parts[0],y=+parts[1],z=+parts[2];
+  const ix=x-cx*SIZE+1,iz=z-cz*SIZE+1;
+  if(ix<0||ix>=XN||iz<0||iz>=ZN||y<MIN_Y||y>TERRAIN_TOP||y<=BEDROCK_Y)continue;
+  voxels[voxelIdx(ix,iz,y)]=BLOCK_NUM[blockId(raw)]||0;
+ }
+ const faces=new Map(), specials=new Map(),faceUV=[0,0,1,0,1,1,0,1];
+ function addFace(id,x,y,z,face){
+  let b=faces.get(id);if(!b){b={p:[],n:[],uv:[]};faces.set(id,b)}
+  const f=SURFACE_FACES[face];
+  for(const a of [0,1,2,0,2,3]){
+   const v=f.v[a];b.p.push(x+v[0],y+v[1],z+v[2]);b.n.push(...f.n);
+   b.uv.push(faceUV[a*2],faceUV[a*2+1]);
+  }
+ }
+ for(let ix=1;ix<=SIZE;ix++)for(let iz=1;iz<=SIZE;iz++)for(let y=MIN_Y;y<=TERRAIN_TOP;y++){
+  const code=voxels[voxelIdx(ix,iz,y)];if(!code)continue;
+  let id=BLOCK_IDS[code],x=cx*SIZE+ix-1,z=cz*SIZE+iz-1;
+  if(id==='door_top')continue;
+  // Interior rock is just a solid occupancy flag; mineral variations are
+  // resolved below only when at least one face is visible.
+  if(id==='stone'&&y<=height(x,z)-4&&!edits.has(positionKey(x,y,z))){
+   let hasAir=false;
+   for(let f=0;f<6;f++){
+    const d=SURFACE_FACES[f].n,ny=y+d[1];
+    const other=ny<MIN_Y||ny>TERRAIN_TOP?at(x+d[0],ny,z+d[2]):BLOCK_IDS[voxels[voxelIdx(ix+d[0],iz+d[2],ny)]];
+    if(!occludesWholeFace(other)){hasAir=true;break}
+   }
+   if(!hasAir)continue;
+   id=geology(x,y,z);
+  }
+  if(SPECIAL.has(id)){const d=valueAt(x,y,z);(specials.get(id)||specials.set(id,[]).get(id)).push([x,y,z,d&&typeof d==='object'?d:null]);continue}
+  for(let f=0;f<6;f++){
+   const dir=SURFACE_FACES[f].n,ny=y+dir[1];
+   let otherCode=0;
+   if(ny>=MIN_Y&&ny<=TERRAIN_TOP)otherCode=voxels[voxelIdx(ix+dir[0],iz+dir[2],ny)];
+   else otherCode=BLOCK_NUM[at(x+dir[0],ny,z+dir[2])]||0;
+   const other=BLOCK_IDS[otherCode];
+   // Fackeln, Betten, Tueren und andere Teilbloecke duerfen Nachbarseiten niemals verstecken.
+   if(!other||!occludesWholeFace(other)&&other!==id||isTransparent(id)&&other!==id)addFace(id,x,y,z,f)
+  }
+ }
+ // Structures built above the terrain ceiling retain standard instanced rendering.
+ for(const [key,raw] of edits){const id=blockId(raw);if(!id||id==='door_top')continue;
+  const [x,y,z]=key.split(',').map(Number);
+  if(coord(x)!==cx||coord(z)!==cz||y<=TERRAIN_TOP)continue;
+  (specials.get(id)||specials.set(id,[]).get(id)).push([x,y,z,raw&&typeof raw==='object'?raw:null]);
+ }
+ const out=[];
+ for(const [id,b] of faces){
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(b.p,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(b.n,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(b.uv,2));
+  g.computeBoundingSphere();const mesh=new THREE.Mesh(g,cubeMat(id));mesh.frustumCulled=true;
+  mesh.userData.terrainOwnGeometry=true;
+  if(id==='water')mesh.renderOrder=1;else if(id==='glass')mesh.renderOrder=2;
+  terrainGroup.add(mesh);out.push(mesh);chunkMeshes.push(mesh)
+ }
+ for(const [id,locs] of specials){const mesh=makeInstanced(locs,id);if(mesh){
+  terrainGroup.add(mesh);out.push(mesh);chunkMeshes.push(mesh)
+ }}
+ chunkMap.set(k,out);
+}
+function scheduleChunks(){if(mode!=='creative')return;let a=coord(px),b=coord(pz),wanted=new Set(),jobs=[];for(let dx=-viewDistance;dx<=viewDistance;dx++)for(let dz=-viewDistance;dz<=viewDistance;dz++){let cx=a+dx,cz=b+dz,k=chunkKey(cx,cz);wanted.add(k);if(!chunkMap.has(k)&&!queued.has(k)){jobs.push([cx,cz,dx*dx+dz*dz]);queued.add(k)}}jobs.sort((a,b)=>a[2]-b[2]);chunkQueue.push(...jobs.map(x=>x.slice(0,2)));for(let k of [...chunkMap.keys()])if(!wanted.has(k)){let [x,z]=k.split(',').map(Number);disposeChunk(x,z)}}
+function resetChunks(){for(let k of [...chunkMap.keys()]){let [x,z]=k.split(',').map(Number);disposeChunk(x,z)}chunkQueue.length=0;queued.clear();heightCache.clear();shaftCache.clear();lastCX=lastCZ=NaN;if(mode==='creative')scheduleChunks()}
+function rebuildNearby(x,z){
+ if(mode!=='creative'){refreshCustom();return}
+ // Only the affected chunk and, at chunk borders, the immediately adjacent chunks.
+ const cx=coord(x),cz=coord(z),targets=[[cx,cz]];
+ if(x%SIZE===0)targets.push([cx-1,cz]);if(x%SIZE===SIZE-1||x%SIZE===-1)targets.push([cx+1,cz]);
+ if(z%SIZE===0)targets.push([cx,cz-1]);if(z%SIZE===SIZE-1||z%SIZE===-1)targets.push([cx,cz+1]);
+ for(const [a,b] of targets)if(chunkMap.has(chunkKey(a,b)))rebuildChunk(a,b);
+}
+function refreshCustom(){
+ for(const m of customMeshes){customGroup.remove(m);m.dispose?.()}customMeshes=[];
+ if(mode==='creative')return;
+ let buckets={};for(let [key,value] of edits){let id=blockId(value);if(!id||id==='door_top')continue;
+  let [x,y,z]=key.split(',').map(Number);(buckets[id]??=[]).push([x,y,z,value&&typeof value==='object'?value:null]);}
+ for(let [id,coords] of Object.entries(buckets)){let obj=makeInstanced(coords,id);if(obj){customGroup.add(obj);customMeshes.push(obj)}}
+}
+function save(show=false){try{let value={version:11,navigation:mode==='creative'?{home:creativeHome,waypoint:creativeWaypoint}:undefined,hotbar:[...hotbarSlots],activeSlot,architectureCuts:mode==='chernobyl'?[...architectureCuts]:[],lightIndex,world:mode,seed,blocks:[...edits],player:[px,py,pz,yaw,pitch],flying:fly,viewDistance};localStorage.setItem(SAVEKEY[mode],JSON.stringify(value));localStorage.setItem('mooncraft_last_mode',mode);dirty=false;if(show)notify('Spielstand gespeichert ✓');return true}catch(e){notify('Speicher voll. Bitte Spielstand exportieren!');return false}}
+function safeLoad(obj){
+ if(obj?.architectureCuts!==undefined&&(!Array.isArray(obj.architectureCuts)||obj.architectureCuts.length>50000||!obj.architectureCuts.every(k=>typeof k==='string'&&/^-?\d+,-?\d+,-?\d+$/.test(k)&&k.split(',').map(Number).every(n=>Number.isSafeInteger(n)&&Math.abs(n)<250000))))throw Error('Ungültige Gebäudeänderungen');
+if(!obj||!Array.isArray(obj.blocks)||obj.blocks.length>250000)throw Error('Ungültige Weltdatei');clearBuildHistory();loadHotbar(obj);loadNavigation(obj);if(mode==='chernobyl'){architectureCuts=new Set(obj.architectureCuts||[]);restoreArchitecture();}lightIndex=[0,1,2].includes(obj.lightIndex)?obj.lightIndex:0;
+ edits=new Map();for(const b of obj.blocks){if(!Array.isArray(b)||b.length!==2||typeof b[0]!=='string'||!(/^[-\d]+,[-\d]+,[-\d]+$/.test(b[0]))||!validEditValue(b[1]))continue;edits.set(b[0],b[1])}if(mode==='creative'&&Number.isSafeInteger(obj.seed))seed=obj.seed;let pos=obj.player;if(Array.isArray(pos)&&pos.length===5&&pos.every(n=>Number.isFinite(n))&&Math.max(...pos.map(Math.abs))<5000000){[px,py,pz,yaw,pitch]=pos;if(mode==='creative'&&py<BEDROCK_Y+1)py=height(Math.floor(px),Math.floor(pz))+3}else setSpawn();fly=obj.flying!==false;viewDistance=Math.max(2,Math.min(4,Number(obj.viewDistance)||3));viewDistance=Math.floor(viewDistance);resetChunks();refreshCustom();syncUI()}
+function setSpawn(){jumpLatch=false;yVel=0;if(mode==='chernobyl'){[px,py,pz,yaw,pitch]=[80,3,-210,0,-.12]}else{px=.5;pz=.5;py=height(0,0)+12;yaw=0;pitch=-.15}fly=true;yVel=0}
+function selectWorld(next){stopRepeatBuild();if(mode!==next){save();clearBuildHistory();loadHotbar({});mode=next;loadNavigation({});edits.clear();if(mode==='chernobyl'){architectureCuts.clear();restoreArchitecture();}setSpawn();plantGroup.visible=mode==='chernobyl';terrainGroup.visible=mode==='creative';customGroup.visible=mode==='chernobyl';if(mode==='chernobyl'&&!plantBuilt)buildPlant();if(mode==='chernobyl'){roofHidden=false;roofBatch.visible=true;}resetChunks();refreshCustom();let str=localStorage.getItem(SAVEKEY[mode]);if(str){try{safeLoad(JSON.parse(str))}catch(e){console.warn(e);notify('Spielstand konnte nicht geladen werden')}}}applyEnvironment();syncUI();$('choiceCreative').classList.toggle('active',mode==='creative');$('choicePlant').classList.toggle('active',mode==='chernobyl');$('play').textContent=mode==='chernobyl'?'▶ AKW Tschernobyl erkunden':'▶ Kreativwelt betreten';$('reset').textContent=mode==='chernobyl'?'↺ Tschernobyl wiederherstellen':'✦ Neue Kreativwelt';$('plantButtons').classList.toggle('hidden',mode!=='chernobyl');$('caveBtn').classList.toggle('hidden',mode!=='creative');$('worldDescription').textContent=mode==='chernobyl'?'Historisch inspirierte Anlage vor dem Unfall von 1986. Begehbare Spiel-Rekonstruktion, keine exakte technische Bauaufnahme.':'Tiefe Kreativwelt bis Y −64, natürliche Höhlen, Mineralien, Wasser, Feuer, Türen, Fenster und unbegrenzt Baublöcke.';if(playing)pause(false)}
+function syncUI(){updateNavigationHUD();$('worldInfo').textContent=(mode==='chernobyl'?'Tschernobyl 1986':'Kreativwelt')+' · '+(edits.size+(mode==='chernobyl'?architectureCuts.size:0))+' Bauänderungen · Seed '+seed;$('fly').textContent='✈ Flug '+(fly?'AN':'AUS');$('distance').value=viewDistance;$('distanceText').textContent=viewDistance;$('plantMode').textContent=roofHidden?'Dach: ausgeblendet':'Dach: sichtbar';$('roofLabel').textContent=roofHidden?'Dächer einblenden':'Dächer ausblenden';$('lightingLabel').textContent=['Tag','Abend','Nacht'][lightIndex];renderHotbar()}
+function start(){closePopups();$('mainMenu').classList.add('hidden');playing=true;clock.getDelta();if(!matchMedia('(pointer:coarse)').matches)renderer.domElement.requestPointerLock?.().catch(()=>{})}
+function pause(store=true){stopRepeatBuild();keys.clear();playing=false;if(document.pointerLockElement===renderer.domElement)document.exitPointerLock?.();$('mainMenu').classList.remove('hidden');closePopups();if(store)save();syncUI()}
+function closePopups(){for(let id of ['travel','mapPanel','inventoryModal','helpModal','graphicsModal'])$(id).classList.add('hidden')}
+function showPopup(id){stopRepeatBuild();keys.clear();let opening=$(id).classList.contains('hidden');closePopups();if(opening){$(id).classList.remove('hidden');if(id==='mapPanel'){mapCenterX=px;mapCenterZ=pz;drawMap();}if(id==='inventoryModal')fillInventory()}playing=false;if(!matchMedia('(pointer:coarse)').matches&&document.pointerLockElement)document.exitPointerLock?.()}
+function leavePopup(){closePopups();start()}
+function toggleFly(){fly=!fly;yVel=0;jumpLatch=keys.has('Space');syncUI();notify(fly?'Flugmodus aktiviert':'Laufmodus aktiviert')}
+function selectBlock(i){selected=(i+BLOCKS.length)%BLOCKS.length;hotbarSlots[activeSlot]=BLOCKS[selected][0];dirty=true;renderHotbar();notify('Platz '+(activeSlot+1)+': '+BLOCKS[selected][1])}
+function selectSlot(i){activeSlot=(i+9)%9;selected=BLOCKS.findIndex(b=>b[0]===hotbarSlots[activeSlot]);dirty=true;renderHotbar()}
+
+function renderHotbar(){const hot=$('hotbar');hot.innerHTML='';for(let i=0;i<9;i++){const item=BLOCKS.find(b=>b[0]===hotbarSlots[i]);const b=document.createElement('button');b.className='slot'+(activeSlot===i?' sel':'');b.title='Platz '+(i+1)+': '+item[1]+' · Mit E neu belegen';b.innerHTML='<span class="swatch" style="background:'+item[2]+'"></span><span>'+(i+1)+' '+item[1]+'</span>';b.onclick=()=>selectSlot(i);hot.append(b)}$('selectedBlock').textContent=BLOCKS[selected][1];updateHistoryUI()}
+function categoryOf(id){
+ if(['torch','lantern','light','lamp','fire','crystal'].includes(id))return 'Licht';
+ if(['bed','table','bookshelf','door_oak','door_steel','pane','fence'].includes(id))return 'Einrichtung';
+ if(['red','blue','yellow','green','white','black','orange','pink','cyan','lime','purple','wool'].includes(id))return 'Farben';
+ if(['grass','dirt','stone','sand','wood','leaves','snow','water','clay','cactus','deepstone','bedrock','coal_ore','iron_ore','copper_ore','diamond_ore','moss','gravel'].includes(id))return 'Natur';
+ return 'Baumaterial';
+}
+function fillInventory(){const cats=$('categoryButtons');cats.innerHTML='';for(const c of ['Alle','Natur','Baumaterial','Einrichtung','Licht','Farben']){const b=document.createElement('button');b.textContent=c;b.className=inventoryCategory===c?'primary':'';b.onclick=()=>{inventoryCategory=c;fillInventory()};cats.append(b)}
+ const g=$('invGrid');g.innerHTML='';let count=0;for(let i=0;i<BLOCKS.length;i++){const b=BLOCKS[i];if(inventoryCategory!=='Alle'&&categoryOf(b[0])!==inventoryCategory)continue;if(!b[1].toLocaleLowerCase('de').includes(($('blockSearch').value||'').toLocaleLowerCase('de')))continue;count++;const bt=document.createElement('button');bt.className='item';bt.innerHTML='<span class="swatch" style="background:'+b[2]+'"></span>'+b[1];bt.onclick=()=>{selectBlock(i);leavePopup()};g.append(bt)}
+ $('inventoryHint').textContent=count+' Treffer · Auswahl belegt Schnellplatz '+(activeSlot+1)+'. Zum Wechseln des Platzes: Inventar schließen und 1–9 drücken.';
+ if(!count){const p=document.createElement('p');p.textContent='Keine passenden Blöcke. Suchbegriff oder Kategorie ändern.';g.append(p)}
+}
+function applyEnvironment(){caveState=false;headlamp.intensity=0;let sky,ambient,day; if(mode==='creative'){sky=['#95cbe9','#a48f8b','#161e35'][lightIndex];ambient=[2.15,1.65,.85][lightIndex];day=[2.3,1.45,.38][lightIndex];scene.fog=new THREE.Fog(sky,45,viewDistance*SIZE*1.8+52);camera.far=350}else{sky=['#a4b7bf','#c4a28a','#192839'][lightIndex];ambient=[2.1,1.45,.73][lightIndex];day=[2.1,1.05,.35][lightIndex];scene.fog=new THREE.Fog(sky,230,1700);camera.far=2200}scene.background=new THREE.Color(sky);hemi.intensity=ambient;sun.intensity=day;sun.position.set(lightIndex===1?200:160,lightIndex===2?60:240,-120);renderer.toneMappingExposure=lightIndex===2?1.55:1.2;camera.updateProjectionMatrix()}
+function toggleRoof(){roofHidden=!roofHidden;roofBatch.visible=!roofHidden;syncUI();notify(roofHidden?'Dächer ausgeblendet: Innenräume besser sichtbar':'Dächer eingeblendet')}
+// ===== PRESET CHERNOBYL: architecture as a large walkable game reconstruction. =====
+const P={},architectureColliders=[],floorSlabs=[],interactPoints=[],pickableMeshes=[],roofBatch=new THREE.Group();plantGroup.add(roofBatch);
+let plantBuilt=false;const allBatches=new Map(),signs=[];const plantPal={concrete:'#bdc3bc',pale:'#d9dcd2',grey:'#8b9697',deep:'#586367',dark:'#374247',glass:'#344f58',blue:'#547480',red:'#b85d4d',metal:'#72868b',rust:'#986c50',green:'#547967',greenDark:'#26483f',floor:'#899391',tile:'#aeb3aa',line:'#ddd2ae',lamp:'#ffe2a7',yellow:'#e9c45d',asphalt:'#535b5c',water:'#3e7e9c',roof:'#768386',glassLight:'#7d9ca5',white:'#ebebe1',black:'#252d31',rail:'#a3aca5',slate:'#59686a'};
+const plantMats={};
+function industrialTexture(key){let c=document.createElement('canvas');c.width=c.height=128;let ctx=c.getContext('2d');ctx.fillStyle=plantPal[key];ctx.fillRect(0,0,128,128);let h=i=>((Math.sin(i*127.18+key.length*14)*75413.123)%1+1)%1;for(let i=0;i<250;i++){ctx.globalAlpha=.016+h(i)*.055;ctx.fillStyle=i%2?'#000000':'#ffffff';let x=h(i+55)*128,y=h(i+992)*128;ctx.fillRect(x,y,1+h(i+71)*12,1+h(i+31)*5)}ctx.globalAlpha=1;
+ if(key==='concrete'||key==='pale'||key==='grey'){ctx.strokeStyle='#46565628';ctx.lineWidth=1;for(let x=0;x<128;x+=32){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,128);ctx.stroke()}for(let y=0;y<128;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(128,y);ctx.stroke()}}
+ if(key==='floor'||key==='tile'){ctx.strokeStyle='#31434a38';for(let p=0;p<=128;p+=16){ctx.beginPath();ctx.moveTo(p,0);ctx.lineTo(p,128);ctx.moveTo(0,p);ctx.lineTo(128,p);ctx.stroke()}}
+ if(key==='roof'){ctx.strokeStyle='#333e4170';for(let x=0;x<128;x+=9){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,128);ctx.stroke()}}
+ if(key==='asphalt'){for(let i=0;i<1000;i++){let x=h(i*3)*128,y=h(i*4)*128;ctx.fillStyle=i%2?'#6d7271':'#303637';ctx.globalAlpha=.16;ctx.fillRect(x,y,1.1,1.1)}ctx.globalAlpha=1}
+ let t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);return t}
+function plantMaterial(id){if(plantMats[id])return plantMats[id];let p=new THREE.MeshStandardMaterial({map:industrialTexture(id),color:'#ffffff',roughness: id==='metal'||id==='glass'?.53:.89,metalness:id==='metal'?.53:.03,side:THREE.DoubleSide,transparent:id==='glass',opacity:id==='glass'?.73:1});plantMats[id]=p;return p}
+function box(x,y,z,w,h,d,mat='concrete',opts={}){if(w<=0||h<=0||d<=0)return;let name=mat+':box:'+(opts.roof?'roof':'base')+':'+(opts.pick===false?'deco':'solid');let bucket=allBatches.get(name);if(!bucket){bucket={mat,kind:'box',roof:!!opts.roof,pick:opts.pick!==false,items:[]};allBatches.set(name,bucket)}bucket.items.push([x,y,z,w,h,d,!!opts.walk,!!opts.wall]);if(opts.walk){floorSlabs.push([x-w/2,x+w/2,z-d/2,z+d/2,y+h/2])}if(opts.wall){architectureColliders.push([x-w/2,x+w/2,y-h/2,y+h/2,z-d/2,z+d/2])}}
+function cyl(x,y,z,r,h,mat='metal',segments=14,opts={}){const kind='cyl'+segments,name=mat+':'+kind+':'+(opts.roof?'roof':'base')+':deco';let bucket=allBatches.get(name);if(!bucket){bucket={mat,kind,roof:!!opts.roof,pick:false,items:[]};allBatches.set(name,bucket)}bucket.items.push([x,y,z,r,h,r])}
+function pipe(ax,ay,az,bx,by,bz,r=.22,mat='metal'){let name=mat+':pipe:base:deco',bucket=allBatches.get(name);if(!bucket){bucket={mat,kind:'pipe',roof:false,pick:false,items:[]};allBatches.set(name,bucket)}bucket.items.push([ax,ay,az,bx,by,bz,r])}
+const textTextures=new Map();
+function label(txt,x,y,z,size=1,opts={}){let material=textTextures.get(txt);if(!material){let canvas=document.createElement('canvas');canvas.width=1024;canvas.height=132;let a=canvas.getContext('2d');a.fillStyle='#142a32ed';a.fillRect(0,0,1024,132);a.strokeStyle='#deb974';a.lineWidth=6;a.strokeRect(4,4,1016,124);a.fillStyle='#f2ece0';a.textAlign='center';a.textBaseline='middle';a.font='bold 53px sans-serif';a.fillText(txt,512,68,975);let map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;material=new THREE.SpriteMaterial({map,depthTest:opts.depthTest??true,transparent:true});textTextures.set(txt,material)}let spr=new THREE.Sprite(material);spr.position.set(x,y,z);spr.scale.set(32*size,4.1*size,1);plantGroup.add(spr);signs.push(spr)}
+function wallX(x1,x2,y1,y2,z,thick=1.1,mat='concrete'){box((x1+x2)/2,(y1+y2)/2,z,x2-x1,y2-y1,thick,mat,{wall:true})}
+function wallZ(x,z1,z2,y1,y2,thick=1.1,mat='concrete'){box(x,(y1+y2)/2,(z1+z2)/2,thick,y2-y1,z2-z1,mat,{wall:true})}
+function floor(x,y,z,w,d,material='floor',h=.55){box(x,y-h/2,z,w,h,d,material,{walk:true})}
+function columns(xList,zList,lo,hi){for(const x of xList)for(const z of zList)box(x,(lo+hi)/2,z,1.4,hi-lo,1.4,'metal',{pick:false})}
+function railingX(x1,x2,y,z){pipe(x1,y,z,x2,y,z,.1,'rail');for(let x=x1;x<=x2;x+=3.5)pipe(x,y-1.2,z,x,y,z,.075,'rail')}
+function railingZ(x,z1,z2,y){pipe(x,y,z1,x,y,z2,.1,'rail');for(let z=z1;z<=z2;z+=3.5)pipe(x,y-1.2,z,x,y,z,.075,'rail')}
+function windowRibbon(x1,x2,y,z,mat='glass'){for(let x=x1;x<=x2;x+=5){box(x,y,z,3.8,3,.12,mat,{pick:false});box(x+2.2,y,z,.15,3.25,.22,'metal',{pick:false})}}
+function windowRibbonZ(x,z1,z2,y){for(let z=z1;z<=z2;z+=5){box(x,y,z,.12,3,3.8,'glass',{pick:false});box(x,y,z+2.2,.22,3.2,.14,'metal',{pick:false})}}
+function stripedChimney(x,z){for(let j=0;j<12;j++){cyl(x,23+j*8.7,z,6.2,8.75,(j%2?'pale':'red'),20);if(j%2===0)for(let a=0;a<8;a++){let theta=a*Math.PI/4;pipe(x+Math.cos(theta)*7.4,21+j*8.7,z+Math.sin(theta)*7.4,x+Math.cos(theta)*7.4,29+j*8.7,z+Math.sin(theta)*7.4,.08,'metal')}}cyl(x,132,z,5.3,2,'black',20);for(let a=0;a<10;a++){let t=a*Math.PI/5;pipe(x+Math.cos(t)*9,6,z+Math.sin(t)*9,x+Math.cos(t)*8.4,130,z+Math.sin(t)*8.4,.12,'metal')}}
+function buildPlant(){if(plantBuilt)return;plantBuilt=true;
+ // site scale approx 1 unit = 1m. Whole land is 2.4 x 1.65 km; player can fly and build throughout.
+ floor(0,-.1,0,2400,1650,'concrete',.2);
+ box(-150,.01,-220,1030,.09,18,'asphalt',{pick:false});box(-150,.02,190,1150,.1,22,'asphalt',{pick:false});
+ for(let x=-1120;x<=1120;x+=92){box(x,.01,-665,45,.02,2,'line',{pick:false});box(x,.01,620,45,.02,2,'line',{pick:false})}
+ for(let z=-600;z<=600;z+=110)box(-970,.01,z,3,.02,52,'line',{pick:false});
+ for(let x=-980;x<=980;x+=10){box(x,1,-550,.17,2,.17,'metal',{pick:false});box(x,1,550,.17,2,.17,'metal',{pick:false})}
+ for(let z=-545;z<=545;z+=10){box(-980,1,z,.17,2,.17,'metal',{pick:false});box(980,1,z,.17,2,.17,'metal',{pick:false})}
+ pipe(-980,2,-550,980,2,-550,.08,'metal');pipe(-980,2,550,980,2,550,.08,'metal');
+ // Power blocks 3 and 4. Real unit 3/4 have conjoined concrete shells and common stack.
+ buildReactorUnit(-74,3);buildReactorUnit(77,4);
+ stripedChimney(1,33);
+ // Service corridor connecting 3 & 4, pass-through galleries.
+ floor(0,9.8,-115,36,48,'tile');floor(0,19.7,-115,36,48,'tile');
+ for(let y of [9.8,19.7]){railingX(-17,17,y+1,-138);railingX(-17,17,y+1,-91)}
+ for(let x of [-16,16])for(let z of [-135,-112,-92])box(x,16,z,1.4,32,1.4,'metal',{pick:false});
+ // V6: connector is an enclosed building, not two exposed floating decks.
+ wallZ(-18,-140,-91,0,27,1.0,'pale');wallZ(18,-140,-91,0,27,1.0,'pale');
+ for(let x of [-18.7,18.7])for(let z of [-131,-117,-103])box(x,17,z,.22,3.4,6,'glassLight',{pick:false});
+ box(0,28.1,-115,37,1.25,50,'roof',{roof:true,pick:false});
+ // Individual turbine generators in two hall wings, historically a shared facility.
+ buildTurbineHall();buildOutbuildings();buildSubstation();buildCanal();buildRoadFixtures();
+ // Guide signage with deliberately large wayfinding icons, not original sign reproductions.
+ label('TSCHERNOBYL 1986 · VOR DEM UNFALL',80,12,-255,1.38);
+ label('REAKTORBLOCK 4',77,53,-96,1.05);
+ label('REAKTORBLOCK 3',-74,53,-96,1.05);
+ label('LEITWARTE 4 · SPIEL-REKONSTRUKTION',77,15,-158,1.0);
+ label('TURBINENHALLE',30,36,111,1.15);
+ label('KÜHLKANAL',15,6,475,.95);
+ // batch many repeating components to keep draw calls manageable.
+ flushArchitecture();
+}
+function buildReactorUnit(cx,number){const major=number===4;
+ // Lower plant building: external walls are panels, not a filled cube; halls, doors and floors are physically traversable.
+ floor(cx,.15,-16,119,91,'floor');
+ for(const y of [9.7,19.4,30.9]){
+  floor(cx-36,y,-22,29,78,'tile');floor(cx+36,y,-22,29,78,'tile');
+  floor(cx,y,-69,100,11,'tile');floor(cx,y,39,107,9,'tile');
+  railingZ(cx-22,-61,28,y+1.05);railingZ(cx+22,-61,28,y+1.05)
+  // V6: traversable connecting bridges, outside the reactor centre.
+  for(const zz of [-47,15]){
+   floor(cx,y,zz,102,6,'metal',.65);
+   railingX(cx-20,cx+20,y+1.15,zz-2.65);
+   railingX(cx-20,cx+20,y+1.15,zz+2.65);
+  }
+ }
+ // Tall central void makes the reactor dome/deck visible from upper galleries
+ wallZ(cx-60,-63,47,1,32,1.7);wallZ(cx+60,-63,47,1,32,1.7);
+ // segmented front wall and true door openings
+ // V6: uninterrupted lower facade panels. A deliberate 18m-wide main doorway remains.
+ for(let x=cx-60;x<cx+60;x+=18){
+  let right=Math.min(x+18,cx+60),entrance=x>=cx-6&&x<cx+12;
+  if(entrance){wallX(x,right,9.0,32,-63,1.6,'pale');
+   box(x+.45,4.0,-63.95,.55,8.0,1.3,'metal',{pick:false});
+   box(right-.45,4.0,-63.95,.55,8.0,1.3,'metal',{pick:false});
+  }else wallX(x,right,1,32,-63,1.6,major?'pale':'concrete');
+ }
+ wallX(cx-60,cx+60,1,32,47,1.6,'concrete');
+ // upper construction stepped masses reminiscent of the pre-1986 reactor building silhouette
+ // V6: upper reactor hall must meet the roof; the old 60-71 m facade was absent.
+ for(let y of [32,45,58]){
+  let upper=Math.min(y+13,71.7);
+  wallZ(cx-34,-55,17,y,upper,1.7,'pale');wallZ(cx+34,-55,17,y,upper,1.7,'pale');
+  if(y===32){
+   wallX(cx-34,cx-8,y,upper,-55,1.7,'pale');wallX(cx+8,cx+34,y,upper,-55,1.7,'pale');
+   wallX(cx-8,cx+8,43,upper,-55,1.7,'pale');
+  }else wallX(cx-34,cx+34,y,upper,-55,1.7,'pale');
+  wallX(cx-34,cx+34,y,upper,17,1.7,'pale');
+ }
+ // The stepped lower shoulder has complete exterior walls and matching roofs.
+ for(let side of [-1,1]){
+  wallZ(cx+side*60,-63,47,32,47,1.7,'concrete');
+  box(cx+side*47,47.0,-8,26.4,1.4,111.6,'roof',{roof:true,pick:false});
+  for(let z of [-47,-21,4,29]){
+   box(cx+side*59.7,39.5,z,.3,5.2,9.2,'glassLight',{pick:false});
+   box(cx+side*60.15,39.5,z+4.7,.3,6,.28,'metal',{pick:false});
+  }
+ }
+ wallX(cx-60,cx+60,32,47,47,1.7,'pale');
+ // A tall central passage links the upper deck to the annex footbridge.
+ wallX(cx-60,cx-8,32,47,-63,1.7,'pale');
+ wallX(cx+8,cx+60,32,47,-63,1.7,'pale');
+ wallX(cx-8,cx+8,43,47,-63,1.7,'pale');
+ // Connect front/rear roof sections to the taller core (rather than leaving holes).
+ box(cx,47.0,-59.2,68.2,1.4,8.6,'roof',{roof:true,pick:false});
+ box(cx,47.0,32,68.2,1.4,30.6,'roof',{roof:true,pick:false});
+ // high bay from 35.5m to 71m, partly visible with access via open facades on player side
+ floor(cx,35.5,-19,65,65,'tile');
+ for(let z=-49;z<=11;z+=12){box(cx-35,52,z,1.3,37,1.3,'metal',{pick:false});box(cx+35,52,z,1.3,37,1.3,'metal',{pick:false})}
+ for(let x=cx-32;x<=cx+32;x+=8)pipe(x,71,-52,x,71,15,.22,'metal');
+ box(cx,71.5,-19,74,2,74,'roof',{roof:true,pick:false});
+ // Roof plenum / upper service stair casing; historical form approximate
+ box(cx+36,52,6,25,23,33,'pale');box(cx-38,50,6,19,18,21,'pale');
+ box(cx+36,64.5,6,26,1.2,34,'roof',{roof:true,pick:false});
+ // Steel ventilation and facade bands, segmented windows and industrial piping
+ for(let h of [14,23,30]){windowRibbon(cx-55,cx+55,h,48);windowRibbon(cx-55,cx-24,h,-64);windowRibbon(cx+26,cx+55,h,-64)}
+ for(let i=0;i<19;i++){let x=cx-54+i*6;box(x,31.2,46.7,.45,6,.5,'grey',{pick:false});box(x,31.2,-64.0,.4,6,.5,'grey',{pick:false})}
+ for(let y of [10,19,31])pipe(cx-59,y,-58,cx-59,y,44,.35,'rust');
+ for(let x of [cx-46,cx+47])pipe(x,30,36,x,49,36,.3,'metal');
+ // Reactor deck decorative non-operable model: central upper shield, channel pattern, lifting crane.
+ cyl(cx,34.3,-19,11.5,3.2,'slate',32);cyl(cx,36.1,-19,11.9,.5,'grey',32);
+ for(let dx=-8;dx<=8;dx+=1.75)for(let dz=-8;dz<=8;dz+=1.75)if(dx*dx+dz*dz<=8.8*8.8)cyl(cx+dx,36.65,-19+dz,.39,.9,((dx+dz)%3===0?'line':'metal'),8);
+ for(let x of [cx-15,cx+15])for(let z of [-34,-3]){box(x,39.7,z,.6,7,.6,'yellow',{pick:false});box(x,43,z,3,.2,.4,'metal',{pick:false})}
+ box(cx,63,-19,46,2.3,4,'rust',{pick:false});box(cx,65,-19,13,2.0,6,'metal',{pick:false});pipe(cx-31,64,-47,cx+31,64,-47,.33,'metal');
+ // Upper service balcony sections which can be reached using quick travel / lift
+ floor(cx-29,46.6,-19,8,58,'metal');floor(cx+29,46.6,-19,8,58,'metal');
+ railingZ(cx-25,-47,9,47.8);railingZ(cx+25,-47,9,47.8);
+ // Lower interior service hall with gallery on three levels
+ for(const y of [0,9.7,19.4,30.9]){
+  for(let x of [cx-50,cx+50])for(let z of [-52,-20,14,37]){
+   let low=y+1.2,hi=y+9;for(let a=low;a<hi;a+=5.5)pipe(x,a,z,x,a+5.4,z,.16,'metal');
+  }
+ }
+ // Control complex to south: lobby, 2 floors, connecting corridor, daylight openings
+ const az=-123;
+ floor(cx,0.5,az,81,83,'tile');
+ floor(cx-25,10.4,az,26,80,'floor');floor(cx+25,10.4,az,26,80,'floor');
+ floor(cx,10.4,-92,59,10,'floor');
+ // upper corridor to next technical gallery
+ floor(cx,20.4,-91,66,10,'floor');
+ // Durchgehende Brücken vom Vorbau bis in die Haupthalle, damit die Ebenen nicht isoliert sind.
+ floor(cx,1,-73,14,35,'tile');
+ floor(cx,10.4,-73,14,38,'metal');
+ floor(cx,20.4,-72,14,38,'metal');
+ floor(cx,35.5,-65,13,100,'metal');
+ for(const y of [10.4,20.4,35.5]){
+   railingZ(cx-6.4,-109,-20,y+1.2);railingZ(cx+6.4,-109,-20,y+1.2);
+ }
+ wallZ(cx-41,-164,-82,0,20,.9,'concrete');wallZ(cx+41,-164,-82,0,20,.9,'concrete');
+ wallX(cx-41,cx-12,0,18,-164,1,'pale');wallX(cx+12,cx+41,0,18,-164,1,'pale');
+ wallX(cx-12,cx+12,10.3,19,-164,1,'pale');
+ // V6: the formerly open annex had no rear wall and no roof.
+ // Doorway between main reactor block and annex stays open at ground level.
+ wallX(cx-41,cx-10,0,27,-82,1.15,'concrete');
+ wallX(cx+10,cx+41,0,27,-82,1.15,'concrete');
+ wallX(cx-10,cx+10,9,27,-82,1.15,'pale');
+ for(let side of [-1,1]){
+  const xx=cx+side*41;
+  wallZ(xx,-164,-82,20,27,1.0,'pale');
+  for(let z of [-151,-137,-119,-102])box(xx+side*.72,18,z,.26,3.5,8,'glassLight',{pick:false});
+ }
+ // Two roof sections; these also cover the old open gap between annex and main block.
+ box(cx,27.6,-123,83.5,1.25,83.5,'roof',{roof:true,pick:false});
+ box(cx,28,-73,84,1.1,19,'roof',{roof:true,pick:false});
+ // Sturdy floor deck between annex first-floor galleries.
+ floor(cx,20.4,-156,80,7,'metal');
+ railingX(cx-39,cx+39,21.6,-152.7);
+ windowRibbon(cx-39,cx-13,13,-164);windowRibbon(cx+14,cx+39,13,-164);
+ // control room: enclosed on 3 sides, open front doorway, racks of simulated instruments
+ const crz=-143;
+ floor(cx,10.5,crz,69,39,'tile');
+ wallZ(cx-35,-163,-123,10.5,22.5,.8,'pale');wallZ(cx+35,-163,-123,10.5,22.5,.8,'pale');
+ wallX(cx-35,cx-9,10.5,22.5,-162,1,'pale');wallX(cx+9,cx+35,10.5,22.5,-162,1,'pale');
+ wallX(cx-35,cx+35,10.5,22.5,-124,1,'pale');
+ box(cx,23.2,crz,73,.8,42,'roof',{roof:true,pick:false});
+ for(let i=0;i<11;i++){let x=cx-30+i*6;box(x,15,-123.4,5.5,7,.85,'greenDark',{pick:false});for(let j=0;j<4;j++){
+  box(x-1.85+(j%4)*1.25,15.1,-123.98,.8,.62,.1,j===2?'yellow':'green',{pick:false});
+  box(x-1.5+(j%4)*1.2,17.1,-123.98,.8,.62,.1,j===1?'line':'blue',{pick:false});
+ }}
+ for(let i=0;i<9;i++){let x=cx-28+i*7;box(x,11.7,-136,6,1.8,3.2,'metal',{pick:false});box(x,12.5,-135.25,5.7,.22,2.6,'greenDark',{pick:false});for(let j=0;j<5;j++)box(x-2.2+j*1.1,12.68,-135,.38,.14,.4,j%3?'lamp':'red',{pick:false})}
+ for(let x of [cx-28,cx-15,cx,cx+15,cx+29])box(x,20.5,-149,4,.2,1,'lamp',{pick:false});
+ label('BLOCK '+number+' · LEITWARTE (REKONSTRUKTION)',cx,19,-163,1.15);
+ // Multi-floor corridor and service room for unit 4
+ for(let z of [-103,-88,-71])for(let x of [cx-32,cx-19,cx+19,cx+32]){box(x,9,z,.8,17,.8,'metal',{pick:false});box(x,22,z,.7,5,.7,'metal',{pick:false})}
+ for(let y of [3,12,22]){pipe(cx-35,y,-162,cx-35,y,-80,.21,'rust');pipe(cx+35,y,-162,cx+35,y,-80,.21,'metal')}
+ // One functioning staircase, along x edge, ascending from ground up to control level, steps each 0.65m
+ staircase(cx+31,1.0,-159,16,.6,0,1);
+ // A second staircase to equipment gallery
+ staircase(cx-31,10.8,-109,16,.6,0,-1);
+ // Industrial access lifts represented as transport pads, activated by G
+ for(let i=0;i<3;i++){let y=[.1,10.4,35.5][i];floor(cx+16,y,-97,7,7,'yellow',.3);box(cx+16,y+.1,-97,3,.07,3,'black',{pick:false})}
+ interactPoints.push({x:cx+16,y:1.5,z:-97,name:'Aufzug Reaktorblock '+number,stops:[[cx+16,1,-97],[cx+16,11,-97],[cx+16,36,-97],[cx+17,47,-19]]});
+ // Atmosphere: staged stationary machines and piping in service passages
+ for(let z of [-52,-24,6,30])for(let x of [cx-38,cx+38]){
+  cyl(x,2,z,3.1,4,'greenDark',12);pipe(x,4,z,x+5,4,z,.55,'metal');cyl(x,4.3,z,1.2,.6,'metal',12);
+ }
+}
+function staircase(x,baseY,z,count,step,alongX,dir=1){for(let i=0;i<count;i++){let rise=step*i;let zz=z+dir*i*.85;let yy=baseY+rise;box(x,yy-.13,zz,3.0,.4,.84,'metal',{walk:true});box(x-1.4,yy+.48,zz,.1,1.0,.85,'rail',{pick:false});box(x+1.4,yy+.48,zz,.1,1.0,.85,'rail',{pick:false});}}
+function buildTurbineHall(){const z=112;
+ floor(-40,.2,z,760,60,'floor');
+ // sidewalls are interrupted by tall actual doors
+ for(let x=-410;x<335;x+=20){const entrance=(x>-10&&x<50)||(x>200&&x<250);if(!entrance)wallX(x,x+19,0,28,z+30,1.2,'pale');else wallX(x,x+19,11,28,z+30,1.2,'pale');windowRibbon(x+2,x+16,22,z+30)}
+ wallX(-410,335,6,28,z-30,1.3,'pale');
+ wallZ(-410,z-30,z+30,0,29,1.4,'concrete');wallZ(335,z-30,z+30,0,29,1.4,'concrete');
+ for(let x=-410;x<335;x+=12){box(x,14,z-28,1.15,28,1.15,'metal',{pick:false});box(x,14,z+28,1.15,28,1.15,'metal',{pick:false});pipe(x,27.8,z-29,x,27.8,z+29,.15,'metal')}
+ box(-37,30,z,764,1.6,65,'roof',{roof:true,pick:false});
+ for(let x=-405;x<332;x+=7)box(x,30.9,z,1.4,.4,65,'slate',{roof:true,pick:false});
+ // overhead service walkway, up to 400+ meters, rails
+ floor(-38,19.4,z+23,735,4,'metal');railingX(-404,329,20.6,z+20.7);railingX(-404,329,20.6,z+25.0);
+ // Turbine trains: two machines per major block. Stator housings, generator drums, foundation, steam conduits
+ for(let i=0;i<8;i++){let tx=-352+i*96;
+  box(tx,1.8,z,39,3,16,'deep');
+  box(tx-12,4.0,z,13,5.5,12,'slate');
+  for(let j=0;j<3;j++){cyl(tx-6+j*7,7.0,z,5.9,7.9,'metal',20); // oriented vertical but game stylised
+   box(tx-6+j*7,7.9,z,8,3,12,'grey',{pick:false})}
+  box(tx+19,5,z,12,7,11,'greenDark');
+  for(let zz of [z-15,z+15])pipe(tx-19,8.5,zz,tx+21,8.5,zz,.65,'metal');
+  for(let zz of [z-10,z+9])pipe(tx-22,8.5,zz,tx-22,19,zz,.42,'rust');
+  label('TURBINE '+(i+1),tx,15,z-4,.53);
+ }
+ // Gantry cranes
+ for(let x of [-310,-92,119,289]){
+  pipe(x,24,z-29,x,24,z+29,.4,'rust');box(x,26,z,4,3,60,'yellow',{pick:false});pipe(x,26,z,x,10,z,.22,'metal');
+ }
+ for(let x=-388;x<310;x+=48){pipe(x,20,z-22,x+38,20,z-22,.45,'rust');pipe(x,15,z-24,x+40,15,z-24,.32,'metal')}
+ interactPoints.push({x:305,y:1,z:140,name:'Aufzug Turbinenhalle',stops:[[305,1,140],[305,20,137]]});
+ floor(305,.1,140,9,8,'yellow');floor(305,19.4,137,9,8,'yellow');
+}
+function buildOutbuildings(){
+ // blocks 1,2 approximated as early power units; readable campus silhouette
+ for(const [x,n] of [[-600,1],[-445,2]]){
+  floor(x,.15,-6,135,100,'floor');
+  for(let zz of [-56,44]){wallX(x-67,x+67,1,32,zz,1.5,'concrete');for(let yy of [12,23])windowRibbon(x-60,x+60,yy,zz+1)}
+  for(let xx of [x-67,x+67])wallZ(xx,-56,44,0,33,1.5,'pale');
+  box(x,32.5,-3,138,1.5,103,'roof',{roof:true,pick:false});
+  box(x-12,47,-16,67,28,56,'pale');box(x-12,62,-16,68,1.5,57,'roof',{roof:true,pick:false});
+  label('BLOCK '+n,x,36,-59,1.0);
+ }
+ for(let [x,z,w,d,h,name] of [[335,-125,155,87,18,'VERWALTUNG'],[520,-95,120,80,22,'WERKSTÄTTEN'],[-670,-185,125,66,16,'LAGER'],[470,170,143,68,20,'NEBENANLAGEN']]){
+  floor(x,.1,z,w,d,'floor');wallX(x-w/2,x-8,0,h,z-d/2,1.1,'pale');wallX(x+8,x+w/2,0,h,z-d/2,1.1,'pale');wallX(x-w/2,x+w/2,0,h,z+d/2,1.1,'pale');wallZ(x-w/2,z-d/2,z+d/2,0,h,1.1,'concrete');wallZ(x+w/2,z-d/2,z+d/2,0,h,1.1,'concrete');
+  for(let y=7;y<h-2;y+=8){windowRibbon(x-w/2+4,x+w/2-4,y,z-d/2-.7);windowRibbon(x-w/2+4,x+w/2-4,y,z+d/2+.7)}
+  floor(x,9,z,w-4,d-4,'tile');box(x,h+.6,z,w+1,1,d+1,'roof',{roof:true,pick:false});label(name,x,h+5,z-d/2-3,.85);
+ }
+}
+function buildSubstation(){floor(10,.08,308,920,180,'concrete');for(let x=-445;x<=435;x+=46)for(let zz of [260,302,347]){
+ for(let xx of [x-8,x+8]){pipe(xx,1,zz,xx,16,zz,.19,'metal');pipe(xx,16,zz,xx+3,18,zz,.16,'metal')}
+ pipe(x-10,16,zz,x+10,16,zz,.3,'metal');for(let i=-2;i<=2;i++)cyl(x+i*3,16,zz,.32,1.2,'pale',8);
+ if(zz<347)pipe(x-7,18,zz,x-7,18,zz+45,.1,'dark');
+ }
+ for(let x=-420;x<450;x+=69){box(x,1.8,393,18,3,11,'greenDark');for(let t=-6;t<=6;t+=6)box(x+t,3.2,389,.7,.6,1,'lamp',{pick:false})}
+ label('UMSPANNWERK · REKONSTRUKTION',5,29,240,1.1);
+}
+function buildCanal(){box(20,-1.8,489,2300,2.7,115,'water',{pick:false});
+ for(let x=-980;x<=970;x+=160){floor(x,2,489,12,140,'concrete');for(let z of [433,543]){pipe(x-5,3.6,z,x+5,3.6,z,.22,'metal');pipe(x-5,3.6,z,x-5,2.5,z,.13,'metal');pipe(x+5,3.6,z,x+5,2.5,z,.13,'metal')}}
+ for(let z of [422,556])box(20,.5,z,2340,2,6,'concrete');
+}
+function buildRoadFixtures(){for(let z of [-250,195])for(let x=-800;x<=680;x+=75){pipe(x,0,z,x,12,z,.25,'metal');box(x,12.8,z,4,.45,1.4,'lamp',{pick:false})}
+ for(let z of [-221,-201])for(let x=-850;x<=700;x+=50)box(x,.08,z,8,.04,.23,'line',{pick:false});
+ for(let x=-660;x<=500;x+=65){pipe(x,6,65,x,6,78,.33,'rust');pipe(x,6,65,x,10,65,.16,'metal');pipe(x,6,78,x,10,78,.16,'metal')}
+}
+function flushArchitecture(){for(let b of allBatches.values()){
+  let geom=b.kind==='box'?geoCube:b.kind==='pipe'?new THREE.CylinderGeometry(1,1,1,8):new THREE.CylinderGeometry(1,1,1,+b.kind.slice(3));
+  let obj=new THREE.InstancedMesh(geom,plantMaterial(b.mat),b.items.length);obj.count=b.items.length;obj.userData.kind='plant';obj.userData.pick=b.pick;obj.userData.architecture=true;
+  for(let i=0;i<b.items.length;i++){const p=b.items[i];dummy.rotation.set(0,0,0);if(b.kind==='pipe'){const dir=new THREE.Vector3(p[3]-p[0],p[4]-p[1],p[5]-p[2]);dummy.position.set((p[0]+p[3])/2,(p[1]+p[4])/2,(p[2]+p[5])/2);dummy.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.clone().normalize());dummy.scale.set(p[6],dir.length(),p[6])}else{dummy.quaternion.identity();dummy.position.set(p[0],p[1],p[2]);dummy.scale.set(p[3],p[4],p[5])}dummy.updateMatrix();obj.setMatrixAt(i,dummy.matrix)}
+  obj.instanceMatrix.needsUpdate=true;obj.computeBoundingSphere();(b.roof?roofBatch:plantGroup).add(obj);if(b.kind==='box')pickableMeshes.push(obj);
+ }if(!architectureOriginal)architectureOriginal=structuredClone([...allBatches]);allBatches.clear();}
+function floorHere(x,z,current,maxStep=1.0){let h=0;for(let y=Math.floor(current+maxStep);y>=Math.floor(current)-3;y--){let id=at(Math.floor(x),y,Math.floor(z));if(isSolid(id,Math.floor(x),y,Math.floor(z))){let top=y+(id==='slab'?.5:(id==='bed'||id==='bed_head')?.61:1);if(top<=current+maxStep)h=Math.max(h,top);}}for(let f of floorSlabs)if(x>=f[0]&&x<=f[1]&&z>=f[2]&&z<=f[3]&&f[4]<=current+maxStep&&f[4]>h)h=f[4];return h}
+function collideWall(x,feet,z){if(creativeCollision(x,feet+.02,z))return true;for(let c of architectureColliders)if(x+.27>c[0]&&x-.27<c[1]&&feet+.35<c[3]&&feet+1.75>c[2]&&z+.27>c[4]&&z-.27<c[5])return true;return false}
+function updatePlantGravity(dt,dx,dz){if(!collideWall(px+dx,py,pz))px+=dx;if(!collideWall(px,py,pz+dz))pz+=dz;
+ const h=floorHere(px,pz,py,Math.max(1.05,Math.max(0,yVel)*dt));yVel-=22*dt;let next=py+yVel*dt;
+ if(next<=h&&py>=h-1.0){py=h;yVel=0}else if(yVel>0&&creativeCollision(px,next,pz)){yVel=0}else py=next;
+ if(py<-7){py=4;fly=true;notify('Flugmodus aktiviert, damit du nicht feststeckst.')}
+}
+function nearLift(){let best=null,d=Infinity;for(let p of interactPoints){for(let stop of p.stops){let dd=Math.hypot(px-stop[0],py-stop[1],pz-stop[2]);if(dd<d){best={p,stop};d=dd}}}return d<9?best:null}
+function lift(){if(mode!=='chernobyl')return;const q=nearLift();if(!q){notify('Kein Aufzug in Reichweite. Mit T erreichst du alle Stationen.');return}let stops=q.p.stops,i=stops.indexOf(q.stop),dest=stops[(i+1)%stops.length];[px,py,pz]=dest;py+=.35;yVel=0;notify(q.p.name+' · Ebene '+Math.round(py)+' m');}
+const TRAVEL=[
+ {name:'Haupttor & Panorama',desc:'Vorplatz mit Blick auf Block 4',pos:[80,3,-251,0,-.07]},
+ {name:'Block 4 · Haupteingang',desc:'Lobby auf Geländehöhe',pos:[77,2,-153,Math.PI,.02]},
+ {name:'Block 4 · Leitwarte',desc:'Simulierter Kontrollraum, Ebene +10 m',pos:[77,11,-151,Math.PI,0]},
+ {name:'Block 4 · Technikgalerie',desc:'Rohrleitungen, Galerie +19 m',pos:[108,20,-84,Math.PI,-.1]},
+ {name:'Block 4 · Reaktordeck',desc:'RBMK-Ausstellungsmodell, Ebene +35,5 m',pos:[77,36.5,-48,0,-.12]},
+ {name:'Block 4 · Oberer Laufsteg',desc:'Reaktorhalle auf Ebene +46 m',pos:[106,47,-18,-Math.PI/2,-.12]},
+ {name:'Block 3 · Reaktorhalle',desc:'Begehbare Schwesteranlage',pos:[-74,36.5,-48,0,-.13]},
+ {name:'Maschinenhalle · Eingang',desc:'Große Turbinenhalle, Erdgeschoss',pos:[30,2,137,Math.PI,-.1]},
+ {name:'Maschinenhalle · Galerie',desc:'Oberer 400-m-Laufsteg',pos:[30,20.2,135,Math.PI,-.08]},
+ {name:'Schornstein · Außenblick',desc:'Schornstein zwischen Block 3 und 4',pos:[0,55,115,Math.PI,-.15]},
+ {name:'Blöcke 1 und 2',desc:'Ältere Kraftwerksabschnitte',pos:[-510,55,120,0,-.21]},
+ {name:'Umspannwerk',desc:'Freileitungen und Transformatorfeld',pos:[5,17,340,0,-.17]},
+ {name:'Kühlkanal',desc:'Brücken und Wasserbauwerke',pos:[10,8,520,Math.PI,-.12]},
+ {name:'Vogelperspektive',desc:'Ganzer Kraftwerkskomplex',pos:[100,240,380,Math.PI+.1,-.4]}
+];
+function teleport(v,name){[px,py,pz,yaw,pitch]=v;fly=true;yVel=0;dirty=true;lastCX=lastCZ=NaN;closePopups();start();notify('Ort: '+name)}
+function visitCave(){
+ if(mode!=='creative'){notify('Höhlen gibt es in der Kreativwelt.');return}
+ const bx=Math.floor(px),bz=Math.floor(pz),scanR=125;
+ let best=null,score=Infinity;
+ for(let r=0;r<scanR;r+=7)for(let angle=0;angle<12;angle++){
+  const x=bx+Math.round(Math.cos(angle*Math.PI/6)*r),z=bz+Math.round(Math.sin(angle*Math.PI/6)*r);
+  const h=height(x,z);
+  for(let y=Math.min(h-9,-7);y>=-50;y-=2){
+   if(at(x,y,z)||at(x,y+1,z)||!isSolid(at(x,y-1,z),x,y-1,z))continue;
+   const openness=(!at(x+1,y,z)?1:0)+(!at(x-1,y,z)?1:0)+(!at(x,y,z+1)?1:0)+(!at(x,y,z-1)?1:0);
+   if(openness<2)continue;
+   const s=r*1.1+Math.abs(y+23)*.4;
+   if(s<score){best=[x+.5,y+.15,z+.5];score=s}
+   break;
+  }
+ }
+ if(!best){notify('In der Nähe keine passende Höhle gefunden. Versuche es weiter entfernt.');return}
+ [px,py,pz]=best;fly=true;yVel=0;dirty=true;lastCX=lastCZ=NaN;
+ if(!playing){start()}resetChunks();syncUI();notify('Höhle entdeckt! Flugmodus AN · Taste F zum Laufen.');
+}
+function buildTravel(){let list=$('travelOptions');list.innerHTML='';for(let item of TRAVEL){let b=document.createElement('button');b.className='travelButton';b.innerHTML='<strong>'+item.name+'</strong><span>'+item.desc+'</span>';b.onclick=()=>teleport(item.pos,item.name);list.append(b)}}
+function mapCoords(x,z){return [((x+1000)/2000)*280,((z+700)/1400)*210]}
+function drawMap(){prepareMapUI();if(mode==='creative'){drawCreativeMap();return}const c=$('mapCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,280,210);ctx.fillStyle='#263c43';ctx.fillRect(0,0,280,210);
+ for(let x=0;x<280;x+=28){ctx.fillStyle='#ffffff0a';ctx.fillRect(x,0,1,210)}for(let y=0;y<210;y+=21){ctx.fillStyle='#ffffff0b';ctx.fillRect(0,y,280,1)}
+ let rect=(x,z,w,d,col)=>{const [xx,zz]=mapCoords(x,z);ctx.fillStyle=col;ctx.fillRect(xx-w*.14,zz-d*.075,w*.14,d*.15)};
+ rect(75,-16,118,90,'#c7b5a2');rect(-74,-16,118,90,'#c7b5a2');rect(-40,112,760,60,'#a0b8be');rect(-520,-5,286,100,'#97aea4');rect(10,308,920,180,'#889d8e');rect(20,490,2000,110,'#4598bc');
+ ctx.font='bold 10px sans-serif';ctx.fillStyle='#f6f2de';for(let [name,x,z] of [['4',75,-16],['3',-74,-16],['Turbinen',-100,112],['Umspannwerk',-200,309]]){let [mx,my]=mapCoords(x,z);ctx.fillText(name,mx-4,my)}
+ let [meX,meY]=mapCoords(px,pz);ctx.beginPath();ctx.arc(meX,meY,4,0,Math.PI*2);ctx.fillStyle='#ffe17f';ctx.fill();ctx.strokeStyle='#14191d';ctx.stroke();ctx.strokeStyle='#ffe17f';ctx.beginPath();ctx.moveTo(meX,meY);ctx.lineTo(meX-Math.sin(yaw)*12,meY-Math.cos(yaw)*12);ctx.stroke();}
+function voxelTarget(){
+ // Amanatides-Woo voxel traversal: O(reach), independent of the number of visible meshes.
+ let origin=camera.position,dir=new THREE.Vector3();camera.getWorldDirection(dir);
+ let x=Math.floor(origin.x),y=Math.floor(origin.y),z=Math.floor(origin.z);
+ let sx=Math.sign(dir.x),sy=Math.sign(dir.y),sz=Math.sign(dir.z);
+ let deltaX=sx?Math.abs(1/dir.x):Infinity,deltaY=sy?Math.abs(1/dir.y):Infinity,deltaZ=sz?Math.abs(1/dir.z):Infinity;
+ let tx=sx>0?(x+1-origin.x)*deltaX:sx<0?(origin.x-x)*deltaX:Infinity;
+ let ty=sy>0?(y+1-origin.y)*deltaY:sy<0?(origin.y-y)*deltaY:Infinity;
+ let tz=sz>0?(z+1-origin.z)*deltaZ:sz<0?(origin.z-z)*deltaZ:Infinity;
+ let normal=new THREE.Vector3(),d=0;
+ for(let i=0;i<24&&d<=8;i++){
+  const id=at(x,y,z);
+  if(id){return {pos:[x,y,z],normal:normal.clone(),own:edits.has(positionKey(x,y,z)),dist:d,point:origin.clone().addScaledVector(dir,d),kind:'block',id}}
+  if(tx<=ty&&tx<=tz){x+=sx;d=tx;tx+=deltaX;normal.set(-sx,0,0)}
+  else if(ty<=tz){y+=sy;d=ty;ty+=deltaY;normal.set(0,-sy,0)}
+  else{z+=sz;d=tz;tz+=deltaZ;normal.set(0,0,-sz)}
+ }
+ return null;
+}
+function currentTarget(){if(mode==='creative')return voxelTarget();const list=mode==='creative'?chunkMeshes:[...customMeshes,...pickableMeshes];ray.far=mode==='chernobyl'?14:7;ray.setFromCamera({x:0,y:0},camera);const hits=ray.intersectObjects(list.filter(m=>m.parent?.visible!==false),false);for(const h of hits){let pos,normal=h.face.normal.clone();if(h.object.isInstancedMesh){const mat=new THREE.Matrix4();h.object.getMatrixAt(h.instanceId,mat);let q=new THREE.Matrix3().getNormalMatrix(mat);normal.applyMatrix3(q).normalize().round()}if(h.object.userData.kind==='blocks'&&h.instanceId!=null){pos=h.object.userData.positions[h.instanceId];return {pos,normal,own:mode==='chernobyl'||edits.has(positionKey(...pos)),dist:h.distance,point:h.point,kind:'block',id:h.object.userData.blockType}}
+ if(h.object.userData.kind==='plant'){let p=h.point.clone().addScaledVector(normal,-.001);pos=[Math.floor(p.x),Math.floor(p.y),Math.floor(p.z)];return {pos,normal,own:false,dist:h.distance,point:h.point,kind:'plant'}}}
+ return null}
+function midairPlacement(){
+ let v=new THREE.Vector3();camera.getWorldDirection(v);let p=camera.position.clone().addScaledVector(v,5);
+ return [Math.floor(p.x),Math.floor(p.y),Math.floor(p.z)];
+}
+function toggleDoor(){return withBuildHistory(toggleDoorAction)}
+function toggleDoorAction(){
+ if(!playing)return false;let t=currentTarget();if(!t||t.kind!=='block')return false;
+ if(t.id==='bed'||t.id==='bed_head'){lightIndex=0;applyEnvironment();notify('Guten Morgen!');dirty=true;return true;}
+ let [x,y,z]=t.pos;let key=positionKey(x,y,z),raw=edits.get(key);
+ if(blockId(raw)==='door_top'){y--;key=positionKey(x,y,z);raw=edits.get(key)}
+ if(!['door_oak','door_steel'].includes(blockId(raw)))return false;
+ let obj=typeof raw==='object'?raw:{id:blockId(raw),dir:0,open:0};
+ writeBlock(key,{...obj,open:obj.open?0:1});dirty=true;rebuildNearby(x,z);
+ notify(obj.open?'Tür geschlossen':'Tür geöffnet');return true;
+}
+// Treppenmodell: die hohe Kante liegt lokal an +Z. Die ansteigende Seite
+// zeigt beim Bauen standardmaessig VOM Spieler WEG (Blickrichtung).
+// data.dir wird bereits als 90-Grad-Schritt gespeichert und von makeInstanced geladen.
+const STAIR_COMPASS=['Sueden','Osten','Norden','Westen'];
+function normalizedQuarter(value){return ((value%4)+4)%4}
+function stairFacingFromYaw(angle,extra=0){return normalizedQuarter(Math.round(angle/(Math.PI/2))+2+extra)}
+function stairLabel(dir){return ['Süden','Osten','Norden','Westen'][normalizedQuarter(dir)]}
+function turnNextStair(){
+ if(!playing)return;
+ if(BLOCKS[selected][0]!=='stairs'){notify('Wähle zuerst die Holzstufe im Inventar (E).');return}
+ stairTurn=normalizedQuarter(stairTurn+1);
+ notify('Nächste Stufe: Aufstieg nach '+stairLabel(stairFacingFromYaw(yaw,stairTurn))+' · X erneut drehen');
+}
+function turnPlacedStair(delta=1){
+ if(!playing)return;
+ const target=currentTarget();
+ if(!target||target.kind!=='block'||target.id!=='stairs'){
+  notify('Zum Drehen eine platzierte Holzstufe anvisieren (Q).');return;
+ }
+ const [x,y,z]=target.pos, key=positionKey(x,y,z),raw=edits.get(key);
+ if(blockId(raw)!=='stairs'){
+  notify('Nur selbst gesetzte Holzstufen lassen sich drehen.');return;
+ }
+ return withBuildHistory(()=>{
+  const previous=typeof raw==='object'?raw:{id:'stairs',dir:0};
+  const dir=normalizedQuarter((previous.dir||0)+delta);
+  writeBlock(key,{...previous,id:'stairs',dir});
+  dirty=true;rebuildNearby(x,z);syncUI();
+  notify('Stufe gedreht: Aufstieg nach '+stairLabel(dir)+' · Strg+Z rückgängig');
+ });
+}
+function edit(placing){return withBuildHistory(()=>editAction(placing))}
+function editAction(placing){
+ if(!playing)return;
+ const t=currentTarget(),chosen=BLOCKS[selected][0];
+ if(placing&&t?.id&&['door_oak','door_steel'].includes(t.id)&&keys.has('AltLeft')){toggleDoor();return}
+ let xyz;
+ if(placing){
+  if(!t||(freePlacement&&(chosen==='water'||chosen==='fire'))){
+   // Freely place a fire or water source in empty space without a surface to click.
+   if(chosen!=='water'&&chosen!=='fire'){notify('Kein Block in Reichweite.');return}
+   xyz=midairPlacement();
+  }else if(t.kind==='plant'){
+   const v=t.point.clone().addScaledVector(t.normal,.51);xyz=[Math.floor(v.x),Math.floor(v.y),Math.floor(v.z)];
+  }else xyz=t.pos.map((n,i)=>n+Math.round([t.normal.x,t.normal.y,t.normal.z][i]));
+ }else{
+  if(!t){notify('Kein Block in Reichweite.');return}
+  if(mode==='chernobyl'&&t.kind==='plant'){cutArchitecture(t.pos);return}
+  xyz=t.pos.slice();
+ }
+ let [x,y,z]=xyz;
+ if(y<=BEDROCK_Y){notify('Hier beginnt das unzerstörbare Grundgestein (Y = −61).');return}if(y>180||Math.abs(x)>250000||Math.abs(z)>250000)return;
+ let key=positionKey(x,y,z),old=at(x,y,z);
+ if(placing){
+  if(old){notify('Hier ist schon ein Block.');return}
+  if(isSolid(chosen,x,y,z)&&playerOverlapsCell(x,y,z)){notify('Du stehst in diesem Block.');return}
+  if(chosen==='door_oak'||chosen==='door_steel'){
+   if(at(x,y+1,z)||playerOverlapsCell(x,y+1,z)){notify('Für die Tür werden zwei freie Blöcke benötigt.');return}
+   const dir=(Math.round(yaw/(Math.PI/2))%4+4)%4;
+   writeBlock(key,{id:chosen,dir,open:0});writeBlock(positionKey(x,y+1,z),{id:'door_top',dir,open:0});
+  }else if(chosen==='bed'){
+   const dir=(Math.round(yaw/(Math.PI/2))%4+4)%4,[dx,dz]=[[0,-1],[-1,0],[0,1],[1,0]][dir];
+   if(at(x+dx,y,z+dz)||playerOverlapsCell(x+dx,y,z+dz)){notify('Das Bett benötigt zwei freie Blöcke.');return}
+   writeBlock(key,{id:'bed',dir});writeBlock(positionKey(x+dx,y,z+dz),{id:'bed_head',dir});
+  }else if(chosen==='pane'||chosen==='fence'||chosen==='slab'||chosen==='stairs'||chosen==='table'){
+   const dir=chosen==='stairs'?stairFacingFromYaw(yaw,stairTurn):normalizedQuarter(Math.round(yaw/(Math.PI/2)));
+   writeBlock(key,{id:chosen,dir});
+  }else writeBlock(key,chosen);
+ }else{
+  // Breaking a door also deletes its upper half. Old user saves remain compatible.
+  let id=at(x,y,z);if(id==='bed'||id==='bed_head'){const raw=valueAt(x,y,z),[dx,dz]=[[0,-1],[-1,0],[0,1],[1,0]][(raw?.dir||0)%4],sign=id==='bed'?1:-1;writeBlock(positionKey(x+dx*sign,y,z+dz*sign),null);rebuildNearby(x+dx*sign,z+dz*sign);}if(id==='door_top'){y--;key=positionKey(x,y,z);id=at(x,y,z)}
+  if(id==='door_oak'||id==='door_steel'){writeBlock(positionKey(x,y+1,z),null)}
+  // A removed natural block is stored as null, rather than deleting the edit.
+  writeBlock(key,null);
+ }
+ dirty=true;rebuildNearby(x,z);if(chosen==='bed'){for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]])rebuildNearby(x+dx,z+dz);}
+ syncUI();
+}
+function creativeCollision(x,y,z){
+ for(const ox of [-.27,.27])for(const oz of [-.27,.27])for(const oy of [.07,.83,1.68]){
+  let bx=Math.floor(x+ox),by=Math.floor(y+oy),bz=Math.floor(z+oz);
+  let b=at(bx,by,bz);if(!isSolid(b,bx,by,bz))continue;if((b==='slab'||b==='bed'||b==='bed_head')&&(y+oy)-by>=((b==='bed'||b==='bed_head')?.61:.5))continue;return true;
+ }return false;
+}
+function stepCreative(dt,dx,dz){
+ if(!creativeCollision(px+dx,py,pz))px+=dx;
+ if(!creativeCollision(px,py,pz+dz))pz+=dz;
+ let grounded=creativeCollision(px,py-.095,pz);
+ const jumping=keys.has('Space')||holdUp;
+ if(jumping&&!jumpLatch&&grounded){yVel=8.2;grounded=false}
+ jumpLatch=jumping;
+ if(grounded&&yVel<=0){
+  // Snap feet to the top face, not a point inside the block (eliminates camera shake).
+  const fy=Math.floor(py-.095);py=fy+1+.001;yVel=0;
+  return;
+ }
+ yVel=Math.max(-32,yVel-23*dt);
+ const delta=yVel*dt,steps=Math.max(1,Math.ceil(Math.abs(delta)/.14));
+ for(let i=0;i<steps;i++){
+  let next=py+delta/steps;
+  if(!creativeCollision(px,next,pz)){py=next;continue}
+  if(yVel<0){let under=Math.floor(py-.095);py=under+1+.001}
+  else if(yVel>0)py=Math.floor(py+1.7)-1.7-.004;
+  yVel=0;break;
+ }
+ if(py<MIN_Y+1){py=height(Math.floor(px),Math.floor(pz))+3;yVel=0;fly=true;notify('Sicherheits-Rückkehr zur Oberfläche.');syncUI()}
+}
+function stepPlant(dt,dx,dz){
+ if(!collideWall(px+dx,py,pz))px+=dx;
+ if(!collideWall(px,py,pz+dz))pz+=dz;
+ const floor=floorHere(px,pz,py,.10),grounded=Math.abs(py-floor)<.09&&yVel<=0;
+ const jumping=keys.has('Space')||holdUp;
+ if(jumping&&!jumpLatch&&grounded)yVel=7.4;
+ jumpLatch=jumping;
+ yVel=Math.max(-40,yVel-22*dt);
+ const next=py+yVel*dt;
+ if(yVel<=0&&next<=floor&&py>=floor-.12){py=floor;yVel=0}
+ else if(yVel>0&&creativeCollision(px,next,pz)){yVel=0}else py=next;
+ if(py<-7){py=4;fly=true;yVel=0;notify('Flugmodus aktiviert: Du bist unter das Gelände geraten.')}
+}
+function tick(dt){
+ if(!playing)return;
+ let forward=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-joyY;
+ let strafe=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0)+joyX;
+ const len=Math.max(1,Math.hypot(forward,strafe));forward/=len;strafe/=len;
+ const speed=keys.has('ControlLeft')||keys.has('ControlRight')?(mode==='chernobyl'?38:17):(mode==='chernobyl'?12:8);
+ const dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*strafe)*speed*dt;
+ const dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*strafe)*speed*dt;
+ if(fly){px+=dx;pz+=dz;let climb=(keys.has('Space')||holdUp?1:0)-(keys.has('ShiftLeft')||keys.has('ShiftRight')||holdDown?1:0);py=Math.max(BEDROCK_Y+1.05,Math.min(400,py+climb*speed*dt));jumpLatch=keys.has('Space')}
+ else if(mode==='chernobyl')stepPlant(dt,dx,dz);
+ else stepCreative(dt,dx,dz);
+ if(mode==='creative'&&(coord(px)!==lastCX||coord(pz)!==lastCZ)){
+  lastCX=coord(px);lastCZ=coord(pz);scheduleChunks();
+ }
+ // Caves become atmospheric, with an automatic player lamp rather than permanent global daylight.
+ if(mode==='creative'){
+  const h=height(Math.floor(px),Math.floor(pz));const underground=py<h-5;
+  headlamp.position.set(px,py+1.55,pz);headlamp.intensity=underground?3.8:0;
+  if(underground!==caveState){caveState=underground;
+   hemi.intensity=underground?.49:[2.15,1.65,.85][lightIndex];
+   sun.intensity=underground?.18:[2.3,1.45,.38][lightIndex];
+   const sky=underground?'#101a25':['#95cbe9','#a48f8b','#161e35'][lightIndex];
+   scene.fog=new THREE.Fog(sky,underground?8:45,underground?52:viewDistance*SIZE*1.8+52);
+   scene.background=new THREE.Color(sky);
+  }
+ }else headlamp.intensity=0;
+ // Player coordinate always stores foot height. Camera eye height never changes on mode switch.
+ camera.position.set(px,py+1.65,pz);camera.rotation.order='YXZ';camera.rotation.set(pitch,yaw,0);
+ updateRepeatBuild(dt);updateNavigationHUD();
+ hitTarget=currentTarget();marker.visible=!!hitTarget;
+ if(hitTarget){let p=hitTarget.pos;marker.position.set(p[0]+.5,p[1]+.5,p[2]+.5)}
+  const stairsSelected=BLOCKS[selected][0]==='stairs';
+  $('aimInfo').textContent=hitTarget?.id==='stairs'?
+   'Holzstufe · Q drehen · Shift+Q zurück · Strg+Z rückgängig':
+   hitTarget?(mode==='chernobyl'&&!hitTarget.own?'Links: Gebäude abbauen · Rechts: bauen':'Links: abbauen · Rechts: bauen'+(['door_oak','door_steel'].includes(hitTarget.id)?' · G: Tür öffnen':['bed','bed_head'].includes(hitTarget.id)?' · G: Schlafen':'')):
+   ((BLOCKS[selected][0]==='water'||BLOCKS[selected][0]==='fire')?'Wasser / Feuer frei im Raum platzieren':'');
+  if(stairsSelected&&hitTarget?.id!=='stairs')$('aimInfo').textContent+=' · Holzstufe: Aufstieg nach '+stairLabel(stairFacingFromYaw(yaw,stairTurn))+' · X drehen';
+ elapsed+=dt;if(dirty&&elapsed>28){elapsed=0;save()}
+ $('actionText').textContent=mode==='chernobyl'&&nearLift()?'G: Aufzug':'V: Wasser/Feuer frei';
+}
+function loop(){
+ requestAnimationFrame(loop);
+ const dt=Math.min(clock.getDelta(),.06);
+ if(mode==='creative'&&chunkQueue.length){const [x,z]=chunkQueue.shift(),key=chunkKey(x,z);queued.delete(key);
+  if(Math.abs(coord(px)-x)<=viewDistance&&Math.abs(coord(pz)-z)<=viewDistance&&!chunkMap.has(key))buildChunk(x,z);
+ }
+ if(playing){simAccumulator=Math.min(simAccumulator+dt,.075);let steps=0;
+  while(simAccumulator>=1/60&&steps<5){tick(1/60);simAccumulator-=1/60;steps++}
+ }else simAccumulator=0;
+ frames++;fpsElapsed+=dt;
+ if(fpsElapsed>.7){fps=Math.round(frames/fpsElapsed);fpsElapsed=0;frames=0;
+  const w=mode==='chernobyl'?'AKW 1986':'Kreativwelt';
+  $('stats').innerHTML='<strong>'+w+'</strong> · '+fps+' FPS<br>X '+Math.round(px)+' · Y '+Math.round(py)+' · Z '+Math.round(pz)+'<br>'+edits.size+' Bauänderungen · '+(fly?'Fliegen':'Laufen')+(mode==='chernobyl'?' · Dächer '+(roofHidden?'AUS':'AN'):'');
+ }
+ const fireMat=materialCache.get('fire');if(fireMat)fireMat.opacity=.77+Math.sin(performance.now()*.009)*.15;
+ updateLocalLights();renderer.toneMappingExposure=(lightIndex===2?1.55:1.2)*graphics.exposure;renderer.render(scene,camera);
+}
+function initEvents(){
+ initMapControls();
+ $('play').onclick=start;$('menuBtn').onclick=()=>pause();$('choiceCreative').onclick=()=>selectWorld('creative');$('choicePlant').onclick=()=>selectWorld('chernobyl');
+ $('save').onclick=()=>save(true);$('reset').onclick=()=>{let msg=mode==='chernobyl'?'Alle Bau- und Gebäudeänderungen in Tschernobyl zurücksetzen? Die ursprünglichen Gebäude werden wiederhergestellt.':'Eine neue Kreativwelt erzeugen?';if(!confirm(msg))return;clearBuildHistory();if(mode==='creative'){seed=Math.floor(Math.random()*2147482000);loadNavigation({});}edits.clear();if(mode==='chernobyl'){architectureCuts.clear();restoreArchitecture();}setSpawn();resetChunks();refreshCustom();dirty=true;save();syncUI();notify('Welt zurückgesetzt')};
+ $('export').onclick=()=>{let out={version:11,navigation:mode==='creative'?{home:creativeHome,waypoint:creativeWaypoint}:undefined,hotbar:[...hotbarSlots],activeSlot,architectureCuts:mode==='chernobyl'?[...architectureCuts]:[],lightIndex,world:mode,seed,blocks:[...edits],player:[px,py,pz,yaw,pitch],flying:fly,viewDistance};let url=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));let a=document.createElement('a');a.href=url;a.download='mooncraft-'+mode+'-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200)};
+ $('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{let o=JSON.parse(await f.text());if(o.world&&o.world!==mode){notify('Die Datei gehört zur anderen Welt. Bitte vorher Welt wechseln.');return}safeLoad(o);dirty=true;save(true)}catch(ex){notify('Die Speicherdatei ist beschädigt oder ungültig')}finally{e.target.value=''}};
+ $('distance').oninput=e=>{viewDistance=Math.max(2,Math.min(4,+e.target.value));$('distanceText').textContent=viewDistance;resetChunks();applyEnvironment()};
+ $('undoBtn').onclick=undoBuild;$('redoBtn').onclick=redoBuild;
+ renderer.domElement.addEventListener('wheel',e=>{if(!playing)return;e.preventDefault();selectSlot(activeSlot+(e.deltaY>0?1:-1))},{passive:false});
+ $('blockSearch').oninput=fillInventory;
+ $('invBtn').onclick=()=>showPopup('inventoryModal');$('closeInv').onclick=leavePopup;
+ $('fly').onclick=toggleFly;$('travelBtn').onclick=()=>showPopup('travel');$('mapBtn').onclick=()=>showPopup('mapPanel');$('helpBtn').onclick=()=>showPopup('helpModal');$('caveBtn').onclick=visitCave;
+ $('roof').onclick=toggleRoof;$('light').onclick=()=>{lightIndex=(lightIndex+1)%3;applyEnvironment();syncUI();notify('Beleuchtung: '+['Tag','Abend','Nacht'][lightIndex])};
+ for(let id of ['closeTravel','closeMap','closeHelp'])$(id).onclick=leavePopup;
+ $('mapCanvas').onclick=e=>{if(mode==='creative'){pickMapWaypoint(e);return}let r=e.target.getBoundingClientRect();let x=(e.clientX-r.left)*280/r.width,z=(e.clientY-r.top)*210/r.height;let [wx,wz]=[x/280*2000-1000,z/210*1400-700];let nearest=TRAVEL.reduce((a,b)=>{let d=(b.pos[0]-wx)**2+(b.pos[2]-wz)**2;return d<a.d?{d,item:b}:a},{d:Infinity,item:null});if(nearest.item){let tt=nearest.item;teleport(tt.pos,tt.name)}};
+ renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());renderer.domElement.addEventListener('mousedown',e=>{if(!playing)return;if(document.pointerLockElement===renderer.domElement||matchMedia('(pointer:coarse)').matches){if(e.button===1){const t=currentTarget();const i=BLOCKS.findIndex(b=>b[0]===(t?.id==='bed_head'?'bed':t?.id));if(i>=0)selectBlock(i);}else if(e.button===2){e.preventDefault();beginRepeatBuild('mouse');}else if(e.button===0)edit(false)}else renderer.domElement.requestPointerLock?.()});
+ addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement&&e.code!=='Escape')return;if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.repeat)return;
+ if((e.ctrlKey||e.metaKey)&&['KeyZ','KeyY'].includes(e.code)){stopRepeatBuild();e.preventDefault();if(e.code==='KeyY'||e.shiftKey)redoBuild();else undoBuild();return;}
+ if(e.code==='Escape'&&!$('graphicsModal').classList.contains('hidden')){$('closeGraphics').click();return}
+ if(e.code==='Escape'){if(!playing&&(!$('inventoryModal').classList.contains('hidden')||!$('travel').classList.contains('hidden')||!$('mapPanel').classList.contains('hidden')||!$('helpModal').classList.contains('hidden')))leavePopup();else if(playing)pause();return}
+ if(e.code==='KeyB'&&playing&&!e.ctrlKey&&!e.metaKey&&!e.altKey){e.preventDefault();beginRepeatBuild('keyboard');}
+ if(e.code==='KeyX'&&playing&&!e.ctrlKey&&!e.metaKey&&!e.altKey)turnNextStair();if(e.code==='KeyQ'&&playing&&!e.ctrlKey&&!e.metaKey&&!e.altKey)turnPlacedStair(e.shiftKey?-1:1);
+ if(e.code==='KeyE')showPopup('inventoryModal');if(e.code==='KeyF'&&playing)toggleFly();if(e.code==='KeyP')save(true);if(e.code==='KeyT'&&mode==='chernobyl')showPopup('travel');if(e.code==='KeyM'){if(!$('mapPanel').classList.contains('hidden'))leavePopup();else showPopup('mapPanel');}if(e.code==='KeyC'&&mode==='creative')visitCave();if(e.code==='KeyR'&&mode==='chernobyl')toggleRoof();if(e.code==='KeyL'){$('light').click()};if(e.code==='KeyG'&&playing){if(!toggleDoor())lift()};if(e.code==='KeyV'&&playing){freePlacement=!freePlacement;notify('Freies Wasser/Feuer: '+(freePlacement?'AN':'AUS'))};if(e.code==='KeyH')showPopup('helpModal');
+ if(e.code.startsWith('Digit')){let n=+e.code.slice(5);if(n>0&&n<=9)selectSlot(n-1)}});
+ addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='KeyB')endRepeatBuild('keyboard')});
+ addEventListener('mouseup',e=>{if(e.button===2)endRepeatBuild('mouse')});addEventListener('blur',()=>{stopRepeatBuild();keys.clear();holdUp=holdDown=false});
+ document.addEventListener('pointerlockchange',()=>{if(!document.pointerLockElement)stopRepeatBuild();if(!document.pointerLockElement&&playing&&!matchMedia('(pointer:coarse)').matches){playing=false;$('mainMenu').classList.remove('hidden')}});
+ addEventListener('mousemove',e=>{if(playing&&document.pointerLockElement===renderer.domElement){yaw-=e.movementX*.0022;pitch=Math.max(-1.52,Math.min(1.52,pitch-e.movementY*.0022))}});
+ for(const [id,fn] of [['mBreak',()=>edit(false)],['mPlace',()=>edit(true)]])$(id).addEventListener('pointerdown',e=>{e.preventDefault();fn()});
+ for(const [id,fn] of [['mUp',v=>holdUp=v],['mDown',v=>holdDown=v]]){const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture(e.pointerId);fn(true)});el.addEventListener('pointerup',()=>fn(false));el.addEventListener('pointercancel',()=>fn(false))}
+ $('mFly').onclick=toggleFly;
+ const joy=$('joystick');const moveJoy=e=>{let r=joy.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,len=Math.hypot(dx,dy),f=Math.min(1,38/(len||1));joyX=dx*f/38;joyY=dy*f/38;$('joyDot').style.transform=`translate(${joyX*30}px,${joyY*30}px)`};joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(joy.hasPointerCapture(e.pointerId))moveJoy(e)});const resetJoy=()=>{joyX=joyY=0;$('joyDot').style.transform=''};joy.addEventListener('pointerup',resetJoy);joy.addEventListener('pointercancel',resetJoy);
+ let looking=null,lx=0,ly=0;renderer.domElement.addEventListener('touchstart',e=>{if(!playing)return;for(let t of e.changedTouches){if(t.clientX>innerWidth*.34&&looking===null){looking=t.identifier;lx=t.clientX;ly=t.clientY;break}}},{passive:true});renderer.domElement.addEventListener('touchmove',e=>{for(let t of e.changedTouches)if(t.identifier===looking){yaw-=(t.clientX-lx)*.004;pitch=Math.max(-1.52,Math.min(1.52,pitch-(t.clientY-ly)*.004));lx=t.clientX;ly=t.clientY}},{passive:true});renderer.domElement.addEventListener('touchend',e=>{for(let t of e.changedTouches)if(t.identifier===looking)looking=null});
+ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+ addEventListener('beforeunload',()=>{if(dirty)save(false)})
+}
+function init(){try{initEvents();initGraphics();buildTravel();buildPlant();plantGroup.visible=false;customGroup.visible=false;const last=localStorage.getItem('mooncraft_last_mode')||'creative';if(last==='chernobyl'){mode='chernobyl';setSpawn();plantGroup.visible=true;customGroup.visible=true;terrainGroup.visible=false}else{mode='creative';setSpawn();terrainGroup.visible=true}
+ const stored=localStorage.getItem(SAVEKEY[mode]);if(stored)try{safeLoad(JSON.parse(stored))}catch(e){console.warn('Speicherfehler',e)};
+ resetChunks();applyEnvironment();syncUI();$('choiceCreative').classList.toggle('active',mode==='creative');$('choicePlant').classList.toggle('active',mode==='chernobyl');$('play').textContent=mode==='chernobyl'?'▶ AKW Tschernobyl erkunden':'▶ Kreativwelt betreten';$('reset').textContent=mode==='chernobyl'?'↺ Tschernobyl wiederherstellen':'✦ Neue Kreativwelt';$('plantButtons').classList.toggle('hidden',mode!=='chernobyl');$('caveBtn').classList.toggle('hidden',mode!=='creative');$('worldDescription').textContent=mode==='chernobyl'?'Historisch inspirierte Anlage vor dem Unfall von 1986. Begehbare Spiel-Rekonstruktion, keine exakte technische Bauaufnahme.':'Tiefe Kreativwelt bis Y −64, natürliche Höhlen, Mineralien, Wasser, Feuer, Türen, Fenster und unbegrenzt Baublöcke.';
+ camera.position.set(px,py+1.65,pz);camera.rotation.order='YXZ';camera.rotation.set(pitch,yaw,0);$('loading').classList.add('hidden');loop();}catch(err){console.error(err);$('loading').classList.add('error');$('loading').innerHTML='<strong>MoonCraft konnte nicht gestartet werden</strong><div>'+String(err.message||err)+'</div><div>Bitte in Chrome/Edge öffnen und Internetverbindung prüfen.</div>'}}
+
+let architectureCuts=new Set(),architectureOriginal=null;
+function splitBox(p,c){
+ const a=[p[0]-p[3]/2,p[1]-p[4]/2,p[2]-p[5]/2],b=[p[0]+p[3]/2,p[1]+p[4]/2,p[2]+p[5]/2];
+ const lo=a.map((v,i)=>Math.max(v,c[i])),hi=b.map((v,i)=>Math.min(v,c[i]+1));
+ if(lo.some((v,i)=>v>=hi[i]-1e-7))return [p];
+ const out=[];function emit(l,h){if(l.every((v,i)=>h[i]-v>1e-7))out.push([(l[0]+h[0])/2,(l[1]+h[1])/2,(l[2]+h[2])/2,h[0]-l[0],h[1]-l[1],h[2]-l[2],p[6],p[7]])}
+ emit(a,[lo[0],b[1],b[2]]);emit([hi[0],a[1],a[2]],b);
+ emit([lo[0],a[1],a[2]],[hi[0],lo[1],b[2]]);emit([lo[0],hi[1],a[2]],[hi[0],b[1],b[2]]);
+ emit([lo[0],lo[1],a[2]],[hi[0],hi[1],lo[2]]);emit([lo[0],lo[1],hi[2]],[hi[0],hi[1],b[2]]);return out;
+}
+function restoreArchitecture(){
+ if(!architectureOriginal)return;
+ const remove=[];plantGroup.traverse(o=>{if(o.userData.architecture)remove.push(o)});
+ for(const o of remove){o.parent.remove(o);o.dispose();if(o.geometry!==geoCube)o.geometry.dispose()}
+ pickableMeshes.length=0;floorSlabs.length=0;architectureColliders.length=0;allBatches.clear();
+ const cuts=[...architectureCuts].map(k=>k.split(',').map(Number));
+ for(const [key,source] of architectureOriginal){const b={...source,items:source.items};
+  if(b.kind==='box'){
+   b.items=[];
+   for(const p of source.items){let parts=[p];for(const c of cuts){if(c.some((v,i)=>v+1<=p[i]-p[i+3]/2||v>=p[i]+p[i+3]/2))continue;parts=parts.flatMap(part=>splitBox(part,c))}b.items.push(...parts)}
+   for(const p of b.items){const [x,y,z,w,h,d,walk,wall]=p;if(walk)floorSlabs.push([x-w/2,x+w/2,z-d/2,z+d/2,y+h/2]);if(wall)architectureColliders.push([x-w/2,x+w/2,y-h/2,y+h/2,z-d/2,z+d/2]);}
+  }if(b.items.length)allBatches.set(key,b);
+ }flushArchitecture();
+}
+function cutArchitecture(pos){return withBuildHistory(()=>cutArchitectureAction(pos))}
+function cutArchitectureAction(pos){
+ if(architectureCuts.size>=50000){notify('Maximale Anzahl an Gebäudeänderungen erreicht. Bitte exportieren.');return}
+ const key=positionKey(...pos);if(architectureCuts.has(key))return;
+ if(buildTransaction&&!buildTransaction.cuts.has(key))buildTransaction.cuts.set(key,architectureCuts.has(key));architectureCuts.add(key);restoreArchitecture();dirty=true;syncUI();notify('Gebäudeblock entfernt · Änderung wird gespeichert');
+}
+let graphics={resolution:1,fov:73,exposure:1,dynamicLights:true,showStats:true};
+const localLights=Array.from({length:8},()=>{const l=new THREE.PointLight(0xffbc65,0,12,1.5);scene.add(l);return l});
+let lightUpdate=0;
+function updateLocalLights(){
+ if(performance.now()-lightUpdate<200)return;lightUpdate=performance.now();
+ const candidates=[];if(graphics.dynamicLights)for(const [k,v] of edits){if(!['torch','lantern','lamp','light'].includes(blockId(v)))continue;const p=k.split(',').map(Number),d=(p[0]-px)**2+(p[1]-py)**2+(p[2]-pz)**2;if(d<900)candidates.push({p,d})}
+ candidates.sort((a,b)=>a.d-b.d);localLights.forEach((l,i)=>{const c=candidates[i];l.intensity=c?5:0;if(c)l.position.set(c.p[0]+.5,c.p[1]+.85,c.p[2]+.5)});
+}
+function applyGraphics(){renderer.setPixelRatio(Math.min(devicePixelRatio,2)*graphics.resolution);renderer.setSize(innerWidth,innerHeight);camera.fov=graphics.fov;camera.updateProjectionMatrix();$('stats').classList.toggle('hidden',!graphics.showStats);for(const id of ['resolution','fov','exposure']){$(id).value=graphics[id];$(id+'Value').textContent=graphics[id]}for(const id of ['dynamicLights','showStats'])$(id).checked=graphics[id];try{localStorage.setItem('mooncraft_graphics_v7',JSON.stringify(graphics))}catch{}}
+function initGraphics(){
+ try{const g=JSON.parse(localStorage.getItem('mooncraft_graphics_v7'));if(g){for(const [k,min,max] of [['resolution',.5,2],['fov',50,100],['exposure',.6,1.8]])if(Number.isFinite(g[k]))graphics[k]=Math.max(min,Math.min(max,g[k]));for(const k of ['dynamicLights','showStats'])if(typeof g[k]==='boolean')graphics[k]=g[k]}}catch{}
+ $('graphicsBtn').onclick=$('menuGraphics').onclick=()=>showPopup('graphicsModal');$('closeGraphics').onclick=()=>{closePopups();if($('mainMenu').classList.contains('hidden'))start()};
+ for(const k of ['resolution','fov','exposure'])$(k).oninput=e=>{graphics[k]=+e.target.value;applyGraphics()};
+ for(const k of ['dynamicLights','showStats'])$(k).onchange=e=>{graphics[k]=e.target.checked;applyGraphics()};
+ document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const p=b.dataset.preset;graphics.resolution=p==='low'?.6:p==='high'?1.3:1;graphics.dynamicLights=p!=='low';viewDistance=p==='low'?2:p==='high'?4:3;resetChunks();applyEnvironment();syncUI();applyGraphics()});
+ $('dayButton').onclick=()=>{$('light').click()};applyGraphics();
+}
+
+let hotbarSlots=BLOCKS.slice(0,9).map(b=>b[0]),activeSlot=0,inventoryCategory='Alle';
+let undoStack=[],redoStack=[],buildTransaction=null;
+function loadHotbar(obj){hotbarSlots=BLOCKS.slice(0,9).map(b=>b[0]);if(Array.isArray(obj.hotbar)&&obj.hotbar.length===9)obj.hotbar.forEach((id,i)=>{if(BLOCKS.some(b=>b[0]===id))hotbarSlots[i]=id});activeSlot=Number.isInteger(obj.activeSlot)?Math.max(0,Math.min(8,obj.activeSlot)):0;selected=BLOCKS.findIndex(b=>b[0]===hotbarSlots[activeSlot])}
+function updateHistoryUI(){$('undoBtn').disabled=!undoStack.length;$('redoBtn').disabled=!redoStack.length;$('undoBtn').title='Strg+Z · '+undoStack.length+' Bauaktionen';$('redoBtn').title='Strg+Y · '+redoStack.length+' Bauaktionen'}
+function clearBuildHistory(){undoStack=[];redoStack=[];buildTransaction=null;updateHistoryUI()}
+function writeBlock(key,value){if(buildTransaction&&!buildTransaction.cells.has(key))buildTransaction.cells.set(key,{has:edits.has(key),value:edits.get(key)});edits.set(key,value)}
+function withBuildHistory(fn){
+ if(buildTransaction)return fn();const transaction={world:mode,cells:new Map(),cuts:new Map()};buildTransaction=transaction;
+ try{return fn()}finally{
+  buildTransaction=null;const cells=[];for(const [key,before] of transaction.cells){const after={has:edits.has(key),value:edits.get(key)};if(before.has!==after.has||JSON.stringify(before.value)!==JSON.stringify(after.value))cells.push({key,before,after})}
+  const cuts=[];for(const [key,before] of transaction.cuts){const after=architectureCuts.has(key);if(before!==after)cuts.push({key,before,after})}
+  if(cells.length||cuts.length){undoStack.push({world:transaction.world,cells,cuts});if(undoStack.length>100)undoStack.shift();redoStack=[];}updateHistoryUI();
+ }
+}
+function applyBuildHistory(action,side){
+ if(action.world!==mode)return false;
+ for(const c of action.cells){const state=c[side];if(state.has)edits.set(c.key,state.value);else edits.delete(c.key)}
+ for(const c of action.cuts){if(c[side])architectureCuts.add(c.key);else architectureCuts.delete(c.key)}
+ if(action.cuts.length)restoreArchitecture();
+ if(mode==='chernobyl')refreshCustom();else{
+  const chunks=new Set();for(const c of action.cells){const [x,y,z]=c.key.split(',').map(Number);for(const [dx,dz] of [[0,0],[-1,0],[1,0],[0,-1],[0,1]])chunks.add(chunkKey(coord(x+dx),coord(z+dz)))}
+  for(const key of chunks){if(chunkMap.has(key)){const [x,z]=key.split(',').map(Number);rebuildChunk(x,z)}}
+ }
+ if(!fly&&(creativeCollision(px,py,pz)||(mode==='chernobyl'&&collideWall(px,py,pz)))){fly=true;yVel=0;notify('Flug aktiviert: Bauaktion hat deinen Standort verändert.')}
+ dirty=true;syncUI();return true;
+}
+function undoBuild(){stopRepeatBuild();const action=undoStack.pop();if(!action){notify('Keine Bauaktion zum Rückgängigmachen.');return}if(applyBuildHistory(action,'before'))redoStack.push(action);updateHistoryUI();notify('Bauaktion rückgängig · '+undoStack.length+' weitere verfügbar')}
+function redoBuild(){stopRepeatBuild();const action=redoStack.pop();if(!action){notify('Keine Bauaktion zum Wiederholen.');return}if(applyBuildHistory(action,'after'))undoStack.push(action);updateHistoryUI();notify('Bauaktion wiederholt')}
+
+let repeatSources=new Set(),repeatElapsed=0,repeatCount=0;
+let creativeHome=null,creativeWaypoint=null,mapSpan=256,mapCenterX=0,mapCenterZ=0;
+function playerOverlapsCell(x,y,z){return px+.27>x&&px-.27<x+1&&py+1.75>y&&py<y+1&&pz+.27>z&&pz-.27<z+1}
+function beginRepeatBuild(source){if(!playing)return;const active=repeatSources.size>0;repeatSources.add(source);if(!active){repeatElapsed=0;repeatCount=0;edit(true);repeatCount++;}}
+function endRepeatBuild(source){repeatSources.delete(source);if(!repeatSources.size)repeatElapsed=0}
+function stopRepeatBuild(){repeatSources.clear();repeatElapsed=0;keys.delete('KeyB')}
+function updateRepeatBuild(dt){if(!playing||!repeatSources.size)return;repeatElapsed+=dt;if(repeatElapsed>=.18){repeatElapsed=0;if(currentTarget()||(['water','fire'].includes(BLOCKS[selected][0])&&freePlacement)){edit(true);repeatCount++;}}}
+function loadNavigation(obj){
+ stopRepeatBuild();if(mode!=='creative')return;
+ const valid=(p,n)=>Array.isArray(p)&&p.length===n&&p.every(v=>Number.isFinite(v)&&Math.abs(v)<=250000);
+ creativeHome=valid(obj.navigation?.home,3)?[...obj.navigation.home]:null;
+ creativeWaypoint=valid(obj.navigation?.waypoint,2)?[...obj.navigation.waypoint]:null;
+}
+function homePoint(){return creativeHome||[.5,height(0,0)+12,.5]}
+function bearing(x,z){const dx=x-px,dz=z-pz;if(Math.hypot(dx,dz)<2)return 'hier';return ['N','NO','O','SO','S','SW','W','NW'][((Math.round(Math.atan2(dx,-dz)/(Math.PI/4))%8)+8)%8]}
+function updateNavigationHUD(){const el=$('navigationHud');el.classList.toggle('hidden',mode!=='creative');if(mode!=='creative')return;
+ const h=homePoint(),heading=['N','NO','O','SO','S','SW','W','NW'][((Math.round(-yaw/(Math.PI/4))%8)+8)%8];
+ let text='Blick: '+heading+' · Karte: M\n⌂ '+(creativeHome?'Bauplatz':'Start')+': '+Math.round(Math.hypot(h[0]-px,h[2]-pz))+' Blöcke '+bearing(h[0],h[2]);
+ if(creativeWaypoint)text+='\n◆ Ziel: '+Math.round(Math.hypot(creativeWaypoint[0]-px,creativeWaypoint[1]-pz))+' Blöcke '+bearing(...creativeWaypoint);
+ el.style.whiteSpace='pre-line';el.textContent=text;
+}
+function prepareMapUI(){const creative=mode==='creative';$('creativeMapControls').classList.toggle('hidden',!creative);$('mapTitle').textContent=creative?'▦ Kreativwelt · Orientierung':'▦ Tschernobyl · Geländeübersicht';$('mapDescription').textContent=creative?'Norden ist oben. Gelb zeigt dich und deine Blickrichtung. Klicke auf die Karte, um ein Ziel zu markieren.':'Du bist gelb markiert. Klicke auf die Karte, um zur nächstgelegenen Schnellreise-Station zu gelangen.';$('mapLegend').textContent=creative?'Grün: Land · Blau: Wasser · Hell: Schnee/Sand · Farbige Punkte: eigene Bauten · Rosa: Ziel · Mint: Bauplatz/Start. Oberflächenkarte, keine Höhlenansicht.':'Hell: Gebäude · Blau: Kühlkanal · Gelb: deine Position';}
+function creativeMapCoords(x,z){return [(x-mapCenterX)/mapSpan*280+140,(z-mapCenterZ)/mapSpan*280+105]}
+function creativeMapWorld(x,y){return [mapCenterX+(x-140)/280*mapSpan,mapCenterZ+(y-105)/280*mapSpan]}
+function drawCreativeMap(){
+ const c=$('mapCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,280,210);
+ // A sampled surface map is independent of loaded chunks; distant terrain remains visible.
+ for(let sy=0;sy<210;sy+=2)for(let sx=0;sx<280;sx+=2){const [wx,wz]=creativeMapWorld(sx+1,sy+1),x=Math.floor(wx),z=Math.floor(wz),h=height(x,z),b=biome(x,z);ctx.fillStyle=h<SEA?'#397ca6':b==='desert'?'hsl(43 42% '+(53+h*.55)+'%)':b==='snow'?'hsl(195 16% '+(72+h*.4)+'%)':'hsl(115 29% '+(25+h*.7)+'%)';ctx.fillRect(sx,sy,2,2);}
+ // Render the highest visible edited block in each projected map pixel.
+ const tops=new Map();for(const [key,raw] of edits){const [x,y,z]=key.split(',').map(Number),[mx,my]=creativeMapCoords(x+.5,z+.5);if(mx<0||mx>=280||my<0||my>=210)continue;const id=blockId(raw),h=height(x,z);if(y<h)continue;const k=Math.floor(mx)+','+Math.floor(my),old=tops.get(k);if(!old||y>old.y)tops.set(k,{x:mx,y,z:my,id});}
+ const size=Math.max(1,Math.min(5,280/mapSpan));for(const p of tops.values()){ctx.fillStyle=p.id?colorForBlock(p.id):'#493f35';ctx.fillRect(p.x-size/2,p.z-size/2,size,size);}
+ ctx.strokeStyle='#ffffff25';ctx.lineWidth=1;for(let x=0;x<=280;x+=70){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,210);ctx.stroke()}for(let y=0;y<=210;y+=70){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(280,y);ctx.stroke()}
+ function dot(wx,wz,color,label){const [x,y]=creativeMapCoords(wx,wz);if(x<0||x>280||y<0||y>210)return;ctx.fillStyle=color;ctx.strokeStyle='#102334';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='bold 10px sans-serif';ctx.fillText(label,Math.max(4,Math.min(230,x+7)),Math.max(12,Math.min(202,y-5)));}
+ const h=homePoint();dot(h[0],h[2],'#a2e8c6',creativeHome?'Bauplatz':'Start');if(creativeWaypoint)dot(...creativeWaypoint,'#f49ed0','Ziel');dot(px,pz,'#ffe17f','Du');
+ const [mx,my]=creativeMapCoords(px,pz);if(mx>=0&&mx<=280&&my>=0&&my<=210){ctx.strokeStyle='#ffe17f';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(mx-Math.sin(yaw)*13,my-Math.cos(yaw)*13);ctx.stroke()}
+ ctx.fillStyle='#ffffff';ctx.font='bold 11px sans-serif';ctx.fillText('N ↑',6,14);
+ $('mapReadout').textContent='Breite: '+mapSpan+' Blöcke · Mitte X '+Math.round(mapCenterX)+' / Z '+Math.round(mapCenterZ)+' · Du: X '+Math.round(px)+' / Y '+Math.round(py)+' / Z '+Math.round(pz)+(creativeWaypoint?' · Ziel X '+creativeWaypoint[0]+' / Z '+creativeWaypoint[1]:'');
+}
+function pickMapWaypoint(e){const r=e.target.getBoundingClientRect();const [x,z]=creativeMapWorld((e.clientX-r.left)*280/r.width,(e.clientY-r.top)*210/r.height);creativeWaypoint=[Math.round(x),Math.round(z)];dirty=true;drawMap();updateNavigationHUD();save();}
+function initMapControls(){
+ $('mapZoomIn').onclick=()=>{mapSpan=Math.max(64,mapSpan/2);drawMap()};$('mapZoomOut').onclick=()=>{mapSpan=Math.min(4096,mapSpan*2);drawMap()};
+ $('mapCenter').onclick=()=>{mapCenterX=px;mapCenterZ=pz;drawMap()};
+ $('mapSetHome').onclick=()=>{creativeHome=[px,py,pz];dirty=true;save();drawMap();updateNavigationHUD();notify('Bauplatz gespeichert. Die Markierung bleibt im Spielstand erhalten.')};
+ $('mapHome').onclick=()=>{const p=homePoint();mapCenterX=p[0];mapCenterZ=p[2];drawMap()};
+ $('mapClearTarget').onclick=()=>{creativeWaypoint=null;dirty=true;save();drawMap();updateNavigationHUD()};
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){stopRepeatBuild();keys.clear()}});
+}
+
+init();
+
+
+</script></body></html>
