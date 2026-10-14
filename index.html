@@ -44,7 +44,11 @@ body {
     margin: 30px auto 50px;
     padding: 30px 20px 55px;
 
-    background: linear-gradient(145deg, rgba(8,15,35,.94), rgba(15,7,30,.94));
+    background: linear-gradient(
+        145deg,
+        rgba(8,15,35,.94),
+        rgba(15,7,30,.94)
+    );
 
     border: 1px solid rgba(0,255,255,.35);
     border-radius: 24px;
@@ -112,8 +116,12 @@ h1 {
     letter-spacing: 2px;
 
     background: linear-gradient(
-        90deg, #00ffff, #ffffff,
-        #ff00c8, #8c5cff, #00ffff
+        90deg,
+        #00ffff,
+        #ffffff,
+        #ff00c8,
+        #8c5cff,
+        #00ffff
     );
 
     background-size: 300% 100%;
@@ -126,9 +134,15 @@ h1 {
 }
 
 @keyframes titleGlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 p {
@@ -165,7 +179,108 @@ p {
     gap: 18px;
 }
 
-/* BATTLE AGES */
+/* =========================================
+   NEU: MOONCRAFT
+========================================= */
+
+.mooncraft-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    min-height: 115px;
+    padding: 22px;
+
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        #102d24,
+        #176344,
+        #145968,
+        #142444
+    );
+
+    border: 2px solid rgba(80,255,180,.75);
+
+    box-shadow:
+        0 0 20px rgba(0,255,150,.18),
+        0 0 35px rgba(0,200,255,.08),
+        inset 0 0 24px rgba(80,255,190,.06);
+
+    transition:
+        transform .25s,
+        border-color .25s,
+        box-shadow .25s;
+}
+
+/* Lichtreflex */
+
+.mooncraft-button::before {
+    content: "";
+    position: absolute;
+
+    top: -100%;
+    left: -55%;
+
+    width: 35%;
+    height: 300%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.16),
+        transparent
+    );
+
+    transform: rotate(25deg);
+    transition: left .6s;
+    pointer-events: none;
+}
+
+.mooncraft-button:hover::before {
+    left: 130%;
+}
+
+.mooncraft-button span {
+    display: block;
+    margin-top: 9px;
+
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0;
+    color: #ceffea;
+}
+
+.mooncraft-button:hover,
+.mooncraft-button:focus-visible {
+    transform: translateY(-4px) scale(1.01);
+    border-color: #80ffca;
+
+    box-shadow:
+        0 0 32px rgba(0,255,150,.32),
+        0 0 45px rgba(0,200,255,.12),
+        0 14px 30px rgba(0,0,0,.4);
+}
+
+.mooncraft-button:active {
+    transform: translateY(1px) scale(.99);
+}
+
+/* =========================================
+   BATTLE AGES
+========================================= */
 
 .battleages-button {
     display: flex;
@@ -212,7 +327,9 @@ p {
         0 15px 30px rgba(0,0,0,.4);
 }
 
-/* TOWER DEFENSE 2 */
+/* =========================================
+   TOWER DEFENSE 2
+========================================= */
 
 .tower2-button {
     display: flex;
@@ -230,7 +347,9 @@ p {
 
     background: linear-gradient(
         135deg,
-        #09264a, #102d6b, #351064
+        #09264a,
+        #102d6b,
+        #351064
     );
 
     border: 1px solid rgba(0,200,255,.6);
@@ -253,7 +372,9 @@ p {
         0 12px 25px rgba(0,0,0,.4);
 }
 
-/* DORFHERRSCHER */
+/* =========================================
+   DORFHERRSCHER
+========================================= */
 
 .dorf-button {
     width: 100%;
@@ -268,7 +389,9 @@ p {
 
     background: linear-gradient(
         135deg,
-        #3a2110, #6b3d14, #241308
+        #3a2110,
+        #6b3d14,
+        #241308
     );
 
     border: 1px solid rgba(255,190,70,.65);
@@ -290,7 +413,9 @@ p {
         0 12px 25px rgba(0,0,0,.4);
 }
 
-/* INSELWACHT */
+/* =========================================
+   INSELWACHT
+========================================= */
 
 .inselwacht-button {
     display: flex;
@@ -308,7 +433,10 @@ p {
 
     background: linear-gradient(
         135deg,
-        #083b4c, #0d6670, #123d35, #071f2b
+        #083b4c,
+        #0d6670,
+        #123d35,
+        #071f2b
     );
 
     border: 2px solid rgba(80,230,255,.65);
@@ -336,7 +464,9 @@ p {
         0 12px 28px rgba(0,0,0,.4);
 }
 
-/* ISLAND LIFE */
+/* =========================================
+   ISLAND LIFE
+========================================= */
 
 .islandlife-button {
     display: flex;
@@ -354,7 +484,10 @@ p {
 
     background: linear-gradient(
         135deg,
-        #123f28, #1d6b3a, #197c68, #0b3442
+        #123f28,
+        #1d6b3a,
+        #197c68,
+        #0b3442
     );
 
     border: 2px solid rgba(80,255,170,.65);
@@ -382,7 +515,9 @@ p {
         0 12px 28px rgba(0,0,0,.4);
 }
 
-/* DROHNEN SIMULATOR */
+/* =========================================
+   DROHNEN SIMULATOR
+========================================= */
 
 .drone-button {
     display: flex;
@@ -400,7 +535,10 @@ p {
 
     background: linear-gradient(
         135deg,
-        #101c2c, #153d52, #12647a, #101827
+        #101c2c,
+        #153d52,
+        #12647a,
+        #101827
     );
 
     border: 2px solid rgba(90,225,255,.72);
@@ -454,7 +592,7 @@ p {
 }
 
 /* =========================================
-   NEU: WIMMELWELTEN
+   WIMMELWELTEN
 ========================================= */
 
 .wimmelwelten-button {
@@ -535,14 +673,20 @@ p {
 
 .tower-button {
     background: linear-gradient(
-        135deg, #0c422c, #12633d, #082719
+        135deg,
+        #0c422c,
+        #12633d,
+        #082719
     );
     border: 1px solid rgba(0,255,150,.55);
 }
 
 .zombie-button {
     background: linear-gradient(
-        135deg, #441014, #7b1820, #21080c
+        135deg,
+        #441014,
+        #7b1820,
+        #21080c
     );
     border: 1px solid rgba(255,50,70,.6);
 }
@@ -680,7 +824,10 @@ p {
 
 .netzteil {
     background: linear-gradient(
-        135deg, #17384a, #10232f, #172044
+        135deg,
+        #17384a,
+        #10232f,
+        #172044
     );
     border: 1px solid rgba(0,220,255,.55);
 }
@@ -703,7 +850,10 @@ p {
     border-radius: 15px;
 
     background: linear-gradient(
-        135deg, #30205a, #56175f, #24133e
+        135deg,
+        #30205a,
+        #56175f,
+        #24133e
     );
 
     border: 1px solid rgba(255,0,220,.55);
@@ -733,7 +883,10 @@ p {
     border-radius: 15px;
 
     background: linear-gradient(
-        135deg, #123f2d, #164e39, #102a22
+        135deg,
+        #123f2d,
+        #164e39,
+        #102a22
     );
 
     border: 1px solid rgba(0,255,160,.5);
@@ -763,7 +916,10 @@ p {
     border-radius: 15px;
 
     background: linear-gradient(
-        135deg, #182d5a, #263b82, #25134f
+        135deg,
+        #182d5a,
+        #263b82,
+        #25134f
     );
 
     border: 1px solid rgba(120,150,255,.65);
@@ -825,6 +981,19 @@ p {
         min-height: 68px;
         padding: 13px 12px;
         font-size: 20px;
+    }
+
+    /* NEU: MOONCRAFT MOBIL */
+
+    .mooncraft-button {
+        font-size: 24px;
+        min-height: 98px;
+        padding: 17px 12px;
+    }
+
+    .mooncraft-button span {
+        font-size: 13px;
+        line-height: 1.5;
     }
 
     .battleages-button {
@@ -927,7 +1096,9 @@ p {
     und werden laufend weiterentwickelt.
 </p>
 
-<p>Neue Spiele und Tools werden regelmäßig hinzugefügt.</p>
+<p>
+    Neue Spiele und Tools werden regelmäßig hinzugefügt.
+</p>
 
 <!-- =====================================
      HINWEIS
@@ -945,6 +1116,21 @@ p {
 ===================================== -->
 
 <div class="haupt-buttons">
+
+    <!-- =====================================
+         NEU: MOONCRAFT
+    ===================================== -->
+
+    <a
+        href="mooncraft_tschernobyl_v11.html"
+        class="mooncraft-button"
+    >
+        🌍 MOONCRAFT
+        <span>
+            Erkunde riesige 3D-Welten, baue frei im
+            Kreativmodus und entdecke Tschernobyl
+        </span>
+    </a>
 
     <!-- BATTLE AGES -->
 
@@ -1003,9 +1189,7 @@ p {
         </span>
     </a>
 
-    <!-- =====================================
-         NEU: WIMMELWELTEN
-    ===================================== -->
+    <!-- WIMMELWELTEN -->
 
     <a
         href="https://austrian-moonshiner.github.io/wimmelwelten_tarnmodus_einzeldatei.html"
@@ -1046,106 +1230,127 @@ p {
     <h2>🎮 MEINE SPIELE</h2>
 
     <!-- BATTLE AGES 2 -->
+
     <a href="battleages2v2.html" class="spiel-button">
         ⚔️ Battle Ages 2 V2
     </a>
 
     <!-- BIRDJUMP -->
+
     <a href="birdjump.html" class="spiel-button">
         🐦 Birdjump
     </a>
 
     <!-- SOLITÄR -->
+
     <a href="groß.html" class="spiel-button">
         🃏 Solitär
     </a>
 
     <!-- MEMORY -->
+
     <a href="Memory.html" class="spiel-button">
         🧠 Memory
     </a>
 
     <!-- MEMORY 2 -->
+
     <a href="memory2.html" class="spiel-button">
         🧠 Memory 2
     </a>
 
     <!-- MINESWEEPER -->
+
     <a href="minesweeper.html" class="spiel-button">
         💣 Minesweeper
     </a>
 
     <!-- SNAKE -->
+
     <a href="snake.html" class="spiel-button">
         🐍 Snake
     </a>
 
     <!-- TETRIS -->
+
     <a href="Tetris.html" class="spiel-button">
         🧱 Tetris
     </a>
 
     <!-- FLAPPY BIRD -->
+
     <a href="flappybird.html" class="spiel-button">
         🐦 Flappy Bird
     </a>
 
     <!-- PAC-MAN -->
+
     <a href="pacman.html" class="spiel-button">
         🟡 Pac-Man
     </a>
 
     <!-- BIRDMANIA -->
+
     <a href="birdmania_v2.html" class="spiel-button">
         🐦 Birdmania
     </a>
 
     <!-- SUDOKU -->
+
     <a href="Sudoku.html" class="spiel-button">
         🔢 Sudoku
     </a>
 
     <!-- BREAKOUT -->
+
     <a href="breakout.html" class="spiel-button">
         🧱 Breakout
     </a>
 
     <!-- 4 GEWINNT -->
+
     <a href="4gewinnt.html" class="spiel-button">
         🔴 4 Gewinnt
     </a>
 
     <!-- BULLDOGGEN SPIEL -->
+
     <a href="frenchie-mania.html" class="spiel-button">
         🐶 Bulldoggen-Spiel
     </a>
 
     <!-- BULLDOGMANIA 2 -->
+
     <a href="bulldogmania2.html" class="spiel-button">
         🐶 Bulldogmania 2
     </a>
 
     <!-- SCHACH -->
+
     <a href="schach.html" class="spiel-button">
         ♟️ Schach mit KI
     </a>
 
     <!-- DOODLE JUMP -->
+
     <a href="doodlejump.html" class="spiel-button">
         🚀 Doodle Jump
     </a>
 
     <!-- CANDY CRUSH 2 -->
+
     <a href="candycrush2v1.html" class="spiel-button">
         🍬 Candy Crush 2
     </a>
 
     <!-- CANDY CRUSH -->
+
     <a href="candy-crush.html" class="spiel-button">
         🍭 Candy Crush
     </a>
 
     <!-- BIRDMANIA CLASSIC -->
+
     <a href="birdmania.html" class="spiel-button">
         🐦 Birdmania Classic
     </a>
